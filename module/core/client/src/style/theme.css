@@ -64,6 +64,9 @@
   width: 64px;
   height: 64px
 }
+.icon-container .title {
+  overflow: hidden;
+}
 
 .choice label {
   display: block;

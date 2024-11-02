@@ -28,12 +28,11 @@ func Models(m *model.Model, args *model.Args, goVersion string, linebreak string
 	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpSlicesForGo(goVersion))
 	g.AddImport(helper.ImpLo, helper.ImpAppUtil)
 	g.AddImport(m.Imports.Supporting("array")...)
 	g.AddBlocks(modelArray(m))
 
-	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +104,9 @@ func modelArrayRandom(m *model.Model) *golang.Block {
 func modelArrayClone(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayClone", "func")
 	ret.WF("func (%s %s) Clone() %s {", m.FirstLetter(), m.ProperPlural(), m.ProperPlural())
-	ret.WF("\treturn slices.Clone(%s)", m.FirstLetter())
+	ret.WF("\treturn lo.Map(%s, func(xx *%s, _ int) *%s {", m.FirstLetter(), m.Proper(), m.Proper())
+	ret.W("\t\treturn xx.Clone()")
+	ret.W("\t})")
 	ret.W("}")
 	return ret
 }

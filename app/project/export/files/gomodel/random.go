@@ -60,6 +60,10 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		}
 		return fmt.Sprintf("%s.All%s.Random()", et.Package, et.ProperPlural()), nil
 	case types.KeyInt:
+		i := types.TypeAs[*types.Int](t)
+		if i != nil && i.Bits == 64 {
+			return "util.RandomInt64(10000)", nil
+		}
 		return "util.RandomInt(10000)", nil
 	case types.KeyFloat:
 		return "util.RandomFloat(1000)", nil

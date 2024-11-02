@@ -151,6 +151,10 @@ func toGoMapParse(t types.Type) (string, error) {
 	case types.KeyFloat:
 		return "Float", nil
 	case types.KeyInt:
+		i := types.TypeAs[*types.Int](t)
+		if i != nil && i.Bits == 64 {
+			return "Int64", nil
+		}
 		return "Int", nil
 	case types.KeyJSON:
 		return "JSON", nil

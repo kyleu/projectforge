@@ -79,6 +79,36 @@ func SVGBuild(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func SVGAddContent(w http.ResponseWriter, r *http.Request) {
+	controller.Act("svg.add.content", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
+		if err != nil {
+			return "", err
+		}
+		prj, err := getProject(r, as)
+		if err != nil {
+			return "", err
+		}
+		pfs, err := as.Services.Projects.GetFilesystem(prj)
+		if err != nil {
+			return "", err
+		}
+		tgt := frm.GetStringOpt("tgt")
+		content := frm.GetStringOpt("content")
+		u := frm.GetStringOpt("url")
+		x, err := svg.AddContentToProject(prj.Key, pfs, tgt, content, u)
+		if err != nil {
+			return "", err
+		}
+		_, err = svg.Build(pfs, ps.Logger, prj)
+		if err != nil {
+			return "", err
+		}
+		ps.SetTitleAndData("Added SVG ["+x.Key+"]", x)
+		return controller.Render(r, as, &vsvg.View{Project: prj, SVG: x}, ps, "projects", prj.Key, svgBC(prj), x.Key)
+	})
+}
+
 func SVGAdd(w http.ResponseWriter, r *http.Request) {
 	controller.Act("svg.add", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		qa := r.URL.Query()

@@ -53,19 +53,29 @@ func ParseFloat(r any, path string, allowEmpty bool) (float64, error) {
 }
 
 func ParseInt(r any, path string, allowEmpty bool) (int, error) {
+	ret, err := ParseInt64(r, path, allowEmpty)
+	if err != nil {
+		return 0, err
+	}
+	return int(ret), nil
+}
+
+func ParseInt64(r any, path string, allowEmpty bool) (int64, error) {
 	switch t := r.(type) {
 	case int:
-		return t, nil
+		return int64(t), nil
+	case int32:
+		return int64(t), nil
 	case int64:
-		return int(t), nil
+		return t, nil
 	case float64:
-		return int(t), nil
+		return int64(t), nil
 	case string:
 		ret, err := strconv.ParseInt(t, 10, 64)
-		return int(ret), err
+		return ret, err
 	case []byte:
 		ret, err := strconv.ParseInt(string(t), 10, 64)
-		return int(ret), err
+		return ret, err
 	case nil:
 		if !allowEmpty {
 			return 0, errors.Errorf("could not find int for path [%s]", path)

@@ -22,12 +22,16 @@ func RandomString(length int) string {
 }
 
 func RandomInt(maxExclusive int) int {
-	maxCount := big.NewInt(int64(maxExclusive))
+	return int(RandomInt64(int64(maxExclusive)))
+}
+
+func RandomInt64(maxExclusive int64) int64 {
+	maxCount := big.NewInt(maxExclusive)
 	ret, err := rand.Int(rand.Reader, maxCount)
 	if err != nil {
 		panic(errMsg(err))
 	}
-	return int(ret.Int64())
+	return ret.Int64()
 }
 
 func RandomFloat(maxExclusive int) float64 {

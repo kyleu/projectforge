@@ -13,25 +13,26 @@ import (
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/components/view"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/vsvg/List.html:14
+//line views/vsvg/List.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsvg/List.html:14
+//line views/vsvg/List.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsvg/List.html:14
+//line views/vsvg/List.html:15
 type List struct {
 	layout.Basic
 	Project  *project.Project
@@ -39,45 +40,50 @@ type List struct {
 	Contents map[string]string
 }
 
-//line views/vsvg/List.html:21
+//line views/vsvg/List.html:22
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:21
+//line views/vsvg/List.html:22
 	qw422016.N().S(`
   `)
-//line views/vsvg/List.html:22
+//line views/vsvg/List.html:23
 	vproject.StreamSummary(qw422016, p.Project, "SVG", nil, &action.TypeSVG, nil, ps)
-//line views/vsvg/List.html:22
+//line views/vsvg/List.html:23
 	qw422016.N().S(`
   <div class="card">
     <h3>SVG icons</h3>
     <div class="mt">
       <a href="/svg/`)
-//line views/vsvg/List.html:26
+//line views/vsvg/List.html:27
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:26
+//line views/vsvg/List.html:27
 	qw422016.N().S(`/x/build" title="Writes [svg.go], containing the contents of all SVGs"><button>Rebuild</button></a>
       <a href="/svg/`)
-//line views/vsvg/List.html:27
+//line views/vsvg/List.html:28
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:27
+//line views/vsvg/List.html:28
 	qw422016.N().S(`/x/refreshapp" title="Rewrites the application icon and all exported forms"><button>Refresh App Icon</button></a>
     </div>
   </div>
   <div class="card">
+    <div class="right"><a href="#modal-icon"><button>`)
+//line views/vsvg/List.html:32
+	components.StreamSVGButton(qw422016, "edit", ps)
+//line views/vsvg/List.html:32
+	qw422016.N().S(`</button></a></div>
     <h3>Add a new icon</h3>
     <p>
       To add an icon to your application, enter a key from `)
-//line views/vsvg/List.html:33
+//line views/vsvg/List.html:35
 	view.StreamURL(qw422016, "https://icons8.com/line-awesome", "Line Awesome", true, ps)
-//line views/vsvg/List.html:33
+//line views/vsvg/List.html:35
 	qw422016.N().S(`.
       Instead of an icon key, you may also provide a URL to any SVG.
       The SVG will be rewritten with attribution.
     </p>
     <form action="/svg/`)
-//line views/vsvg/List.html:37
+//line views/vsvg/List.html:39
 	qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:37
+//line views/vsvg/List.html:39
 	qw422016.N().S(`/x/add" method="get">
       <div class="overflow full-width">
         <table>
@@ -102,88 +108,110 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <h3>Current Icons</h3>
     <div class="flex-wrap">
 `)
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:62
 	for _, k := range p.Keys {
-//line views/vsvg/List.html:60
+//line views/vsvg/List.html:62
 		qw422016.N().S(`      <div class="icon-container">
         <a href="/svg/`)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:64
 		qw422016.E().S(p.Project.Key)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:64
 		qw422016.N().S(`/`)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:64
 		qw422016.E().S(k)
-//line views/vsvg/List.html:62
+//line views/vsvg/List.html:64
+		qw422016.N().S(`" title="`)
+//line views/vsvg/List.html:64
+		qw422016.E().S(k)
+//line views/vsvg/List.html:64
 		qw422016.N().S(`">
           <div>`)
-//line views/vsvg/List.html:63
+//line views/vsvg/List.html:65
 		qw422016.N().S(strings.ReplaceAll(p.Contents[k], "svg-"+k, "svg-"+k+"_adhoc"))
-//line views/vsvg/List.html:63
+//line views/vsvg/List.html:65
 		qw422016.N().S(`</div>
 `)
-//line views/vsvg/List.html:64
+//line views/vsvg/List.html:66
 		x, y := util.StringSplit(k, '@', true)
 
-//line views/vsvg/List.html:65
+//line views/vsvg/List.html:67
 		if y == "" {
-//line views/vsvg/List.html:65
-			qw422016.N().S(`          <div>`)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:67
+			qw422016.N().S(`          <div class="title">`)
+//line views/vsvg/List.html:68
 			qw422016.E().S(k)
-//line views/vsvg/List.html:66
+//line views/vsvg/List.html:68
 			qw422016.N().S(`</div>
 `)
-//line views/vsvg/List.html:67
+//line views/vsvg/List.html:69
 		} else {
-//line views/vsvg/List.html:67
+//line views/vsvg/List.html:69
 			qw422016.N().S(`          <div>`)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:70
 			qw422016.E().S(x)
-//line views/vsvg/List.html:68
+//line views/vsvg/List.html:70
 			qw422016.N().S(`</div>
           <em style="font-size: 75%;">`)
-//line views/vsvg/List.html:69
+//line views/vsvg/List.html:71
 			qw422016.E().S(y)
-//line views/vsvg/List.html:69
+//line views/vsvg/List.html:71
 			qw422016.N().S(`</em>
 `)
-//line views/vsvg/List.html:70
+//line views/vsvg/List.html:72
 		}
-//line views/vsvg/List.html:70
+//line views/vsvg/List.html:72
 		qw422016.N().S(`        </a>
       </div>
 `)
-//line views/vsvg/List.html:73
+//line views/vsvg/List.html:75
 	}
-//line views/vsvg/List.html:73
+//line views/vsvg/List.html:75
 	qw422016.N().S(`    </div>
   </div>
+  <div id="modal-icon" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>SVG Import</h2>
+      </div>
+      <div class="modal-body">
+        <div class="mt expanded">
+          <form action="" method="post">
+            <textarea name="content" placeholder="Paste an SVG element to bundle within your app" rows="12"></textarea>
+            <div class="mt"><input name="tgt" placeholder="Key for this icon" /></div>
+            <div class="mt"><button type="submit">Add SVG</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 `)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 }
 
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	p.StreamBody(qw422016, as, ps)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 }
 
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	p.WriteBody(qb422016, as, ps)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	qs422016 := string(qb422016.B)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 	return qs422016
-//line views/vsvg/List.html:76
+//line views/vsvg/List.html:96
 }

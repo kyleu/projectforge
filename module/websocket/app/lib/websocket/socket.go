@@ -127,10 +127,8 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 	for {
 		_, message, err := sock.ReadMessage()
 		if err != nil {
-			if strings.Contains(err.Error(), "1001") {
-				continue
-			}
-			if strings.Contains(err.Error(), "close 1005") {
+			errMsg := err.Error()
+			if strings.Contains(errMsg, "1001") || strings.Contains(errMsg, "close 1005") {
 				return nil
 			}
 			return errors.Wrapf(err, "error processing socket read loop for connection [%s]", connID.String())

@@ -6,6 +6,7 @@
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vproject"
@@ -28,6 +29,7 @@
     </div>
   </div>
   <div class="card">
+    <div class="right"><a href="#modal-icon"><button>{%= components.SVGButton("edit", ps) %}</button></a></div>
     <h3>Add a new icon</h3>
     <p>
       To add an icon to your application, enter a key from {%= view.URL("https://icons8.com/line-awesome", "Line Awesome", true, ps) %}.
@@ -59,11 +61,11 @@
     <div class="flex-wrap">
       {%- for _, k := range p.Keys -%}
       <div class="icon-container">
-        <a href="/svg/{%s p.Project.Key %}/{%s k %}">
+        <a href="/svg/{%s p.Project.Key %}/{%s k %}" title="{%s k %}">
           <div>{%s= strings.ReplaceAll(p.Contents[k], "svg-" + k, "svg-" + k + "_adhoc") %}</div>
           {%- code x, y := util.StringSplit(k, '@', true) -%}
           {%- if y == "" -%}
-          <div>{%s k %}</div>
+          <div class="title">{%s k %}</div>
           {%- else -%}
           <div>{%s x %}</div>
           <em style="font-size: 75%;">{%s y %}</em>
@@ -71,6 +73,24 @@
         </a>
       </div>
       {%- endfor -%}
+    </div>
+  </div>
+  <div id="modal-icon" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>SVG Import</h2>
+      </div>
+      <div class="modal-body">
+        <div class="mt expanded">
+          <form action="" method="post">
+            <textarea name="content" placeholder="Paste an SVG element to bundle within your app" rows="12"></textarea>
+            <div class="mt"><input name="tgt" placeholder="Key for this icon" /></div>
+            <div class="mt"><button type="submit">Add SVG</button></div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 {% endfunc %}

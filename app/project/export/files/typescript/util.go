@@ -1,13 +1,15 @@
 package typescript
 
 import (
+	"strings"
+
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
-	"strings"
 )
 
 func tsContent(enums enum.Enums, models model.Models) golang.Blocks {

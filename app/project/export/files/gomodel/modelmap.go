@@ -19,19 +19,19 @@ import (
 func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
 	g.AddImport(helper.ImpAppUtil)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
 	g.AddImport(imps...)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("map")...)
 	g.AddBlocks(modelToMap(g, m, args.Enums, args.Database))
-	if b, e := modelFromMap(g, m, args.Enums, args.Database); e == nil {
+	if b, e := modelFromMap(g, m, args.Models, args.Enums, args.Database); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return nil, e
@@ -54,7 +54,7 @@ func modelToMap(g *golang.File, m *model.Model, enums enum.Enums, database strin
 	return ret
 }
 
-func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
+func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, database string) (*golang.Block, error) {
 	cols := m.Columns.NotDerived().WithoutTags("created", "updated")
 	pks := cols.PKs()
 	nonPKs := cols.NonPKs()
@@ -69,14 +69,14 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 	for _, col := range pks {
 		ret.WF("\t\tcase %q:", col.CamelNoReplace())
 		ret.W("\t\t\tif setPK {")
-		if err := forCol(g, ret, 4, m, enums, col); err != nil {
+		if err := forCol(g, ret, 4, m, models, enums, col); err != nil {
 			return nil, err
 		}
 		ret.W("\t\t\t}")
 	}
 	for _, col := range nonPKs {
 		ret.WF("\t\tcase %q:", col.CamelNoReplace())
-		if err := forCol(g, ret, 3, m, enums, col); err != nil {
+		if err := forCol(g, ret, 3, m, models, enums, col); err != nil {
 			return nil, err
 		}
 	}
@@ -96,7 +96,7 @@ func modelFromMap(g *golang.File, m *model.Model, enums enum.Enums, database str
 }
 
 //nolint:gocognit
-func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums enum.Enums, col *model.Column) error {
+func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, models model.Models, enums enum.Enums, col *model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")
@@ -119,7 +119,7 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, enums
 	case col.Type.Key() == types.KeyReference:
 		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 		catchErr("err")
-		ref, err := model.AsRef(col.Type)
+		ref, err := helper.LoadRef(col, models)
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}

@@ -24,6 +24,8 @@ func (d FieldDesc) Parse(q any) (any, error) {
 		return ParseFloat(q, "", true)
 	case "int", "number":
 		return ParseInt(q, "", true)
+	case "int64", "bigint":
+		return ParseInt64(q, "", true)
 	case "string", "":
 		return ParseString(q, "", true)
 	case "[]string":

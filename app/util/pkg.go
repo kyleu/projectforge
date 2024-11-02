@@ -52,10 +52,16 @@ func (p Pkg) Drop(n int) Pkg {
 }
 
 func (p Pkg) Last() string {
+	if len(p) == 0 {
+		return ""
+	}
 	return p[len(p)-1]
 }
 
 func (p Pkg) Shift() Pkg {
+	if len(p) == 0 {
+		return nil
+	}
 	ret := make(Pkg, 0, len(p)-1)
 	for i, s := range p {
 		if i == len(p)-1 {

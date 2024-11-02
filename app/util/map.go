@@ -18,6 +18,14 @@ func ValueMapFor(kvs ...any) ValueMap {
 	return ret
 }
 
+func ValueMapFrom(m map[string]any) ValueMap {
+	ret := make(ValueMap, len(m))
+	for k, v := range m {
+		ret[k] = v
+	}
+	return ret
+}
+
 func (m ValueMap) Add(kvs ...any) {
 	for i := 0; i < len(kvs); i += 2 {
 		k, ok := kvs[i].(string)

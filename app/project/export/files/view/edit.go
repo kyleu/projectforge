@@ -21,7 +21,7 @@ func edit(m *model.Model, p *project.Project, args *model.Args, linebreak string
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpComponentsEdit, helper.ImpCutil, helper.ImpLayout, helper.ImpAppUtil)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 
-	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}

@@ -46,7 +46,7 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 			g.AddImport(helper.ViewImport(rm.PackageWithGroup("v")))
 		}
 	})
-	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}

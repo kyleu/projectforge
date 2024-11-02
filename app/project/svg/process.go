@@ -32,6 +32,25 @@ func AddToProject(prj string, fs filesystem.FileLoader, src string, tgt string) 
 	return ret, nil
 }
 
+func AddContentToProject(prj string, fs filesystem.FileLoader, tgt string, content string, srcURL string) (*SVG, error) {
+	dst := svgPath(prj, tgt)
+	if tgt == "" {
+		return nil, errors.New("svg key may not be empty")
+	}
+	ret, err := Transform(tgt, []byte(content), srcURL)
+	if err != nil {
+		return nil, err
+	}
+	if ret.Markup == "" {
+		return nil, errors.New("svg markup may not be empty")
+	}
+	err = fs.WriteFile(dst, []byte(ret.Markup), filesystem.DefaultMode, true)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to write SVG content to file ["+tgt+".svg]")
+	}
+	return ret, nil
+}
+
 func svgPath(prj string, key string) string {
 	if strings.Contains(key, "@") {
 		x, y := util.StringSplit(key, '@', true)

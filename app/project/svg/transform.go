@@ -21,9 +21,6 @@ func Transform(tgt string, b []byte, url string) (*SVG, error) {
 		return nil, errors.New("root element must be [svg]")
 	}
 	vb := getAttr(x.Attrs, "viewBox")
-	if vb == "" {
-		return nil, errors.New("no [viewBox] available in <svg> attributes")
-	}
 	linebreak := util.StringDetectLinebreak(c)
 	var markup string
 	add := func(s string) {
@@ -37,9 +34,17 @@ func Transform(tgt string, b []byte, url string) (*SVG, error) {
 		tgt = tgt[:idx]
 	}
 
-	add("<!-- imported from " + url + " -->")
+	if url == "" {
+		add("<!-- imported from inline content -->")
+	} else {
+		add("<!-- imported from " + url + " -->")
+	}
 	add(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">`)
-	add(fmt.Sprintf(`  <symbol id="svg-%s" viewBox=%q>`, tgt, vb))
+	if vb == "" {
+		add(fmt.Sprintf(`  <symbol id="svg-%s">`, tgt))
+	} else {
+		add(fmt.Sprintf(`  <symbol id="svg-%s" viewBox=%q>`, tgt, vb))
+	}
 
 	content, err := transformNodes(x.Nodes)
 	if err != nil {

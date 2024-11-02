@@ -27,12 +27,12 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 		g.AddImport(helper.ImpPath)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
 	g.AddImport(imps...)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}

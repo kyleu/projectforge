@@ -110,11 +110,13 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 	}
 
 	if args.HasModule("notebook") {
-		x, err := script.NotebookScript(p, args.Models, linebreak)
-		if err != nil {
-			return nil, err
+		if wd := args.Models.WithDatabase(); len(wd) > 0 {
+			x, err := script.NotebookScript(p, wd, linebreak)
+			if err != nil {
+				return nil, err
+			}
+			ret = append(ret, x)
 		}
-		ret = append(ret, x)
 	}
 
 	if args.HasModule("migration") {

@@ -15,12 +15,12 @@ func SimpleJSON(database string) bool {
 	return database == util.DatabaseSQLite || database == util.DatabaseSQLServer
 }
 
-func SpecialImports(cols model.Columns, pkg string, enums enum.Enums) (model.Imports, error) {
+func SpecialImports(cols model.Columns, pkg string, models model.Models, enums enum.Enums) (model.Imports, error) {
 	var ret model.Imports
 	for _, col := range cols {
 		switch col.Type.Key() {
 		case types.KeyReference:
-			ref, err := model.AsRef(col.Type)
+			ref, err := LoadRef(col, models)
 			if err != nil {
 				return nil, err
 			}
@@ -41,7 +41,7 @@ func SpecialImports(cols model.Columns, pkg string, enums enum.Enums) (model.Imp
 	return ret, nil
 }
 
-func EnumImports(ts types.Types, pkg string, enums enum.Enums) (model.Imports, error) {
+func EnumImports(ts types.Types, pkg string, models model.Models, enums enum.Enums) (model.Imports, error) {
 	var ret model.Imports
 	for _, t := range ts {
 		switch t.Key() {

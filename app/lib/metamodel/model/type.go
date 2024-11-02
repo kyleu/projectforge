@@ -35,7 +35,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 			ret = e.Package + "." + e.Proper()
 		}
 	case types.KeyInt:
-		ret = types.KeyInt
+		ret = t.String()
 	case types.KeyFloat:
 		ret = "float64"
 	case types.KeyList:

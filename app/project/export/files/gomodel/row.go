@@ -24,13 +24,13 @@ func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error)
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
 	g.AddImport(imps...)
 	g.AddImport(helper.ImpLo)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error)
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(g, m, args.Enums, args.Database)
+	mrm, err := modelRowToModel(g, m, args.Models, args.Enums, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 }
 
 //nolint:gocognit
-func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database string) (*golang.Block, error) {
+func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, database string) (*golang.Block, error) {
 	ba := func(decoder string) string {
 		return "[]byte(" + decoder + ")"
 	}
@@ -179,7 +179,7 @@ func modelRowToModel(g *golang.File, m *model.Model, enums enum.Enums, database 
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
-			ref, err := model.AsRef(c.Type)
+			ref, err := helper.LoadRef(c, models)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}

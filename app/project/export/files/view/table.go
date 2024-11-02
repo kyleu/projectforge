@@ -28,7 +28,7 @@ func table(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	imps, err := helper.EnumImports(m.Columns.WithoutDisplays(util.KeyDetail).Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err := helper.EnumImports(m.Columns.WithoutDisplays(util.KeyDetail).Types(), m.PackageWithGroup(""), args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}

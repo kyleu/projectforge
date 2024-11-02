@@ -40,6 +40,7 @@ func projectRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/p/{key}/palette/{palette}/{theme}", cproject.ProjectThemeSave)
 
 	makeRoute(r, http.MethodGet, "/svg/{key}", cproject.SVGList)
+	makeRoute(r, http.MethodPost, "/svg/{key}", cproject.SVGAddContent)
 	makeRoute(r, http.MethodGet, "/svg/{key}/x/add", cproject.SVGAdd)
 	makeRoute(r, http.MethodGet, "/svg/{key}/x/build", cproject.SVGBuild)
 	makeRoute(r, http.MethodGet, "/svg/{key}/x/refreshapp", cproject.SVGRefreshApp)
