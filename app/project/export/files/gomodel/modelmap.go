@@ -155,8 +155,7 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, model
 			return err
 		}
 	case col.Type.Key() == types.KeyList:
-		lt := types.TypeAs[*types.List](col.Type)
-		if e, _ := model.AsEnumInstance(lt.V, enums); e != nil {
+		if e, _ := model.AsEnumInstance(col.Type.ListType(), enums); e != nil {
 			if err := colMP(ind + parseCall); err != nil {
 				return err
 			}

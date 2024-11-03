@@ -31,8 +31,7 @@ func ToSQLType(t types.Type, database string) (string, error) {
 		}
 		return e.Ref, nil
 	case types.KeyInt:
-		i := types.TypeAs[*types.Int](t)
-		if i != nil && i.Bits == 64 {
+		if types.Bits(t) == 64 {
 			return "bigint", nil
 		}
 		return "int", nil

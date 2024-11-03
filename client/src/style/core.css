@@ -71,8 +71,8 @@ button:hover {
 }
 
 button:disabled, button[disabled]{
-  border-color: #888888;
-  background-color: #888888;
+  border-color: var(--color-background-muted);
+  color: var(--color-foreground-muted);
   cursor: default;
 }
 

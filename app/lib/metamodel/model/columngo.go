@@ -78,19 +78,22 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	case types.KeyFloat:
 		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyInt:
+		if types.Bits(c.Type) == 64 {
+			preprop = "int(" + preprop + ")"
+		}
 		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyJSON:
 		return fmt.Sprintf(msgTextarea, key, id, c.Title(), prop, h), nil
 	case types.KeyList:
-		lt := types.TypeAs[*types.List](c.Type)
-		e, _ := AsEnumInstance(lt.V, enums)
+		lt := c.Type.ListType()
+		e, _ := AsEnumInstance(lt, enums)
 		if e != nil {
 			return fmt.Sprintf(
 				`{%%%%= edit.CheckboxTable(%q, %q, %s.Keys(), %s.All%s.Keys(), %s.All%s%s, 5, %s.All%s.Help()) %%%%}`,
 				key, c.Title(), prop, e.Package, e.ProperPlural(), e.Package, e.ProperPlural(), stringsSuffix, e.Package, e.ProperPlural(),
 			), nil
 		}
-		if c.Display == FmtTags.Key && lt.V.Key() == types.KeyString {
+		if c.Display == FmtTags.Key && lt.Key() == types.KeyString {
 			msg := `{%%%%= edit.TagsTable(%q, util.StringToTitle(%q), %q, %s, ps, 5, %s) %%%%}`
 			return fmt.Sprintf(msg, key, id, c.Title(), prop, h), nil
 		}
@@ -151,8 +154,7 @@ func toGoMapParse(t types.Type) (string, error) {
 	case types.KeyFloat:
 		return "Float", nil
 	case types.KeyInt:
-		i := types.TypeAs[*types.Int](t)
-		if i != nil && i.Bits == 64 {
+		if types.Bits(t) == 64 {
 			return "Int64", nil
 		}
 		return "Int", nil

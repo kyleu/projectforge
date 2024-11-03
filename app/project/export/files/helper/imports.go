@@ -144,8 +144,7 @@ func importsForTypeCtxWebEdit(t types.Type) model.Imports {
 	case types.KeyAny:
 		return model.Imports{ImpAppUtil, ImpFmt}
 	case types.KeyList:
-		lt := types.TypeAs[*types.List](t)
-		if x := types.TypeAs[*types.Enum](lt.V); x != nil {
+		if x := types.TypeAs[*types.Enum](types.Wrap(t).ListType()); x != nil {
 			return model.Imports{}
 		}
 		return model.Imports{ImpAppUtil}

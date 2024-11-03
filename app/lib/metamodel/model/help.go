@@ -31,8 +31,8 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 	case types.KeyFloat:
 		return q("Floating-point number"), nil
 	case types.KeyList:
-		lt := types.TypeAs[*types.List](t)
-		if e, _ := AsEnumInstance(lt.V, enums); e != nil {
+		lt := types.Wrap(t).ListType()
+		if e, _ := AsEnumInstance(lt, enums); e != nil {
 			return fmt.Sprintf("%s.All%s.Help()", e.Package, e.ProperPlural()), nil
 		}
 		return q("Comma-separated list of values"), nil

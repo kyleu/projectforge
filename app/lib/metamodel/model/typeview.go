@@ -25,6 +25,9 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		case FmtSeconds.Key:
 			return tmplStartS + fmt.Sprintf("view.DurationSeconds(float64(%s))", prop) + tmplEnd
 		case "":
+			if types.Bits(t) == 64 {
+				return tmplStart + "d int(" + prop + ")" + tmplEnd
+			}
 			return tmplStart + "d " + prop + tmplEnd
 		default:
 			return "INVALID_INT_FORMAT[" + format + "]"
