@@ -20,6 +20,8 @@ func modelClone(m *model.Model) *golang.Block {
 		switch col.Type.Key() {
 		case types.KeyMap, types.KeyValueMap, types.KeyReference:
 			decl += ".Clone()"
+		case types.KeyList:
+			decl += "[:]"
 		}
 		return fmt.Sprintf("%s.%s,", m.FirstLetter(), decl)
 	})
