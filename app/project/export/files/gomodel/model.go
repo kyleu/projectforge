@@ -141,7 +141,7 @@ func modelStruct(m *model.Model, models model.Models, enums enum.Enums) (*golang
 			return err.Error()
 		}
 		if ref, mdl, _ := helper.LoadRef(c, models); ref != nil && !strings.Contains(gt, ".") {
-			if mdl.Package != m.Package {
+			if mdl != nil && mdl.Package != m.Package {
 				gt = mdl.Package + "." + gt
 				if x := len(gt); maxTypeLength < x {
 					maxTypeLength = x

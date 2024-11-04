@@ -14,7 +14,7 @@ function copyModule {
   touch *
   touch .*
   zip -q -r -X "../../build/dist/projectforge_module_$1.zip" .
-  cp "../../build/dist/projectforge_module_$1.zip" "../../assets/module/$1.zip"
+  # cp "../../build/dist/projectforge_module_$1.zip" "../../assets/module/$1.zip"
   cd ..
 }
 
