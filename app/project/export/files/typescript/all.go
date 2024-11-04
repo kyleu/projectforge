@@ -40,7 +40,16 @@ func Group(group string, models model.Models, enums enum.Enums, linebreak string
 	if group != "" {
 		dir = append(dir, group)
 	}
-	g := golang.NewGoTemplate(dir, "models.ts")
+	filename := "models"
+	switch {
+	case len(models) == 1 && len(enums) == 0:
+		filename = models[0].CamelLower()
+	case len(models) == 0 && len(enums) == 1:
+		filename = enums[0].Camel()
+	case len(models) == 0:
+		filename = "enums"
+	}
+	g := golang.NewGoTemplate(dir, filename+".ts")
 	g.AddBlocks(tsContent(enums, models)...)
 	return g.Render(linebreak)
 }

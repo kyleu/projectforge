@@ -55,7 +55,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 		}
 		g.AddBlocks(pk, pkString)
 	}
-	str, err := modelStruct(m, args.Enums)
+	str, err := modelStruct(m, args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -128,21 +128,34 @@ func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelStruct(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func modelStruct(m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.WF("type %s struct {", m.Proper())
 	cols := m.Columns.NotDerived()
 	maxColLength := cols.MaxCamelLength()
 	maxTypeLength := cols.MaxGoTypeLength(m.Package, enums)
-	for _, c := range cols {
+
+	var gts = lo.Map(cols, func(c *model.Column, _ int) string {
 		gt, err := c.ToGoType(m.Package, enums)
 		if err != nil {
-			return nil, err
+			return err.Error()
+		}
+		if ref, mdl, _ := helper.LoadRef(c, models); ref != nil && !strings.Contains(gt, ".") {
+			if mdl.Package != m.Package {
+				gt = mdl.Package + "." + gt
+				if x := len(gt); maxTypeLength < x {
+					maxTypeLength = x
+				}
+			}
 		}
 		if gt == "*"+types.KeyAny {
 			gt = types.KeyAny
 		}
-		goType := util.StringPad(gt, maxTypeLength)
+		return gt
+	})
+
+	for idx, c := range cols {
+		goType := util.StringPad(gts[idx], maxTypeLength)
 		var tag string
 		if c.JSON == "" {
 			tag = fmt.Sprintf("json:%q", c.CamelNoReplace()+modelJSONSuffix(c))

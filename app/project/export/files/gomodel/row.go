@@ -179,14 +179,11 @@ func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums 
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
-			ref, err := helper.LoadRef(c, models)
+			ref, _, err := helper.LoadRef(c, models)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}
 			ret.WF("\t%sArg := %s{}", c.Camel(), ref.LastAddr(ref.Pkg.Last() != m.Package))
-			if ref.Pkg.Last() != m.Package {
-				g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
-			}
 			ret.WF("\t_ = util.FromJSON(%s, %sArg)", decoder, c.Camel())
 			refs = append(refs, fmt.Sprintf("%s %sArg", k, c.Camel()))
 		default:

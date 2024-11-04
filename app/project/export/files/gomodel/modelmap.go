@@ -119,14 +119,11 @@ func forCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, model
 	case col.Type.Key() == types.KeyReference:
 		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 		catchErr("err")
-		ref, err := helper.LoadRef(col, models)
+		ref, _, err := helper.LoadRef(col, models)
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}
 		ret.WF(ind+"%sArg := %s{}", col.Camel(), ref.LastAddr(ref.Pkg.Last() != m.Package))
-		if ref.Pkg.Last() != m.Package {
-			g.AddImport(model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
-		}
 		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
 		catchErr("err")
 		ret.WF(ind+"ret.%s = %sArg", col.Proper(), col.Camel())

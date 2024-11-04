@@ -20,13 +20,17 @@ func SpecialImports(cols model.Columns, pkg string, models model.Models, enums e
 	for _, col := range cols {
 		switch col.Type.Key() {
 		case types.KeyReference:
-			ref, err := LoadRef(col, models)
+			ref, mdl, err := LoadRef(col, models)
 			if err != nil {
 				return nil, err
 			}
 			split := strings.Split(pkg, "/")
 			if ref.Pkg.Last() != split[len(split)-1] {
-				ret = append(ret, model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
+				if mdl == nil {
+					ret = append(ret, model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
+				} else {
+					ret = append(ret, AppImport(mdl.PackageWithGroup("")))
+				}
 			}
 		case types.KeyEnum:
 			e, err := model.AsEnumInstance(col.Type, enums)
