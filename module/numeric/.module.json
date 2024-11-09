@@ -1,0 +1,9 @@
+{
+  "name": "Numerics",
+  "icon": "hash",
+  "description": "TypeScript and Golang implementations for managing large numbers.",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/numeric"
+}

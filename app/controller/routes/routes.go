@@ -54,5 +54,5 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 
 	makeRoute(r, http.MethodOptions, "/", controller.Options)
 
-	return cutil.WireRouter(r, controller.NotFoundAction, logger)
+	return cutil.WireRouter(r, defaultHandler, logger)
 }

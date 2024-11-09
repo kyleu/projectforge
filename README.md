@@ -1,33 +1,37 @@
 # Project Forge
+
 ![app logo](./assets/favicon.png)
 
-[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go programming language.
+[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go programming
+language.
 You control your application's features, provided via "modules" that enable everything from databases to OAuth.
-When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application you want, without compromise.
+When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application
+you want, without compromise.
 
-All projects managed by Project Forge provide an HTTP server using [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if enabled).
-An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
+All projects managed by Project Forge provide an HTTP server using [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if
+enabled).
+An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user
+profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
 
-Project Forge applications can support any UI framework, but the included UI renders a JS-dependency-free page, heavily optimized for speed and accessibility, with a modern UX that works surprisingly well without JavaScript.
+Project Forge applications can support any UI framework, but the included UI renders a JS-dependency-free page, heavily optimized for speed and accessibility,
+with a modern UX that works surprisingly well without JavaScript.
 The about page is animated, themed, and responsive, and only creates three requests (HTML, CSS, JS) totaling less than 20KB zipped.
 It serves in less than a millisecond, and renders in Chrome in less than 20ms.
 Progressive enhancement is provided by an included ESBuild TypeScript project, though all functionality is supported with JavaScript disabled.
 
 Your application can (optionally) build for _every_ platform; desktop and mobile webview apps, WASM, and notarized universal macOS binaries.
 If you enable all the build options, it will produce almost 60 builds for various platforms. They all produce a ~20MB native binary.
-The binaries produced can be configured to auto-upgrade from GitHub Releases, or be upgraded by the user using a CLI or UI (module "upgrade" must be in your project).
+The binaries produced can be configured to auto-upgrade from GitHub Releases, or be upgraded by the user using a CLI or UI (module "upgrade" must be in your
+project).
 CI/CD workflows based on GitHub Actions are provided, handling building, testing, linting, and publishing to GitHub Releases (and any configured Docker repos).
-
 
 ## Download
 
 https://projectforge.dev/download
 
-
 ## Source code
 
 https://github.com/kyleu/projectforge
-
 
 ## App Features
 
@@ -41,7 +45,6 @@ A project managed by Project Forge...
 - Optionally supports OAuth with dozens of providers, full theme and stateless session support
 - Provides a type-safe API for working with PostgreSQL, MySQL, and SQLite databases (or no database at all)
 - Uses ESBuild for a TypeScript client with progressive enhancement, embedded SVGs, and modern CSS
-
 
 ## Available Modules
 
@@ -69,6 +72,7 @@ A project managed by Project Forge...
 | [MySQL](module/mysql/doc/module/mysql.md)                        | Provides an API for accessing MySQL databases                                                  |
 | [Notarize](module/notarize/doc/module/notarize.md)               | Sends files to Apple for notarization                                                          |
 | [Notebook](module/notebook/doc/module/notebook.md)               | Provides an Observable Framework notebook                                                      |
+| [Numeric](module/numeric/doc/module/numeric.md)                  | It provides TypeScript and Golang implementations for managing large numbers.                  |
 | [OAuth](module/oauth/doc/module/oauth.md)                        | Provides logins and session management for many OAuth providers                                |
 | [OpenAPI](module/openapi/doc/module/openapi.md)                  | Embeds the Swagger UI, using your OpenAPI specification                                        |
 | [Playwright](module/playwright/doc/module/playwright.md)         | Adds a project for testing the UI using playwright.dev                                         |
@@ -95,7 +99,7 @@ A project managed by Project Forge...
 ## Example Applications
 
 - [Rituals.dev](https://rituals.dev) ([GitHub](https://github.com/kyleu/rituals)):
-Work with your team to estimate work, track your progress, and gather feedback.
+  Work with your team to estimate work, track your progress, and gather feedback.
   - It's a full websocket-driven rich client application, but also works fine without JavaScript
 
 - [TODO Forge](https://todo.kyleu.dev) ([GitHub](https://github.com/kyleu/todoforge)):
@@ -104,7 +108,7 @@ Work with your team to estimate work, track your progress, and gather feedback.
 
 - [Load Toad](https://loadtoad.kyleu.dev) ([GitHub](https://github.com/kyleu/loadtoad)):
   A tool for uploading HTTP Archives (`.har` files) and running load tests.
-  - Also supports client-defined JavaScript, executed in-process on the server 
+  - Also supports client-defined JavaScript, executed in-process on the server
 
 - [Admini](https://admini.dev) ([GitHub](https://github.com/kyleu/admini)):
   A database management application, basically. It does other stuff too.
@@ -120,7 +124,6 @@ Work with your team to estimate work, track your progress, and gather feedback.
 
 _More examples coming soon..._
 
-
 ## Documentation
 
 - [Installation](doc/installation.md)
@@ -130,7 +133,6 @@ _More examples coming soon..._
 - [Running](doc/running.md)
 - [Scripts](doc/scripts.md)
 - [Technology](doc/technology.md)
-
 
 ## Licensing
 

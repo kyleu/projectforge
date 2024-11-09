@@ -52,6 +52,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `mysql`: API for accessing MySQL databases
 - `notarize`: Sends files to Apple for notarization
 - `notebook`: Provides an Observable Framework notebook
+- `numeric`: TypeScript and Golang implementations for managing large numbers
 - `oauth`: Login and session management for many OAuth providers
 - `openapi`: Embeds the Swagger UI, using your OpenAPI specification
 - `playwright`: Adds a project for testing the UI using playwright.dev
