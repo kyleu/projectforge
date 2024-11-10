@@ -21,7 +21,7 @@ func TestParse(t *testing.T) {
 		{"Zero", "0", numeric.Zero, nil},
 		{"One", "1", numeric.One, nil},
 		{"Ten", "10", numeric.From(1, 1), nil},
-		{"TenString", "10", numeric.FromFloat(10), nil},
+		{"TenString", "10", numeric.Ten, nil},
 	}
 
 	for _, tt := range tests {

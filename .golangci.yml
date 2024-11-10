@@ -4,7 +4,6 @@ issues:
   max-same-issues: 0
   exclude-dirs:
     - /data
-    - /assets/module
     - /module
     - /testproject
 

@@ -55,6 +55,10 @@ func (n Numeric) Ln() float64 {
 	return 2.30258509299404568402 * n.Log10()
 }
 
+func (n Numeric) LnN() Numeric {
+	return FromFloat(n.Ln())
+}
+
 func (n Numeric) Log10() float64 {
 	return float64(n.exponent) + math.Log10(n.mantissa)
 }
@@ -93,9 +97,9 @@ func (n Numeric) Pow(other Numeric) Numeric {
 
 func (n Numeric) Pow10() Numeric {
 	if n.IsInt() {
-		return normalize(1, n.ToInt())
+		return normalize(1, n.ToInt64())
 	}
-	return normalize(math.Pow(10, math.Mod(n.ToFloat(), 1)), n.ToInt())
+	return normalize(math.Pow(10, math.Mod(n.ToFloat(), 1)), n.ToInt64())
 }
 
 func isInteger(x float64) bool {

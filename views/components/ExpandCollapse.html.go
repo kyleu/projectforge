@@ -23,34 +23,38 @@ var (
 //line views/components/ExpandCollapse.html:3
 func StreamExpandCollapse(qw422016 *qt422016.Writer, indent int, ps *cutil.PageState) {
 //line views/components/ExpandCollapse.html:4
-	StreamIndent(qw422016, true, indent)
+	if indent > 0 {
 //line views/components/ExpandCollapse.html:5
+		StreamIndent(qw422016, true, indent)
+//line views/components/ExpandCollapse.html:6
+	}
+//line views/components/ExpandCollapse.html:7
 	StreamSVGRef(qw422016, `right`, 15, 15, `expand-collapse`, ps)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 }
 
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 func WriteExpandCollapse(qq422016 qtio422016.Writer, indent int, ps *cutil.PageState) {
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	StreamExpandCollapse(qw422016, indent, ps)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 }
 
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 func ExpandCollapse(indent int, ps *cutil.PageState) string {
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	WriteExpandCollapse(qb422016, indent, ps)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	qs422016 := string(qb422016.B)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 	return qs422016
-//line views/components/ExpandCollapse.html:6
+//line views/components/ExpandCollapse.html:8
 }

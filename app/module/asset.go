@@ -3,8 +3,6 @@ package module
 import (
 	"context"
 	"net/http"
-	"path"
-	"runtime"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -15,10 +13,9 @@ import (
 )
 
 const (
-	assetURL       = "https://api.github.com/repos/kyleu/projectforge/releases/latest"
-	backupAssetURL = "https://projectforge.dev/assets/module"
-	assetPrefix    = "projectforge_module_"
-	assetSuffix    = ".zip"
+	assetURL    = "https://api.github.com/repos/kyleu/projectforge/releases/latest"
+	assetPrefix = "projectforge_module_"
+	assetSuffix = ".zip"
 )
 
 var assetMap map[string]string
@@ -49,15 +46,12 @@ type ghRsp struct {
 
 func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	assetMap = map[string]string{}
-	if runtime.GOOS == "js" {
-		return loadBackupAssetMap(logger)
-	}
 	logger.Infof("loading assets from [%s]", assetURL)
 	req := util.NewHTTPRequest(ctx, http.MethodGet, assetURL)
 	req.Header.Set("Access-Control-Allow-Origin", "*")
 	rsp, b, err := req.WithClient(telemetry.HTTPClient()).RunSimple()
 	if err != nil {
-		return loadBackupAssetMap(logger)
+		return err
 	}
 	if rsp.StatusCode != 200 {
 		return errors.Errorf("release asset [%s] returned status [%d]", assetURL, rsp.StatusCode)
@@ -71,14 +65,6 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 			key := strings.TrimSuffix(asset.Name[len(assetPrefix):], assetSuffix)
 			assetMap[key] = asset.URL
 		}
-	})
-	return nil
-}
-
-func loadBackupAssetMap(logger util.Logger) error {
-	logger.Info("unable to download assets from github, using backup option")
-	lo.ForEach(nativeModuleKeys, func(key string, _ int) {
-		assetMap[key] = path.Join(backupAssetURL, key+".zip")
 	})
 	return nil
 }

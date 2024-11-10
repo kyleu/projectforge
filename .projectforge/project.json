@@ -32,7 +32,6 @@
   ],
   "ignore": [
     "^data",
-    "^assets/module",
     "^module",
     "^testproject"
   ],

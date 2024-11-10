@@ -32,6 +32,10 @@ func (n Numeric) ToFloat() float64 {
 	return result
 }
 
-func (n Numeric) ToInt() int64 {
+func (n Numeric) ToInt() int {
+	return int(n.ToFloat())
+}
+
+func (n Numeric) ToInt64() int64 {
 	return int64(n.ToFloat())
 }
