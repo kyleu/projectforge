@@ -63,6 +63,12 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		if types.Bits(t) == 64 {
 			return "util.RandomInt64(10000)", nil
 		}
+		if types.Bits(t) == 32 {
+			return "util.RandomInt32(10000)", nil
+		}
+		if types.Bits(t) == 16 {
+			return "util.RandomInt16(10000)", nil
+		}
 		return "util.RandomInt(10000)", nil
 	case types.KeyFloat:
 		return "util.RandomFloat(1000)", nil

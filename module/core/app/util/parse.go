@@ -60,6 +60,60 @@ func ParseInt(r any, path string, allowEmpty bool) (int, error) {
 	return int(ret), nil
 }
 
+func ParseInt16(r any, path string, allowEmpty bool) (int16, error) {
+	switch t := r.(type) {
+	case int:
+		return int16(t), nil
+	case int16:
+		return t, nil
+	case int32:
+		return int16(t), nil
+	case int64:
+		return int16(t), nil
+	case float64:
+		return int16(t), nil
+	case string:
+		ret, err := strconv.ParseInt(t, 10, 16)
+		return int16(ret), err
+	case []byte:
+		ret, err := strconv.ParseInt(string(t), 10, 16)
+		return int16(ret), err
+	case nil:
+		if !allowEmpty {
+			return 0, errors.Errorf("could not find int16 for path [%s]", path)
+		}
+		return 0, nil
+	default:
+		return 0, invalidTypeError(path, "int16", t)
+	}
+}
+
+func ParseInt32(r any, path string, allowEmpty bool) (int32, error) {
+	switch t := r.(type) {
+	case int:
+		return int32(t), nil
+	case int32:
+		return t, nil
+	case int64:
+		return int32(t), nil
+	case float64:
+		return int32(t), nil
+	case string:
+		ret, err := strconv.ParseInt(t, 10, 32)
+		return int32(ret), err
+	case []byte:
+		ret, err := strconv.ParseInt(string(t), 10, 32)
+		return int32(ret), err
+	case nil:
+		if !allowEmpty {
+			return 0, errors.Errorf("could not find int32 for path [%s]", path)
+		}
+		return 0, nil
+	default:
+		return 0, invalidTypeError(path, "int32", t)
+	}
+}
+
 func ParseInt64(r any, path string, allowEmpty bool) (int64, error) {
 	switch t := r.(type) {
 	case int:

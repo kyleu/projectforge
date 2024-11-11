@@ -33,6 +33,18 @@ func (m ValueMap) ParseInt64(path string, allowMissing bool, allowEmpty bool) (i
 	})
 }
 
+func (m ValueMap) ParseInt32(path string, allowMissing bool, allowEmpty bool) (int32, error) {
+	return parseMapField(m, path, allowMissing, func(res any) (int32, error) {
+		return ParseInt32(res, path, allowEmpty)
+	})
+}
+
+func (m ValueMap) ParseInt16(path string, allowMissing bool, allowEmpty bool) (int16, error) {
+	return parseMapField(m, path, allowMissing, func(res any) (int16, error) {
+		return ParseInt16(res, path, allowEmpty)
+	})
+}
+
 func (m ValueMap) ParseJSON(path string, allowMissing bool, allowEmpty bool) (any, error) {
 	return parseMapField(m, path, allowMissing, func(res any) (any, error) {
 		return ParseJSON(res, path, allowEmpty)

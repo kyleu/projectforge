@@ -78,7 +78,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 	case types.KeyFloat:
 		return fmt.Sprintf(`{%%%%= edit.FloatTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyInt:
-		if types.Bits(c.Type) == 64 {
+		if types.Bits(c.Type) != 0 {
 			preprop = "int(" + preprop + ")"
 		}
 		return fmt.Sprintf(`{%%%%= edit.IntTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
@@ -154,6 +154,12 @@ func toGoMapParse(t types.Type) (string, error) {
 	case types.KeyFloat:
 		return "Float", nil
 	case types.KeyInt:
+		if types.Bits(t) == 16 {
+			return "Int16", nil
+		}
+		if types.Bits(t) == 32 {
+			return "Int32", nil
+		}
 		if types.Bits(t) == 64 {
 			return "Int64", nil
 		}

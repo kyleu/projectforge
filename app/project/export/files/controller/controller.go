@@ -67,11 +67,20 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
 		add("}")
-		add("%sArgX, err := strconv.ParseInt(%sArgStr, 10, 32)", col.Camel(), col.Camel())
+		bits := types.Bits(col.Type)
+		if bits == 0 {
+			add("%sArgX, err := strconv.ParseInt(%sArgStr, 10, 64)", col.Camel(), col.Camel())
+		} else {
+			add("%sArgX, err := strconv.ParseInt(%sArgStr, 10, %d)", col.Camel(), col.Camel(), bits)
+		}
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid integer\")", retVal, col.Camel())
 		add("}")
-		add("%sArg := int(%sArgX)", col.Camel(), col.Camel())
+		if bits == 0 {
+			add("%sArg := int(%sArgX)", col.Camel(), col.Camel())
+		} else {
+			add("%sArg := int%d(%sArgX)", col.Camel(), bits, col.Camel())
+		}
 	case types.KeyFloat:
 		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")

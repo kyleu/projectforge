@@ -207,7 +207,12 @@ func defaultRowToModel(k string, c *model.Column, database string) []string {
 		case types.KeyString:
 			refs = append(refs, fmt.Sprintf("%s r.%s.String", k, c.Proper()))
 		case types.KeyInt:
-			refs = append(refs, fmt.Sprintf("%s int(r.%s.Int64)", k, c.Proper()))
+			if i := types.TypeAs[*types.Int](c.Type); i != nil {
+				b := util.Choose(i.Bits == 0, 64, i.Bits)
+				refs = append(refs, fmt.Sprintf("%s r.%s.Int%d", k, c.Proper(), b))
+			} else {
+				refs = append(refs, fmt.Sprintf("%s int(r.%s.Int64)", k, c.Proper()))
+			}
 		case types.KeyFloat:
 			refs = append(refs, fmt.Sprintf("%s r.%s.Float64", k, c.Proper()))
 		case types.KeyBool:

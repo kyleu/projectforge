@@ -25,6 +25,24 @@ func RandomInt(maxExclusive int) int {
 	return int(RandomInt64(int64(maxExclusive)))
 }
 
+func RandomInt16(maxExclusive int16) int16 {
+	maxCount := big.NewInt(int64(maxExclusive))
+	ret, err := rand.Int(rand.Reader, maxCount)
+	if err != nil {
+		panic(errMsg(err))
+	}
+	return int16(ret.Int64())
+}
+
+func RandomInt32(maxExclusive int32) int32 {
+	maxCount := big.NewInt(int64(maxExclusive))
+	ret, err := rand.Int(rand.Reader, maxCount)
+	if err != nil {
+		panic(errMsg(err))
+	}
+	return int32(ret.Int64())
+}
+
 func RandomInt64(maxExclusive int64) int64 {
 	maxCount := big.NewInt(maxExclusive)
 	ret, err := rand.Int(rand.Reader, maxCount)
