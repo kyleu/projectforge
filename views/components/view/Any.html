@@ -1,7 +1,6 @@
 {% import (
   "fmt"
   "net/url"
-  "strings"
   "time"
 
   "github.com/google/uuid"
@@ -30,7 +29,9 @@
     {% case int64 %}
       {%= Int(t) %}
     {% case util.ValueMap %}
-      {%= Map(false, t, ps) %}
+      <div class="bl">{%= Map(false, t, ps) %}</div>
+    {% case map[string]any %}
+      <div class="bl">{%= Map(false, t, ps) %}</div>
     {% case []util.ValueMap %}
       {%= MapArray(false, ps, t...) %}
     {% case util.Pkg %}
@@ -50,11 +51,20 @@
     {% case *uuid.UUID %}
       {%= UUID(t) %}
     {% case []any %}
-      {% code arr, extra := util.ArrayLimit(util.StringArrayFromAny(t, 32), 8) %}
-      {%s strings.Join(arr, ", ") %}
-      {% if extra > 0 %}
-        {% space %}<em>...and{% space %}{%d extra %}{% space %}more</em>
-      {% endif %}
+      {%- if len(t) == 0 -%}
+        <em>empty array</em>
+      {%- else -%}
+        {% code arr, extra := util.ArrayLimit(t, 8) %}
+        {%- for idx, e := range arr -%}
+          <div class="flex bt">
+            <div class="mrs mts"><em>{%d idx + 1 %}</em></div>
+            <div class="">{%= Any(e, ps) %}</div>
+          </div>
+        {%- endfor -%}
+        {% if extra > 0 %}
+          <div class="bb"><em>...and{% space %}{%d extra %}{% space %}more</em></div>
+        {% endif %}
+      {%- endif -%}
     {% default %}
       unhandled type [{%s fmt.Sprintf("%T", x) %}]
     {% endswitch %}
