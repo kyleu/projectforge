@@ -32,13 +32,10 @@ func (x *List) String() string {
 }
 
 func (x *List) From(v any) any {
-	switch t := v.(type) {
-	case string:
-		lt := util.StringSplitAndTrim(t, ",")
-		return lt
-	default:
-		return invalidInput(x.Key(), t)
+	if x, err := util.ParseArray(v, "", true, true); err == nil {
+		return x
 	}
+	return invalidInput(x.Key(), v)
 }
 
 func (x *List) Default(string) any {

@@ -1,5 +1,7 @@
 package types
 
+import "{{{ .Package }}}/app/util"
+
 const KeyUUID = "uuid"
 
 type UUID struct{}
@@ -23,6 +25,9 @@ func (x *UUID) String() string {
 }
 
 func (x *UUID) From(v any) any {
+	if x, err := util.ParseUUID(v, "", true); err == nil {
+		return x
+	}
 	return invalidInput(x.Key(), v)
 }
 

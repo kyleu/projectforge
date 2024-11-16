@@ -41,7 +41,7 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 		l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
 		r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
 		switch col.Type.Key() {
-		case types.KeyAny, types.KeyJSON, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+		case types.KeyAny, types.KeyJSON, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference, types.KeyNumeric:
 			ret.WF("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 		case types.KeyBool, types.KeyInt, types.KeyFloat:
 			g.AddImport(helper.ImpFmt)

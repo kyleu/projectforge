@@ -1,5 +1,7 @@
 package types
 
+import "github.com/pkg/errors"
+
 const KeyError = "error"
 
 type Error struct {
@@ -28,6 +30,8 @@ func (x *Error) From(v any) any {
 	switch t := v.(type) {
 	case error:
 		return t
+	case string:
+		return errors.New(t)
 	default:
 		return invalidInput(x.Key(), t)
 	}

@@ -1,5 +1,7 @@
 package types
 
+import "{{{ .Package }}}/app/util"
+
 const KeyEnumValue = "enumValue"
 
 type EnumValue struct{}
@@ -23,6 +25,9 @@ func (x *EnumValue) String() string {
 }
 
 func (x *EnumValue) From(v any) any {
+	if x, err := util.ParseString(v, "", true); err == nil {
+		return x
+	}
 	return invalidInput(x.Key(), v)
 }
 

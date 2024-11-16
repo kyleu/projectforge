@@ -133,6 +133,7 @@
           <th>Indexed</th>
           <th>Unique</th>
           <th>Tags</th>
+          <th>Metadata</th>
         </tr>
       </thead>
       <tbody>
@@ -147,6 +148,7 @@
           <td>{%= view.BoolIcon(col.Indexed || model.Relations.ContainsSource(col.Name), 15, "icon", ps) %}</td>
           <td>{%= view.BoolIcon(col.HasTag("unique"), 15, "icon", ps) %}</td>
           <td>{%s strings.Join(col.Tags, ", ") %}</td>
+          <td>{%= view.Map(false, col.Metadata, ps) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

@@ -36,7 +36,7 @@ func StreamMap(qw422016 *qt422016.Writer, preserveWhitespace bool, m util.ValueM
 //line views/components/view/Map.html:11
 	} else {
 //line views/components/view/Map.html:11
-		qw422016.N().S(`<div class="overflow full-width"><table class="expanded min-200"><tbody>`)
+		qw422016.N().S(`<div class="overflow full-width bl"><table class="expanded"><tbody>`)
 //line views/components/view/Map.html:15
 		for _, k := range m.Keys() {
 //line views/components/view/Map.html:15

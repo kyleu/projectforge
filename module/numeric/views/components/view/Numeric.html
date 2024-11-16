@@ -1,0 +1,13 @@
+{% import (
+  "fmt"
+
+  "{{{ .Package }}}/app/util"
+) %}
+
+{% func Numeric(f any) %}{% stripspace %}
+  {%s f.(fmt.Stringer).String() %}
+{% endstripspace %}{% endfunc %}
+
+{% func NumericArray(value []any) %}{% stripspace %}
+  {%= StringArray(util.ArrayToStringArray(value)) %}
+{% endstripspace %}{% endfunc %}

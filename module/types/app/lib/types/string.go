@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const KeyString = "string"
@@ -34,12 +36,10 @@ func (x *String) String() string {
 }
 
 func (x *String) From(v any) any {
-	switch t := v.(type) {
-	case string:
-		return t
-	default:
-		return invalidInput(x.Key(), t)
+	if x, err := util.ParseString(v, "", true); err == nil {
+		return x
 	}
+	return invalidInput(x.Key(), v)
 }
 
 func (x *String) Default(string) any {

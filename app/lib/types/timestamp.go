@@ -25,6 +25,9 @@ func (x *Timestamp) String() string {
 }
 
 func (x *Timestamp) From(v any) any {
+	if x, err := util.ParseTime(v, "", true); err == nil {
+		return x
+	}
 	return invalidInput(x.Key(), v)
 }
 

@@ -115,3 +115,11 @@ func (n Numeric) String() string {
 func (n Numeric) Debug() string {
 	return fmt.Sprintf("%fe%d", n.mantissa, n.exponent)
 }
+
+func (n Numeric) MarshalJSON() ([]byte, error) {
+	return []byte(`{"m": ` + fmt.Sprint(n.mantissa) + `, "e": ` + fmt.Sprint(n.exponent) + `}`), nil
+}
+
+func (n Numeric) UnmarshalJSON(data []byte) error {
+	return nil
+}

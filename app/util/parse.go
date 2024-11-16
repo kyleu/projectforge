@@ -198,6 +198,8 @@ func ParseMap(r any, path string, allowEmpty bool) (ValueMap, error) {
 
 func ParseString(r any, path string, allowEmpty bool) (string, error) {
 	switch t := r.(type) {
+	case rune:
+		return string(t), nil
 	case string:
 		if (!allowEmpty) && t == "" {
 			return "", errors.New("empty string")

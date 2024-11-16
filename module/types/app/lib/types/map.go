@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const KeyMap = "map"
@@ -34,6 +36,9 @@ func (x *Map) String() string {
 }
 
 func (x *Map) From(v any) any {
+	if x, err := util.ParseMap(v, "", true); err == nil {
+		return x
+	}
 	return invalidInput(x.Key(), v)
 }
 

@@ -5,10 +5,10 @@ import (
 )
 
 type Type interface {
+	fmt.Stringer
 	Key() string
 	Sortable() bool
 	Scalar() bool
-	fmt.Stringer
 	From(v any) any
 	Default(key string) any
 }

@@ -100,6 +100,8 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		return fmt.Sprintf(msgTextarea, key, id, c.Title(), prop, h), nil
 	case types.KeyMap, types.KeyValueMap:
 		return fmt.Sprintf(msgTextarea, key, id, c.Title(), preprop, h), nil
+	case types.KeyNumeric:
+		return fmt.Sprintf(`{%%%%= edit.NumericTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
 	case types.KeyReference:
 		return fmt.Sprintf(msgTextarea, key, id, c.Title(), preprop, h), nil
 	case types.KeyDate:
@@ -178,6 +180,8 @@ func toGoMapParse(t types.Type) (string, error) {
 		return "Array" + x, nil
 	case types.KeyMap, types.KeyValueMap:
 		return "Map", nil
+	case types.KeyNumeric:
+		return "Numeric", nil
 	case types.KeyReference:
 		return asRefK(t), nil
 	case types.KeyString, types.KeyEnum:
@@ -208,6 +212,8 @@ func (c *Column) ZeroVal() string {
 		return "0.0"
 	case types.KeyMap, types.KeyValueMap, types.KeyReference:
 		return types.KeyNil
+	case types.KeyNumeric:
+		return "numeric.Zero"
 	case types.KeyString:
 		return `""`
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:

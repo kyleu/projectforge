@@ -89,3 +89,39 @@ table.terminal td {
   word-wrap: break-word;
   word-break: break-word;
 }
+
+table.results {
+  background-color: var(--color-background);
+  position: relative;
+}
+
+table.results > thead > tr > th {
+  background-color: var(--color-background);
+  position: sticky;
+  top: var(--nav-height);
+}
+
+table.results > tbody > tr > th {
+  background-color: var(--color-background);
+  position: sticky;
+  left: var(--menu-width);
+}
+
+table.results .pkhead {
+  left: var(--menu-width);
+  z-index: 2;
+  border-right: var(--border);
+}
+
+table.results .pkcol {
+  border-right: var(--border);
+}
+
+@media (max-width: 800px) {
+  table.results .pkhead {
+    left: 0;
+  }
+  table.results .pkcol {
+    left: 0;
+  }
+}

@@ -29,9 +29,9 @@
     {% case int64 %}
       {%= Int(t) %}
     {% case util.ValueMap %}
-      <div class="bl">{%= Map(false, t, ps) %}</div>
+      {%= Map(false, t, ps) %}
     {% case map[string]any %}
-      <div class="bl">{%= Map(false, t, ps) %}</div>
+      {%= Map(false, t, ps) %}
     {% case []util.ValueMap %}
       {%= MapArray(false, ps, t...) %}
     {% case util.Pkg %}

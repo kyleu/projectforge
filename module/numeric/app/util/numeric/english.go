@@ -1,10 +1,11 @@
 package numeric
 
 import (
-	"github.com/kyleu/idlingengine/app/util"
 	"strings"
 
 	"github.com/pkg/errors"
+
+	"github.com/kyleu/idlingengine/app/util"
 )
 
 var prefixes = []string{

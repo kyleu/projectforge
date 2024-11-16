@@ -6,7 +6,8 @@
   "github.com/google/uuid"
 
   "{{{ .Package }}}/app/controller/cutil"
-  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/app/util"{{{ if .HasModule "numeric" }}}
+  "{{{ .Package }}}/app/util/numeric"{{{ end }}}
 ) %}
 
 {% func Any(x any, ps *cutil.PageState) %}{% stripspace %}
@@ -29,11 +30,13 @@
     {% case int64 %}
       {%= Int(t) %}
     {% case util.ValueMap %}
-      <div class="bl">{%= Map(false, t, ps) %}</div>
+      {%= Map(false, t, ps) %}
     {% case map[string]any %}
-      <div class="bl">{%= Map(false, t, ps) %}</div>
+      {%= Map(false, t, ps) %}
     {% case []util.ValueMap %}
-      {%= MapArray(false, ps, t...) %}
+      {%= MapArray(false, ps, t...) %}{{{ if .HasModule "numeric" }}}
+    {% case numeric.Numeric %}
+      {%= Numeric(t) %}{{{ end }}}
     {% case util.Pkg %}
       {%= Package(t) %}
     {% case string %}

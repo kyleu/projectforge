@@ -94,16 +94,8 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 			}
 			if x := e.Config.GetStringOpt("type:" + k); x != "" {
 				switch x {
-				case types.KeyString:
-					typ = types.KeyString
-				case types.KeyInt:
-					typ = types.KeyInt
-				case types.KeyFloat:
-					typ = types.KeyFloat
-				case types.KeyBool:
-					typ = types.KeyBool
-				case types.KeyTimestamp:
-					typ = types.KeyTimestamp
+				case types.KeyBool, types.KeyFloat, types.KeyInt, types.KeyString, types.KeyTimestamp:
+					typ = x
 				default:
 					typ = "unknown config type [" + x + "]"
 				}

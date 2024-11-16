@@ -27,7 +27,13 @@ func SpecialImports(cols model.Columns, pkg string, models model.Models, enums e
 			split := strings.Split(pkg, "/")
 			if ref.Pkg.Last() != split[len(split)-1] {
 				if mdl == nil {
-					ret = append(ret, model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
+					if len(ref.Pkg) > 0 && ref.Pkg[0] == "app" {
+						ret = append(ret, AppImport(ref.Pkg[1:].ToPath()))
+					} else if len(ref.Pkg) > 0 && ref.Pkg[0] == "views" {
+						ret = append(ret, ViewImport(ref.Pkg[1:].ToPath()))
+					} else {
+						ret = append(ret, model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
+					}
 				} else {
 					ret = append(ret, AppImport(mdl.PackageWithGroup("")))
 				}

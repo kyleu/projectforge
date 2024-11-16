@@ -49,13 +49,15 @@ type Column struct {
 	Values         []string       `json:"values,omitempty"`
 	Tags           []string       `json:"tags,omitempty"`
 	HelpString     string         `json:"helpString,omitempty"`
+	Metadata       util.ValueMap  `json:"metadata,omitempty"`
 	acronyms       []string
 }
 
 func (c *Column) Clone() *Column {
 	return &Column{
-		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault, Display: c.Display,
-		Format: c.Format, Example: c.Example, JSON: c.JSON, Validation: c.Validation, Values: c.Values, Tags: c.Tags, HelpString: c.HelpString,
+		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault,
+		Display: c.Display, Format: c.Format, Example: c.Example, JSON: c.JSON, Validation: c.Validation,
+		Values: c.Values, Tags: c.Tags, HelpString: c.HelpString, Metadata: c.Metadata, acronyms: c.acronyms,
 	}
 }
 

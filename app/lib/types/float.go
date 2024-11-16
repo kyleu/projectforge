@@ -1,5 +1,11 @@
 package types
 
+import (
+	"strconv"
+
+	"projectforge.dev/projectforge/app/util"
+)
+
 const KeyFloat = "float"
 
 type Float struct {
@@ -25,7 +31,23 @@ func (x *Float) String() string {
 }
 
 func (x *Float) From(v any) any {
-	return invalidInput(x.Key(), v)
+	switch t := v.(type) {
+	case string:
+		ret, _ := strconv.ParseFloat(t, util.Choose(x.Bits == 0, 64, x.Bits))
+		return ret
+	case float32:
+		return float64(t)
+	case float64:
+		return t
+	case int:
+		return float64(t)
+	case int32:
+		return float64(t)
+	case int64:
+		return float64(t)
+	default:
+		return invalidInput(x.Key(), t)
+	}
 }
 
 func (x *Float) Default(string) any {

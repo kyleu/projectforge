@@ -3,6 +3,8 @@ package types
 import (
 	"fmt"
 	"strconv"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const KeyInt = "int"
@@ -36,8 +38,12 @@ func (x *Int) String() string {
 func (x *Int) From(v any) any {
 	switch t := v.(type) {
 	case string:
-		ret, _ := strconv.ParseInt(t, 10, 32)
+		ret, _ := strconv.ParseInt(t, 10, util.Choose(x.Bits == 0, 64, x.Bits))
 		return int(ret)
+	case float32:
+		return int(t)
+	case float64:
+		return int(t)
 	case int:
 		return t
 	case int32:

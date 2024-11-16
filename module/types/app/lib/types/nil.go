@@ -23,12 +23,10 @@ func (x *Nil) String() string {
 }
 
 func (x *Nil) From(v any) any {
-	switch v {
-	case nil:
+	if v == nil {
 		return nil
-	default:
-		return invalidInput(x.Key(), v)
 	}
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Nil) Default(string) any {

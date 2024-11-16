@@ -9,8 +9,8 @@
   {%- elseif len(m) == 0 -%}
   <em>empty result</em>
   {%- else -%}
-  <div class="overflow full-width">
-    <table class="expanded min-200">
+  <div class="overflow full-width bl">
+    <table class="expanded">
       <tbody>
         {%- for _, k := range m.Keys() -%}
           <tr>

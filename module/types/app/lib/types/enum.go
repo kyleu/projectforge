@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const KeyEnum = "enum"
@@ -29,12 +31,10 @@ func (x *Enum) String() string {
 }
 
 func (x *Enum) From(v any) any {
-	switch t := v.(type) {
-	case string:
-		return t
-	default:
-		return invalidInput(x.Key(), t)
+	if x, err := util.ParseString(v, "", true); err == nil {
+		return x
 	}
+	return invalidInput(x.Key(), v)
 }
 
 func (x *Enum) Default(_ string) any {

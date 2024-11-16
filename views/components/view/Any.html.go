@@ -69,20 +69,12 @@ func StreamAny(qw422016 *qt422016.Writer, x any, ps *cutil.PageState) {
 			StreamInt(qw422016, t)
 //line views/components/view/Any.html:31
 		case util.ValueMap:
-//line views/components/view/Any.html:31
-			qw422016.N().S(`<div class="bl">`)
 //line views/components/view/Any.html:32
 			StreamMap(qw422016, false, t, ps)
-//line views/components/view/Any.html:32
-			qw422016.N().S(`</div>`)
 //line views/components/view/Any.html:33
 		case map[string]any:
-//line views/components/view/Any.html:33
-			qw422016.N().S(`<div class="bl">`)
 //line views/components/view/Any.html:34
 			StreamMap(qw422016, false, t, ps)
-//line views/components/view/Any.html:34
-			qw422016.N().S(`</div>`)
 //line views/components/view/Any.html:35
 		case []util.ValueMap:
 //line views/components/view/Any.html:36

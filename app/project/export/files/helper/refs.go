@@ -21,7 +21,8 @@ func LoadRef(col *model.Column, models model.Models) (*types.Reference, *model.M
 			mdl = models.Get(ss)
 		}
 		if mdl != nil {
-			return &types.Reference{Pkg: append(mdl.Group, mdl.Package), K: ret.K}, mdl, nil
+			pkg := append(mdl.Group[:], mdl.Package)
+			return &types.Reference{Pkg: pkg, K: ret.K}, mdl, nil
 		}
 	}
 	return ret, nil, nil
