@@ -12,8 +12,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func tsContent(enums enum.Enums, models model.Models) golang.Blocks {
+func tsContent(imps []string, enums enum.Enums, models model.Models) golang.Blocks {
 	ret := make(golang.Blocks, 0, len(enums)+len(models))
+	if len(imps) > 0 {
+		b := golang.NewBlock("imports", "ts")
+		for _, l := range imps {
+			b.W(l)
+		}
+		ret = append(ret, b)
+	}
 	for _, e := range enums {
 		ret = append(ret, tsEnum(e))
 	}

@@ -1,10 +1,12 @@
 package typescript
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
@@ -26,7 +28,11 @@ func All(models model.Models, enums enum.Enums, linebreak string) (file.Files, e
 
 	for _, group := range groups {
 		m, e := groupedModels[group], groupedEnums[group]
-		x, err := Group(group, m, e, linebreak)
+		imps, err := tsImports(enums, models, e, m)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error processing imports for group [%s]", group)
+		}
+		x, err := Group(group, m, e, imps, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing group [%s]", group)
 		}
@@ -35,7 +41,22 @@ func All(models model.Models, enums enum.Enums, linebreak string) (file.Files, e
 	return ret, nil
 }
 
-func Group(group string, models model.Models, enums enum.Enums, linebreak string) (*file.File, error) {
+func tsImports(allEnums enum.Enums, allModels model.Models, es enum.Enums, ms model.Models) ([]string, error) {
+	var ret []string
+	for _, m := range ms {
+		for _, col := range m.Columns {
+			if r, rm, _ := helper.LoadRef(col, allModels); rm != nil {
+				if rm.PackageWithGroup("") != m.PackageWithGroup("") {
+					msg := `import type {%s} from "../%s/%s";`
+					ret = append(ret, fmt.Sprintf(msg, r.K, rm.Camel(), rm.Camel()))
+				}
+			}
+		}
+	}
+	return ret, nil
+}
+
+func Group(group string, models model.Models, enums enum.Enums, imps []string, linebreak string) (*file.File, error) {
 	dir := []string{"client", "src"}
 	if group != "" {
 		dir = append(dir, group)
@@ -50,6 +71,6 @@ func Group(group string, models model.Models, enums enum.Enums, linebreak string
 		filename = "enums"
 	}
 	g := golang.NewGoTemplate(dir, filename+".ts")
-	g.AddBlocks(tsContent(enums, models)...)
+	g.AddBlocks(tsContent(imps, enums, models)...)
 	return g.Render(linebreak)
 }

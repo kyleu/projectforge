@@ -22,7 +22,7 @@ export abstract class Notation {
     }
     const n = new Numeric(v);
     if (isNaN(n.mantissa)) {
-      return this.nan
+      return this.nan;
     }
     if (Settings.isInfinite(n.abs())) {
       return n.sign() < 0 ? this.negativeInfinite : this.infinite;

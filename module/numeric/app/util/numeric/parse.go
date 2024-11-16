@@ -44,6 +44,21 @@ func FromFloat(value float64) Numeric {
 }
 
 func FromString(value string) (Numeric, error) {
+	if strings.Contains(value, " ") {
+		split := util.StringSplitAndTrim(value, " ")
+		if len(split) == 2 {
+			amt, err := strconv.ParseFloat(split[0], 64)
+			if err != nil {
+				return Numeric{}, errors.Errorf("invalid initial amount [%s]: %s", split[0], value)
+			}
+			pow10, err := Pow10FromEnglish(split[1])
+			if err != nil {
+				return Numeric{}, errors.Errorf("invalid English number [%s]: %s", split[1], value)
+			}
+			ret := normalize(amt, int64(pow10))
+			return ret, nil
+		}
+	}
 	if strings.Contains(value, "e") {
 		parts := strings.Split(value, "e")
 		if len(parts) != 2 {
