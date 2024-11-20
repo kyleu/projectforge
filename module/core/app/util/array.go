@@ -174,6 +174,23 @@ func ArrayLastN[V any](items []V, n int) []V {
 	return items[len(items)-n:]
 }
 
+func ArrayReplaceOrAdd[T any](a []T, fn func(el T) bool, x T) []T {
+	ret := make([]T, 0, len(a)+1)
+	var hit bool
+	for _, el := range a {
+		if !hit && fn(el) {
+			hit = true
+			ret = append(ret, x)
+		} else {
+			ret = append(ret, el)
+		}
+	}
+	if !hit {
+		ret = append(ret, x)
+	}
+	return ret
+}
+
 func MapError[T any, U any](xa []T, f func(el T, idx int) (U, error)) ([]U, error) {
 	ret := make([]U, 0, len(xa))
 	for i, x := range xa {

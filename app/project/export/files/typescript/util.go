@@ -57,6 +57,8 @@ func tsModel(m *model.Model, enums enum.Enums) *golang.Block {
 
 func tsType(t *types.Wrapped, enums enum.Enums) string {
 	switch t.Key() {
+	case types.KeyBool:
+		return "boolean"
 	case types.KeyUUID:
 		return "string"
 	case types.KeyInt, types.KeyFloat:

@@ -2,8 +2,8 @@ package typescript
 
 import (
 	"fmt"
-
 	"github.com/pkg/errors"
+	"slices"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
@@ -45,17 +45,23 @@ func All(models model.Models, enums enum.Enums, linebreak string) (file.Files, e
 
 func tsImports(allEnums enum.Enums, allModels model.Models, es enum.Enums, ms model.Models) ([]string, error) {
 	var ret []string
+	add := func(s string, args ...any) {
+		s = fmt.Sprintf(s, args...)
+		if !slices.Contains(ret, s) {
+			ret = append(ret, s)
+		}
+	}
 	for _, m := range ms {
 		for _, col := range m.Columns {
 			r, rm, _ := helper.LoadRef(col, allModels)
 			if rm == nil {
 				if col.Metadata != nil {
 					if tsImport := col.Metadata.GetStringOpt("tsImport"); tsImport != "" {
-						ret = append(ret, fmt.Sprintf(`import type {%s} from "%s";`, r.K, tsImport))
+						add(`import type {%s} from "%s";`, r.K, tsImport)
 					}
 				}
 			} else if rm.PackageWithGroup("") != m.PackageWithGroup("") {
-				ret = append(ret, fmt.Sprintf(`import type {%s} from "../%s/%s";`, r.K, rm.Camel(), rm.Camel()))
+				add(`import type {%s} from "../%s/%s";`, r.K, rm.Camel(), rm.Camel())
 			}
 		}
 	}

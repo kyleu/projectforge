@@ -354,7 +354,7 @@ func StreamExecScript(qw422016 *qt422016.Writer, id string, connectURL string, d
 //line views/vexec/Detail.html:122
 	qw422016.N().S(`, open, recv, err, "`)
 //line views/vexec/Detail.html:122
-	qw422016.E().S(connectURL)
+	qw422016.N().S(connectURL)
 //line views/vexec/Detail.html:122
 	qw422016.N().S(`");
     })

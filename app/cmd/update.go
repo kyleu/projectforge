@@ -19,7 +19,7 @@ func updateF(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	for _, mod := range mSvc.Modules() {
+	for _, mod := range mSvc.Modules().Sort() {
 		url := mod.URL
 		var err error
 		if url == "" {
