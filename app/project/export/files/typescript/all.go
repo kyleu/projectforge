@@ -2,8 +2,9 @@ package typescript
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"slices"
+
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
