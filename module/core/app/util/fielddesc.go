@@ -65,7 +65,9 @@ func FieldDescsCollect(r *http.Request, args FieldDescs) *FieldDescResults {
 	qa := r.URL.Query()
 	m := ValueMap{}
 	lo.ForEach(args, func(arg *FieldDesc, _ int) {
-		m[arg.Key] = qa.Get(arg.Key)
+		if qa.Has(arg.Key) {
+			m[arg.Key] = qa.Get(arg.Key)
+		}
 	})
 	return FieldDescsCollectMap(m, args)
 }
