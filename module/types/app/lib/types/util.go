@@ -16,4 +16,6 @@ func Bits(t Type) int {
 		return i.Bits
 	}
 	return 0
-}
+}{{{ if .HasModule "numeric" }}}
+
+const KeyNumeric = "numeric"{{{ end }}}

@@ -10,9 +10,13 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type numJSON struct {
-	M float64 `json:"m,omitempty"`
+type NumericJSON struct {
+	M float64 `json:"m"`
 	E int64   `json:"e,omitempty"`
+}
+
+func (n *NumericJSON) ToNumeric() Numeric {
+	return From(n.M, n.E)
 }
 
 func (n Numeric) MarshalJSON() ([]byte, error) {
@@ -30,11 +34,11 @@ func (n *Numeric) UnmarshalJSON(data []byte) error {
 	}
 	switch data[0] {
 	case '{':
-		s, err := util.FromJSONObj[numJSON](data)
+		s, err := util.FromJSONObj[NumericJSON](data)
 		if err != nil {
 			return errors.Wrapf(err, "invalid object value [%s]", string(data))
 		}
-		*n = From(s.M, s.E)
+		*n = s.ToNumeric()
 	case '"', '\'':
 		s, err := util.FromJSONString(data)
 		if err != nil {

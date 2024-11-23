@@ -30,10 +30,18 @@
       {%= Int(t) %}
     {% case util.ValueMap %}
       {%= Map(false, t, ps) %}
+    {% case util.ToMap %}
+      {%= Map(false, t.ToMap(), ps) %}
     {% case map[string]any %}
       {%= Map(false, t, ps) %}
+    {% case util.ToOrderedMap[any] %}
+      {%= OrderedMap(false, t.ToOrderedMap(), ps) %}
     {% case []util.ValueMap %}
       {%= MapArray(false, ps, t...) %}
+    {% case util.ToMaps %}
+      {%= MapArray(false, ps, t.ToMaps()...) %}
+    {% case util.ToOrderedMaps[any] %}
+      {%= OrderedMapArray(false, ps, t.ToOrderedMaps()...) %}
     {% case util.Pkg %}
       {%= Package(t) %}
     {% case string %}

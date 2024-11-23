@@ -88,9 +88,7 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		}
 		t = tgt
 	case KeyNil:
-		t, err = util.FromJSONObj[*Nil](wu.T){{{ if .HasModule "numeric" }}}
-	case KeyNumeric:
-		t, err = util.FromJSONObj[*Numeric](wu.T){{{ end }}}
+		t, err = util.FromJSONObj[*Nil](wu.T)
 	case KeyOption:
 		var tgt *Option
 		tgt, err = util.FromJSONObj[*Option](wu.T)

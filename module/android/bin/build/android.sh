@@ -11,7 +11,7 @@ TGT=$1
 
 echo "building gomobile for Android..."
 mkdir -p build/dist/mobile_android_arm64
-GOARCH=arm64 time gomobile bind -o build/dist/mobile_android_arm64/{{{ .Key }}}.aar -target=android {{{ .Package }}}/app/cmd
+GOARCH=arm64 time gomobile bind -o build/dist/mobile_android_arm64/{{{ .Key }}}.aar -target=android -androidapi 21 {{{ .Package }}}/app/cmd
 echo "gomobile for Android completed successfully, building distribution..."
 cd "build/dist/mobile_android_arm64"
 zip -r "../{{{ .Key }}}_${TGT}_android_aar.zip" .

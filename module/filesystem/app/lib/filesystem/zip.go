@@ -72,7 +72,7 @@ func (f *FileSystem) UnzipToDir(src string, dest string) (*util.OrderedMap[int64
 		if err != nil {
 			return nil, err
 		}
-		ret.Append(f.Name, fsz)
+		ret.Set(f.Name, fsz)
 	}
 	return ret, nil
 }

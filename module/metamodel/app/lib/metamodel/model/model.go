@@ -7,7 +7,8 @@ import (
 
 	"github.com/samber/lo"
 
-	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/lib/filter"{{{ if .HasModule "types" }}}
+	"{{{ .Package }}}/app/lib/types"{{{ end}}}
 	"{{{ .Package }}}/app/util"
 )
 
@@ -125,7 +126,35 @@ func (m *Model) IndexedColumns(includePK bool) Columns {
 		}
 	})
 	return ret
+}{{{ if .HasModule "types" }}}
+
+func (m *Model) HasSearches() bool {
+	return len(m.AllSearches("")) > 0
 }
+
+func (m *Model) AllSearches(db string) []string {
+	if !m.HasTag("search") {
+		return m.Search
+	}
+	ret := util.NewStringSlice(slices.Clone(m.Search))
+	lo.ForEach(m.Columns, func(c *Column, _ int) {
+		if c.Search {
+			x := fmt.Sprintf("%q", c.SQL())
+			if !types.IsString(c.Type) {
+				switch db {
+				case dbSQLServer:
+					x = fmt.Sprintf("cast(%q as nvarchar(2048))", c.SQL())
+				case dbSQLite:
+					x = c.SQL()
+				default:
+					x = fmt.Sprintf("%q::text", c.SQL())
+				}
+			}
+			ret.Push(fmt.Sprintf("lower(%s)", x))
+		}
+	})
+	return ret.Slice
+}{{{ end }}}
 
 func (m *Model) SetAcronyms(acronyms ...string) {
 	m.acronyms = acronyms

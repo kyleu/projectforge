@@ -82,7 +82,7 @@ func (r *Result) EndTime() time.Time {
 }
 
 func (r *Result) DataMap() util.ValueMap {
-	if r.Data == nil {
+	if r == nil || r.Data == nil {
 		return nil
 	}
 	ret, err := util.ParseMap(r.Data, "", true)

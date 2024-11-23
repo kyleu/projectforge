@@ -16,26 +16,28 @@ type OrderedPair[V any] struct {
 	V V      `json:"v"`
 }
 
+func NewOrderedPair[V any](k string, v V) *OrderedPair[V] {
+	return &OrderedPair[V]{K: k, V: v}
+}
+
+type OrderedPairs[V any] []*OrderedPair[V]
+
 type OrderedMap[V any] struct {
 	Lexical bool
 	Order   []string
 	Map     map[string]V
 }
 
-func NewOrderedMap[V any](lexical bool, capacity int) *OrderedMap[V] {
-	return &OrderedMap[V]{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]V, capacity)}
+func NewOrderedMap[V any](lexical bool, capacity int, pairs ...*OrderedPair[V]) *OrderedMap[V] {
+	ret := &OrderedMap[V]{Lexical: lexical, Order: make([]string, 0, capacity), Map: make(map[string]V, capacity)}
+	for _, p := range pairs {
+		ret.Set(p.K, p.V)
+	}
+	return ret
 }
 
 func NewOMap[V any]() *OrderedMap[V] {
 	return NewOrderedMap[V](false, 0)
-}
-
-func (o *OrderedMap[V]) Append(k string, v V) {
-	o.Order = append(o.Order, k)
-	o.Map[k] = v
-	if o.Lexical {
-		slices.Sort(o.Order)
-	}
 }
 
 func (o *OrderedMap[V]) Set(k string, v V) {
@@ -68,7 +70,7 @@ func (o *OrderedMap[V]) GetSimple(k string) V {
 
 func (o *OrderedMap[V]) Pairs() []*OrderedPair[V] {
 	return lo.Map(o.Order, func(k string, _ int) *OrderedPair[V] {
-		return &OrderedPair[V]{K: k, V: o.GetSimple(k)}
+		return NewOrderedPair(k, o.GetSimple(k))
 	})
 }
 
@@ -154,4 +156,14 @@ func (o OrderedMap[V]) MarshalJSON() ([]byte, error) {
 	}
 	buf.WriteByte('}')
 	return buf.Bytes(), nil
+}
+
+type OrderedMaps[V any] []*OrderedMap[V]
+
+type ToOrderedMap[T any] interface {
+	ToOrderedMap() *OrderedMap[T]
+}
+
+type ToOrderedMaps[T any] interface {
+	ToOrderedMaps() OrderedMaps[T]
 }

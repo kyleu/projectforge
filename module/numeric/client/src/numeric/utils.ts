@@ -38,22 +38,22 @@ export function formatWithCommas(v: number | string): string {
 
 export function fixMantissaOverflow(v: Numeric, places: number, threshold: number, powerOffset: number): Numeric {
   const pow10 = 10 ** places;
-  const isOverflowing = Math.round(v.mantissa * pow10) >= threshold * pow10;
+  const isOverflowing = Math.round(v.m * pow10) >= threshold * pow10;
   if (isOverflowing) {
-    return Numeric.from(1, v.exponent + powerOffset);
+    return Numeric.from(1, v.e + powerOffset);
   }
   return v;
 }
 
 export function toEngineering(v: Numeric): Numeric {
-  const exponentOffset = v.exponent % 3;
-  return Numeric.raw(v.mantissa * 10 ** exponentOffset, v.exponent - exponentOffset);
+  const exponentOffset = v.e % 3;
+  return Numeric.raw(v.m * 10 ** exponentOffset, v.e - exponentOffset);
 }
 
 export function toLongScale(v: Numeric): Numeric {
-  const mod = v.exponent < 6 ? 3 : 6;
-  const exponentOffset = v.exponent % mod;
-  return Numeric.raw(v.mantissa * 10 ** exponentOffset, v.exponent - exponentOffset);
+  const mod = v.e < 6 ? 3 : 6;
+  const exponentOffset = v.e % mod;
+  return Numeric.raw(v.m * 10 ** exponentOffset, v.e - exponentOffset);
 }
 
 export function toFixedEngineering(v: Numeric, places: number): Numeric {
@@ -61,7 +61,7 @@ export function toFixedEngineering(v: Numeric, places: number): Numeric {
 }
 
 export function toFixedLongScale(v: Numeric, places: number): Numeric {
-  const overflowPlaces = v.exponent < 6 ? 3 : 6;
+  const overflowPlaces = v.e < 6 ? 3 : 6;
   return fixMantissaOverflow(toLongScale(v), places, 10 ** overflowPlaces, overflowPlaces);
 }
 

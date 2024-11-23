@@ -39,20 +39,6 @@ func TestNewOMap(t *testing.T) {
 	}
 }
 
-func TestOrderedMap_Append(t *testing.T) {
-	t.Parallel()
-	om := util.NewOMap[int]()
-	om.Append("a", 1)
-	om.Append("b", 2)
-
-	if len(om.Order) != 2 || om.Order[0] != "a" || om.Order[1] != "b" {
-		t.Errorf("unexpected Order: %v", om.Order)
-	}
-	if om.Map["a"] != 1 || om.Map["b"] != 2 {
-		t.Errorf("unexpected Map: %v", om.Map)
-	}
-}
-
 func TestOrderedMap_Set(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
@@ -84,8 +70,8 @@ func TestOrderedMap_HasKey(t *testing.T) {
 func TestOrderedMap_IndexOf(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
-	om.Append("a", 1)
-	om.Append("b", 2)
+	om.Set("a", 1)
+	om.Set("b", 2)
 
 	if om.IndexOf("a") != 0 {
 		t.Errorf("expected IndexOf('a') to be 0, got %d", om.IndexOf("a"))
@@ -124,8 +110,8 @@ func TestOrderedMap_GetSimple(t *testing.T) {
 func TestOrderedMap_Pairs(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
-	om.Append("a", 1)
-	om.Append("b", 2)
+	om.Set("a", 1)
+	om.Set("b", 2)
 
 	pairs := om.Pairs()
 	expected := []*util.OrderedPair[int]{
@@ -141,8 +127,8 @@ func TestOrderedMap_Pairs(t *testing.T) {
 func TestOrderedMap_Remove(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
-	om.Append("a", 1)
-	om.Append("b", 2)
+	om.Set("a", 1)
+	om.Set("b", 2)
 	om.Remove("a")
 
 	if len(om.Order) != 1 || om.Order[0] != "b" {
@@ -156,8 +142,8 @@ func TestOrderedMap_Remove(t *testing.T) {
 func TestOrderedMap_MarshalJSON(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
-	om.Append("b", 2)
-	om.Append("a", 1)
+	om.Set("b", 2)
+	om.Set("a", 1)
 
 	b, err := json.Marshal(om)
 	if err != nil {
@@ -189,8 +175,8 @@ func TestOrderedMap_UnmarshalJSON(t *testing.T) {
 func TestOrderedMap_MarshalXML(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
-	om.Append("b", 2)
-	om.Append("a", 1)
+	om.Set("b", 2)
+	om.Set("a", 1)
 
 	b, err := xml.Marshal(om)
 	if err != nil {

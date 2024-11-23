@@ -27,33 +27,33 @@ func DebugGetInfo(version string, started time.Time) *DebugInfo {
 
 	serverTags := NewOrderedMap[string](false, 10)
 	hostname, _ := os.Hostname()
-	serverTags.Append("Machine Name", hostname)
-	serverTags.Append("CPU Architecture", runtime.GOARCH)
-	serverTags.Append("Operating System", runtime.GOOS)
-	serverTags.Append("CPU Count", fmt.Sprint(runtime.NumCPU()))
+	serverTags.Set("Machine Name", hostname)
+	serverTags.Set("CPU Architecture", runtime.GOARCH)
+	serverTags.Set("Operating System", runtime.GOOS)
+	serverTags.Set("CPU Count", fmt.Sprint(runtime.NumCPU()))
 
 	appTags := NewOrderedMap[string](false, 10)
-	appTags.Append("Name", AppName)
+	appTags.Set("Name", AppName)
 	exec, _ := os.Executable()
 	wind, exec := StringSplitLast(exec, '/', true)
 	if exec == "" {
 		_, exec = StringSplitLast(wind, '\\', true)
 	}
-	appTags.Append("Executable", exec)
-	appTags.Append("Version", version)
-	appTags.Append("Go Version", runtime.Version())
-	appTags.Append("Compiler", runtime.Compiler)
+	appTags.Set("Executable", exec)
+	appTags.Set("Version", version)
+	appTags.Set("Go Version", runtime.Version())
+	appTags.Set("Compiler", runtime.Compiler)
 
 	runtimeTags := NewOrderedMap[string](false, 10)
 	args := os.Args
 	if len(args) > 0 {
 		args = args[1:]
 	}
-	runtimeTags.Append("Running Since", TimeRelative(&started))
-	runtimeTags.Append("Arguments", strings.Join(args, " "))
-	runtimeTags.Append("Max Processes", fmt.Sprint(runtime.GOMAXPROCS(-1)))
-	runtimeTags.Append("Go Routines", fmt.Sprint(runtime.NumGoroutine()))
-	runtimeTags.Append("Cgo Calls", fmt.Sprint(runtime.NumCgoCall()))
+	runtimeTags.Set("Running Since", TimeRelative(&started))
+	runtimeTags.Set("Arguments", strings.Join(args, " "))
+	runtimeTags.Set("Max Processes", fmt.Sprint(runtime.GOMAXPROCS(-1)))
+	runtimeTags.Set("Go Routines", fmt.Sprint(runtime.NumGoroutine()))
+	runtimeTags.Set("Cgo Calls", fmt.Sprint(runtime.NumCgoCall()))
 
 	return &DebugInfo{ServerTags: serverTags, AppTags: appTags, RuntimeTags: runtimeTags, Mods: bi.Deps}
 }

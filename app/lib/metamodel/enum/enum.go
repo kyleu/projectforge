@@ -70,6 +70,10 @@ func (e *Enum) Camel() string {
 	return util.StringToLowerCamel(e.Name, e.acronyms...)
 }
 
+func (e *Enum) CamelLower() string {
+	return strings.ToLower(e.Camel())
+}
+
 func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 	ret := util.NewOrderedMap[string](false, 0)
 	for _, v := range e.Values {
@@ -100,7 +104,7 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 					typ = "unknown config type [" + x + "]"
 				}
 			}
-			ret.Append(k, typ)
+			ret.Set(k, typ)
 		}
 	}
 	return ret

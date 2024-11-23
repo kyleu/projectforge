@@ -189,3 +189,11 @@ func ValueMapGet[T any](m ValueMap, pth string) (T, error) {
 	}
 	return ret, nil
 }
+
+type ToMap interface {
+	ToMap() ValueMap
+}
+
+type ToMaps interface {
+	ToMaps() []ValueMap
+}

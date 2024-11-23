@@ -99,9 +99,9 @@ export class EnglishNotation extends EngineeringNotation {
     }
 
     // Calculate the actual mantissa and exponent.
-    const ceiled = engineering.mantissa + precision / 2 >= 1000;
-    const mantissa = ceiled ? 1 : engineering.mantissa + precision / 2;
-    const exponent = engineering.exponent + (ceiled ? 1 : 0);
+    const ceiled = engineering.m + precision / 2 >= 1000;
+    const mantissa = ceiled ? 1 : engineering.m + precision / 2;
+    const exponent = engineering.e + (ceiled ? 1 : 0);
 
     const unit = this.formatUnits(mantissa, places);
     const abbreviation = this.formatPrefixes(exponent);

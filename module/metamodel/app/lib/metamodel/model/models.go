@@ -73,13 +73,13 @@ func (m Models) withDeps(mdl *Model) Models {
 		deps = append(deps, mdl)
 	}
 	return deps
-}
+}{{{ if .HasModule "types" }}}
 
 func (m Models) HasSearch() bool {
 	return lo.ContainsBy(m, func(x *Model) bool {
 		return x.HasSearches()
 	})
-}
+}{{{ end }}}
 
 func (m Models) HasSeedData() bool {
 	return lo.ContainsBy(m, func(x *Model) bool {

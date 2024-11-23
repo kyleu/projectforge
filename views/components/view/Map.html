@@ -66,3 +66,59 @@
   </div>
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
+
+{% func OrderedMap(preserveWhitespace bool, m *util.OrderedMap[any], ps *cutil.PageState) %}{% stripspace %}
+  {%- if m == nil -%}
+  <em>no result</em>
+  {%- elseif len(m.Map) == 0 -%}
+  <em>empty result</em>
+  {%- else -%}
+  <div class="overflow full-width bl">
+    <table class="expanded">
+      <tbody>
+        {%- for _, k := range m.Order -%}
+          <tr>
+            <th class="shrink">{%s k %}</th>
+            {%- if preserveWhitespace -%}
+            <td class="prews">{%= Any(m.GetSimple(k), ps) %}</td>
+            {%- else -%}
+            <td>{%= Any(m.GetSimple(k), ps) %}</td>
+            {%- endif -%}
+          </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func OrderedMapArray(preserveWhitespace bool, ps *cutil.PageState, maps ...*util.OrderedMap[any]) %}{% stripspace %}
+  {%- if len(maps) == 0 -%}
+  <em>no results</em>
+  {%- else -%}
+  <div class="overflow full-width">
+    <table>
+      <thead>
+      <tr>
+        {%- for _, k := range maps[0].Order -%}
+        <th>{%s k %}</th>
+        {%- endfor -%}
+      </tr>
+      </thead>
+      <tbody>
+        {%- for _, m := range maps -%}
+          <tr>
+            {%- for _, k := range m.Order -%}
+            {%- if preserveWhitespace -%}
+            <td class="prews">{%= Any(m.GetSimple(k), ps) %}</td>
+            {%- else -%}
+            <td>{%= Any(m.GetSimple(k), ps) %}</td>
+            {%- endif -%}
+            {%- endfor -%}
+          </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}

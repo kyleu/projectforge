@@ -60,7 +60,7 @@ func Models(m *model.Model, args *model.Args, goVersion string, linebreak string
 			g.AddBlocks(modelArrayGetBySingle(m, col, args.Enums), modelArrayGetByMulti(m, col, args.Enums))
 		}
 	})
-	g.AddBlocks(modelArrayToCSV(m), modelArrayRandom(m), modelArrayClone(m))
+	g.AddBlocks(modelArrayToMaps(m), modelArrayToOrderedMaps(m), modelArrayToCSV(m), modelArrayRandom(m), modelArrayClone(m))
 	return g.Render(linebreak)
 }
 
@@ -91,6 +91,26 @@ func modelArrayGet(g *golang.File, m *model.Model, cols model.Columns, enums enu
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil
+}
+
+func modelArrayToMaps(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"ArrayToMaps", "func")
+	ret.WF("func (%s %s) ToMaps() []util.ValueMap {", m.FirstLetter(), m.ProperPlural())
+	ret.WF("\treturn lo.Map(%s, func(x *%s, _ int) util.ValueMap {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn x.ToMap()")
+	ret.W("\t})")
+	ret.W("}")
+	return ret
+}
+
+func modelArrayToOrderedMaps(m *model.Model) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"ArrayToOrderedMaps", "func")
+	ret.WF("func (%s %s) ToOrderedMaps() util.OrderedMaps[any] {", m.FirstLetter(), m.ProperPlural())
+	ret.WF("\treturn lo.Map(%s, func(x *%s, _ int) *util.OrderedMap[any] {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn x.ToOrderedMap()")
+	ret.W("\t})")
+	ret.W("}")
+	return ret
 }
 
 func modelArrayRandom(m *model.Model) *golang.Block {

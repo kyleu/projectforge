@@ -21,16 +21,16 @@ export abstract class Notation {
       return this.infinite;
     }
     const n = new Numeric(v);
-    if (isNaN(n.mantissa)) {
+    if (isNaN(n.m)) {
       return this.nan;
     }
     if (Settings.isInfinite(n.abs())) {
       return n.sign() < 0 ? this.negativeInfinite : this.infinite;
     }
-    if (n.exponent < -300) {
+    if (n.e < -300) {
       return n.sign() < 0 ? this.formatVerySmallNegativeNumeric(n.abs(), placesUnder1000) : this.formatVerySmallNumeric(n, placesUnder1000);
     }
-    if (n.exponent < 3) {
+    if (n.e < 3) {
       const number = n.toNumber();
       return number < 0 ? this.formatNegativeUnder1000(Math.abs(number), placesUnder1000) : this.formatUnder1000(number, placesUnder1000);
     }

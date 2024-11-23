@@ -17,8 +17,8 @@ export function powerOf10(power: number): number {
 }
 
 export type MantissaExponent = {
-  mantissa: number;
-  exponent: number;
+  m: number;
+  e: number;
 }
 
 export type NumericSource = MantissaExponent | number | string;
@@ -46,8 +46,8 @@ export class Numeric {
       return Numeric.numericNaN;
     }
     const n = new Numeric();
-    n.mantissa = mantissa;
-    n.exponent = exponent;
+    n.m = mantissa;
+    n.e = exponent;
     return n;
   }
 
@@ -66,38 +66,38 @@ export class Numeric {
     return Numeric.from(Math.pow(10, v % 1), Math.trunc(v));
   }
 
-  public mantissa = NaN;
-  public exponent = NaN;
+  public m = NaN;
+  public e = NaN;
 
   constructor(x?: NumericSource) {
     if (x === undefined || x === null) {
-      this.mantissa = 0;
-      this.exponent = 0;
+      this.m = 0;
+      this.e = 0;
     } else if (typeof x === "number") {
       this.setFromNumber(x);
     } else if (typeof x === "string") {
       this.setFromString(x);
     } else if (x instanceof Numeric) {
       this.copyFrom(x);
-    } else if (x.mantissa !== undefined && x.exponent !== undefined) {
-      this.copyFrom(x);
+    } else if (x.m === undefined) {
+      throw new Error(`unsupported Numeric source type [${JSON.stringify(x)}]`);
     } else {
-      throw Error("Unsupported Numeric source type.");
+      this.copyFrom(x);
     }
   }
 
   public isNaN(): boolean {
     // eslint-disable-next-line no-self-compare
-    return this.mantissa !== this.mantissa;
+    return this.m !== this.m;
   }
 
   private copyFrom(v: MantissaExponent): void {
-    this.mantissa = v.mantissa;
-    this.exponent = v.exponent;
+    this.m = v.m;
+    this.e = v.e ?? 0;
   }
 
   public clone(): Numeric {
-    return Numeric.raw(this.mantissa, this.exponent);
+    return Numeric.raw(this.m, this.e);
   }
 
   public log(base: number): number {
@@ -105,29 +105,29 @@ export class Numeric {
   }
 
   public log10(): number {
-    return this.exponent + Math.log10(this.mantissa);
+    return this.e + Math.log10(this.m);
   }
 
   public absLog10(): number {
-    return this.exponent + Math.log10(Math.abs(this.mantissa));
+    return this.e + Math.log10(Math.abs(this.m));
   }
 
   public pow(v: number | Numeric): Numeric {
-    if (this.mantissa === 0) {
+    if (this.m === 0) {
       return this;
     }
     const numberValue = v instanceof Numeric ? v.toNumber() : v;
-    const temp = this.exponent * numberValue;
+    const temp = this.e * numberValue;
     let newMantissa;
     if (Number.isSafeInteger(temp)) {
-      newMantissa = Math.pow(this.mantissa, numberValue);
+      newMantissa = Math.pow(this.m, numberValue);
       if (isFinite(newMantissa) && newMantissa !== 0) {
         return Numeric.from(newMantissa, temp);
       }
     }
     const newExponent = Math.trunc(temp);
     const residue = temp - newExponent;
-    newMantissa = Math.pow(10, numberValue * Math.log10(this.mantissa) + residue);
+    newMantissa = Math.pow(10, numberValue * Math.log10(this.m) + residue);
     if (isFinite(newMantissa) && newMantissa !== 0) {
       return Numeric.from(newMantissa, newExponent);
     }
@@ -144,20 +144,20 @@ export class Numeric {
   }
 
   public neg(): Numeric {
-    return Numeric.raw(-this.mantissa, this.exponent);
+    return Numeric.raw(-this.m, this.e);
   }
 
   public sign(): number {
-    return Math.sign(this.mantissa);
+    return Math.sign(this.m);
   }
 
   public abs(): Numeric {
-    return Numeric.raw(Math.abs(this.mantissa), this.exponent);
+    return Numeric.raw(Math.abs(this.m), this.e);
   }
 
   public eq(v: NumericSource): boolean {
     const n = new Numeric(v);
-    return this.exponent === n.exponent && this.mantissa === n.mantissa;
+    return this.e === n.e && this.m === n.m;
   }
 
   public neq(v: NumericSource): boolean {
@@ -169,19 +169,19 @@ export class Numeric {
     if (!this.isFinite()) {
       return !n.isFinite();
     }
-    if (this.mantissa === 0) {
-      return n.mantissa > 0;
+    if (this.m === 0) {
+      return n.m > 0;
     }
-    if (n.mantissa === 0) {
-      return this.mantissa <= 0;
+    if (n.m === 0) {
+      return this.m <= 0;
     }
-    if (this.exponent === n.exponent) {
-      return this.mantissa < n.mantissa;
+    if (this.e === n.e) {
+      return this.m < n.m;
     }
-    if (this.mantissa > 0) {
-      return n.mantissa > 0 && this.exponent < n.exponent;
+    if (this.m > 0) {
+      return n.m > 0 && this.e < n.e;
     }
-    return n.mantissa > 0 || this.exponent > n.exponent;
+    return n.m > 0 || this.e > n.e;
   }
   public lte(v: NumericSource): boolean {
     return !this.gt(v);
@@ -189,19 +189,19 @@ export class Numeric {
 
   public gt(v: NumericSource): boolean {
     const n = new Numeric(v);
-    if (this.mantissa === 0) {
-      return n.mantissa < 0;
+    if (this.m === 0) {
+      return n.m < 0;
     }
-    if (n.mantissa === 0) {
-      return this.mantissa > 0;
+    if (n.m === 0) {
+      return this.m > 0;
     }
-    if (this.exponent === n.exponent) {
-      return this.mantissa > n.mantissa;
+    if (this.e === n.e) {
+      return this.m > n.m;
     }
-    if (this.mantissa > 0) {
-      return n.mantissa < 0 || this.exponent > n.exponent;
+    if (this.m > 0) {
+      return n.m < 0 || this.e > n.e;
     }
-    return n.mantissa < 0 && this.exponent < n.exponent;
+    return n.m < 0 && this.e < n.e;
   }
 
   public gte(v: NumericSource): boolean {
@@ -209,46 +209,46 @@ export class Numeric {
   }
 
   public recip(): Numeric {
-    return Numeric.raw(1 / this.mantissa, -this.exponent);
+    return Numeric.raw(1 / this.m, -this.e);
   }
 
   public normalize(): Numeric {
-    if (this.mantissa >= 1 && this.mantissa < 10) {
+    if (this.m >= 1 && this.m < 10) {
       return this;
     }
-    if (!isFinite(this.mantissa)) {
+    if (!isFinite(this.m)) {
       return this;
     }
-    if (this.mantissa === 0) {
-      this.mantissa = 0;
-      this.exponent = 0;
+    if (this.m === 0) {
+      this.m = 0;
+      this.e = 0;
       return this;
     }
-    const tempExponent = Math.floor(Math.log10(Math.abs(this.mantissa)));
-    this.mantissa = tempExponent === NUMBER_EXP_MIN ? this.mantissa * 10 / 1e-323 : this.mantissa / powerOf10(tempExponent);
-    this.exponent += tempExponent;
+    const tempExponent = Math.floor(Math.log10(Math.abs(this.m)));
+    this.m = tempExponent === NUMBER_EXP_MIN ? this.m * 10 / 1e-323 : this.m / powerOf10(tempExponent);
+    this.e += tempExponent;
     return this;
   }
 
   public isFinite(): boolean {
-    return isFinite(this.mantissa);
+    return isFinite(this.m);
   }
 
   public toNumber(): number {
     if (!this.isFinite()) {
-      return this.mantissa;
+      return this.m;
     }
-    if (this.exponent > NUMBER_EXP_MAX) {
-      return this.mantissa > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+    if (this.e > NUMBER_EXP_MAX) {
+      return this.m > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
     }
-    if (this.exponent < NUMBER_EXP_MIN) {
+    if (this.e < NUMBER_EXP_MIN) {
       return 0;
     }
-    if (this.exponent === NUMBER_EXP_MIN) {
-      return this.mantissa > 0 ? 5e-324 : -5e-324;
+    if (this.e === NUMBER_EXP_MIN) {
+      return this.m > 0 ? 5e-324 : -5e-324;
     }
-    const result = this.mantissa * powerOf10(this.exponent);
-    if (!isFinite(result) || this.exponent < 0) {
+    const result = this.m * powerOf10(this.e);
+    if (!isFinite(result) || this.e < 0) {
       return result;
     }
     const resultRounded = Math.round(result);
@@ -261,12 +261,12 @@ export class Numeric {
   public mul(v: NumericSource): Numeric {
     if (typeof v === "number") {
       if (v < 1e307 && v > -1e307) {
-        return Numeric.from(this.mantissa * v, this.exponent);
+        return Numeric.from(this.m * v, this.e);
       }
-      return Numeric.from(this.mantissa * 1e-307 * v, this.exponent + 307);
+      return Numeric.from(this.m * 1e-307 * v, this.e + 307);
     }
     const n = new Numeric(v);
-    return Numeric.from(this.mantissa * n.mantissa, this.exponent + n.exponent);
+    return Numeric.from(this.m * n.m, this.e + n.e);
   }
 
   public div(v: NumericSource): Numeric {
@@ -274,24 +274,24 @@ export class Numeric {
   }
 
   public toString(): string {
-    return `n(${this.mantissa}e${this.exponent})`;
+    return `n(${this.m}e${this.e})`;
   }
 
   private setFromNumber(v: number): Numeric {
     if (!isFinite(v)) {
-      this.mantissa = v;
-      this.exponent = 0;
+      this.m = v;
+      this.e = 0;
       return this;
     }
 
     if (v === 0) {
-      this.mantissa = 0;
-      this.exponent = 0;
+      this.m = 0;
+      this.e = 0;
       return this;
     }
 
-    this.exponent = Math.floor(Math.log10(Math.abs(v)));
-    this.mantissa = this.exponent === NUMBER_EXP_MIN ? v * 10 / 1e-323 : v / powerOf10(this.exponent);
+    this.e = Math.floor(Math.log10(Math.abs(v)));
+    this.m = this.e === NUMBER_EXP_MIN ? v * 10 / 1e-323 : v / powerOf10(this.e);
     this.normalize();
     return this;
   }
@@ -300,11 +300,11 @@ export class Numeric {
     v = v.toLowerCase();
     if (v.indexOf("e") !== -1) {
       const parts = v.split("e");
-      this.mantissa = parseFloat(parts[0]);
-      if (isNaN(this.mantissa)) {
-        this.mantissa = 1;
+      this.m = parseFloat(parts[0]);
+      if (isNaN(this.m)) {
+        this.m = 1;
       }
-      this.exponent = parseFloat(parts[1]);
+      this.e = parseFloat(parts[1]);
       this.normalize();
       return;
     }
@@ -315,7 +315,7 @@ export class Numeric {
     this.setFromNumber(parseFloat(v));
     this.normalize();
     if (this.isNaN()) {
-      throw Error("[NumericError] Invalid argument: " + v);
+      throw new Error("invalid [Numeric] argument: " + v);
     }
   }
 }
