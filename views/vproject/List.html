@@ -37,7 +37,7 @@
   <a class="link-section" href="{%s prj.WebPath() %}" title="{%s prj.DescriptionSafe() %}">
     <div class="card">
       <div class="left mrs">{%= components.SVGRef(prj.IconSafe(), 40, 40, "", ps) %}</div>
-      <div class="right">{%= view.Tags(prj.Tags) %}</div>
+      <div class="right">{%= view.Tags(prj.Tags, nil) %}</div>
       <strong class="highlight">{%s prj.Title() %}</strong>
       <div><em>{%s prj.Package %}</em></div>
     </div>

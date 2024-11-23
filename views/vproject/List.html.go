@@ -121,7 +121,7 @@ func StreamListItem(qw422016 *qt422016.Writer, prj *project.Project, ps *cutil.P
 	qw422016.N().S(`</div>
       <div class="right">`)
 //line views/vproject/List.html:40
-	view.StreamTags(qw422016, prj.Tags)
+	view.StreamTags(qw422016, prj.Tags, nil)
 //line views/vproject/List.html:40
 	qw422016.N().S(`</div>
       <strong class="highlight">`)

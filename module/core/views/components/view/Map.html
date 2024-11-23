@@ -32,7 +32,7 @@
   {%- if m == nil || len(m) == 0 -%}
   <em>no keys</em>
   {%- else -%}
-  {%= Tags(m.Keys()) %}
+  {%= Tags(m.Keys(), nil) %}
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 

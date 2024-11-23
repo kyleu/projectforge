@@ -109,7 +109,7 @@ func StreamMapKeys(qw422016 *qt422016.Writer, m util.ValueMap) {
 //line views/components/view/Map.html:34
 	} else {
 //line views/components/view/Map.html:35
-		StreamTags(qw422016, m.Keys())
+		StreamTags(qw422016, m.Keys(), nil)
 //line views/components/view/Map.html:36
 	}
 //line views/components/view/Map.html:37

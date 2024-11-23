@@ -43,26 +43,26 @@ func FromFloat(value float64) Numeric {
 	return normalize(value, 0)
 }
 
-func FromString(value string) (Numeric, error) {
-	if strings.Contains(value, " ") {
-		split := util.StringSplitAndTrim(value, " ")
+func FromString(s string) (Numeric, error) {
+	if strings.Contains(s, " ") {
+		split := util.StringSplitAndTrim(s, " ")
 		if len(split) == 2 {
 			amt, err := strconv.ParseFloat(split[0], 64)
 			if err != nil {
-				return Numeric{}, errors.Errorf("invalid initial amount [%s]: %s", split[0], value)
+				return Numeric{}, errors.Errorf("invalid initial amount [%s]: %s", split[0], s)
 			}
 			pow10, err := Pow10FromEnglish(split[1])
 			if err != nil {
-				return Numeric{}, errors.Errorf("invalid English number [%s]: %s", split[1], value)
+				return Numeric{}, errors.Errorf("invalid English number [%s]: %s", split[1], s)
 			}
 			ret := normalize(amt, int64(pow10))
 			return ret, nil
 		}
 	}
-	if strings.Contains(value, "e") {
-		parts := strings.Split(value, "e")
+	if strings.Contains(s, "e") {
+		parts := strings.Split(s, "e")
 		if len(parts) != 2 {
-			return Numeric{}, errors.Errorf("invalid scientific notation: %s", value)
+			return Numeric{}, errors.Errorf("invalid scientific notation: %s", s)
 		}
 		mantissa, err := strconv.ParseFloat(parts[0], 64)
 		if err != nil {
@@ -75,19 +75,24 @@ func FromString(value string) (Numeric, error) {
 		return normalize(mantissa, exponent), nil
 	}
 
-	if value == "NaN" {
+	if s == "NaN" {
 		return NaN, nil
 	}
 
-	floatVal, err := strconv.ParseFloat(value, 64)
+	floatVal, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		return Numeric{}, errors.Errorf("invalid number: %s", value)
+		return Numeric{}, errors.Errorf("invalid number: %s", s)
 	}
 
 	result := FromFloat(floatVal)
 	if math.IsNaN(result.mantissa) {
-		return Numeric{}, errors.Errorf("invalid argument: %s", value)
+		return Numeric{}, errors.Errorf("invalid argument: %s", s)
 	}
 
 	return result, nil
+}
+
+func FromStringOK(s string) Numeric {
+	ret, _ := FromString(s)
+	return ret
 }
