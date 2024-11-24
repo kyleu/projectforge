@@ -3,6 +3,8 @@ package numeric
 import (
 	"math"
 	"strconv"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const (
@@ -88,4 +90,8 @@ var powersOf10 = func() []float64 {
 func powerOf10(power int64) float64 {
 	indexOf0 := -FloatExpMin - 1
 	return powersOf10[indexOf0+power]
+}
+
+func Random(maxExponent int) Numeric {
+	return normalize(util.RandomFloat(1), int64(util.RandomInt(maxExponent+1)))
 }

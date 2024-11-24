@@ -18,10 +18,6 @@ func From(mantissa float64, exponent int64) Numeric {
 	return normalize(mantissa, exponent)
 }
 
-func Random(maxExponent int) Numeric {
-	return normalize(util.RandomFloat(1), int64(util.RandomInt(maxExponent+1)))
-}
-
 func FromInt(value int) Numeric {
 	return FromFloat(float64(value))
 }
@@ -95,4 +91,26 @@ func FromString(s string) (Numeric, error) {
 func FromStringOK(s string) Numeric {
 	ret, _ := FromString(s)
 	return ret
+}
+
+func FromAny(x any) (Numeric, error) {
+	switch t := x.(type) {
+	case int:
+		return FromInt(t), nil
+	case int64:
+		return FromInt64(t), nil
+	case float64:
+		return FromFloat(t), nil
+	case string:
+		return FromString(t)
+	case Numeric:
+		return t, nil
+	case *Numeric:
+		if t == nil {
+			return Zero, nil
+		}
+		return *t, nil
+	default:
+		return Zero, errors.Errorf("unhandled numeric type [%T]", x)
+	}
 }

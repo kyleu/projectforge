@@ -28,24 +28,22 @@
       {%= Int(t) %}
     {% case int64 %}
       {%= Int(t) %}
-    {% case util.ValueMap %}
-      {%= Map(false, t, ps) %}
     {% case util.ToMap %}
       {%= Map(false, t.ToMap(), ps) %}
+    {% case util.ValueMap %}
+      {%= Map(false, t, ps) %}
     {% case map[string]any %}
       {%= Map(false, t, ps) %}
-    {% case util.ToOrderedMap[any] %}
-      {%= OrderedMap(false, t.ToOrderedMap(), ps) %}
-    {% case []util.ValueMap %}
-      {%= MapArray(false, ps, t...) %}
     {% case util.ToMaps %}
       {%= MapArray(false, ps, t.ToMaps()...) %}
-    {% case util.ToOrderedMaps[any] %}
-      {%= OrderedMapArray(false, ps, t.ToOrderedMaps()...) %}
+    {% case []util.ValueMap %}
+      {%= MapArray(false, ps, t...) %}
     {% case util.Pkg %}
       {%= Package(t) %}
     {% case string %}
       {%= String(t) %}
+    {% case []string %}
+      {%= StringArray(t) %}
     {% case time.Time %}
       {%= Timestamp(&t) %}
     {% case *time.Time %}
