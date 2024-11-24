@@ -124,6 +124,9 @@ func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
 }
 
 func (e *Enum) PackageWithGroup(prefix string) string {
+	if x := e.Config.GetStringOpt("pkg-" + prefix); x != "" {
+		return x
+	}
 	if len(e.Group) == 0 {
 		if prefix != "" && !strings.HasSuffix(prefix, "/") {
 			prefix += "/"

@@ -65,6 +65,7 @@ var (
 	buildIgnored       = &Build{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored}
 	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
+	buildSize          = &Build{Key: "size", Title: "Binary Size", Description: "Visualizes the file size of the binary", Run: onSize}
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
 	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension))
 	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension))
@@ -83,7 +84,7 @@ var (
 )
 
 var AllBuilds = Builds{
-	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup,
+	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
 	buildTidy, buildFormat, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
 }
 

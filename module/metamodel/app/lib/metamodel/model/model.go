@@ -82,6 +82,9 @@ func (m *Model) CanTraverseRelation() bool {
 }
 
 func (m *Model) PackageWithGroup(prefix string) string {
+	if x := m.Config.GetStringOpt("pkg-" + prefix); x != "" {
+		return x
+	}
 	if len(m.Group) == 0 {
 		return prefix + m.Package
 	}

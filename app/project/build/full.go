@@ -15,57 +15,59 @@ import (
 
 const templatesNS = "templates."
 
-func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]string, error) {
-	var logs []string
-	addLog := func(msg string, args ...any) {
-		ret := fmt.Sprintf(msg, args...)
-		logs = append(logs, ret)
-	}
-	addLogOutput := func(key string, out string) {
-		addLog("%s output for [%s]:\n%s", key, prj.Key, out)
-	}
-	cmd := func(key string, cmd string, pth string) error {
-		if key == "" {
-			key = cmd
-		}
-		if pth == "" {
-			pth = prj.Path
-		}
-		exitCode, out, err := telemetry.RunProcessSimple(ctx, cmd, pth, logger)
-		if err != nil {
-			return err
-		}
-		addLogOutput(key, out)
-		if exitCode != 0 {
-			return errors.Errorf(key+" failed with exit code [%d]", exitCode)
-		}
-		return nil
-	}
+type ExecHelper struct {
+	Logs []string `json:"logs,omitempty"`
+}
 
-	addLog("building project [%s] in [%s]", prj.Key, prj.Path)
-	err := cmd(templatesNS+ScriptExtension, filepath.Join("bin", templatesNS+ScriptExtension), "")
-	if err != nil {
-		return logs, err
+func (e *ExecHelper) AddLog(msg string, args ...any) {
+	e.Logs = append(e.Logs, fmt.Sprintf(msg, args...))
+}
+
+func (e *ExecHelper) AddLogOutput(key string, out string) {
+	e.AddLog("%s output: %s", key, out)
+}
+
+func (e *ExecHelper) Cmd(ctx context.Context, key string, cmd string, pth string, logger util.Logger) (string, error) {
+	if key == "" {
+		key = cmd
 	}
-	err = cmd("", "go mod tidy", "")
+	exitCode, out, err := telemetry.RunProcessSimple(ctx, cmd, pth, logger)
 	if err != nil {
-		return logs, err
+		return "", err
 	}
-	err = cmd("", "npm install", filepath.Join(prj.Path, "client"))
-	if err != nil {
-		return logs, err
+	e.AddLogOutput(key, out)
+	if exitCode != 0 {
+		return out, errors.Errorf(key+" failed with exit code [%d]", exitCode)
 	}
-	err = cmd("client build", filepath.Join("bin", "build", "client."+ScriptExtension), "")
+	return out, nil
+}
+
+func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]string, error) {
+	ex := &ExecHelper{}
+	ex.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
+	_, err := ex.Cmd(ctx, templatesNS+ScriptExtension, filepath.Join("bin", templatesNS+ScriptExtension), "", logger)
 	if err != nil {
-		return logs, err
+		return ex.Logs, err
+	}
+	_, err = ex.Cmd(ctx, "", "go mod tidy", "", logger)
+	if err != nil {
+		return ex.Logs, err
+	}
+	_, err = ex.Cmd(ctx, "", "npm install", filepath.Join(prj.Path, "client"), logger)
+	if err != nil {
+		return ex.Logs, err
+	}
+	_, err = ex.Cmd(ctx, "client build", filepath.Join("bin", "build", "client."+ScriptExtension), "", logger)
+	if err != nil {
+		return ex.Logs, err
 	}
 	makeCmd := "make build"
 	if runtime.GOOS == OSWindows {
 		makeCmd = fmt.Sprintf(`go build -ldflags "-s -w" -trimpath -o build/release/%s.exe`, prj.Executable())
 	}
-	err = cmd("project build", makeCmd, "")
+	_, err = ex.Cmd(ctx, "project build", makeCmd, "", logger)
 	if err != nil {
-		return logs, err
+		return ex.Logs, err
 	}
-	return logs, nil
+	return ex.Logs, nil
 }

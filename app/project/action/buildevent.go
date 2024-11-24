@@ -110,6 +110,18 @@ func onCleanup(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
+func onSize(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	t := util.TimerStart()
+	d, logs, err := build.Size(ctx, pm.Prj, pm.FS, r.Args.GetStringOpt("exec"), pm.Logger)
+	r.Data = d
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"size"}, Status: util.OK, Duration: t.End()})
+	r.Logs = append(r.Logs, logs...)
+	if err != nil {
+		return r.WithError(err)
+	}
+	return r
+}
+
 func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, err := build.Full(ctx, pm.Prj, pm.Logger)

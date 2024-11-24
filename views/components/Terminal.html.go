@@ -7,79 +7,82 @@ package components
 //line views/components/Terminal.html:1
 import (
 	"github.com/robert-nix/ansihtml"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
-//line views/components/Terminal.html:7
+//line views/components/Terminal.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/Terminal.html:7
+//line views/components/Terminal.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/Terminal.html:7
-func StreamTerminal(qw422016 *qt422016.Writer, id string, s string) {
-//line views/components/Terminal.html:9
-	raw := string(ansihtml.ConvertToHTML([]byte(s)))
-	lines := util.StringSplitLines(raw)
+//line views/components/Terminal.html:8
+func StreamTerminal(qw422016 *qt422016.Writer, id string, s ...string) {
+//line views/components/Terminal.html:10
+	lines := lo.Flatten(lo.Map(s, func(x string, _ int) []string {
+		raw := string(ansihtml.ConvertToHTML([]byte(x)))
+		return util.StringSplitLines(raw)
+	}))
 	if len(lines) > 0 && lines[len(lines)-1] == "" {
 		lines = lines[:len(lines)-1]
 	}
 
-//line views/components/Terminal.html:14
+//line views/components/Terminal.html:17
 	qw422016.N().S(`<div class="overflow full-width"><table class="terminal"><tbody id="`)
-//line views/components/Terminal.html:17
+//line views/components/Terminal.html:20
 	qw422016.E().S(id)
-//line views/components/Terminal.html:17
+//line views/components/Terminal.html:20
 	qw422016.N().S(`"><tr><td class="shrink"></td><td></td></tr>`)
-//line views/components/Terminal.html:19
+//line views/components/Terminal.html:22
 	for idx, line := range lines {
-//line views/components/Terminal.html:19
+//line views/components/Terminal.html:22
 		qw422016.N().S(`<tr><th>`)
-//line views/components/Terminal.html:20
+//line views/components/Terminal.html:23
 		qw422016.N().D(idx + 1)
-//line views/components/Terminal.html:20
+//line views/components/Terminal.html:23
 		qw422016.N().S(`</th><td>`)
-//line views/components/Terminal.html:20
+//line views/components/Terminal.html:23
 		qw422016.N().S(line)
-//line views/components/Terminal.html:20
+//line views/components/Terminal.html:23
 		qw422016.N().S(`</td></tr>`)
-//line views/components/Terminal.html:21
+//line views/components/Terminal.html:24
 	}
-//line views/components/Terminal.html:21
+//line views/components/Terminal.html:24
 	qw422016.N().S(`</tbody></table></div>`)
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
 }
 
-//line views/components/Terminal.html:25
-func WriteTerminal(qq422016 qtio422016.Writer, id string, s string) {
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
+func WriteTerminal(qq422016 qtio422016.Writer, id string, s ...string) {
+//line views/components/Terminal.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/Terminal.html:25
-	StreamTerminal(qw422016, id, s)
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
+	StreamTerminal(qw422016, id, s...)
+//line views/components/Terminal.html:28
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
 }
 
-//line views/components/Terminal.html:25
-func Terminal(id string, s string) string {
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
+func Terminal(id string, s ...string) string {
+//line views/components/Terminal.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/Terminal.html:25
-	WriteTerminal(qb422016, id, s)
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
+	WriteTerminal(qb422016, id, s...)
+//line views/components/Terminal.html:28
 	qs422016 := string(qb422016.B)
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
 	return qs422016
-//line views/components/Terminal.html:25
+//line views/components/Terminal.html:28
 }

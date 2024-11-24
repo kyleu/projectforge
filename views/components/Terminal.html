@@ -1,13 +1,16 @@
 {% import (
   "github.com/robert-nix/ansihtml"
+	"github.com/samber/lo"
 
   "projectforge.dev/projectforge/app/util"
 ) %}
 
-{% func Terminal(id string, s string) %}{% stripspace %}
+{% func Terminal(id string, s ...string) %}{% stripspace %}
   {%- code
-    raw := string(ansihtml.ConvertToHTML([]byte(s)))
-    lines := util.StringSplitLines(raw)
+    lines := lo.Flatten(lo.Map(s, func(x string, _ int) []string {
+      raw := string(ansihtml.ConvertToHTML([]byte(x)))
+      return util.StringSplitLines(raw)
+    }))
     if len(lines) > 0 && lines[len(lines) - 1] == "" {
       lines = lines[:len(lines) - 1]
     }
