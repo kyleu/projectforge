@@ -4,12 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 var (
-	jsoniterParser  = jsoniter.Config{EscapeHTML: false, SortMapKeys: true, ValidateJsonRawMessage: true}.Froze()
 	trailingNewline = []byte{'\n'}
 )
 
@@ -38,18 +35,18 @@ func ToJSONBytes(x any, indent bool) []byte {
 }
 
 func FromJSON(msg json.RawMessage, tgt any) error {
-	return jsoniterParser.Unmarshal(msg, tgt)
+	return json.NewDecoder(bytes.NewReader(msg)).Decode(tgt)
 }
 
 func FromJSONString(msg json.RawMessage) (string, error) {
 	var tgt string
-	err := jsoniterParser.Unmarshal(msg, &tgt)
+	err := json.NewDecoder(bytes.NewReader(msg)).Decode(&tgt)
 	return tgt, err
 }
 
 func FromJSONMap(msg json.RawMessage) (ValueMap, error) {
 	var tgt ValueMap
-	err := jsoniterParser.Unmarshal(msg, &tgt)
+	err := json.NewDecoder(bytes.NewReader(msg)).Decode(&tgt)
 	return tgt, err
 }
 
@@ -83,13 +80,13 @@ func FromJSONReader(r io.Reader, tgt any) error {
 }
 
 func FromJSONStrict(msg json.RawMessage, tgt any) error {
-	dec := jsoniterParser.NewDecoder(bytes.NewReader(msg))
+	dec := json.NewDecoder(bytes.NewReader(msg))
 	dec.DisallowUnknownFields()
 	return dec.Decode(tgt)
 }
 
 func CycleJSON(src any, tgt any) error {
-	b, _ := jsoniterParser.Marshal(src)
+	b := ToJSONBytes(src, false)
 	return FromJSON(b, tgt)
 }
 
