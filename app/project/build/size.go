@@ -1,10 +1,13 @@
 package build
 
 import (
+	"cmp"
 	"context"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
@@ -77,5 +80,15 @@ func Size(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, p
 	}
 
 	ret = ret.Flatten()
-	return ret.TotalSizes(), ret.TotalStrings(), nil
+	retSizes := make([]*util.KeyVal[int], 0, len(ret))
+	for k, v := range ret.TotalSizes() {
+		retSizes = append(retSizes, &util.KeyVal[int]{Key: k, Val: v})
+	}
+	slices.SortFunc(retSizes, func(l *util.KeyVal[int], r *util.KeyVal[int]) int {
+		return cmp.Compare(l.Val, r.Val)
+	})
+	retSizeStrings := lo.Map(retSizes, func(x *util.KeyVal[int], _ int) string {
+		return x.String()
+	})
+	return retSizeStrings, retSizeStrings, nil
 }
