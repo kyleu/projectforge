@@ -28,6 +28,14 @@
       {%= Int(t) %}
     {% case int64 %}
       {%= Int(t) %}
+    {% case util.ToOrderedMap[any] %}
+      {%= OrderedMap(false, t.ToOrderedMap(), ps) %}
+    {% case *util.OrderedMap[any] %}
+      {%= OrderedMap(false, t, ps) %}
+    {% case util.ToOrderedMaps[any] %}
+      {%= OrderedMapArray(false, ps, t.ToOrderedMaps()...) %}
+    {% case []*util.OrderedMap[any] %}
+      {%= OrderedMapArray(false, ps, t...) %}
     {% case util.ToMap %}
       {%= Map(false, t.ToMap(), ps) %}
     {% case util.ValueMap %}

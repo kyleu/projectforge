@@ -63,7 +63,7 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	case types.KeyMap, types.KeyValueMap:
 		ret = "util.ValueMap"
 	case types.KeyOrderedMap:
-		ret = "util.OrderedMap[any]"
+		ret = "*util.OrderedMap[any]"
 	case types.KeyNumeric:
 		ret = "numeric.Numeric"
 	case types.KeyReference:
