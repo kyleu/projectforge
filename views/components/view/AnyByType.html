@@ -46,6 +46,8 @@
     {% else %}
       {%= AnyByType(x, t.T.(*types.Option).V, ps) %}
     {% endif %}
+  {% case types.KeyOrderedMap %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyRange %}
     {%= Default(x, t.String(), ps) %}
   {% case types.KeyReference %}

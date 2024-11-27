@@ -1,6 +1,12 @@
 package numeric
 
 func (n Numeric) LessThan(x Numeric) bool {
+	if x.IsInf() {
+		return true
+	}
+	if x.IsNegInf() {
+		return false
+	}
 	if n.IsNaN() || x.IsNaN() {
 		return false
 	}
@@ -20,6 +26,12 @@ func (n Numeric) LessThan(x Numeric) bool {
 }
 
 func (n Numeric) GreaterThan(x Numeric) bool {
+	if x.IsInf() {
+		return false
+	}
+	if x.IsNegInf() {
+		return true
+	}
 	if n.IsNaN() || x.IsNaN() {
 		return false
 	}

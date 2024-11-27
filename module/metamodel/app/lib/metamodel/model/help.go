@@ -36,10 +36,10 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 			return fmt.Sprintf("%s.All%s.Help()", e.Package, e.ProperPlural()), nil
 		}
 		return q("Comma-separated list of values"), nil
-	case types.KeyMap, types.KeyValueMap:
-		return q("JSON object"), nil{{{ if .HasModule "numeric" }}}
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap:
+		return q("JSON object"), nil
 	case types.KeyNumeric:
-		return q("Large numeric value"), nil{{{ end }}}
+		return q("A potentially very large number"), nil
 	case types.KeyReference:
 		return q("[" + strings.TrimPrefix(asRefK(t), "*") + "], as a JSON object"), nil
 	case types.KeyString:

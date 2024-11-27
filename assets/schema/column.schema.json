@@ -45,6 +45,14 @@
       "description": "the JSON field name to use when serializing, defaults to [name]",
       "type": "string"
     },
+    "sql": {
+      "description": "the SQL column name to use when serializing, defaults to [name]",
+      "type": "string"
+    },
+    "title": {
+      "description": "the title to use when displaying, defaults to a proper-cased version of [name]",
+      "type": "string"
+    },
     "values": {
       "description": "when format is \"select\", this controls the available values",
       "type": "array",

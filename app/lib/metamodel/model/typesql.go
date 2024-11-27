@@ -37,7 +37,7 @@ func ToSQLType(t types.Type, database string) (string, error) {
 		return "int", nil
 	case types.KeyFloat:
 		return "double precision", nil
-	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference, types.KeyNumeric:
+	case types.KeyList, types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference, types.KeyNumeric:
 		if database == util.DatabaseSQLServer {
 			return keyNVarcharMax, nil
 		}

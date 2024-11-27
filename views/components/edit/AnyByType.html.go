@@ -105,135 +105,139 @@ func StreamAnyByType(qw422016 *qt422016.Writer, key string, id string, x any, t 
 //line views/components/edit/AnyByType.html:42
 		StreamOption(qw422016, key, id, x, t.T.(*types.Option))
 //line views/components/edit/AnyByType.html:43
-	case types.KeyRange:
+	case types.KeyOrderedMap:
 //line views/components/edit/AnyByType.html:44
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:45
-	case types.KeyReference:
+	case types.KeyRange:
 //line views/components/edit/AnyByType.html:46
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:47
-	case types.KeySet:
+	case types.KeyReference:
 //line views/components/edit/AnyByType.html:48
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:49
-	case types.KeyString:
+	case types.KeySet:
 //line views/components/edit/AnyByType.html:50
-		StreamString(qw422016, key, id, fmt.Sprint(x))
-//line views/components/edit/AnyByType.html:51
-	case types.KeyTime:
-//line views/components/edit/AnyByType.html:52
 		StreamDefault(qw422016, key, id, x, t)
+//line views/components/edit/AnyByType.html:51
+	case types.KeyString:
+//line views/components/edit/AnyByType.html:52
+		StreamString(qw422016, key, id, fmt.Sprint(x))
 //line views/components/edit/AnyByType.html:53
-	case types.KeyTimestamp:
+	case types.KeyTime:
 //line views/components/edit/AnyByType.html:54
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:55
-	case types.KeyTimestampZoned:
+	case types.KeyTimestamp:
 //line views/components/edit/AnyByType.html:56
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:57
-	case types.KeyUnknown:
+	case types.KeyTimestampZoned:
 //line views/components/edit/AnyByType.html:58
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:59
-	case types.KeyUUID:
+	case types.KeyUnknown:
 //line views/components/edit/AnyByType.html:60
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:61
-	case types.KeyValueMap:
+	case types.KeyUUID:
 //line views/components/edit/AnyByType.html:62
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:63
-	case types.KeyXML:
+	case types.KeyValueMap:
 //line views/components/edit/AnyByType.html:64
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:65
-	default:
+	case types.KeyXML:
 //line views/components/edit/AnyByType.html:66
 		StreamDefault(qw422016, key, id, x, t)
 //line views/components/edit/AnyByType.html:67
+	default:
+//line views/components/edit/AnyByType.html:68
+		StreamDefault(qw422016, key, id, x, t)
+//line views/components/edit/AnyByType.html:69
 	}
-//line views/components/edit/AnyByType.html:68
-}
-
-//line views/components/edit/AnyByType.html:68
-func WriteAnyByType(qq422016 qtio422016.Writer, key string, id string, x any, t *types.Wrapped) {
-//line views/components/edit/AnyByType.html:68
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/AnyByType.html:68
-	StreamAnyByType(qw422016, key, id, x, t)
-//line views/components/edit/AnyByType.html:68
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/AnyByType.html:68
-}
-
-//line views/components/edit/AnyByType.html:68
-func AnyByType(key string, id string, x any, t *types.Wrapped) string {
-//line views/components/edit/AnyByType.html:68
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/AnyByType.html:68
-	WriteAnyByType(qb422016, key, id, x, t)
-//line views/components/edit/AnyByType.html:68
-	qs422016 := string(qb422016.B)
-//line views/components/edit/AnyByType.html:68
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/AnyByType.html:68
-	return qs422016
-//line views/components/edit/AnyByType.html:68
+//line views/components/edit/AnyByType.html:70
 }
 
 //line views/components/edit/AnyByType.html:70
-func StreamDefault(qw422016 *qt422016.Writer, key string, id string, x any, t types.Type) {
+func WriteAnyByType(qq422016 qtio422016.Writer, key string, id string, x any, t *types.Wrapped) {
+//line views/components/edit/AnyByType.html:70
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/edit/AnyByType.html:70
+	StreamAnyByType(qw422016, key, id, x, t)
+//line views/components/edit/AnyByType.html:70
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/edit/AnyByType.html:70
+}
+
+//line views/components/edit/AnyByType.html:70
+func AnyByType(key string, id string, x any, t *types.Wrapped) string {
+//line views/components/edit/AnyByType.html:70
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/edit/AnyByType.html:70
+	WriteAnyByType(qb422016, key, id, x, t)
+//line views/components/edit/AnyByType.html:70
+	qs422016 := string(qb422016.B)
+//line views/components/edit/AnyByType.html:70
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/edit/AnyByType.html:70
+	return qs422016
+//line views/components/edit/AnyByType.html:70
+}
+
 //line views/components/edit/AnyByType.html:72
+func StreamDefault(qw422016 *qt422016.Writer, key string, id string, x any, t types.Type) {
+//line views/components/edit/AnyByType.html:74
 	msg := fmt.Sprintf("unhandled type: %s (%T)", t.String(), x)
 	if x == nil {
 		x = "∅"
 	}
 
-//line views/components/edit/AnyByType.html:76
+//line views/components/edit/AnyByType.html:78
 	qw422016.N().S(`<input title="`)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.E().S(msg)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.N().S(`" value="`)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.E().V(x)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.N().S(`" name="`)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.E().S(key)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.N().S(`" id="`)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.E().S(id)
-//line views/components/edit/AnyByType.html:77
+//line views/components/edit/AnyByType.html:79
 	qw422016.N().S(`" />`)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 }
 
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 func WriteDefault(qq422016 qtio422016.Writer, key string, id string, x any, t types.Type) {
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	StreamDefault(qw422016, key, id, x, t)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 }
 
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 func Default(key string, id string, x any, t types.Type) string {
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	WriteDefault(qb422016, key, id, x, t)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	qs422016 := string(qb422016.B)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 	return qs422016
-//line views/components/edit/AnyByType.html:78
+//line views/components/edit/AnyByType.html:80
 }

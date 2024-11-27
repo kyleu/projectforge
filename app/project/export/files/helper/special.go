@@ -15,12 +15,12 @@ func SimpleJSON(database string) bool {
 	return database == util.DatabaseSQLite || database == util.DatabaseSQLServer
 }
 
-func SpecialImports(cols model.Columns, pkg string, models model.Models, enums enum.Enums) (model.Imports, error) {
+func SpecialImports(cols model.Columns, pkg string, models model.Models, enums enum.Enums, extraTypes model.Models) (model.Imports, error) {
 	var ret model.Imports
 	for _, col := range cols {
 		switch col.Type.Key() {
 		case types.KeyReference:
-			ref, mdl, err := LoadRef(col, models)
+			ref, mdl, err := LoadRef(col, models, extraTypes)
 			if err != nil {
 				return nil, err
 			}

@@ -23,6 +23,12 @@ type HistoryResult struct {
 	Debug   any            `json:"debug,omitempty"`
 }
 
+type HistoryAuthor struct {
+	Key   string `json:"key"`
+	Name  string `json:"name"`
+	Count int    `json:"count"`
+}
+
 type HistoryEntry struct {
 	Headers     util.ValueMap `json:"headers" xml:"headers"`
 	SHA         string        `json:"sha" xml:"sha"`
@@ -39,6 +45,21 @@ func (h HistoryEntries) Get(sha string) *HistoryEntry {
 	return lo.FindOrElse(h, nil, func(x *HistoryEntry) bool {
 		return x.SHA == sha
 	})
+}
+
+func (h HistoryEntries) Authors() []*HistoryAuthor {
+	byAuthor := lo.GroupBy(h, func(x *HistoryEntry) string {
+		return x.AuthorEmail
+	})
+	ret := make([]*HistoryAuthor, 0, len(byAuthor))
+	for k, v := range byAuthor {
+		ret = append(ret, &HistoryAuthor{
+			Key:   k,
+			Name:  v[0].AuthorName,
+			Count: len(v),
+		})
+	}
+	return ret
 }
 
 type HistoryFile struct {

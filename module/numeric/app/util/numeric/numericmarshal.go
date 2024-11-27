@@ -20,8 +20,8 @@ func (n *NumericJSON) ToNumeric() Numeric {
 }
 
 func (n Numeric) MarshalJSON() ([]byte, error) {
-	if n.exponent == 0 {
-		return []byte(`{"m": ` + fmt.Sprint(n.mantissa) + `}`), nil
+	if n.LessThan(MaxString) {
+		return []byte(n.String()), nil
 	}
 	return []byte(`{"m": ` + fmt.Sprint(n.mantissa) + `, "e": ` + fmt.Sprint(n.exponent) + `}`), nil
 }
@@ -49,7 +49,7 @@ func (n *Numeric) UnmarshalJSON(data []byte) error {
 			return errors.Wrapf(err, "invalid numeric string [%s]", string(data))
 		}
 		*n = ret
-	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
+	case '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
 		s, err := util.FromJSONObj[float64](data)
 		if err != nil {
 			return errors.Wrapf(err, "invalid float value [%s]", string(data))

@@ -40,6 +40,8 @@
     {%= Default(key, id, x, t) %}
   {% case types.KeyOption %}
     {%= Option(key, id, x, t.T.(*types.Option)) %}
+  {% case types.KeyOrderedMap %}
+    {%= Default(key, id, x, t) %}
   {% case types.KeyRange %}
     {%= Default(key, id, x, t) %}
   {% case types.KeyReference %}

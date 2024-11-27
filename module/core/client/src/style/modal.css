@@ -51,6 +51,14 @@
   flex-direction: column;
 }
 
+.modal.wide .modal-content {
+  min-width: 90%;
+}
+
+.modal.tall .modal-content {
+  min-height: 90%;
+}
+
 .modal-content .modal-header {
   flex-grow: 0;
   padding: var(--padding) var(--padding) 0 var(--padding);

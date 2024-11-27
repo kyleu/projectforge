@@ -8,22 +8,32 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func LoadRef(col *model.Column, models model.Models) (*types.Reference, *model.Model, error) {
+func LoadRef(col *model.Column, models model.Models, extraTypes model.Models) (*types.Reference, *model.Model, error) {
 	ret, err := model.AsRef(col.Type)
 	if err != nil {
 		return nil, nil, err
 	}
-	if len(ret.Pkg) == 0 {
+	mdl := models.Get(ret.K)
+	if mdl == nil {
+		mdl = extraTypes.Get(ret.K)
+	}
+	if mdl == nil {
 		deref := util.StringToLowerCamel(strings.TrimPrefix(ret.K, "*"))
-		mdl := models.Get(deref)
+		mdl = models.Get(deref)
+		if mdl == nil {
+			mdl = extraTypes.Get(deref)
+		}
 		ss := util.StringToSingular(deref)
 		if mdl == nil && ss != deref {
 			mdl = models.Get(ss)
+			if mdl == nil {
+				mdl = extraTypes.Get(ss)
+			}
 		}
-		if mdl != nil {
-			pkg := append(mdl.Group[:], mdl.Package)
-			return &types.Reference{Pkg: pkg, K: ret.K}, mdl, nil
-		}
+	}
+	if mdl != nil {
+		pkg := append(mdl.Group[:], mdl.Package)
+		return &types.Reference{Pkg: pkg, K: ret.K}, mdl, nil
 	}
 	return ret, nil, nil
 }

@@ -26,11 +26,11 @@ func ToJSONBytes(x any, indent bool) []byte {
 			enc.SetIndent("", "  ")
 		}
 		enc.SetEscapeHTML(false)
-		jsonHandleError(enc.Encode(x))
+		jsonHandleError(x, enc.Encode(x))
 		return bytes.TrimSuffix(bts.Bytes(), trailingNewline)
 	}
 	b, err := json.Marshal(x)
-	jsonHandleError(err)
+	jsonHandleError(x, err)
 	return bytes.TrimSuffix(b, trailingNewline)
 }
 
@@ -47,6 +47,12 @@ func FromJSONString(msg json.RawMessage) (string, error) {
 func FromJSONMap(msg json.RawMessage) (ValueMap, error) {
 	var tgt ValueMap
 	err := json.NewDecoder(bytes.NewReader(msg)).Decode(&tgt)
+	return tgt, err
+}
+
+func FromJSONOrderedMap[V any](msg json.RawMessage) (*OrderedMap[V], error) {
+	var tgt *OrderedMap[V]
+	err := json.NewDecoder(bytes.NewReader(msg)).Decode(tgt)
 	return tgt, err
 }
 
@@ -92,12 +98,12 @@ func CycleJSON(src any, tgt any) error {
 
 func JSONToMap(i any) map[string]any {
 	m := map[string]any{}
-	jsonHandleError(CycleJSON(i, &m))
+	jsonHandleError(i, CycleJSON(i, &m))
 	return m
 }
 
-func jsonHandleError(err error) {
+func jsonHandleError(src any, err error) {
 	if err != nil && RootLogger != nil {
-		RootLogger.Warnf("error encountered serializing JSON: %+v", err)
+		RootLogger.Warnf("error [%s] encountered serializing JSON for type [%T]", err.Error(), src)
 	}
 }

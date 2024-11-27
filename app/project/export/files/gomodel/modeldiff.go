@@ -43,6 +43,8 @@ func modelDiffBlock(g *golang.File, m *model.Model, enums enum.Enums) (*golang.B
 		switch col.Type.Key() {
 		case types.KeyAny, types.KeyJSON, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference, types.KeyNumeric:
 			ret.WF("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
+		case types.KeyOrderedMap:
+			ret.WF("\tdiffs = append(diffs, util.DiffObjects(%s.Map, %s.Map, %q)...)", l, r, col.Camel())
 		case types.KeyBool, types.KeyInt, types.KeyFloat:
 			g.AddImport(helper.ImpFmt)
 			ret.WF("\tif %s != %s {", l, r)

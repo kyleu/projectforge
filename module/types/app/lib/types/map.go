@@ -43,7 +43,7 @@ func (x *Map) From(v any) any {
 }
 
 func (x *Map) Default(string) any {
-	return ""
+	return emptyMap
 }
 
 func NewMap(k *Wrapped, v *Wrapped) *Wrapped {

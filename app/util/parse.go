@@ -15,6 +15,66 @@ func DefaultValue[T any]() T {
 	return ret
 }
 
+func ParseBoolSimple(r any) bool {
+	ret, _ := ParseBool(r, "", true)
+	return ret
+}
+
+func ParseFloatSimple(r any) float64 {
+	ret, _ := ParseFloat(r, "", true)
+	return ret
+}
+
+func ParseIntSimple(r any) int {
+	ret, _ := ParseInt(r, "", true)
+	return ret
+}
+
+func ParseInt16Simple(r any) int16 {
+	ret, _ := ParseInt16(r, "", true)
+	return ret
+}
+
+func ParseInt32Simple(r any) int32 {
+	ret, _ := ParseInt32(r, "", true)
+	return ret
+}
+
+func ParseInt64Simple(r any) int64 {
+	ret, _ := ParseInt64(r, "", true)
+	return ret
+}
+
+func ParseJSONSimple(r any) any {
+	ret, _ := ParseJSON(r, "", true)
+	return ret
+}
+
+func ParseMapSimple(r any) ValueMap {
+	ret, _ := ParseMap(r, "", true)
+	return ret
+}
+
+func ParseOrderedMapSimple(r any) *OrderedMap[any] {
+	ret, _ := ParseOrderedMap(r, "", true)
+	return ret
+}
+
+func ParseStringSimple(r any) string {
+	ret, _ := ParseString(r, "", true)
+	return ret
+}
+
+func ParseTimeSimple(r any) *time.Time {
+	ret, _ := ParseTime(r, "", true)
+	return ret
+}
+
+func ParseUUIDSimple(r any) *uuid.UUID {
+	ret, _ := ParseUUID(r, "", true)
+	return ret
+}
+
 func ParseBool(r any, path string, allowEmpty bool) (bool, error) {
 	switch t := r.(type) {
 	case bool:
@@ -193,6 +253,59 @@ func ParseMap(r any, path string, allowEmpty bool) (ValueMap, error) {
 		return nil, nil
 	default:
 		return nil, invalidTypeError(path, "map", t)
+	}
+}
+
+func ParseOrderedMap(r any, path string, allowEmpty bool) (*OrderedMap[any], error) {
+	switch t := r.(type) {
+	case *OrderedMap[any]:
+		if (!allowEmpty) && len(t.Map) == 0 {
+			return nil, errors.New("empty map")
+		}
+		return t, nil
+	case ValueMap:
+		if (!allowEmpty) && len(t) == 0 {
+			return nil, errors.New("empty map")
+		}
+		o := NewOrderedMap[any](false, len(t))
+		for k, v := range t {
+			o.Set(k, v)
+		}
+		return o, nil
+	case map[string]any:
+		if (!allowEmpty) && len(t) == 0 {
+			return nil, errors.New("empty map")
+		}
+		o := NewOrderedMap[any](false, len(t))
+		for k, v := range t {
+			o.Set(k, v)
+		}
+		return o, nil
+	case string:
+		if strings.TrimSpace(t) == "" {
+			return nil, nil
+		}
+		ret, err := FromJSONOrderedMap[any]([]byte(t))
+		if err != nil {
+			return nil, wrapError(path, "time", errors.Wrap(err, "invalid JSON"))
+		}
+		return ret, err
+	case []byte:
+		if len(t) == 0 {
+			return nil, nil
+		}
+		ret, err := FromJSONOrderedMap[any](t)
+		if err != nil {
+			return nil, wrapError(path, "time", errors.Wrap(err, "invalid JSON"))
+		}
+		return ret, err
+	case nil:
+		if !allowEmpty {
+			return nil, errors.Errorf("could not find ordered map for path [%s]", path)
+		}
+		return nil, nil
+	default:
+		return nil, invalidTypeError(path, "ordered map", t)
 	}
 }
 

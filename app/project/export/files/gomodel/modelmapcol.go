@@ -14,7 +14,7 @@ import (
 )
 
 //nolint:gocognit
-func forMapCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, models model.Models, enums enum.Enums, col *model.Column) error {
+func forMapCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, col *model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")
@@ -37,7 +37,7 @@ func forMapCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, mo
 	case col.Type.Key() == types.KeyReference:
 		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 		catchErr("err")
-		ref, _, err := helper.LoadRef(col, models)
+		ref, _, err := helper.LoadRef(col, models, extraTypes)
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}
@@ -86,6 +86,9 @@ func forMapCol(g *golang.File, ret *golang.Block, indent int, m *model.Model, mo
 			}
 			catchErr("err")
 		}
+	case col.Type.Key() == types.KeyNumeric:
+		g.AddImport(helper.ImpAppNumeric)
+		ret.WF(ind+"ret.%s, err = numeric.FromAny(v)", col.Proper())
 	case col.Nullable || col.Type.Scalar():
 		if err := colMP(ind + parseMsg); err != nil {
 			return err

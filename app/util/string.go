@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"runtime"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -173,6 +174,13 @@ func StringReplaceBetween(s string, l string, r string, replacement string) (str
 	return s[:lio] + replacement + s[ri:], nil
 }
 
+func StringNullable(s fmt.Stringer) string {
+	if s == nil || reflect.ValueOf(s).IsNil() {
+		return ""
+	}
+	return s.String()
+}
+
 func CountryFlag(code string) string {
 	if len(code) != 2 {
 		return fmt.Sprintf("INVALID: %q", code)
@@ -188,9 +196,17 @@ func Filename(s string) string {
 	return filenameReplacer.Replace(s)
 }
 
-func StringNullable(s fmt.Stringer) string {
-	if s == nil || reflect.ValueOf(s).IsNil() {
-		return ""
+func DecodeUTF8(input []byte) (string, error) {
+	remaining, offset := input, 0
+	runes := make([]rune, 0, len(remaining))
+	for len(remaining) > 0 {
+		r, size := utf8.DecodeRune(remaining)
+		if r == utf8.RuneError && size <= 1 {
+			return "", fmt.Errorf("not a valid UTF-8 string (at position %d): %s", offset, string(input))
+		}
+		runes = append(runes, r)
+		remaining = remaining[size:]
+		offset += size
 	}
-	return s.String()
+	return string(runes), nil
 }

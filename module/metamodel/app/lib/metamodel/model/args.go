@@ -16,17 +16,19 @@ const (
 )
 
 type Args struct {
-	Config     util.ValueMap              `json:"config,omitempty"`
-	ConfigFile json.RawMessage            `json:"-"`
-	Enums      enum.Enums                 `json:"enums,omitempty"`
-	EnumFiles  map[string]json.RawMessage `json:"-"`
-	Models     Models                     `json:"models,omitempty"`
-	ModelFiles map[string]json.RawMessage `json:"-"`
-	Groups     Groups                     `json:"groups,omitempty"`
-	Acronyms   []string                   `json:"acronyms,omitempty"`
-	GroupsFile json.RawMessage            `json:"-"`
-	Modules    []string                   `json:"-"`
-	Database   string                     `json:"-"`
+	Config         util.ValueMap              `json:"config,omitempty"`
+	ConfigFile     json.RawMessage            `json:"-"`
+	Enums          enum.Enums                 `json:"enums,omitempty"`
+	EnumFiles      map[string]json.RawMessage `json:"-"`
+	Models         Models                     `json:"models,omitempty"`
+	ModelFiles     map[string]json.RawMessage `json:"-"`
+	Groups         Groups                     `json:"groups,omitempty"`
+	GroupsFile     json.RawMessage            `json:"-"`
+	Acronyms       []string                   `json:"acronyms,omitempty"`
+	ExtraTypes     Models                     `json:"extraTypes,omitempty"`
+	ExtraTypesFile json.RawMessage            `json:"-"`
+	Modules        []string                   `json:"-"`
+	Database       string                     `json:"-"`
 }
 
 func (a *Args) HasModule(key string) bool {

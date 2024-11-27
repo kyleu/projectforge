@@ -2,7 +2,10 @@ package types
 
 import "fmt"
 
-const emptyList = "[]"
+const (
+	emptyList = "[]"
+	emptyMap  = "{}"
+)
 
 func invalidInput(key string, v any) string {
 	return fmt.Sprintf("unable to parse [%s] from [%v] (%T)", key, v, v)
@@ -16,6 +19,4 @@ func Bits(t Type) int {
 		return i.Bits
 	}
 	return 0
-}{{{ if .HasModule "numeric" }}}
-
-const KeyNumeric = "numeric"{{{ end }}}
+}

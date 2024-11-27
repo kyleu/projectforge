@@ -32,7 +32,7 @@ func Models(m *model.Model, args *model.Args, goVersion string, linebreak string
 	g.AddImport(m.Imports.Supporting("array")...)
 	g.AddBlocks(modelArray(m))
 
-	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
 		return nil, err
 	}

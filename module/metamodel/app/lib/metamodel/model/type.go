@@ -61,9 +61,11 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 			ret = goTypeAnyArray
 		}
 	case types.KeyMap, types.KeyValueMap:
-		ret = "util.ValueMap"{{{ if .HasModule "numeric" }}}
+		ret = "util.ValueMap"
+	case types.KeyOrderedMap:
+		ret = "util.OrderedMap[any]"
 	case types.KeyNumeric:
-		ret = "numeric.Numeric"{{{ end }}}
+		ret = "numeric.Numeric"
 	case types.KeyReference:
 		ref, err := AsRef(t)
 		if err != nil {
@@ -99,7 +101,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 			return fmt.Sprintf("%s.String()", prop)
 		}
 		return prop
-	case types.KeyMap, types.KeyValueMap{{{ if .HasModule "numeric" }}}, types.KeyNumeric{{{ end }}}:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap{{{ if .HasModule "numeric" }}}, types.KeyNumeric{{{ end }}}:
 		return fmt.Sprintf("util.ToJSONCompact(%s)", prop)
 	case types.KeyDate:
 		if alwaysString {
@@ -109,6 +111,8 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 			return fmt.Sprintf("util.TimeToYMD(&%s)", prop)
 		}
 		return prop
+	case types.KeyNumeric:
+		return fmt.Sprintf("%s.String()", prop)
 	case types.KeyTimestamp, types.KeyTimestampZoned:
 		if alwaysString {
 			if nullable {

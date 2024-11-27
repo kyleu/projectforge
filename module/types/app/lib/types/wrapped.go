@@ -63,3 +63,11 @@ func (x *Wrapped) ListType() *Wrapped {
 	}
 	return nil
 }
+
+func (x *Wrapped) OrderedMapType() *Wrapped {
+	l := TypeAs[*OrderedMap](x)
+	if l != nil {
+		return l.V
+	}
+	return nil
+}

@@ -27,7 +27,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 		g.AddImport(helper.ImpPath)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 		}
 		g.AddBlocks(pk, pkString)
 	}
-	str, err := modelStruct(m, args.Models, args.Enums)
+	str, err := modelStruct(m, args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +128,7 @@ func modelToPK(m *model.Model, _ enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func modelStruct(m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
+func modelStruct(m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper(), "struct")
 	ret.WF("type %s struct {", m.Proper())
 	cols := m.Columns.NotDerived()
@@ -140,7 +140,7 @@ func modelStruct(m *model.Model, models model.Models, enums enum.Enums) (*golang
 		if err != nil {
 			return err.Error()
 		}
-		if ref, mdl, _ := helper.LoadRef(c, models); ref != nil && !strings.Contains(gt, ".") {
+		if ref, mdl, _ := helper.LoadRef(c, models, extraTypes); ref != nil && !strings.Contains(gt, ".") {
 			if mdl != nil && mdl.Package != m.Package {
 				gt = mdl.Package + "." + gt
 				if x := len(gt); maxTypeLength < x {
@@ -198,10 +198,10 @@ func modelToData(m *model.Model, cols model.Columns, suffix string, database str
 	ret.WF("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
 		tk := c.Type.Key()
-		switch {
-		case (tk == types.KeyAny || tk == types.KeyList || tk == types.KeyMap || tk == types.KeyReference) && (helper.SimpleJSON(database)):
+		complicated := tk == types.KeyAny || tk == types.KeyList || tk == types.KeyMap || tk == types.KeyOrderedMap || tk == types.KeyReference
+		if complicated && helper.SimpleJSON(database) {
 			return fmt.Sprintf("util.ToJSON(%s.%s),", m.FirstLetter(), c.Proper())
-		default:
+		} else {
 			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())
 		}
 	})

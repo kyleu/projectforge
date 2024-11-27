@@ -138,7 +138,7 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 	}
 
 	if m, e := args.Models.WithTypeScript(), args.Enums.WithTypeScript(); len(m) > 0 || len(e) > 0 {
-		files, err := typescript.All(m, e, linebreak)
+		files, err := typescript.All(m, e, args.ExtraTypes, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render TypeScript output")
 		}

@@ -115,200 +115,204 @@ func StreamAnyByType(qw422016 *qt422016.Writer, x any, t *types.Wrapped, ps *cut
 //line views/components/view/AnyByType.html:48
 		}
 //line views/components/view/AnyByType.html:49
-	case types.KeyRange:
+	case types.KeyOrderedMap:
 //line views/components/view/AnyByType.html:50
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:51
-	case types.KeyReference:
+	case types.KeyRange:
 //line views/components/view/AnyByType.html:52
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:53
-	case types.KeySet:
+	case types.KeyReference:
 //line views/components/view/AnyByType.html:54
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:55
-	case types.KeyString:
+	case types.KeySet:
 //line views/components/view/AnyByType.html:56
-		StreamString(qw422016, x.(string))
-//line views/components/view/AnyByType.html:57
-	case types.KeyTime:
-//line views/components/view/AnyByType.html:58
 		StreamDefault(qw422016, x, t.String(), ps)
+//line views/components/view/AnyByType.html:57
+	case types.KeyString:
+//line views/components/view/AnyByType.html:58
+		StreamString(qw422016, x.(string))
 //line views/components/view/AnyByType.html:59
-	case types.KeyTimestamp:
+	case types.KeyTime:
 //line views/components/view/AnyByType.html:60
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:61
-	case types.KeyTimestampZoned:
+	case types.KeyTimestamp:
 //line views/components/view/AnyByType.html:62
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:63
-	case types.KeyUnknown:
+	case types.KeyTimestampZoned:
 //line views/components/view/AnyByType.html:64
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:65
-	case types.KeyUUID:
+	case types.KeyUnknown:
 //line views/components/view/AnyByType.html:66
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:67
-	case types.KeyValueMap:
+	case types.KeyUUID:
 //line views/components/view/AnyByType.html:68
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:69
-	case types.KeyXML:
+	case types.KeyValueMap:
 //line views/components/view/AnyByType.html:70
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:71
-	default:
+	case types.KeyXML:
 //line views/components/view/AnyByType.html:72
 		StreamDefault(qw422016, x, t.String(), ps)
 //line views/components/view/AnyByType.html:73
+	default:
+//line views/components/view/AnyByType.html:74
+		StreamDefault(qw422016, x, t.String(), ps)
+//line views/components/view/AnyByType.html:75
 	}
-//line views/components/view/AnyByType.html:74
-}
-
-//line views/components/view/AnyByType.html:74
-func WriteAnyByType(qq422016 qtio422016.Writer, x any, t *types.Wrapped, ps *cutil.PageState) {
-//line views/components/view/AnyByType.html:74
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/AnyByType.html:74
-	StreamAnyByType(qw422016, x, t, ps)
-//line views/components/view/AnyByType.html:74
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/AnyByType.html:74
-}
-
-//line views/components/view/AnyByType.html:74
-func AnyByType(x any, t *types.Wrapped, ps *cutil.PageState) string {
-//line views/components/view/AnyByType.html:74
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/AnyByType.html:74
-	WriteAnyByType(qb422016, x, t, ps)
-//line views/components/view/AnyByType.html:74
-	qs422016 := string(qb422016.B)
-//line views/components/view/AnyByType.html:74
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/AnyByType.html:74
-	return qs422016
-//line views/components/view/AnyByType.html:74
+//line views/components/view/AnyByType.html:76
 }
 
 //line views/components/view/AnyByType.html:76
+func WriteAnyByType(qq422016 qtio422016.Writer, x any, t *types.Wrapped, ps *cutil.PageState) {
+//line views/components/view/AnyByType.html:76
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/AnyByType.html:76
+	StreamAnyByType(qw422016, x, t, ps)
+//line views/components/view/AnyByType.html:76
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/AnyByType.html:76
+}
+
+//line views/components/view/AnyByType.html:76
+func AnyByType(x any, t *types.Wrapped, ps *cutil.PageState) string {
+//line views/components/view/AnyByType.html:76
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/AnyByType.html:76
+	WriteAnyByType(qb422016, x, t, ps)
+//line views/components/view/AnyByType.html:76
+	qs422016 := string(qb422016.B)
+//line views/components/view/AnyByType.html:76
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/AnyByType.html:76
+	return qs422016
+//line views/components/view/AnyByType.html:76
+}
+
+//line views/components/view/AnyByType.html:78
 func StreamDefault(qw422016 *qt422016.Writer, x any, t string, ps *cutil.PageState) {
-//line views/components/view/AnyByType.html:77
+//line views/components/view/AnyByType.html:79
 	msg := fmt.Sprintf("unhandled type: %s (%T)", t, x)
 
-//line views/components/view/AnyByType.html:77
+//line views/components/view/AnyByType.html:79
 	qw422016.N().S(`<span title="`)
-//line views/components/view/AnyByType.html:78
+//line views/components/view/AnyByType.html:80
 	qw422016.E().S(msg)
-//line views/components/view/AnyByType.html:78
+//line views/components/view/AnyByType.html:80
 	qw422016.N().S(`">`)
-//line views/components/view/AnyByType.html:78
+//line views/components/view/AnyByType.html:80
 	StreamAny(qw422016, x, ps)
-//line views/components/view/AnyByType.html:78
+//line views/components/view/AnyByType.html:80
 	qw422016.N().S(`</span>`)
-//line views/components/view/AnyByType.html:79
-}
-
-//line views/components/view/AnyByType.html:79
-func WriteDefault(qq422016 qtio422016.Writer, x any, t string, ps *cutil.PageState) {
-//line views/components/view/AnyByType.html:79
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/AnyByType.html:79
-	StreamDefault(qw422016, x, t, ps)
-//line views/components/view/AnyByType.html:79
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/AnyByType.html:79
-}
-
-//line views/components/view/AnyByType.html:79
-func Default(x any, t string, ps *cutil.PageState) string {
-//line views/components/view/AnyByType.html:79
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/AnyByType.html:79
-	WriteDefault(qb422016, x, t, ps)
-//line views/components/view/AnyByType.html:79
-	qs422016 := string(qb422016.B)
-//line views/components/view/AnyByType.html:79
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/AnyByType.html:79
-	return qs422016
-//line views/components/view/AnyByType.html:79
+//line views/components/view/AnyByType.html:81
 }
 
 //line views/components/view/AnyByType.html:81
-func StreamType(qw422016 *qt422016.Writer, v types.Type) {
-//line views/components/view/AnyByType.html:82
-	qw422016.E().S(v.String())
-//line views/components/view/AnyByType.html:83
-}
-
-//line views/components/view/AnyByType.html:83
-func WriteType(qq422016 qtio422016.Writer, v types.Type) {
-//line views/components/view/AnyByType.html:83
+func WriteDefault(qq422016 qtio422016.Writer, x any, t string, ps *cutil.PageState) {
+//line views/components/view/AnyByType.html:81
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/AnyByType.html:83
-	StreamType(qw422016, v)
-//line views/components/view/AnyByType.html:83
+//line views/components/view/AnyByType.html:81
+	StreamDefault(qw422016, x, t, ps)
+//line views/components/view/AnyByType.html:81
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/AnyByType.html:83
+//line views/components/view/AnyByType.html:81
+}
+
+//line views/components/view/AnyByType.html:81
+func Default(x any, t string, ps *cutil.PageState) string {
+//line views/components/view/AnyByType.html:81
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/AnyByType.html:81
+	WriteDefault(qb422016, x, t, ps)
+//line views/components/view/AnyByType.html:81
+	qs422016 := string(qb422016.B)
+//line views/components/view/AnyByType.html:81
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/AnyByType.html:81
+	return qs422016
+//line views/components/view/AnyByType.html:81
 }
 
 //line views/components/view/AnyByType.html:83
-func Type(v types.Type) string {
-//line views/components/view/AnyByType.html:83
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/AnyByType.html:83
-	WriteType(qb422016, v)
-//line views/components/view/AnyByType.html:83
-	qs422016 := string(qb422016.B)
-//line views/components/view/AnyByType.html:83
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/AnyByType.html:83
-	return qs422016
-//line views/components/view/AnyByType.html:83
+func StreamType(qw422016 *qt422016.Writer, v types.Type) {
+//line views/components/view/AnyByType.html:84
+	qw422016.E().S(v.String())
+//line views/components/view/AnyByType.html:85
 }
 
 //line views/components/view/AnyByType.html:85
-func StreamOption(qw422016 *qt422016.Writer, x any, t *types.Option, ps *cutil.PageState) {
-//line views/components/view/AnyByType.html:86
-	switch t.V.Key() {
-//line views/components/view/AnyByType.html:87
-	default:
-//line views/components/view/AnyByType.html:87
-		qw422016.N().S(`<div class="two-pane"><div class="l">`)
-//line views/components/view/AnyByType.html:89
-		StreamAnyByType(qw422016, x, t.V, ps)
-//line views/components/view/AnyByType.html:89
-		qw422016.N().S(`</div><div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div></div>`)
-//line views/components/view/AnyByType.html:92
-	}
-//line views/components/view/AnyByType.html:93
-}
-
-//line views/components/view/AnyByType.html:93
-func WriteOption(qq422016 qtio422016.Writer, x any, t *types.Option, ps *cutil.PageState) {
-//line views/components/view/AnyByType.html:93
+func WriteType(qq422016 qtio422016.Writer, v types.Type) {
+//line views/components/view/AnyByType.html:85
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/AnyByType.html:93
-	StreamOption(qw422016, x, t, ps)
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
+	StreamType(qw422016, v)
+//line views/components/view/AnyByType.html:85
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
 }
 
-//line views/components/view/AnyByType.html:93
-func Option(x any, t *types.Option, ps *cutil.PageState) string {
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
+func Type(v types.Type) string {
+//line views/components/view/AnyByType.html:85
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/AnyByType.html:93
-	WriteOption(qb422016, x, t, ps)
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
+	WriteType(qb422016, v)
+//line views/components/view/AnyByType.html:85
 	qs422016 := string(qb422016.B)
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
 	return qs422016
-//line views/components/view/AnyByType.html:93
+//line views/components/view/AnyByType.html:85
+}
+
+//line views/components/view/AnyByType.html:87
+func StreamOption(qw422016 *qt422016.Writer, x any, t *types.Option, ps *cutil.PageState) {
+//line views/components/view/AnyByType.html:88
+	switch t.V.Key() {
+//line views/components/view/AnyByType.html:89
+	default:
+//line views/components/view/AnyByType.html:89
+		qw422016.N().S(`<div class="two-pane"><div class="l">`)
+//line views/components/view/AnyByType.html:91
+		StreamAnyByType(qw422016, x, t.V, ps)
+//line views/components/view/AnyByType.html:91
+		qw422016.N().S(`</div><div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div></div>`)
+//line views/components/view/AnyByType.html:94
+	}
+//line views/components/view/AnyByType.html:95
+}
+
+//line views/components/view/AnyByType.html:95
+func WriteOption(qq422016 qtio422016.Writer, x any, t *types.Option, ps *cutil.PageState) {
+//line views/components/view/AnyByType.html:95
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/AnyByType.html:95
+	StreamOption(qw422016, x, t, ps)
+//line views/components/view/AnyByType.html:95
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/AnyByType.html:95
+}
+
+//line views/components/view/AnyByType.html:95
+func Option(x any, t *types.Option, ps *cutil.PageState) string {
+//line views/components/view/AnyByType.html:95
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/AnyByType.html:95
+	WriteOption(qb422016, x, t, ps)
+//line views/components/view/AnyByType.html:95
+	qs422016 := string(qb422016.B)
+//line views/components/view/AnyByType.html:95
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/AnyByType.html:95
+	return qs422016
+//line views/components/view/AnyByType.html:95
 }

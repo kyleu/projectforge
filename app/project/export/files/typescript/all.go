@@ -9,11 +9,13 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
-func All(models model.Models, enums enum.Enums, linebreak string) (file.Files, error) {
+func All(models model.Models, enums enum.Enums, extraTypes model.Models, linebreak string) (file.Files, error) {
 	var ret file.Files
 
 	for _, e := range enums {
@@ -25,7 +27,7 @@ func All(models model.Models, enums enum.Enums, linebreak string) (file.Files, e
 	}
 
 	for _, m := range models {
-		imps, err := tsModelImports(enums, models, m)
+		imps, err := tsModelImports(enums, models, extraTypes, m)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing imports for model [%s]", m.Name)
 		}
@@ -39,7 +41,7 @@ func All(models model.Models, enums enum.Enums, linebreak string) (file.Files, e
 	return ret, nil
 }
 
-func tsModelImports(allEnums enum.Enums, allModels model.Models, m *model.Model) ([]string, error) {
+func tsModelImports(allEnums enum.Enums, allModels model.Models, extraTypes model.Models, m *model.Model) ([]string, error) {
 	var ret []string
 	add := func(s string, args ...any) {
 		s = fmt.Sprintf(s, args...)
@@ -57,7 +59,7 @@ func tsModelImports(allEnums enum.Enums, allModels model.Models, m *model.Model)
 				}
 			}
 		}
-		r, rm, _ := helper.LoadRef(col, allModels)
+		r, rm, _ := helper.LoadRef(col, allModels, extraTypes)
 		if rm == nil {
 			if col.Metadata != nil {
 				if tsImport := col.Metadata.GetStringOpt("tsImport"); tsImport != "" {
@@ -65,11 +67,17 @@ func tsModelImports(allEnums enum.Enums, allModels model.Models, m *model.Model)
 				}
 			}
 		} else {
-			if rm.PackageWithGroup("") != m.PackageWithGroup("") {
+			if tsImport := rm.Config.GetStringOpt("tsImport"); tsImport != "" {
+				add(`import type {%s} from "%s";`, r.K, tsImport)
+			} else if rm.PackageWithGroup("") != m.PackageWithGroup("") {
 				add(`import type {%s} from "../%s/%s";`, r.K, rm.Camel(), rm.Camel())
 			} else {
 				add(`import type {%s} from "./%s";`, r.K, rm.Camel())
 			}
+		}
+		if col.Type.Key() == types.KeyNumeric {
+			relPath := util.StringRepeat("../", len(m.Group)+1)
+			add(`import type {Numeric} from "%snumeric/numeric";`, relPath)
 		}
 	}
 	return ret, nil

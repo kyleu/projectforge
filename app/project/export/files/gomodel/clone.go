@@ -18,7 +18,7 @@ func modelClone(m *model.Model) *golang.Block {
 	calls := lo.Map(m.Columns.NotDerived(), func(col *model.Column, _ int) string {
 		decl := col.Proper()
 		switch col.Type.Key() {
-		case types.KeyMap, types.KeyValueMap, types.KeyReference:
+		case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference:
 			decl += ".Clone()"
 		case types.KeyList:
 			decl += "[:]"

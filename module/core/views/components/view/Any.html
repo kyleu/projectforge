@@ -78,6 +78,8 @@
           <div class="bb"><em>...and{% space %}{%d extra %}{% space %}more</em></div>
         {% endif %}
       {%- endif -%}
+    {% case fmt.Stringer %}
+      {%= String(t.String()) %}
     {% default %}
       unhandled type [{%s fmt.Sprintf("%T", x) %}]
     {% endswitch %}

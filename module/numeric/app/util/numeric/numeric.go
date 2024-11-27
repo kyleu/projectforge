@@ -3,7 +3,6 @@ package numeric
 import (
 	"fmt"
 	"math"
-	"strings"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -104,11 +103,10 @@ func (n Numeric) Equals(other Numeric) bool {
 }
 
 func (n Numeric) String() string {
-	ret := fmt.Sprintf("%.3f", n.mantissa)
-	for strings.HasSuffix(ret, "0") {
-		ret = strings.TrimSuffix(ret, "0")
+	if n.LessThan(MaxString) {
+		return printFloat(n.ToFloat())
 	}
-	ret = strings.TrimSuffix(ret, ".")
+	ret := printFloat(n.mantissa)
 	return fmt.Sprintf("%se%d", ret, n.exponent)
 }
 

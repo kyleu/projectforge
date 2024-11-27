@@ -2,11 +2,12 @@ package util
 
 import (
 	"bytes"
-	"cmp"
+	"encoding/json"
 	"encoding/xml"
 	"slices"
 	"strings"
 
+	"github.com/buger/jsonparser"
 	"github.com/samber/lo"
 	"golang.org/x/exp/maps"
 )
@@ -41,6 +42,9 @@ func NewOMap[V any]() *OrderedMap[V] {
 }
 
 func (o *OrderedMap[V]) Set(k string, v V) {
+	if o.Map == nil {
+		o.Map = map[string]V{}
+	}
 	if _, ok := o.Map[k]; !ok {
 		o.Order = append(o.Order, k)
 	}
@@ -88,6 +92,11 @@ func (o *OrderedMap[V]) Clone() *OrderedMap[V] {
 	return &OrderedMap[V]{Lexical: o.Lexical, Order: slices.Clone(o.Order), Map: maps.Clone(o.Map)}
 }
 
+func (o *OrderedMap[V]) Clear() {
+	o.Order = nil
+	o.Map = map[string]V{}
+}
+
 func (o OrderedMap[V]) MarshalYAML() (any, error) {
 	return o.Map, nil
 }
@@ -119,24 +128,29 @@ func (o OrderedMap[V]) MarshalXML(e *xml.Encoder, start xml.StartElement) error 
 	return e.Flush()
 }
 
-func (o *OrderedMap[V]) UnmarshalJSON(b []byte) error {
-	if err := FromJSON(b, &o.Map); err != nil {
+func (o *OrderedMap[V]) UnmarshalJSON(data []byte) error {
+	o.Clear()
+	err := jsonparser.ObjectEach(data, func(keyData []byte, valueData []byte, dataType jsonparser.ValueType, offset int) error {
+		if dataType == jsonparser.String {
+			valueData = data[offset-len(valueData)-2 : offset]
+		}
+
+		key, err := DecodeUTF8(keyData)
+		if err != nil {
+			return err
+		}
+		var value V
+		if err := json.Unmarshal(valueData, &value); err != nil {
+			return err
+		}
+		o.Set(key, value)
+		return nil
+	})
+	if err != nil {
 		return err
 	}
-
-	index := make(map[string]int)
-	lo.ForEach(lo.Keys(o.Map), func(key string, _ int) {
-		o.Order = append(o.Order, key)
-		esc := ToJSONBytes(key, false) // escape the key
-		index[key] = bytes.Index(b, esc)
-	})
-
 	if o.Lexical {
 		slices.Sort(o.Order)
-	} else {
-		slices.SortFunc(o.Order, func(l string, r string) int {
-			return cmp.Compare(index[l], index[r])
-		})
 	}
 	return nil
 }

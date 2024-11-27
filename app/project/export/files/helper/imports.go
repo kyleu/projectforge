@@ -16,6 +16,7 @@ var (
 	ImpAppController  = AppImport("controller")
 	ImpAppDatabase    = AppImport("lib/database")
 	ImpAppMenu        = AppImport("lib/menu")
+	ImpAppNumeric     = AppImport("util/numeric")
 	ImpAppSvc         = AppImport("lib/svc")
 	ImpAppUtil        = AppImport("util")
 	ImpContext        = model.NewImport(model.ImportTypeInternal, "context")
@@ -82,10 +83,12 @@ func importsForType(ctx string, t types.Type, database string) model.Imports {
 
 func importsForTypeCtxGo(t types.Type) model.Imports {
 	switch t.Key() {
-	case types.KeyMap, types.KeyValueMap, types.KeyList:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyList:
 		return model.Imports{ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
+	case types.KeyNumeric:
+		return model.Imports{ImpAppNumeric}
 	case types.KeyUUID:
 		return model.Imports{ImpUUID}
 	default:
@@ -100,13 +103,15 @@ func importsForTypeCtxRow(t types.Type, database string) model.Imports {
 			return nil
 		}
 		return model.Imports{ImpJSON}
-	case types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference:
+	case types.KeyList, types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference:
 		if SimpleJSON(database) {
 			return model.Imports{ImpAppUtil}
 		}
 		return model.Imports{ImpJSON, ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
+	case types.KeyNumeric:
+		return model.Imports{ImpAppNumeric}
 	case types.KeyUUID:
 		if database == util.DatabaseSQLServer {
 			return nil
@@ -148,7 +153,7 @@ func importsForTypeCtxWebEdit(t types.Type) model.Imports {
 			return model.Imports{}
 		}
 		return model.Imports{ImpAppUtil}
-	case types.KeyMap, types.KeyValueMap, types.KeyReference:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference:
 		return model.Imports{ImpAppUtil}
 	default:
 		return nil

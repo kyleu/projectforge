@@ -1,8 +1,10 @@
 package numeric
 
 import (
+	"fmt"
 	"math"
 	"strconv"
+	"strings"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -24,6 +26,7 @@ var (
 	Zero             = from(0, 0)
 	One              = from(1, 0)
 	Ten              = from(1, 1)
+	MaxString        = from(1, 6)
 	NaN              = from(math.NaN(), 0)
 	PositiveInfinity = from(math.Inf(1), 0)
 	NegativeInfinity = from(math.Inf(-1), 0)
@@ -94,4 +97,12 @@ func powerOf10(power int64) float64 {
 
 func Random(maxExponent int) Numeric {
 	return normalize(util.RandomFloat(1), int64(util.RandomInt(maxExponent+1)))
+}
+
+func printFloat(f float64) string {
+	ret := fmt.Sprintf("%.3f", f)
+	for strings.HasSuffix(ret, "0") {
+		ret = strings.TrimSuffix(ret, "0")
+	}
+	return strings.TrimSuffix(ret, ".")
 }

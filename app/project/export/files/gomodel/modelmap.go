@@ -16,7 +16,7 @@ import (
 func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
 	g.AddImport(helper.ImpAppUtil)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, e
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("map")...)
 	g.AddBlocks(modelToMap(g, m, args.Enums, args.Database))
-	if b, e := modelFromMap(g, m, args.Models, args.Enums, args.Database); e == nil {
+	if b, e := modelFromMap(g, m, args.Models, args.Enums, args.ExtraTypes, args.Database); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return nil, e
@@ -52,7 +52,7 @@ func modelToMap(g *golang.File, m *model.Model, enums enum.Enums, database strin
 	return ret
 }
 
-func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, database string) (*golang.Block, error) {
+func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, database string) (*golang.Block, error) {
 	cols := m.Columns.NotDerived().WithoutTags("created", "updated")
 	pks := cols.PKs()
 	nonPKs := cols.NonPKs()
@@ -67,14 +67,14 @@ func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enu
 	for _, col := range pks {
 		ret.WF("\t\tcase %q:", col.CamelNoReplace())
 		ret.W("\t\t\tif setPK {")
-		if err := forMapCol(g, ret, 4, m, models, enums, col); err != nil {
+		if err := forMapCol(g, ret, 4, m, models, enums, extraTypes, col); err != nil {
 			return nil, err
 		}
 		ret.W("\t\t\t}")
 	}
 	for _, col := range nonPKs {
 		ret.WF("\t\tcase %q:", col.CamelNoReplace())
-		if err := forMapCol(g, ret, 3, m, models, enums, col); err != nil {
+		if err := forMapCol(g, ret, 3, m, models, enums, extraTypes, col); err != nil {
 			return nil, err
 		}
 	}

@@ -24,7 +24,7 @@ func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error)
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error)
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(g, m, args.Models, args.Enums, args.Database)
+	mrm, err := modelRowToModel(g, m, args.Models, args.Enums, args.ExtraTypes, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 }
 
 //nolint:gocognit
-func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, database string) (*golang.Block, error) {
+func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, database string) (*golang.Block, error) {
 	ba := func(decoder string) string {
 		return "[]byte(" + decoder + ")"
 	}
@@ -155,6 +155,11 @@ func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums 
 				if helper.SimpleJSON(database) {
 					decoder = ba(decoder)
 				}
+			case types.KeyOrderedMap:
+				t = "[]util.OrderedMap[any]"
+				if helper.SimpleJSON(database) {
+					decoder = ba(decoder)
+				}
 			case types.KeyEnum:
 				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
 					t = e.ProperPlural()
@@ -179,7 +184,7 @@ func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums 
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
-			ref, _, err := helper.LoadRef(c, models)
+			ref, _, err := helper.LoadRef(c, models, extraTypes)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}

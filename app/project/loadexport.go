@@ -45,6 +45,17 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, lo
 		}
 	}
 
+	if extraTypesCfgPath := filepath.Join(exportPath, "types.json"); fs.Exists(extraTypesCfgPath) {
+		if extraTypesFile, err := fs.ReadFile(extraTypesCfgPath); err == nil {
+			extraTypes, err := util.FromJSONObj[model.Models](extraTypesFile)
+			if err != nil {
+				return nil, errors.Wrap(err, "invalid extraTypes config")
+			}
+			args.ExtraTypesFile = extraTypesFile
+			args.ExtraTypes = extraTypes
+		}
+	}
+
 	enumFiles, enums, err := getEnums(exportPath, fs, logger)
 	if err != nil {
 		return nil, err

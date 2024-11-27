@@ -165,42 +165,46 @@ func StreamAny(qw422016 *qt422016.Writer, x any, ps *cutil.PageState) {
 //line views/components/view/Any.html:73
 			}
 //line views/components/view/Any.html:74
-		default:
-//line views/components/view/Any.html:74
-			qw422016.N().S(`unhandled type [`)
+		case fmt.Stringer:
 //line views/components/view/Any.html:75
-			qw422016.E().S(fmt.Sprintf("%T", x))
-//line views/components/view/Any.html:75
-			qw422016.N().S(`]`)
+			StreamString(qw422016, t.String())
 //line views/components/view/Any.html:76
-		}
+		default:
+//line views/components/view/Any.html:76
+			qw422016.N().S(`unhandled type [`)
 //line views/components/view/Any.html:77
+			qw422016.E().S(fmt.Sprintf("%T", x))
+//line views/components/view/Any.html:77
+			qw422016.N().S(`]`)
+//line views/components/view/Any.html:78
+		}
+//line views/components/view/Any.html:79
 	}
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 }
 
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 func WriteAny(qq422016 qtio422016.Writer, x any, ps *cutil.PageState) {
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	StreamAny(qw422016, x, ps)
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 }
 
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 func Any(x any, ps *cutil.PageState) string {
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	WriteAny(qb422016, x, ps)
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	qs422016 := string(qb422016.B)
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 	return qs422016
-//line views/components/view/Any.html:78
+//line views/components/view/Any.html:80
 }

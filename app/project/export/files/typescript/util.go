@@ -84,7 +84,7 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 	case types.KeyReference:
 		r, _ := model.AsRef(t)
 		return strings.TrimPrefix(r.K, "*")
-	case types.KeyValueMap, types.KeyMap:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap:
 		return "{ [key: string]: unknown }"
 	default:
 		return t.String()
