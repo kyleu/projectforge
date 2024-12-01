@@ -166,7 +166,7 @@ func StreamSocketContent(qw422016 *qt422016.Writer, as *app.State, key string, t
   <div id="result-detail"></div>
   `)
 //line views/vtask/Detail.html:62
-	vexec.StreamExecScript(qw422016, key, u, as.Debug, ps, callbacks...)
+	vexec.StreamExecScript(qw422016, as.Debug, key, u, true, ps, callbacks...)
 //line views/vtask/Detail.html:62
 	qw422016.N().S(`
 `)

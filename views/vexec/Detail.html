@@ -18,7 +18,7 @@
     <h3>{%= components.SVGIcon("file", ps) %} Output</h3>
     <div class="mt">{%= components.Terminal("console-list", p.Exec.Buffer.String()) %}</div>
   </div>
-  {%= ExecScript("console-list", p.Exec.WebPath() + "/connect", as.Debug, ps) %}
+  {%= ExecScript(as.Debug, "console-list", p.Exec.WebPath() + "/connect", true, ps) %}
 {% endfunc %}
 
 {% func ExecDetail(ex *exec.Exec, ps *cutil.PageState) %}
@@ -82,44 +82,10 @@
   </div>
 {% endfunc %}
 
-{% func ExecScript(id string, connectURL string, debug bool, ps *cutil.PageState, extraHandlers ...string) %}
+{% func ExecScript(debug bool, id string, connectURL string, terminal bool, ps *cutil.PageState, extraHandlers ...string) %}
   <script>
-    function open() {{% if debug %}
-      console.log("[socket]: open");
-    {% endif %}}
-    function recv(m) {
-      const tbody = document.getElementById("{%s id %}");
-      if(m.cmd !== "output") {
-        {%- if len(extraHandlers) == 0 -%}
-        console.log("unknown command [" + m.cmd + "] received");
-        {%- else -%}
-        {%- for _, h := range extraHandlers -%}
-        {%s= h %}
-        {%- endfor -%}
-        return;
-        {%- endif -%}
-      }
-      if (m.param["html"] === undefined) {
-        console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
-      }
-      const h = m.param["html"].split("\n");
-      for (const x in h) {
-        const row = document.createElement("tr");
-        const numTH = document.createElement("th");
-        numTH.innerText = tbody.children.length.toString();
-        const textTD = document.createElement("td");
-        textTD.innerHTML = h[x];
-        row.append(numTH, textTD);
-        tbody.append(row);
-      }
-      const c = document.getElementById("content");
-      c.scrollTo(0, c.scrollHeight);
-    }
-    function err(e) {{% if debug %}
-      console.log("[socket error]: " + e);
-    {% endif %}}
     window.addEventListener('load', () => {
-      new projectforge.Socket({%v debug %}, open, recv, err, "{%s= connectURL %}");
+      projectforge.socketLog({%v debug %}, document.getElementById("{%s id %}"), {%v terminal %}, "{%s= connectURL %}");
     })
   </script>
 {% endfunc %}

@@ -96,6 +96,14 @@ func (m ValueMap) GetStringOpt(key string) string {
 	return ret
 }
 
+func (m ValueMap) GetStringOr(key string, dflt string, allowEmpty bool) string {
+	ret, err := m.ParseString(key, true, true)
+	if err != nil || (!allowEmpty && ret == "") {
+		return dflt
+	}
+	return ret
+}
+
 func (m ValueMap) GetStringPtr(key string) *string {
 	ret, err := m.ParseString(key, true, true)
 	if err != nil {

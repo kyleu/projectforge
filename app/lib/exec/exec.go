@@ -44,25 +44,26 @@ func (w *writer) Write(p []byte) (int, error) {
 
 type Exec struct {
 	Key       string        `json:"key"`
-	Idx       int           `json:"idx"`
-	Cmd       string        `json:"cmd"`
+	Idx       int           `json:"idx,omitempty"`
+	Cmd       string        `json:"cmd,omitempty"`
 	Env       []string      `json:"env,omitempty"`
-	Path      string        `json:"path"`
-	Started   *time.Time    `json:"started"`
-	PID       int           `json:"pid"`
-	Completed *time.Time    `json:"completed"`
-	ExitCode  int           `json:"exitCode"`
+	Path      string        `json:"path,omitempty"`
+	Debug     bool          `json:"debug,omitempty"`
+	Started   *time.Time    `json:"started,omitempty"`
+	PID       int           `json:"pid,omitempty"`
+	Completed *time.Time    `json:"completed,omitempty"`
+	ExitCode  int           `json:"exitCode,omitempty"`
 	Link      string        `json:"link,omitempty"`
 	Buffer    *bytes.Buffer `json:"-"`
 	execCmd   *exec.Cmd
 	writer    io.Writer
 }
 
-func NewExec(key string, idx int, cmd string, path string, envvars ...string) *Exec {
+func NewExec(key string, idx int, cmd string, path string, debug bool, envvars ...string) *Exec {
 	if x := strings.Index(key, "/"); x > -1 && x < len(key) {
 		key = key[x+1:]
 	}
-	return &Exec{Key: key, Idx: idx, Cmd: cmd, Env: envvars, Path: path, Buffer: &bytes.Buffer{}}
+	return &Exec{Key: key, Idx: idx, Cmd: cmd, Env: envvars, Path: path, Debug: debug, Buffer: &bytes.Buffer{}}
 }
 
 func (e *Exec) WebPath() string {
@@ -96,7 +97,9 @@ func (e *Exec) Run(fns ...OutFn) error {
 	if err != nil {
 		_, _ = fmt.Fprintf(e.writer, " ::: error while wating for process to terminate %s", err.Error())
 	}
-	_, _ = fmt.Fprintf(e.writer, " ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)
+	if e.Debug {
+		_, _ = fmt.Fprintf(e.writer, " ::: process completed in [%s] with exit code [%d]", t.EndString(), e.ExitCode)
+	}
 	return nil
 }
 

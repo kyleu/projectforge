@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	{{{ if .HasModule "process" }}}"strings"
-	{{{ end }}}"sync"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -86,7 +85,7 @@ func (s *Service) Upgrade(
 func (s *Service) Terminal(ch string, logger util.Logger) func(_ string, b []byte) error {
 	return func(_ string, b []byte) error {
 		html := string(ansihtml.ConvertToHTML(b))
-		m := util.ValueMap{"msg": string(b), "html": strings.TrimSpace(html)}
+		m := util.ValueMap{"msg": string(b), "html": html}
 		msg := NewMessage(nil, ch, "output", m)
 		return s.WriteChannel(msg, logger)
 	}

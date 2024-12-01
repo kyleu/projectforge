@@ -17,7 +17,7 @@ func onStart(_ context.Context, pm *PrjAndMods, ret *Result) *Result {
 	}
 
 	cmd := fmt.Sprintf("%s%s -v server source:%s", project.DebugOutputDir, pm.Prj.Executable(), util.AppKey)
-	exec := pm.XSvc.NewExec(pm.Prj.Key, cmd, pm.Prj.Path, pm.Prj.Info.EnvVars...)
+	exec := pm.XSvc.NewExec(pm.Prj.Key, cmd, pm.Prj.Path, false, pm.Prj.Info.EnvVars...)
 	exec.Link = pm.Prj.WebPath()
 	w := func(key string, b []byte) error {
 		m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}

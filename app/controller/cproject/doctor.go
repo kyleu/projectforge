@@ -81,7 +81,7 @@ func DoctorSolve(w http.ResponseWriter, r *http.Request) {
 			return controller.Render(r, as, &views.Debug{}, ps, "doctor", c.Title)
 		}
 		for idx, ex := range execs {
-			exec := as.Services.Exec.NewExec(fmt.Sprintf("solve-%s-%d", c.Key, idx), ex, ".")
+			exec := as.Services.Exec.NewExec(fmt.Sprintf("solve-%s-%d", c.Key, idx), ex, ".", false)
 			err = exec.Start()
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to run [%s]", ex)

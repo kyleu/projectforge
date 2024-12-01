@@ -21,7 +21,7 @@ func ProjectStart(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		cmd := fmt.Sprintf("%s%s -v server source:%s", project.DebugOutputDir, prj.Executable(), util.AppKey)
-		exec := as.Services.Exec.NewExec(prj.Key, cmd, prj.Path)
+		exec := as.Services.Exec.NewExec(prj.Key, cmd, prj.Path, false)
 		exec.Link = prj.WebPath()
 		wf := func(key string, b []byte) error {
 			m := util.ValueMap{"msg": string(b), "html": string(ansihtml.ConvertToHTML(b))}

@@ -13,6 +13,7 @@ import {editorInit} from "./editor";
 import {formInit} from "./form";
 import {themeInit} from "./theme";
 import {socketInit} from "./socket";
+import {socketLog} from "./socketlog";
 import {appInit} from "./app";
 
 declare global {
@@ -26,6 +27,7 @@ declare global {
       flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;
       Socket: unknown;
+      socketLog: (debug: boolean, tbody: HTMLElement, url: string, extraHandlers: [...(m: unknown) => void]) => void;
     };
     audit: (s: string, ...args: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
     JSX: (tag: string, attrs: unknown[]) => HTMLElement;
@@ -43,7 +45,8 @@ export function init(): void {
     initForm: i,
     flash: flashInit(),
     tags: tagsInit(),
-    Socket: socketInit()
+    Socket: socketInit(),
+    socketLog: socketLog
   };
   menuInit();
   modeInit();
