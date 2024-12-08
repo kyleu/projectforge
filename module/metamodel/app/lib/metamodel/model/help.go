@@ -58,6 +58,8 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 			return q("URL to valid image"), nil
 		case FmtJSON.Key:
 			return q("JSON code"), nil
+		case FmtMarkdown.Key:
+			return q("Markdown source"), nil
 		case FmtSeconds.Key:
 			return q("Number of wall-clock seconds"), nil
 		case FmtSQL.Key:

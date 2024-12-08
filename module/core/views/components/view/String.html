@@ -49,8 +49,7 @@
   {% if extra > 0 %}</span>{% endif %}
 {% endstripspace %}{% endfunc %}
 
-
-{% func Format(v string, ext string) %}{% stripspace %}
+{% func FormatLang(v string, ext string) %}{% stripspace %}
   {% code out, err := cutil.FormatLang(v, ext) %}
   {% if err == nil %}
     {%s= out %}

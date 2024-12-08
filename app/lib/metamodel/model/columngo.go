@@ -124,7 +124,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 		return fmt.Sprintf(`{%%%%= edit.UUIDTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), gs, h), nil
 	case types.KeyString:
 		switch format {
-		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key, FmtSQL.Key:
+		case FmtCode.Key, FmtCodeHidden.Key, FmtHTML.Key, FmtJSON.Key, FmtMarkdown.Key, FmtSQL.Key:
 			return fmt.Sprintf(`{%%%%= edit.TextareaTable(%q, %q, %q, 8, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 		case FmtColor.Key:
 			return fmt.Sprintf(`{%%%%= edit.ColorTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil

@@ -229,46 +229,46 @@ func StringArray(value []string) string {
 //line views/components/view/String.html:50
 }
 
+//line views/components/view/String.html:52
+func StreamFormatLang(qw422016 *qt422016.Writer, v string, ext string) {
 //line views/components/view/String.html:53
-func StreamFormat(qw422016 *qt422016.Writer, v string, ext string) {
-//line views/components/view/String.html:54
 	out, err := cutil.FormatLang(v, ext)
 
-//line views/components/view/String.html:55
+//line views/components/view/String.html:54
 	if err == nil {
-//line views/components/view/String.html:56
+//line views/components/view/String.html:55
 		qw422016.N().S(out)
-//line views/components/view/String.html:57
+//line views/components/view/String.html:56
 	} else {
-//line views/components/view/String.html:58
+//line views/components/view/String.html:57
 		qw422016.E().S(err.Error())
-//line views/components/view/String.html:59
+//line views/components/view/String.html:58
 	}
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
 }
 
-//line views/components/view/String.html:60
-func WriteFormat(qq422016 qtio422016.Writer, v string, ext string) {
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
+func WriteFormatLang(qq422016 qtio422016.Writer, v string, ext string) {
+//line views/components/view/String.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/String.html:60
-	StreamFormat(qw422016, v, ext)
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
+	StreamFormatLang(qw422016, v, ext)
+//line views/components/view/String.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
 }
 
-//line views/components/view/String.html:60
-func Format(v string, ext string) string {
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
+func FormatLang(v string, ext string) string {
+//line views/components/view/String.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/String.html:60
-	WriteFormat(qb422016, v, ext)
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
+	WriteFormatLang(qb422016, v, ext)
+//line views/components/view/String.html:59
 	qs422016 := string(qb422016.B)
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
 	return qs422016
-//line views/components/view/String.html:60
+//line views/components/view/String.html:59
 }
