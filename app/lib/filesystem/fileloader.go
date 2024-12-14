@@ -20,7 +20,7 @@ type FileLoader interface {
 	CopyRecursive(src string, tgt string, ignore []string, logger util.Logger) error
 	Move(src string, tgt string) error
 	ListFiles(path string, ignore []string, logger util.Logger) FileInfos
-	ListFilesRecursive(path string, ignore []string, logger util.Logger) ([]string, error)
+	ListFilesRecursive(path string, ignore []string, logger util.Logger, patterns ...string) ([]string, error)
 	ListTree(cfg util.ValueMap, path string, ignore []string, logger util.Logger, tags ...string) (*Tree, error)
 	ListJSON(path string, ignore []string, trimExtension bool, logger util.Logger) []string
 	ListExtension(path string, ext string, ignore []string, trimExtension bool, logger util.Logger) []string
