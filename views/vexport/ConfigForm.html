@@ -1,7 +1,6 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/edit"
@@ -10,14 +9,13 @@
 
 {% code type ConfigForm struct {
   layout.Basic
-  Project *project.Project
   Cfg util.ValueMap
 } %}
 
 {% func (p *ConfigForm) Body(as *app.State, ps *cutil.PageState) %}
   <form action="" method="post" class="mt expanded">
     <div class="card">
-      <h3>{%= components.SVGIcon(`print`, ps) %}{%s p.Project.Title() %} Export Configuration</h3>
+      <h3>{%= components.SVGIcon(`print`, ps) %} Export Configuration</h3>
       <div class="mt">
         {%= edit.Textarea("cfg", "input-cfg", 16, util.ToJSON(p.Cfg), "JSON object") %}
       </div>

@@ -58,7 +58,7 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 	})
 }
 
-func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger) ([]string, error) {
+func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger, patterns ...string) ([]string, error) {
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
 	ret := &util.StringSlice{}
@@ -68,6 +68,9 @@ func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger
 		}
 		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
+			return nil
+		}
+		if !checkPatterns(patterns, m) {
 			return nil
 		}
 		if info != nil && (!info.IsDir()) && (info.Mode()&os.ModeSymlink != os.ModeSymlink) && (strings.Contains(fp, "/") || strings.Contains(fp, "\\")) {

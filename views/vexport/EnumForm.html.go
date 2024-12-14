@@ -14,7 +14,6 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
@@ -22,111 +21,111 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/EnumForm.html:18
+//line views/vexport/EnumForm.html:17
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/EnumForm.html:18
+//line views/vexport/EnumForm.html:17
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/EnumForm.html:18
+//line views/vexport/EnumForm.html:17
 type EnumForm struct {
 	layout.Basic
-	Project  *project.Project
+	BaseURL  string
 	Enum     *enum.Enum
 	Examples map[string]any
 }
 
-//line views/vexport/EnumForm.html:25
+//line views/vexport/EnumForm.html:24
 func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumForm.html:25
+//line views/vexport/EnumForm.html:24
 	qw422016.N().S(`
 `)
-//line views/vexport/EnumForm.html:26
+//line views/vexport/EnumForm.html:25
 	e := p.Enum
 
-//line views/vexport/EnumForm.html:27
-	u := fmt.Sprintf("/p/%s/export/enums/%s/delete", p.Project.Key, e.Name)
+//line views/vexport/EnumForm.html:26
+	u := fmt.Sprintf("%s/%s/delete", p.BaseURL, e.Name)
 
-//line views/vexport/EnumForm.html:27
+//line views/vexport/EnumForm.html:26
 	qw422016.N().S(`  <form action="" method="post" class="mt expanded">
     <div class="card">
       <div class="right"><a class="link-confirm" href="`)
-//line views/vexport/EnumForm.html:30
+//line views/vexport/EnumForm.html:29
 	qw422016.E().S(u)
-//line views/vexport/EnumForm.html:30
+//line views/vexport/EnumForm.html:29
 	qw422016.N().S(`" data-message="Are you sure you wish to remove this export enum?"><button type="button">Delete</button></a></div>
       <h3>`)
-//line views/vexport/EnumForm.html:31
+//line views/vexport/EnumForm.html:30
 	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
-//line views/vexport/EnumForm.html:31
+//line views/vexport/EnumForm.html:30
 	qw422016.N().S(` `)
-//line views/vexport/EnumForm.html:31
+//line views/vexport/EnumForm.html:30
 	qw422016.E().S(util.Choose(e.Name == "", "New Enum", "Edit "+e.Name))
-//line views/vexport/EnumForm.html:31
+//line views/vexport/EnumForm.html:30
 	qw422016.N().S(`</h3>
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
             `)
-//line views/vexport/EnumForm.html:35
+//line views/vexport/EnumForm.html:34
 	edit.StreamStringTable(qw422016, "name", "", "Name", e.Name, 5, export.Helpers["enum.name"]...)
+//line views/vexport/EnumForm.html:34
+	qw422016.N().S(`
+            `)
+//line views/vexport/EnumForm.html:35
+	edit.StreamStringTable(qw422016, "package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...)
 //line views/vexport/EnumForm.html:35
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:36
-	edit.StreamStringTable(qw422016, "package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...)
+	edit.StreamStringTable(qw422016, "group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...)
 //line views/vexport/EnumForm.html:36
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:37
-	edit.StreamStringTable(qw422016, "group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...)
+	edit.StreamStringTable(qw422016, "description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...)
 //line views/vexport/EnumForm.html:37
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:38
-	edit.StreamStringTable(qw422016, "description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...)
+	edit.StreamStringTable(qw422016, "icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...)
 //line views/vexport/EnumForm.html:38
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:39
-	edit.StreamStringTable(qw422016, "icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...)
+	edit.StreamStringTable(qw422016, "tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...)
 //line views/vexport/EnumForm.html:39
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:40
-	edit.StreamStringTable(qw422016, "tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...)
+	edit.StreamStringTable(qw422016, "titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...)
 //line views/vexport/EnumForm.html:40
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:41
-	edit.StreamStringTable(qw422016, "titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...)
+	edit.StreamStringTable(qw422016, "properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...)
 //line views/vexport/EnumForm.html:41
 	qw422016.N().S(`
             `)
 //line views/vexport/EnumForm.html:42
-	edit.StreamStringTable(qw422016, "properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...)
-//line views/vexport/EnumForm.html:42
-	qw422016.N().S(`
-            `)
-//line views/vexport/EnumForm.html:43
 	edit.StreamTextareaTable(qw422016, "config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...)
-//line views/vexport/EnumForm.html:43
+//line views/vexport/EnumForm.html:42
 	qw422016.N().S(`
           </tbody>
         </table>
       </div>
     </div>
     `)
-//line views/vexport/EnumForm.html:48
+//line views/vexport/EnumForm.html:47
 	edit.StreamRichEditorCard(qw422016, "values", "input-values", "Values", ps, `<a href="#modal-values"><button type="button">Example</button></a>`, "star", enum.ValueFieldDescs, lo.ToAnySlice(e.Values), export.Helpers["enum.values"]...)
-//line views/vexport/EnumForm.html:48
+//line views/vexport/EnumForm.html:47
 	qw422016.N().S(`
     <div class="card">
       <button type="submit">Save</button>
@@ -134,42 +133,42 @@ func (p *EnumForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
   </form>
 `)
-//line views/vexport/EnumForm.html:54
+//line views/vexport/EnumForm.html:53
 	for k, v := range p.Examples {
-//line views/vexport/EnumForm.html:54
+//line views/vexport/EnumForm.html:53
 		qw422016.N().S(`  `)
-//line views/vexport/EnumForm.html:55
+//line views/vexport/EnumForm.html:54
 		components.StreamJSONModal(qw422016, k, "["+k+"] Example", v, 1)
-//line views/vexport/EnumForm.html:55
+//line views/vexport/EnumForm.html:54
 		qw422016.N().S(`
 `)
-//line views/vexport/EnumForm.html:56
+//line views/vexport/EnumForm.html:55
 	}
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 }
 
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 func (p *EnumForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 }
 
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 func (p *EnumForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 	return qs422016
-//line views/vexport/EnumForm.html:57
+//line views/vexport/EnumForm.html:56
 }

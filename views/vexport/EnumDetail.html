@@ -5,14 +5,13 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/file"
   "projectforge.dev/projectforge/app/lib/metamodel/enum"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
 {% code type EnumDetail struct {
   layout.Basic
-  Project *project.Project
+  BaseURL string
   Enum *enum.Enum
   File *file.File
 } %}
@@ -21,11 +20,11 @@
   {%- code e := p.Enum -%}
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/enums/{%s e.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.BaseURL %}/{%s e.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(e.IconSafe(), ps) %} {%s e.Name %}</h3>
     <em>export enum</em>
-    {%= enumSummary(p.Project.Key, e, as, ps) %}
+    {%= enumSummary(e, as, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`star`, ps) %} Values</h3>
@@ -37,7 +36,7 @@
   </div>{%- endif -%}
 {% endfunc %}
 
-{% func enumSummary(pKey string, enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
+{% func enumSummary(enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 full-width">
       <tbody>

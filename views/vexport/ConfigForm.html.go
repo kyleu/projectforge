@@ -8,51 +8,47 @@ package vexport
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/ConfigForm.html:11
+//line views/vexport/ConfigForm.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/ConfigForm.html:11
+//line views/vexport/ConfigForm.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/ConfigForm.html:11
+//line views/vexport/ConfigForm.html:10
 type ConfigForm struct {
 	layout.Basic
-	Project *project.Project
-	Cfg     util.ValueMap
+	Cfg util.ValueMap
 }
 
-//line views/vexport/ConfigForm.html:17
+//line views/vexport/ConfigForm.html:15
 func (p *ConfigForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ConfigForm.html:17
+//line views/vexport/ConfigForm.html:15
 	qw422016.N().S(`
   <form action="" method="post" class="mt expanded">
     <div class="card">
       <h3>`)
-//line views/vexport/ConfigForm.html:20
+//line views/vexport/ConfigForm.html:18
 	components.StreamSVGIcon(qw422016, `print`, ps)
-//line views/vexport/ConfigForm.html:20
-	qw422016.E().S(p.Project.Title())
-//line views/vexport/ConfigForm.html:20
+//line views/vexport/ConfigForm.html:18
 	qw422016.N().S(` Export Configuration</h3>
       <div class="mt">
         `)
-//line views/vexport/ConfigForm.html:22
+//line views/vexport/ConfigForm.html:20
 	edit.StreamTextarea(qw422016, "cfg", "input-cfg", 16, util.ToJSON(p.Cfg), "JSON object")
-//line views/vexport/ConfigForm.html:22
+//line views/vexport/ConfigForm.html:20
 	qw422016.N().S(`
       </div>
       <div class="mt">
@@ -62,31 +58,31 @@ func (p *ConfigForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     </div>
   </form>
 `)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 }
 
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 func (p *ConfigForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 }
 
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 func (p *ConfigForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	qs422016 := string(qb422016.B)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 	return qs422016
-//line views/vexport/ConfigForm.html:30
+//line views/vexport/ConfigForm.html:28
 }

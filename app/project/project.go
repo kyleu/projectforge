@@ -89,6 +89,14 @@ func (p *Project) WebPath() string {
 	return "/p/" + p.Key
 }
 
+func (p *Project) WebPathModels() string {
+	return p.WebPath() + "/export/models"
+}
+
+func (p *Project) WebPathEnums() string {
+	return p.WebPath() + "/export/enums"
+}
+
 func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) error {
 	if p.ExportArgs == nil && p.HasModule("export") {
 		fs, err := pSvc.GetFilesystem(p)

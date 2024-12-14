@@ -7,7 +7,6 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/metamodel/enum"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/project/export"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
@@ -17,14 +16,14 @@
 
 {% code type EnumForm struct {
   layout.Basic
-  Project *project.Project
+  BaseURL string
   Enum *enum.Enum
   Examples map[string]any
 } %}
 
 {% func (p *EnumForm) Body(as *app.State, ps *cutil.PageState) %}
   {%- code e := p.Enum -%}
-  {%- code u := fmt.Sprintf("/p/%s/export/enums/%s/delete", p.Project.Key, e.Name) -%}
+  {%- code u := fmt.Sprintf("%s/%s/delete", p.BaseURL, e.Name) -%}
   <form action="" method="post" class="mt expanded">
     <div class="card">
       <div class="right"><a class="link-confirm" href="{%s u %}" data-message="Are you sure you wish to remove this export enum?"><button type="button">Delete</button></a></div>

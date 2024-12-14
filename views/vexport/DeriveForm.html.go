@@ -8,7 +8,6 @@ package vexport
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/derive"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
@@ -16,55 +15,54 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/DeriveForm.html:12
+//line views/vexport/DeriveForm.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/DeriveForm.html:12
+//line views/vexport/DeriveForm.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/DeriveForm.html:12
+//line views/vexport/DeriveForm.html:11
 type DeriveForm struct {
 	layout.Basic
-	Project *project.Project
-	Result  derive.Result
-	Form    util.ValueMap
+	Result derive.Result
+	Form   util.ValueMap
 }
 
-//line views/vexport/DeriveForm.html:19
+//line views/vexport/DeriveForm.html:17
 func (p *DeriveForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:19
+//line views/vexport/DeriveForm.html:17
 	qw422016.N().S(`
   <div class="card">
     <form action="" method="post" class="mt expanded">
       <h3>`)
-//line views/vexport/DeriveForm.html:22
+//line views/vexport/DeriveForm.html:20
 	components.StreamSVGIcon(qw422016, `dna`, ps)
-//line views/vexport/DeriveForm.html:22
+//line views/vexport/DeriveForm.html:20
 	qw422016.N().S(` Import</h3>
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
             `)
-//line views/vexport/DeriveForm.html:26
+//line views/vexport/DeriveForm.html:24
 	edit.StreamStringTable(qw422016, "name", "", "Name", p.Form.GetStringOpt("name"), 5, "If provided, overrides the detected model name")
-//line views/vexport/DeriveForm.html:26
+//line views/vexport/DeriveForm.html:24
 	qw422016.N().S(`
             `)
-//line views/vexport/DeriveForm.html:27
+//line views/vexport/DeriveForm.html:25
 	edit.StreamStringTable(qw422016, "pkg", "", "Package", p.Form.GetStringOpt("pkg"), 5, "If provided, overrides the detected package")
-//line views/vexport/DeriveForm.html:27
+//line views/vexport/DeriveForm.html:25
 	qw422016.N().S(`
             `)
-//line views/vexport/DeriveForm.html:28
+//line views/vexport/DeriveForm.html:26
 	edit.StreamTextareaTable(qw422016, "content", "", "Content", 4, p.Form.GetStringOpt("content"), 5, "Try pasting any ol' thing, it'll figure it out")
-//line views/vexport/DeriveForm.html:28
+//line views/vexport/DeriveForm.html:26
 	qw422016.N().S(`
             <tr>
               <td colspan="2">
@@ -78,88 +76,88 @@ func (p *DeriveForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     </form>
   </div>
 `)
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:38
 	if p.Result != nil {
-//line views/vexport/DeriveForm.html:40
+//line views/vexport/DeriveForm.html:38
 		qw422016.N().S(`  `)
-//line views/vexport/DeriveForm.html:41
+//line views/vexport/DeriveForm.html:39
 		StreamDeriveResult(qw422016, p.Result, as, ps)
-//line views/vexport/DeriveForm.html:41
+//line views/vexport/DeriveForm.html:39
 		qw422016.N().S(`
 `)
-//line views/vexport/DeriveForm.html:42
+//line views/vexport/DeriveForm.html:40
 	}
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 }
 
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 func (p *DeriveForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 }
 
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 func (p *DeriveForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	qs422016 := string(qb422016.B)
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 	return qs422016
-//line views/vexport/DeriveForm.html:43
+//line views/vexport/DeriveForm.html:41
 }
 
-//line views/vexport/DeriveForm.html:45
+//line views/vexport/DeriveForm.html:43
 func StreamDeriveResult(qw422016 *qt422016.Writer, r derive.Result, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:45
+//line views/vexport/DeriveForm.html:43
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:45
 	components.StreamSVGIcon(qw422016, `play`, ps)
-//line views/vexport/DeriveForm.html:47
+//line views/vexport/DeriveForm.html:45
 	qw422016.N().S(` Results</h3>
     `)
-//line views/vexport/DeriveForm.html:48
+//line views/vexport/DeriveForm.html:46
 	components.StreamJSON(qw422016, r)
-//line views/vexport/DeriveForm.html:48
+//line views/vexport/DeriveForm.html:46
 	qw422016.N().S(`
   </div>
 `)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 }
 
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 func WriteDeriveResult(qq422016 qtio422016.Writer, r derive.Result, as *app.State, ps *cutil.PageState) {
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	StreamDeriveResult(qw422016, r, as, ps)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 }
 
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 func DeriveResult(r derive.Result, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	WriteDeriveResult(qb422016, r, as, ps)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	qs422016 := string(qb422016.B)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 	return qs422016
-//line views/vexport/DeriveForm.html:50
+//line views/vexport/DeriveForm.html:48
 }

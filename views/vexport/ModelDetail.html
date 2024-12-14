@@ -5,7 +5,6 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/file"
   "projectforge.dev/projectforge/app/lib/metamodel/model"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
@@ -13,7 +12,7 @@
 
 {% code type ModelDetail struct {
   layout.Basic
-  Project *project.Project
+  BaseURL string
   Model *model.Model
   Files file.Files
 } %}
@@ -22,11 +21,11 @@
   {%- code m := p.Model -%}
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/models/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.BaseURL %}/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
     <em>export model</em>
-    {%= modelSummary(p.Project.Key, m, as, ps) %}
+    {%= modelSummary(p.BaseURL, m, as, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
@@ -35,7 +34,7 @@
   {%- if len(m.Relations) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`social`, ps) %} Relations</h3>
-    {%= modelRelations(m, p.Project, as, ps) %}
+    {%= modelRelations(m, p.BaseURL, as, ps) %}
   </div>{%- endif -%}{%- if len(m.Links) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`link`, ps) %} Links</h3>
@@ -51,7 +50,7 @@
   </div>{%- endif -%}
 {% endfunc %}
 
-{% func modelSummary(pKey string, model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelSummary(baseURL string, model *model.Model, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 full-width">
       <tbody>
@@ -100,7 +99,7 @@
         <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
         {%- endif -%}
         {%- if len(model.SeedData) > 0 -%}
-        <tr><th>Seed Data</th><td><a href="/p/{%s pKey %}/export/models/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
+        <tr><th>Seed Data</th><td><a href="{%s baseURL %}/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
         {%- endif -%}
         {%- if len(model.Config) > 0 -%}
         <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>
@@ -157,7 +156,7 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func modelRelations(model *model.Model, prj *project.Project, as *app.State, ps *cutil.PageState) %}
+{% func modelRelations(model *model.Model, baseURL string, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 full-width">
       <thead>
@@ -173,7 +172,7 @@
         <tr>
           <td>{%s rel.Name %}</td>
           <td>{%s strings.Join(rel.Src, ", ") %}</td>
-          <td><a href="{%s prj.WebPath() %}/export/models/{%s rel.Table %}">{%s rel.Table %}</a></td>
+          <td><a href="{%s baseURL %}/{%s rel.Table %}">{%s rel.Table %}</a></td>
           <td>{%s strings.Join(rel.Tgt, ", ") %}</td>
         </tr>
         {%- endfor -%}
