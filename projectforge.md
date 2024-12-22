@@ -11,7 +11,6 @@ The following modules were used to build this project:
 - [docbrowse](./doc/module/docbrowse.md)
 - [filesystem](./doc/module/filesystem.md)
 - [git](./doc/module/git.md)
-- [graphql](./doc/module/graphql.md)
 - [help](./doc/module/help.md)
 - [ios](./doc/module/ios.md)
 - [jsx](./doc/module/jsx.md)
