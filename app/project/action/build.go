@@ -62,6 +62,7 @@ var (
 	buildClean         = simpleBuild("clean", "Clean", "make clean")
 	buildDeps          = &Build{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps}
 	buildImports       = &Build{Key: "imports", Title: "Imports", Description: "Organizes the imports in source files and templates", Run: onImports}
+	buildCodeStats     = &Build{Key: "codestats", Title: "Code Stats", Description: "View statistics about the code in your project", Run: onCodeStats}
 	buildIgnored       = &Build{Key: "ignored", Title: "Ignored", Description: "Shows files that are ignored by code generation", Run: onIgnored}
 	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
@@ -84,7 +85,7 @@ var (
 )
 
 var AllBuilds = Builds{
-	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
+	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildCodeStats, buildIgnored, buildPackages, buildCleanup, buildSize,
 	buildTidy, buildFormat, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
 }
 

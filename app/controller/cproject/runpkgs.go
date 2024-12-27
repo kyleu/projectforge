@@ -30,7 +30,7 @@ func runPkgs(prj *project.Project, res *action.Result, r *http.Request, as *app.
 	return controller.Render(r, as, &vbuild.Packages{Project: prj, BuildResult: res, Packages: pkgs}, ps, "projects", prj.Key, "Packages")
 }
 
-func runAllPkgs(cfg util.ValueMap, prjs project.Projects, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
+func runAllPkgs(cfg util.ValueMap, prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	mu := sync.Mutex{}
 	ret := map[string]*action.Result{}
 	pkgs := map[string]build.Pkgs{}

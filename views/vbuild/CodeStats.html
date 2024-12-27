@@ -1,0 +1,166 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/project/action"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vproject"
+) %}
+
+{% code type CodeStats struct {
+  layout.Basic
+  Project *project.Project
+  Result *action.Result
+  Stats *action.CodeStats
+} %}
+
+{% func (p *CodeStats) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code prj := p.Project -%}
+  {%= vproject.Summary(prj, "Code Stats", nil, &action.TypeBuild, nil, ps) %}
+  {%= BuildOptions(prj.Key, false, ps) %}
+
+  {%- if p.Result != nil && len(p.Result.Errors) > 0 -%}
+  <div class="card">
+    <h3>Error</h3>
+    {%- for _, e := range p.Result.Errors -%}
+    <p class="error">{%s e %}</p>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+
+  <div class="card">
+    <h3>Code Stats</h3>
+    {%= codeStats(p.Project.Key, p.Stats, ps) %}
+  </div>
+{% endfunc %}
+
+{% code type CodeStatsAll struct {
+  layout.Basic
+  Projects project.Projects
+  Results map[string]*action.Result
+  CodeStats map[string]*action.CodeStats
+} %}
+
+{% func (p *CodeStatsAll) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Code Stats</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, prj := range p.Projects -%}
+        {%- code
+          res := p.Results[prj.Key]
+          stats := p.CodeStats[prj.Key]
+        -%}
+        <li>
+          <input id="accordion-{%s prj.Key %}" type="checkbox" hidden />
+          <label for="accordion-{%s prj.Key %}">
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
+          </label>
+          <div class="bd"><div><div>
+            {%= vproject.Summary(prj, "Code Stats", nil, nil, nil, ps) %}
+            {%- if res != nil && len(res.Errors) > 0 -%}
+            <div class="card">
+              <h3>Error</h3>
+              {%- for _, e := range res.Errors -%}
+              <p class="error">{%s e %}</p>
+              {%- endfor -%}
+            </div>
+            {%- endif -%}
+            <div class="card">
+              <h3>Code Stats</h3>
+              {%- if stats == nil -%}
+              <em>no stats available</em>
+              {%- else -%}
+              {%= codeStats(prj.Key, stats, ps) %}
+              {%- endif -%}
+            </div>
+          </div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func codeStats(key string, ci *action.CodeStats, ps *cutil.PageState) %}
+  {%- code
+    if ci == nil {
+      panic("!!!")
+    }
+  -%}
+  <div class="overflow full-width">
+    <table class="expanded min-200">
+      <thead>
+        <tr>
+          <th class="shrink">Type</th>
+          <th>Code</th>
+          <th>Comments</th>
+          <th>Blanks</th>
+          <th>Files</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, t := range ci.Types -%}
+        <tr>
+          <td>{%s t.Name %}</td>
+          <td>{%d t.Code %}</td>
+          <td>{%d t.Comments %}</td>
+          <td>{%d t.Blanks %}</td>
+          <td><a href="#modal-{%s key %}-{%s t.Name %}">{%d len(t.Files) %}</a></td>
+        </tr>
+        {%- endfor -%}
+        {%- code t := ci.Total -%}
+        <tr style="border-top: var(--border);">
+          <td style="border-top: var(--border);" class="nowrap"><em>{%s t.Name %}</em></td>
+          <td style="border-top: var(--border);">{%d t.Code %}</td>
+          <td style="border-top: var(--border);">{%d t.Comments %}</td>
+          <td style="border-top: var(--border);">{%d t.Blanks %}</td>
+          <td style="border-top: var(--border);"><a href="#modal-{%s key %}-{%s t.Name %}">{%d len(t.Files) %}</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- for _, t := range ci.Types -%}
+    {%= codeModal(key, t, ps) %}
+  {%- endfor -%}
+  {%= codeModal(key, ci.Total, ps) %}
+{% endfunc %}
+
+{% func codeModal(key string, t *action.CodeType, ps *cutil.PageState) %}
+  <div id="modal-{%s key %}-{%s t.Name %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content" style="min-width: 90%;">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s t.Name %} Files</h2>
+      </div>
+      <div class="modal-body">
+        <div class="overflow full-width">
+          <table class="expanded min-200">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Comments</th>
+                <th>Blanks</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+            {%- for _, x := range t.Files -%}
+            <tr>
+              <td><a href="/p/{%s key %}/fs/{%s x.Name %}">{%s x.Name %}</a></td>
+              <td>{%d x.Code %}</td>
+              <td>{%d x.Comments %}</td>
+              <td>{%d x.Blanks %}</td>
+              <td>{%d x.Total() %}</td>
+            </tr>
+            {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

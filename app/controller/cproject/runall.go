@@ -69,9 +69,11 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
 				return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 			case depsKey:
-				return runAllDeps(cfg, prjs, tags, w, r, as, ps)
+				return runAllDeps(cfg, prjs, tags, r, as, ps)
 			case pkgsKey:
-				return runAllPkgs(cfg, prjs, w, r, as, ps)
+				return runAllPkgs(cfg, prjs, r, as, ps)
+			case statsKey:
+				return runAllCodeStats(cfg, prjs, r, as, ps)
 			case "lint":
 				return "", errors.New("can't run multiple instances of golangcilint")
 			case "full":

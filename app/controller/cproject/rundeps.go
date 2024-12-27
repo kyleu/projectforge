@@ -37,9 +37,7 @@ func runDeps(prj *project.Project, res *action.Result, r *http.Request, as *app.
 	return controller.Render(r, as, page, ps, "projects", prj.Key, "Dependency Management")
 }
 
-func runAllDeps(
-	cfg util.ValueMap, prjs project.Projects, tags []string, w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState,
-) (string, error) {
+func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	var msg string
 	key := cfg.GetStringOpt("key")
 	if pj := cfg.GetStringOpt("project"); pj != "" {
