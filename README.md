@@ -76,6 +76,7 @@ A project managed by Project Forge...
 | [OAuth](module/oauth/doc/module/oauth.md)                        | Provides logins and session management for many OAuth providers                                |
 | [OpenAPI](module/openapi/doc/module/openapi.md)                  | Embeds the Swagger UI, using your OpenAPI specification                                        |
 | [Playwright](module/playwright/doc/module/playwright.md)         | Adds a project for testing the UI using playwright.dev                                         |
+| [Plot](module/plot/doc/module/plot.md)                           | Library for visualizing data using Observable Plot                                             |
 | [PostgreSQL](module/postgres/doc/module/postgres.md)             | Provides an API for accessing PostgreSQL databases                                             |
 | [Process](module/process/doc/module/process.md)                  | Provides a framework for managing system processes                                             |
 | [Proxy](module/proxy/doc/module/proxy.md)                        | Provides an HTTP proxy while still enforcing this app's security                               |
@@ -88,6 +89,7 @@ A project managed by Project Forge...
 | [Search](module/search/doc/module/search.md)                     | Adds search facilities to the top-level navigation bar                                         |
 | [SQL Server](module/sqlserver/doc/module/sqlserver.md)           | Provides an API for accessing MSSQL databases                                                  |
 | [SQLite](module/sqlite/doc/module/sqlite.md)                     | Provides an API for accessing SQLite databases                                                 |
+| [Task](module/themecatalog/doc/module/task.md)                   | Provides an engine for executing and monitoring tasks                                          |
 | [Theme Catalog](module/themecatalog/doc/module/themecatalog.md)  | Includes a dozen default themes, and facilities to create additional                           |
 | [Types](module/types/doc/module/types.md)                        | Classes for representing common data types                                                     |
 | [Upgrade](module/upgrade/doc/module/upgrade.md)                  | Provides in-place version upgrades using GitHub Releases                                       |

@@ -20,8 +20,8 @@ import (
 var nativeModuleKeys = []string{
 	"android", "audit", "brands", "core", "database", "databaseui", "desktop", "docbrowse", "export", "expression",
 	"filesystem", "git", "graphql", "har", "help", "ios", "jsx", "marketing", "migration", "metamodel", util.DatabaseMySQL,
-	"notebook", "notarize", "numeric", "oauth", "openapi", "playwright", util.DatabasePostgreSQL, "process", "proxy", "queue",
-	"readonlydb", "richedit", "sandbox", "schedule", "scripting", "search", util.DatabaseSQLite, util.DatabaseSQLServer,
+	"notebook", "notarize", "numeric", "oauth", "openapi", "playwright", "plot", util.DatabasePostgreSQL, "process", "proxy",
+	"queue", "readonlydb", "richedit", "sandbox", "schedule", "scripting", "search", util.DatabaseSQLite, util.DatabaseSQLServer,
 	"task", "themecatalog", "types", "upgrade", "user", "wasmclient", "wasmserver", "websocket",
 }
 

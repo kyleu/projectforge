@@ -56,6 +56,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `oauth`: Login and session management for many OAuth providers
 - `openapi`: Embeds the Swagger UI, using your OpenAPI specification
 - `playwright`: Adds a project for testing the UI using playwright.dev
+- `plot`: Library for visualizing data using Observable Plot
 - `postgres`: API for accessing PostgreSQL databases
 - `process`: Framework and UI for managing system processes.
 - `proxy`: Provides an HTTP proxy while still enforcing this app's security

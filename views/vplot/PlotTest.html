@@ -1,0 +1,17 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type PlotTest struct {
+  layout.Basic
+} %}
+
+{% func (p *PlotTest) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`chart`, ps) %} Plot Test</h3>
+    <div class="mt">TODO</div>
+  </div>
+{% endfunc %}

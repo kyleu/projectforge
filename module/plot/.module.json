@@ -1,0 +1,9 @@
+{
+  "name": "Plot",
+  "icon": "chart",
+  "description": "Library for visualizing data using Observable Plot",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/plot"
+}

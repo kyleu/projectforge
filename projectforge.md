@@ -18,6 +18,7 @@ The following modules were used to build this project:
 - [metamodel](./doc/module/metamodel.md)
 - [notarize](./doc/module/notarize.md)
 - [playwright](./doc/module/playwright.md)
+- [plot](./doc/module/plot.md)
 - [process](./doc/module/process.md)
 - [richedit](./doc/module/richedit.md)
 - [search](./doc/module/search.md)
