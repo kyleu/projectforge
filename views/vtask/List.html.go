@@ -73,7 +73,11 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtask/List.html:33
 		components.StreamSVGInline(qw422016, t.IconSafe(), 16, ps)
 //line views/vtask/List.html:33
-		qw422016.N().S(` `)
+		qw422016.N().S(`</a> <a href="`)
+//line views/vtask/List.html:33
+		qw422016.E().S(t.WebPath())
+//line views/vtask/List.html:33
+		qw422016.N().S(`">`)
 //line views/vtask/List.html:33
 		qw422016.E().S(t.Key)
 //line views/vtask/List.html:33

@@ -30,7 +30,7 @@
           {%- endif -%}
           {%- for _, t := range p.Tasks -%}
           <tr>
-            <td class="shrink"><a href="{%s t.WebPath() %}">{%= components.SVGInline(t.IconSafe(), 16, ps) %} {%s t.Key %}</a></td>
+            <td class="shrink"><a href="{%s t.WebPath() %}">{%= components.SVGInline(t.IconSafe(), 16, ps) %}</a> <a href="{%s t.WebPath() %}">{%s t.Key %}</a></td>
             <td>{%s t.TitleSafe() %}</td>
           </tr>
           {%- endfor -%}

@@ -70,7 +70,11 @@ func StreamDetailModules(qw422016 *qt422016.Writer, modKeys []string, mods modul
 //line views/vproject/DetailModules.html:21
 			components.StreamSVGInline(qw422016, mod.Icon, 16, ps)
 //line views/vproject/DetailModules.html:21
-			qw422016.N().S(` `)
+			qw422016.N().S(`</a> <a href="/m/`)
+//line views/vproject/DetailModules.html:21
+			qw422016.E().S(mod.Key)
+//line views/vproject/DetailModules.html:21
+			qw422016.N().S(`">`)
 //line views/vproject/DetailModules.html:21
 			qw422016.E().S(mod.Title())
 //line views/vproject/DetailModules.html:21

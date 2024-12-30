@@ -18,7 +18,7 @@
         </tr>
         {%- else -%}
         <tr>
-          <td class="shrink"><a href="/m/{%s mod.Key %}">{%= components.SVGInline(mod.Icon, 16, ps) %} {%s mod.Title() %}</a></td>
+          <td class="shrink"><a href="/m/{%s mod.Key %}">{%= components.SVGInline(mod.Icon, 16, ps) %}</a> <a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a></td>
           <td><em>{%s mod.Description %}</em></td>
         </tr>
         {%- endif -%}

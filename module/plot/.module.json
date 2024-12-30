@@ -5,5 +5,8 @@
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
-  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/plot"
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/plot",
+  "technology": [
+    "typescript"
+  ]
 }
