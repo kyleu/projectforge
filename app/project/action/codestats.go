@@ -5,6 +5,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -108,4 +110,16 @@ func newCodeStats() *CodeStats {
 func (c *CodeStats) Add(x *CodeType) {
 	c.Types = append(c.Types, x)
 	c.Total.Add(x)
+}
+
+func (c *CodeStats) ToMaps() []util.ValueMap {
+	return lo.Map(c.Types, func(x *CodeType, _ int) util.ValueMap {
+		return util.ValueMap{
+			"name":     x.Name,
+			"code":     x.Code,
+			"comments": x.Comments,
+			"blanks":   x.Blanks,
+			"files":    len(x.Files),
+		}
+	})
 }

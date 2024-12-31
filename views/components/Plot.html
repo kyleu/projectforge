@@ -1,0 +1,46 @@
+{% import "projectforge.dev/projectforge/app/util" %}
+
+{% func PlotAssets() %}
+  <script src="/assets/plot/d3.min.js" type="application/javascript" defer="defer"></script>
+  <script src="/assets/plot/plot.min.js" type="application/javascript" defer="defer"></script>
+{% endfunc %}
+
+{% func PlotCall(id string) %}
+    function createPlot_{%s id %}(div) {
+      function render() {
+        const plot = plot_{%s id %}(div);
+        div.innerHTML = "";
+        div.appendChild(plot);
+      }
+
+      window.addEventListener('resize', render);
+      render();
+
+      return () => {
+        window.removeEventListener('resize', render);
+      };
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const div = document.querySelector("#{%s id %}");
+      const cancel = createPlot_{%s id %}(div);
+    });
+{% endfunc %}
+
+{% func PlotHorizontalBar(id string, data []util.ValueMap, x string, y string, title string, marginLeft int) %}
+  <script type="module">
+    // files: ${d.files}\nsize: ${d.size.toLocaleString()} bytes
+    const data = {%s= util.ToJSON(data) %};
+
+    function plot_{%s id %}(div) {
+      const height = {%d (len(data) * 24) + 48 %};
+      const width = div.clientWidth;
+      const color = { legend: false };
+      const marginLeft = {%d marginLeft %};
+      const marks = [Plot.barX(data, { x: "{%s x %}", fill: "{%s y %}", y: "{%s y %}", title: d => `{%s title %}`, marginLeft })];
+      return Plot.plot({ height, width, color, marks });
+    }
+
+    {%= PlotCall(id) %}
+  </script>
+{% endfunc %}

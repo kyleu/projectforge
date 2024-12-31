@@ -16,6 +16,7 @@
 } %}
 
 {% func (p *CodeStats) Body(as *app.State, ps *cutil.PageState) %}
+  {%= components.PlotAssets() %}
   {%- code prj := p.Project -%}
   {%= vproject.Summary(prj, "Code Stats", nil, &action.TypeBuild, nil, ps) %}
   {%= BuildOptions(prj.Key, false, ps) %}
@@ -43,6 +44,7 @@
 } %}
 
 {% func (p *CodeStatsAll) Body(as *app.State, ps *cutil.PageState) %}
+  {%= components.PlotAssets() %}
   <div class="card">
     <h3>Code Stats</h3>
     <div class="mt">
@@ -84,12 +86,10 @@
 {% endfunc %}
 
 {% func codeStats(key string, ci *action.CodeStats, ps *cutil.PageState) %}
-  {%- code
-    if ci == nil {
-      panic("!!!")
-    }
-  -%}
-  <div class="overflow full-width">
+  <div class="overflow full-width mt">
+    <div id="codestats_{%s key %}"></div>
+  </div>
+  <div class="overflow full-width mt">
     <table class="expanded min-200">
       <thead>
         <tr>
@@ -125,6 +125,7 @@
     {%= codeModal(key, t, ps) %}
   {%- endfor -%}
   {%= codeModal(key, ci.Total, ps) %}
+  {%= components.PlotHorizontalBar("codestats_" + key, ci.ToMaps(), "files", "name", "[" + key + "] Code Stats", 92) %}
 {% endfunc %}
 
 {% func codeModal(key string, t *action.CodeType, ps *cutil.PageState) %}

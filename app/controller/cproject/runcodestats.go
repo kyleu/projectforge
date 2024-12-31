@@ -2,9 +2,10 @@ package cproject
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"net/http"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
@@ -37,6 +38,9 @@ func runAllCodeStats(cfg util.ValueMap, prjs project.Projects, r *http.Request, 
 	for _, prj := range prjs {
 		println(" - ", prj.Key)
 		res := action.Apply(ps.Context, actionParams(prj.Key, action.TypeBuild, cfg, as, ps.Logger))
+		if res.HasErrors() {
+			return "", errors.New(strings.Join(res.Errors, ", "))
+		}
 		stats, ok := res.Data.(*action.CodeStats)
 		if !ok {
 			return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)

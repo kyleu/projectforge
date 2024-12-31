@@ -40,86 +40,91 @@ type CodeStats struct {
 func (p *CodeStats) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/vbuild/CodeStats.html:18
 	qw422016.N().S(`
-`)
+  `)
 //line views/vbuild/CodeStats.html:19
+	components.StreamPlotAssets(qw422016)
+//line views/vbuild/CodeStats.html:19
+	qw422016.N().S(`
+`)
+//line views/vbuild/CodeStats.html:20
 	prj := p.Project
 
-//line views/vbuild/CodeStats.html:19
+//line views/vbuild/CodeStats.html:20
 	qw422016.N().S(`  `)
-//line views/vbuild/CodeStats.html:20
+//line views/vbuild/CodeStats.html:21
 	vproject.StreamSummary(qw422016, prj, "Code Stats", nil, &action.TypeBuild, nil, ps)
-//line views/vbuild/CodeStats.html:20
+//line views/vbuild/CodeStats.html:21
 	qw422016.N().S(`
   `)
-//line views/vbuild/CodeStats.html:21
+//line views/vbuild/CodeStats.html:22
 	StreamBuildOptions(qw422016, prj.Key, false, ps)
-//line views/vbuild/CodeStats.html:21
+//line views/vbuild/CodeStats.html:22
 	qw422016.N().S(`
 
 `)
-//line views/vbuild/CodeStats.html:23
+//line views/vbuild/CodeStats.html:24
 	if p.Result != nil && len(p.Result.Errors) > 0 {
-//line views/vbuild/CodeStats.html:23
+//line views/vbuild/CodeStats.html:24
 		qw422016.N().S(`  <div class="card">
     <h3>Error</h3>
 `)
-//line views/vbuild/CodeStats.html:26
+//line views/vbuild/CodeStats.html:27
 		for _, e := range p.Result.Errors {
-//line views/vbuild/CodeStats.html:26
+//line views/vbuild/CodeStats.html:27
 			qw422016.N().S(`    <p class="error">`)
-//line views/vbuild/CodeStats.html:27
+//line views/vbuild/CodeStats.html:28
 			qw422016.E().S(e)
-//line views/vbuild/CodeStats.html:27
+//line views/vbuild/CodeStats.html:28
 			qw422016.N().S(`</p>
 `)
-//line views/vbuild/CodeStats.html:28
+//line views/vbuild/CodeStats.html:29
 		}
-//line views/vbuild/CodeStats.html:28
+//line views/vbuild/CodeStats.html:29
 		qw422016.N().S(`  </div>
 `)
-//line views/vbuild/CodeStats.html:30
+//line views/vbuild/CodeStats.html:31
 	}
-//line views/vbuild/CodeStats.html:30
+//line views/vbuild/CodeStats.html:31
 	qw422016.N().S(`
   <div class="card">
     <h3>Code Stats</h3>
     `)
-//line views/vbuild/CodeStats.html:34
+//line views/vbuild/CodeStats.html:35
 	streamcodeStats(qw422016, p.Project.Key, p.Stats, ps)
-//line views/vbuild/CodeStats.html:34
+//line views/vbuild/CodeStats.html:35
 	qw422016.N().S(`
   </div>
 `)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 }
 
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 func (p *CodeStats) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 }
 
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 func (p *CodeStats) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 	return qs422016
-//line views/vbuild/CodeStats.html:36
+//line views/vbuild/CodeStats.html:37
 }
 
-//line views/vbuild/CodeStats.html:38
+//line views/vbuild/CodeStats.html:39
 type CodeStatsAll struct {
 	layout.Basic
 	Projects  project.Projects
@@ -127,149 +132,154 @@ type CodeStatsAll struct {
 	CodeStats map[string]*action.CodeStats
 }
 
-//line views/vbuild/CodeStats.html:45
+//line views/vbuild/CodeStats.html:46
 func (p *CodeStatsAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:45
+//line views/vbuild/CodeStats.html:46
+	qw422016.N().S(`
+  `)
+//line views/vbuild/CodeStats.html:47
+	components.StreamPlotAssets(qw422016)
+//line views/vbuild/CodeStats.html:47
 	qw422016.N().S(`
   <div class="card">
     <h3>Code Stats</h3>
     <div class="mt">
       <ul class="accordion">
 `)
-//line views/vbuild/CodeStats.html:50
-	for _, prj := range p.Projects {
 //line views/vbuild/CodeStats.html:52
+	for _, prj := range p.Projects {
+//line views/vbuild/CodeStats.html:54
 		res := p.Results[prj.Key]
 		stats := p.CodeStats[prj.Key]
 
-//line views/vbuild/CodeStats.html:54
+//line views/vbuild/CodeStats.html:56
 		qw422016.N().S(`        <li>
           <input id="accordion-`)
-//line views/vbuild/CodeStats.html:56
+//line views/vbuild/CodeStats.html:58
 		qw422016.E().S(prj.Key)
-//line views/vbuild/CodeStats.html:56
+//line views/vbuild/CodeStats.html:58
 		qw422016.N().S(`" type="checkbox" hidden />
           <label for="accordion-`)
-//line views/vbuild/CodeStats.html:57
+//line views/vbuild/CodeStats.html:59
 		qw422016.E().S(prj.Key)
-//line views/vbuild/CodeStats.html:57
+//line views/vbuild/CodeStats.html:59
 		qw422016.N().S(`">
             `)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:60
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:60
 		qw422016.N().S(` `)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:60
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:60
 		qw422016.N().S(` `)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:60
 		qw422016.E().S(prj.Title())
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:60
 		qw422016.N().S(`
           </label>
           <div class="bd"><div><div>
             `)
-//line views/vbuild/CodeStats.html:61
+//line views/vbuild/CodeStats.html:63
 		vproject.StreamSummary(qw422016, prj, "Code Stats", nil, nil, nil, ps)
-//line views/vbuild/CodeStats.html:61
+//line views/vbuild/CodeStats.html:63
 		qw422016.N().S(`
 `)
-//line views/vbuild/CodeStats.html:62
+//line views/vbuild/CodeStats.html:64
 		if res != nil && len(res.Errors) > 0 {
-//line views/vbuild/CodeStats.html:62
+//line views/vbuild/CodeStats.html:64
 			qw422016.N().S(`            <div class="card">
               <h3>Error</h3>
 `)
-//line views/vbuild/CodeStats.html:65
+//line views/vbuild/CodeStats.html:67
 			for _, e := range res.Errors {
-//line views/vbuild/CodeStats.html:65
+//line views/vbuild/CodeStats.html:67
 				qw422016.N().S(`              <p class="error">`)
-//line views/vbuild/CodeStats.html:66
+//line views/vbuild/CodeStats.html:68
 				qw422016.E().S(e)
-//line views/vbuild/CodeStats.html:66
+//line views/vbuild/CodeStats.html:68
 				qw422016.N().S(`</p>
 `)
-//line views/vbuild/CodeStats.html:67
+//line views/vbuild/CodeStats.html:69
 			}
-//line views/vbuild/CodeStats.html:67
+//line views/vbuild/CodeStats.html:69
 			qw422016.N().S(`            </div>
 `)
-//line views/vbuild/CodeStats.html:69
+//line views/vbuild/CodeStats.html:71
 		}
-//line views/vbuild/CodeStats.html:69
+//line views/vbuild/CodeStats.html:71
 		qw422016.N().S(`            <div class="card">
               <h3>Code Stats</h3>
 `)
-//line views/vbuild/CodeStats.html:72
+//line views/vbuild/CodeStats.html:74
 		if stats == nil {
-//line views/vbuild/CodeStats.html:72
+//line views/vbuild/CodeStats.html:74
 			qw422016.N().S(`              <em>no stats available</em>
 `)
-//line views/vbuild/CodeStats.html:74
+//line views/vbuild/CodeStats.html:76
 		} else {
-//line views/vbuild/CodeStats.html:74
+//line views/vbuild/CodeStats.html:76
 			qw422016.N().S(`              `)
-//line views/vbuild/CodeStats.html:75
+//line views/vbuild/CodeStats.html:77
 			streamcodeStats(qw422016, prj.Key, stats, ps)
-//line views/vbuild/CodeStats.html:75
+//line views/vbuild/CodeStats.html:77
 			qw422016.N().S(`
 `)
-//line views/vbuild/CodeStats.html:76
+//line views/vbuild/CodeStats.html:78
 		}
-//line views/vbuild/CodeStats.html:76
+//line views/vbuild/CodeStats.html:78
 		qw422016.N().S(`            </div>
           </div></div></div>
         </li>
 `)
-//line views/vbuild/CodeStats.html:80
+//line views/vbuild/CodeStats.html:82
 	}
-//line views/vbuild/CodeStats.html:80
+//line views/vbuild/CodeStats.html:82
 	qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 }
 
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 func (p *CodeStatsAll) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 }
 
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 func (p *CodeStatsAll) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 	return qs422016
-//line views/vbuild/CodeStats.html:84
+//line views/vbuild/CodeStats.html:86
 }
 
-//line views/vbuild/CodeStats.html:86
-func streamcodeStats(qw422016 *qt422016.Writer, key string, ci *action.CodeStats, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:86
-	qw422016.N().S(`
-`)
 //line views/vbuild/CodeStats.html:88
-	if ci == nil {
-		panic("!!!")
-	}
-
-//line views/vbuild/CodeStats.html:91
-	qw422016.N().S(`  <div class="overflow full-width">
+func streamcodeStats(qw422016 *qt422016.Writer, key string, ci *action.CodeStats, ps *cutil.PageState) {
+//line views/vbuild/CodeStats.html:88
+	qw422016.N().S(`
+  <div class="overflow full-width mt">
+    <div id="codestats_`)
+//line views/vbuild/CodeStats.html:90
+	qw422016.E().S(key)
+//line views/vbuild/CodeStats.html:90
+	qw422016.N().S(`"></div>
+  </div>
+  <div class="overflow full-width mt">
     <table class="expanded min-200">
       <thead>
         <tr>
@@ -383,57 +393,62 @@ func streamcodeStats(qw422016 *qt422016.Writer, key string, ci *action.CodeStats
 	streamcodeModal(qw422016, key, ci.Total, ps)
 //line views/vbuild/CodeStats.html:127
 	qw422016.N().S(`
+  `)
+//line views/vbuild/CodeStats.html:128
+	components.StreamPlotHorizontalBar(qw422016, "codestats_"+key, ci.ToMaps(), "files", "name", "["+key+"] Code Stats", 92)
+//line views/vbuild/CodeStats.html:128
+	qw422016.N().S(`
 `)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 }
 
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 func writecodeStats(qq422016 qtio422016.Writer, key string, ci *action.CodeStats, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	streamcodeStats(qw422016, key, ci, ps)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 }
 
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 func codeStats(key string, ci *action.CodeStats, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	writecodeStats(qb422016, key, ci, ps)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 	return qs422016
-//line views/vbuild/CodeStats.html:128
+//line views/vbuild/CodeStats.html:129
 }
 
-//line views/vbuild/CodeStats.html:130
+//line views/vbuild/CodeStats.html:131
 func streamcodeModal(qw422016 *qt422016.Writer, key string, t *action.CodeType, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:130
+//line views/vbuild/CodeStats.html:131
 	qw422016.N().S(`
   <div id="modal-`)
-//line views/vbuild/CodeStats.html:131
+//line views/vbuild/CodeStats.html:132
 	qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:131
+//line views/vbuild/CodeStats.html:132
 	qw422016.N().S(`-`)
-//line views/vbuild/CodeStats.html:131
+//line views/vbuild/CodeStats.html:132
 	qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:131
+//line views/vbuild/CodeStats.html:132
 	qw422016.N().S(`" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content" style="min-width: 90%;">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vbuild/CodeStats.html:136
+//line views/vbuild/CodeStats.html:137
 	qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:136
+//line views/vbuild/CodeStats.html:137
 	qw422016.N().S(` Files</h2>
       </div>
       <div class="modal-body">
@@ -450,48 +465,48 @@ func streamcodeModal(qw422016 *qt422016.Writer, key string, t *action.CodeType, 
             </thead>
             <tbody>
 `)
-//line views/vbuild/CodeStats.html:151
+//line views/vbuild/CodeStats.html:152
 	for _, x := range t.Files {
-//line views/vbuild/CodeStats.html:151
+//line views/vbuild/CodeStats.html:152
 		qw422016.N().S(`            <tr>
               <td><a href="/p/`)
-//line views/vbuild/CodeStats.html:153
+//line views/vbuild/CodeStats.html:154
 		qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:153
+//line views/vbuild/CodeStats.html:154
 		qw422016.N().S(`/fs/`)
-//line views/vbuild/CodeStats.html:153
+//line views/vbuild/CodeStats.html:154
 		qw422016.E().S(x.Name)
-//line views/vbuild/CodeStats.html:153
+//line views/vbuild/CodeStats.html:154
 		qw422016.N().S(`">`)
-//line views/vbuild/CodeStats.html:153
+//line views/vbuild/CodeStats.html:154
 		qw422016.E().S(x.Name)
-//line views/vbuild/CodeStats.html:153
+//line views/vbuild/CodeStats.html:154
 		qw422016.N().S(`</a></td>
               <td>`)
-//line views/vbuild/CodeStats.html:154
+//line views/vbuild/CodeStats.html:155
 		qw422016.N().D(x.Code)
-//line views/vbuild/CodeStats.html:154
+//line views/vbuild/CodeStats.html:155
 		qw422016.N().S(`</td>
               <td>`)
-//line views/vbuild/CodeStats.html:155
+//line views/vbuild/CodeStats.html:156
 		qw422016.N().D(x.Comments)
-//line views/vbuild/CodeStats.html:155
+//line views/vbuild/CodeStats.html:156
 		qw422016.N().S(`</td>
               <td>`)
-//line views/vbuild/CodeStats.html:156
+//line views/vbuild/CodeStats.html:157
 		qw422016.N().D(x.Blanks)
-//line views/vbuild/CodeStats.html:156
+//line views/vbuild/CodeStats.html:157
 		qw422016.N().S(`</td>
               <td>`)
-//line views/vbuild/CodeStats.html:157
+//line views/vbuild/CodeStats.html:158
 		qw422016.N().D(x.Total())
-//line views/vbuild/CodeStats.html:157
+//line views/vbuild/CodeStats.html:158
 		qw422016.N().S(`</td>
             </tr>
 `)
-//line views/vbuild/CodeStats.html:159
+//line views/vbuild/CodeStats.html:160
 	}
-//line views/vbuild/CodeStats.html:159
+//line views/vbuild/CodeStats.html:160
 	qw422016.N().S(`            </tbody>
           </table>
         </div>
@@ -499,31 +514,31 @@ func streamcodeModal(qw422016 *qt422016.Writer, key string, t *action.CodeType, 
     </div>
   </div>
 `)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 }
 
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 func writecodeModal(qq422016 qtio422016.Writer, key string, t *action.CodeType, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	streamcodeModal(qw422016, key, t, ps)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 }
 
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 func codeModal(key string, t *action.CodeType, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	writecodeModal(qb422016, key, t, ps)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 	return qs422016
-//line views/vbuild/CodeStats.html:166
+//line views/vbuild/CodeStats.html:167
 }
