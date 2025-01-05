@@ -1,6 +1,4 @@
 {% import (
-  "github.com/samber/lo"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
@@ -17,7 +15,7 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`code`, ps) %} HTTP Routes</h3>
     <ul class="mt">
-      {%- for _, k := range util.ArraySorted(lo.Keys(p.Routes)) -%}
+      {%- for _, k := range util.MapKeysSorted(p.Routes) -%}
       <li>
         <strong>{%s k %}</strong>
         <ul>

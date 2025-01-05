@@ -4,10 +4,10 @@ import (
 	"cmp"
 	"encoding/xml"
 	"fmt"
+	"maps"
 	"strings"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 )
 
 type Set[T cmp.Ordered] struct {
@@ -32,8 +32,7 @@ func (s *Set[T]) Remove(x T) {
 }
 
 func (s *Set[T]) Entries() []T {
-	keys := lo.Keys(s.Map)
-	return ArraySorted(keys)
+	return MapKeysSorted(s.Map)
 }
 
 func (s *Set[T]) Clone() *Set[T] {
@@ -44,8 +43,7 @@ func (s *Set[T]) Clone() *Set[T] {
 }
 
 func (s Set[T]) MarshalYAML() (any, error) {
-	keys := lo.Keys(s.Map)
-	return ArraySorted(keys), nil
+	return MapKeysSorted(s.Map), nil
 }
 
 func (s Set[T]) MarshalXML(e *xml.Encoder, start xml.StartElement) error {

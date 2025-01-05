@@ -9,7 +9,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -33,9 +32,9 @@ func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, logger util
 }
 
 func (s *Service) InsertMap(ctx context.Context, table string, m util.ValueMap, tx *sqlx.Tx, logger util.Logger, values ...any) error {
-	columns := util.ArraySorted(lo.Filter(maps.Keys(m), func(x string, _ int) bool {
+	columns := lo.Filter(util.MapKeysSorted(m), func(x string, _ int) bool {
 		return !strings.HasPrefix(x, "~")
-	}))
+	})
 	q := SQLInsert("\"order\"", columns, 1, s.Type)
 	vals := lo.Map(columns, func(k string, _ int) any {
 		return m[k]

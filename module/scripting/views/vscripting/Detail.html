@@ -1,6 +1,4 @@
 {% import (
-  "github.com/samber/lo"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
@@ -42,7 +40,7 @@
     <div class="mt">{%= components.JSON(p.LoadResult) %}</div>
   </div>
   {%- endif -%}
-  {% for _, f := range util.ArraySorted(lo.Keys(p.Results)) -%}
+  {% for _, f := range util.MapKeysSorted(p.Results) -%}
     {%- code res := p.Results[f] -%}
     {% if len(res) > 0 -%}
     <div class="card">
@@ -57,7 +55,7 @@
               </tr>
             </thead>
             <tbody>
-              {%- for _, k := range util.ArraySorted(lo.Keys(res)) -%}
+              {%- for _, k := range util.MapKeysSorted(res) -%}
               {%- code v := res[k] -%}
               <tr>
                 <td><pre>{%s k %}</pre></td>

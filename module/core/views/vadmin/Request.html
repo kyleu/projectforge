@@ -1,8 +1,6 @@
 {% import (
   "net/http"
 
-  "github.com/samber/lo"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
@@ -78,7 +76,7 @@
           </tr>
         </thead>
         <tbody>
-          {%- for _, k := range util.ArraySorted(lo.Keys(hd)) -%}
+          {%- for _, k := range util.MapKeysSorted(hd) -%}
           <tr>
             <td class="nowrap">{%s k %}</td>
             <td>{%s hd.GetStringOpt(k) %}</td>

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 )
 
 func (m ValueMap) GetPath(path string, allowMissing bool) (any, error) {
@@ -48,7 +47,7 @@ func getPath(i any, allowMissing bool, path ...string) (any, error) {
 			if allowMissing {
 				return nil, nil
 			}
-			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(lo.Keys(t), ", "))
+			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(MapKeys(t), ", "))
 		}
 		return getPath(ret, allowMissing, path[1:]...)
 	case []any:

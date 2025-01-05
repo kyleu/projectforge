@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -32,7 +31,7 @@ func (s *Service) Remove(svc string) {
 }
 
 func (s *Service) List() []string {
-	return util.ArraySorted(maps.Keys(s.proxies))
+	return util.MapKeysSorted(s.proxies)
 }
 
 func (s *Service) Handle(ctx context.Context, svc string, w http.ResponseWriter, r *http.Request, pth string, logger util.Logger) error {

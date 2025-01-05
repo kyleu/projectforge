@@ -3,8 +3,6 @@ package auth
 import (
 	"fmt"
 
-	"github.com/samber/lo"
-
 	"{{{ .Package }}}/app/util"
 )
 
@@ -93,7 +91,7 @@ func initAvailable() {
 			"yandex":          "Yandex",
 			"zoom":            "Zoom",
 		}
-		AvailableProviderKeys = util.ArraySorted(lo.Keys(AvailableProviderNames))
+		AvailableProviderKeys = util.MapKeysSorted(AvailableProviderNames)
 	}
 }
 

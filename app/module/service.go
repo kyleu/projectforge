@@ -10,7 +10,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/search/result"
@@ -115,7 +114,7 @@ func (s *Service) Keys() []string {
 func (s *Service) Modules() Modules {
 	s.cacheMu.Lock()
 	defer s.cacheMu.Unlock()
-	var ret Modules = maps.Values(s.cache)
+	var ret Modules = lo.Values(s.cache)
 	return ret.Sort()
 }
 

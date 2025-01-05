@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
+	"maps"
 	"slices"
 	"strings"
 
 	"github.com/buger/jsonparser"
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 )
 
 type OrderedPair[V any] struct {

@@ -27,7 +27,7 @@ func (s *Service) Status() ([]string, []*Connection, []uuid.UUID) {
 	slices.SortFunc(conns, func(l *Connection, r *Connection) int {
 		return cmp.Compare(l.ID.String(), r.ID.String())
 	})
-	taps := slices.Clone(lo.Keys(s.taps))
+	taps := slices.Clone(util.MapKeys(s.taps))
 	return s.ChannelList(nil), conns, taps
 }
 
@@ -49,7 +49,7 @@ func (s *Service) ChannelList(params *filter.Params) []string {
 	params = filter.ParamsWithDefaultOrdering("channel", params)
 	ret := &util.StringSlice{}
 	idx := 0
-	lo.ForEach(lo.Keys(s.channels), func(conn string, _ int) {
+	lo.ForEach(util.MapKeysSorted(s.channels), func(conn string, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret.Push(conn)
 		}

@@ -1,8 +1,6 @@
 {% import (
   "fmt"
 
-  "github.com/samber/lo"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
@@ -23,7 +21,7 @@
     <div class="overflow full-width">
       <table class="mt expanded">
         <tbody>
-          {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
+          {%- for _, k := range util.MapKeysSorted(ps.Session) -%}
           {%- code v := ps.Session[k] -%}
           <tr>
             <th class="shrink">{%s k %}</th>

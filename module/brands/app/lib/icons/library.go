@@ -6,7 +6,6 @@ import (
 	"sync"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -33,7 +32,7 @@ func (l *Library) AddIcon(bi *Icon) {
 }
 
 func (l *Library) SortedKeys() []string {
-	return util.ArraySorted(maps.Keys(l.Icons))
+	return util.MapKeysSorted(l.Icons)
 }
 
 func (l *Library) HTML(key string) string {

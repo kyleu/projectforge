@@ -4,7 +4,6 @@ import (
 	"github.com/graph-gophers/graphql-go"
 	otelgraphql "github.com/graph-gophers/graphql-go/trace/otel"
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 	"go.opentelemetry.io/otel"
 
 	"{{{ .Package }}}/app/util"
@@ -38,7 +37,7 @@ func (s *Service) RegisterStringSchema(key string, title string, content string,
 }
 
 func (s *Service) Keys() []string {
-	return util.ArraySorted(lo.Keys(s.schemata))
+	return util.MapKeysSorted(s.schemata)
 }
 
 func (s *Service) Titles() map[string]string {

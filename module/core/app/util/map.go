@@ -1,6 +1,7 @@
 package util
 
 import (
+	"cmp"
 	"encoding/xml"
 	"fmt"
 	"net/url"
@@ -76,11 +77,11 @@ func (m ValueMap) HasKey(key string) bool {
 }
 
 func (m ValueMap) Keys() []string {
-	return ArraySorted(lo.Keys(m))
+	return MapKeysSorted(m)
 }
 
 func (m ValueMap) KeysAndValues() ([]string, []any) {
-	cols := ArraySorted(lo.Keys(m))
+	cols := m.Keys()
 	vals := lo.Map(cols, func(col string, _ int) any {
 		return m[col]
 	})
@@ -196,4 +197,12 @@ type ToMap interface {
 
 type ToMaps interface {
 	ToMaps() []ValueMap
+}
+
+func MapKeys[K comparable, V any](m map[K]V) []K {
+	return lo.Keys(m)
+}
+
+func MapKeysSorted[K cmp.Ordered, V any](m map[K]V) []K {
+	return ArraySorted(MapKeys(m))
 }

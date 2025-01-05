@@ -6,7 +6,6 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
-	"golang.org/x/exp/maps"
 
 	"{{{ .Package }}}/app/util"
 )
@@ -26,7 +25,7 @@ func (hc headerCarrier) Set(key string, value string) {
 }
 
 func (hc headerCarrier) Keys() []string {
-	return maps.Keys(hc.h)
+	return util.MapKeys(hc.h)
 }
 
 func ExtractHeaders(r *http.Request, logger util.Logger) (context.Context, util.Logger) {
