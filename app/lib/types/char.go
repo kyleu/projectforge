@@ -25,7 +25,7 @@ func (x *Char) String() string {
 }
 
 func (x *Char) From(v any) any {
-	if x, err := util.ParseString(v, "", true); err == nil && len(x) > 0 {
+	if x, err := util.ParseString(v, "", true); err == nil && x != "" {
 		return x[0]
 	}
 	return invalidInput(x.Key(), v)

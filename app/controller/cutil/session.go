@@ -36,7 +36,7 @@ func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, 
 	ua := useragent.Parse(r.Header.Get("User-Agent"))
 	os := strings.ToLower(ua.OS)
 	browser := strings.ToLower(ua.Name)
-	platform := "unknown"
+	platform := util.KeyUnknown
 	switch {
 	case ua.Desktop:
 		platform = "desktop"

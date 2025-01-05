@@ -2,11 +2,11 @@ import {Message, Socket} from "./socket";
 import {req} from "./dom";
 
 export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boolean, url: string, extraHandlers: [...(m: Message) => void]) {
-  const o = ()  => {
+  const o = () => {
     if (debug) {
       console.log("[socket]: open");
     }
-  }
+  };
 
   let currRow: HTMLElement | null = null;
 
@@ -24,10 +24,10 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
       parentEl.append(div);
       currRow = div;
     }
-  }
+  };
 
   const r = (m: Message) => {
-    if(m.cmd !== "output") {
+    if (m.cmd !== "output") {
       if (extraHandlers.length === 0) {
         console.log("unknown command [" + m.cmd + "] received");
       } else {
@@ -37,10 +37,10 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
       }
       return;
     }
-    if (m.param["html"] === undefined) {
+    if (m.param.html === undefined) {
       console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
     }
-    const html = m.param["html"];
+    const html = m.param.html;
 
     let content = "";
     for (const x of html) {
@@ -49,7 +49,7 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
       }
       if (x === "\n") {
         if (content === "") {
-          content = "&nbsp;"
+          content = "&nbsp;";
         }
         currRow!.innerHTML += content;
         content = "";
@@ -63,11 +63,11 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
     }
     const c = req("#content");
     c.scrollTo(0, c.scrollHeight);
-  }
+  };
 
   const e = (svc: string, err: string) => {
     console.error("socket error", svc, err);
-  }
+  };
 
   return new Socket(false, o, r, e, url);
 }

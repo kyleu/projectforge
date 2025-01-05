@@ -21,6 +21,7 @@ const (
 	statsKey = "codestats"
 )
 
+//nolint:gocognit
 func RunAction(w http.ResponseWriter, r *http.Request) {
 	actQ, _ := cutil.PathString(r, "act", false)
 	act := "run.action." + actQ

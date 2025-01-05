@@ -44,7 +44,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	if prj.Info.Org == "" {
 		prj.Info.Org = prj.Key
 		if prj.Info.Org == "" {
-			prj.Info.Org = "unknown"
+			prj.Info.Org = util.KeyUnknown
 		}
 	}
 

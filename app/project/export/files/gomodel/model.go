@@ -135,7 +135,7 @@ func modelStruct(m *model.Model, models model.Models, enums enum.Enums, extraTyp
 	maxColLength := cols.MaxCamelLength()
 	maxTypeLength := cols.MaxGoTypeLength(m.Package, enums)
 
-	var gts = lo.Map(cols, func(c *model.Column, _ int) string {
+	gts := lo.Map(cols, func(c *model.Column, _ int) string {
 		gt, err := c.ToGoType(m.Package, enums)
 		if err != nil {
 			return err.Error()

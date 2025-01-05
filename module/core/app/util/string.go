@@ -202,7 +202,7 @@ func DecodeUTF8(input []byte) (string, error) {
 	for len(remaining) > 0 {
 		r, size := utf8.DecodeRune(remaining)
 		if r == utf8.RuneError && size <= 1 {
-			return "", fmt.Errorf("not a valid UTF-8 string (at position %d): %s", offset, string(input))
+			return "", errors.Errorf("not a valid UTF-8 string (at position %d): %s", offset, string(input))
 		}
 		runes = append(runes, r)
 		remaining = remaining[size:]

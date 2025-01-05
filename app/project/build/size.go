@@ -19,8 +19,7 @@ func Size(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, p
 
 	if path == "" {
 		cmd := "go build -o ./tmp/size_test"
-		out, err := ex.Cmd(ctx, "project build", cmd, fs.Root(), logger)
-		println(out)
+		_, err := ex.Cmd(ctx, "project build", cmd, fs.Root(), logger)
 		if err != nil {
 			return nil, ex.Logs, errors.Wrapf(err, "unable to run [%s]", cmd)
 		}
@@ -40,7 +39,7 @@ func Size(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, p
 	ret.Add("runtime", runtime)
 	ret.Add("other", other)
 	for _, line := range lines {
-		if len(line) == 0 {
+		if line == "" {
 			continue
 		}
 		split := util.StringSplitAndTrim(line, " ")
@@ -56,7 +55,7 @@ func Size(ctx context.Context, prj *project.Project, fs filesystem.FileLoader, p
 			return nil, nil, errors.Wrapf(err, "unable to process size [%s] line [%s]", szStr, line)
 		}
 		sr := &SizeResult{Name: n, Type: typ, Size: sz}
-		var insert = true
+		insert := true
 		if strings.HasPrefix(n, "$") {
 			other.Size += sz
 			insert = false

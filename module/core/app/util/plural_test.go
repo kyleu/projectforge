@@ -6,6 +6,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+//nolint:paralleltest
 func TestStringToPlural(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -32,6 +33,7 @@ func TestStringToPlural(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest
 func TestStringToSingular(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -56,6 +58,7 @@ func TestStringToSingular(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest
 func TestStringForms(t *testing.T) {
 	tests := []struct {
 		input          string
@@ -78,6 +81,7 @@ func TestStringForms(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest
 func TestStringPlural(t *testing.T) {
 	tests := []struct {
 		count    int

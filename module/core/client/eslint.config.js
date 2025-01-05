@@ -6,6 +6,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+    ignores: ["build.js", "eslint.config.js", "jest.config.js"],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: "module",

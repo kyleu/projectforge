@@ -32,7 +32,8 @@ func LoadRef(col *model.Column, models model.Models, extraTypes model.Models) (*
 		}
 	}
 	if mdl != nil {
-		pkg := append(mdl.Group[:], mdl.Package)
+		pkg := mdl.Group
+		pkg = append(pkg, mdl.Package)
 		return &types.Reference{Pkg: pkg, K: ret.K}, mdl, nil
 	}
 	return ret, nil, nil

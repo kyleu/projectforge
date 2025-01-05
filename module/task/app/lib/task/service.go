@@ -38,13 +38,13 @@ func (s *Service) RegisterTask(t *Task) error {
 }
 
 func (s *Service) Run(ctx context.Context, task *Task, run string, args util.ValueMap, logger util.Logger, fns ...exec.OutFn) *Result {
-	ctx, span, logger := telemetry.StartSpan(context.Background(), "task:run:"+task.Key, logger)
+	ctx, span, logger := telemetry.StartSpan(ctx, "task:run:"+task.Key, logger)
 	defer span.Complete()
 
 	ret := task.Run(ctx, run, args, logger, fns...)
-	//if err := s.SaveResult(task, logger); err != nil {
-	//	return ret.CompleteError(errors.Wrapf(err, "unable to save [%s] result for task [%s]", task.Key, task.ID))
-	//}
+	// if err := s.SaveResult(task, logger); err != nil {
+	// 	return ret.CompleteError(errors.Wrapf(err, "unable to save [%s] result for task [%s]", task.Key, task.ID))
+	// }
 	return ret
 }
 

@@ -33,10 +33,7 @@ func runAllCodeStats(cfg util.ValueMap, prjs project.Projects, r *http.Request, 
 	ret := map[string]*action.Result{}
 	statsMap := map[string]*action.CodeStats{}
 
-	println("????")
-
 	for _, prj := range prjs {
-		println(" - ", prj.Key)
 		res := action.Apply(ps.Context, actionParams(prj.Key, action.TypeBuild, cfg, as, ps.Logger))
 		if res.HasErrors() {
 			return "", errors.New(strings.Join(res.Errors, ", "))

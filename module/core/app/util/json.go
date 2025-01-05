@@ -6,9 +6,7 @@ import (
 	"io"
 )
 
-var (
-	trailingNewline = []byte{'\n'}
-)
+var trailingNewline = []byte{'\n'}
 
 func ToJSON(x any) string {
 	return string(ToJSONBytes(x, true))

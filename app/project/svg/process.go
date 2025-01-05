@@ -65,6 +65,9 @@ func load(src string, tgt string) (*SVG, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()
 		rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, u).RunSimple()
+		defer func() {
+			_ = rsp.Body.Close()
+		}()
 		return b, errors.Wrapf(err, "unable to call URL [%s]: %d", u, rsp.StatusCode)
 	}
 

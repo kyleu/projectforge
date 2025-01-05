@@ -45,10 +45,6 @@ func modelToMap(g *golang.File, m *model.Model, enums enum.Enums, database strin
 	}), ", ")
 	ret.W("\treturn util.ValueMap{" + content + "}")
 	ret.W("}")
-
-	_ = ` {
-		return util.ValueMap{"id": m.ID, "t": m.T, "data": m.Data, "occurred": m.Occurred}
-	}`
 	return ret
 }
 
@@ -102,9 +98,5 @@ func modelToOrderedMap(g *golang.File, m *model.Model, enums enum.Enums, databas
 	ret.W("\tpairs := util.OrderedPairs[any]{" + content + "}")
 	ret.W("\treturn util.NewOrderedMap[any](false, 4, pairs...)")
 	ret.W("}")
-
-	_ = ` {
-		return util.ValueMap{"id": m.ID, "t": m.T, "data": m.Data, "occurred": m.Occurred}
-	}`
 	return ret
 }

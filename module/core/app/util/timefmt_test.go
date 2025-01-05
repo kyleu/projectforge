@@ -8,6 +8,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+//nolint:paralleltest,tparallel
 func TestTimeFormatting(t *testing.T) {
 	t.Parallel()
 	testTime := time.Date(2023, 5, 15, 14, 30, 45, 123456789, time.UTC)
@@ -39,6 +40,7 @@ func TestTimeFormatting(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest,tparallel
 func TestTimeParsing(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
@@ -94,6 +96,7 @@ func TestFormatSeconds(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest,tparallel
 func TestFormatSecondsFull(t *testing.T) {
 	t.Parallel()
 	tests := []struct {

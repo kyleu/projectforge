@@ -38,6 +38,7 @@ func randForCol(col *model.Column, pkg string, enums enum.Enums) (string, error)
 	return randForType(col.Type, col.Format, col.Nullable, col.Tags, pkg, enums)
 }
 
+//nolint:gocognit, gocyclo, cyclop
 func randForType(t *types.Wrapped, format string, nullable bool, tags []string, pkg string, enums enum.Enums) (string, error) {
 	switch t.Key() {
 	case types.KeyAny, types.KeyJSON:

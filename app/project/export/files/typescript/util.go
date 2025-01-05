@@ -40,7 +40,7 @@ func tsModelContent(imps []string, m *model.Model, enums enum.Enums) golang.Bloc
 
 func tsEnum(e *enum.Enum) *golang.Block {
 	ret := golang.NewBlock("tsenum-"+e.Name, "ts")
-	ret.W("// eslint-disable-next-line no-shadow")
+	// ret.W("// eslint-disable-next-line no-shadow")
 	ret.WF("export enum %s {", e.Proper())
 	lo.ForEach(e.Values, func(v *enum.Value, idx int) {
 		suffix := util.Choose(idx == len(e.Values)-1, "", ",")

@@ -28,7 +28,7 @@
   {%- endif -%}
   {%- if len(res.Errors) > 0 -%}
   <div class="card">
-    <div class="right">{%s util.StringPlural(len(res.Errors), "error") %}</div>
+    <div class="right">{%s util.StringPlural(len(res.Errors), util.Error) %}</div>
     <h3>{%= components.SVGIcon(`scale`, ps) %} Errors</h3>
     <ul class="mt">
       {%- for _, e := range res.Errors -%}

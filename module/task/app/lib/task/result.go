@@ -40,7 +40,7 @@ func CompletedResult(task *Task, run string, args util.ValueMap, data any, err e
 }
 
 func (r *Result) IsOK() bool {
-	return r.Status == "ok"
+	return r.Status == util.OK
 }
 
 func (r *Result) Log(msg string, args ...any) {
@@ -60,9 +60,9 @@ func (r *Result) Complete(data any, errs ...error) *Result {
 	r.Data = data
 	if err := util.ErrorMerge(errs...); err != nil {
 		r.Error = err.Error()
-		r.Status = "error"
+		r.Status = util.Error
 	} else if r.Status == "" {
-		r.Status = "ok"
+		r.Status = util.OK
 	}
 	r.Elapsed = int(time.Since(r.Started).Microseconds())
 	r.Log("task [%s] completed in [%s]", r.Task.TitleSafe(), util.MicrosToMillis(r.Elapsed))
@@ -98,7 +98,7 @@ func (r *Result) String() string {
 		return "pending"
 	}
 	if r.Status == "" {
-		return "unknown"
+		return util.KeyUnknown
 	}
 	return r.Status
 }

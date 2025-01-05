@@ -48,7 +48,7 @@ func (r Results) Keys() []string {
 			return "-"
 		}
 		if x.Task == nil {
-			return "unknown"
+			return util.KeyUnknown
 		}
 		return x.Task.Key
 	}))

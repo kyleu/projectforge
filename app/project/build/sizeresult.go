@@ -78,13 +78,11 @@ func (s SizeResultMap) Flatten() SizeResultMap {
 					x.Name = nn + "." + x.Name
 					ret.Add(nk, x)
 				}
-			} else {
-				if strings.Contains(k, ".") {
-					nk, nn := util.StringSplit(k, '.', true)
-					nk = clean(nk)
-					x.Name = nn + "." + x.Name
-					ret.Add(nk, x)
-				}
+			} else if strings.Contains(k, ".") {
+				nk, nn := util.StringSplit(k, '.', true)
+				nk = clean(nk)
+				x.Name = nn + "." + x.Name
+				ret.Add(nk, x)
 			}
 		}
 	}
