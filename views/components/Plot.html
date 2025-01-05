@@ -5,10 +5,10 @@
   <script src="/assets/plot/plot.min.js" type="application/javascript" defer="defer"></script>
 {% endfunc %}
 
-{% func PlotCall(id string) %}
-    function createPlot_{%s id %}(div) {
+{% func PlotCall(id string, call string) %}
+    function createPlot(div) {
       function render() {
-        const plot = plot_{%s id %}(div);
+        const plot = {%s call %};
         div.innerHTML = "";
         div.appendChild(plot);
       }
@@ -23,7 +23,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       const div = document.querySelector("#{%s id %}");
-      const cancel = createPlot_{%s id %}(div);
+      const cancel = createPlot(div);
     });
 {% endfunc %}
 
@@ -32,7 +32,7 @@
     // files: ${d.files}\nsize: ${d.size.toLocaleString()} bytes
     const data = {%s= util.ToJSON(data) %};
 
-    function plot_{%s id %}(div) {
+    function horizontalBar(div) {
       const height = {%d (len(data) * 24) + 48 %};
       const width = div.clientWidth;
       const color = { legend: false };
@@ -41,6 +41,6 @@
       return Plot.plot({ height, width, color, marks });
     }
 
-    {%= PlotCall(id) %}
+    {%= PlotCall(id, "horizontalBar(div)") %}
   </script>
 {% endfunc %}

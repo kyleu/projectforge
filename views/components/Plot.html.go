@@ -57,20 +57,16 @@ func PlotAssets() string {
 }
 
 //line views/components/Plot.html:8
-func StreamPlotCall(qw422016 *qt422016.Writer, id string) {
+func StreamPlotCall(qw422016 *qt422016.Writer, id string, call string) {
 //line views/components/Plot.html:8
 	qw422016.N().S(`
-    function createPlot_`)
-//line views/components/Plot.html:9
-	qw422016.E().S(id)
-//line views/components/Plot.html:9
-	qw422016.N().S(`(div) {
+    function createPlot(div) {
       function render() {
-        const plot = plot_`)
+        const plot = `)
 //line views/components/Plot.html:11
-	qw422016.E().S(id)
+	qw422016.E().S(call)
 //line views/components/Plot.html:11
-	qw422016.N().S(`(div);
+	qw422016.N().S(`;
         div.innerHTML = "";
         div.appendChild(plot);
       }
@@ -89,33 +85,29 @@ func StreamPlotCall(qw422016 *qt422016.Writer, id string) {
 	qw422016.E().S(id)
 //line views/components/Plot.html:25
 	qw422016.N().S(`");
-      const cancel = createPlot_`)
-//line views/components/Plot.html:26
-	qw422016.E().S(id)
-//line views/components/Plot.html:26
-	qw422016.N().S(`(div);
+      const cancel = createPlot(div);
     });
 `)
 //line views/components/Plot.html:28
 }
 
 //line views/components/Plot.html:28
-func WritePlotCall(qq422016 qtio422016.Writer, id string) {
+func WritePlotCall(qq422016 qtio422016.Writer, id string, call string) {
 //line views/components/Plot.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/Plot.html:28
-	StreamPlotCall(qw422016, id)
+	StreamPlotCall(qw422016, id, call)
 //line views/components/Plot.html:28
 	qt422016.ReleaseWriter(qw422016)
 //line views/components/Plot.html:28
 }
 
 //line views/components/Plot.html:28
-func PlotCall(id string) string {
+func PlotCall(id string, call string) string {
 //line views/components/Plot.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/Plot.html:28
-	WritePlotCall(qb422016, id)
+	WritePlotCall(qb422016, id, call)
 //line views/components/Plot.html:28
 	qs422016 := string(qb422016.B)
 //line views/components/Plot.html:28
@@ -137,11 +129,7 @@ func StreamPlotHorizontalBar(qw422016 *qt422016.Writer, id string, data []util.V
 //line views/components/Plot.html:33
 	qw422016.N().S(`;
 
-    function plot_`)
-//line views/components/Plot.html:35
-	qw422016.E().S(id)
-//line views/components/Plot.html:35
-	qw422016.N().S(`(div) {
+    function horizontalBar(div) {
       const height = `)
 //line views/components/Plot.html:36
 	qw422016.N().D((len(data) * 24) + 48)
@@ -182,7 +170,7 @@ func StreamPlotHorizontalBar(qw422016 *qt422016.Writer, id string, data []util.V
 
     `)
 //line views/components/Plot.html:44
-	StreamPlotCall(qw422016, id)
+	StreamPlotCall(qw422016, id, "horizontalBar(div)")
 //line views/components/Plot.html:44
 	qw422016.N().S(`
   </script>
