@@ -1,7 +1,6 @@
 package svg
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -16,17 +15,6 @@ func List(prj string, fs filesystem.FileLoader, logger util.Logger) ([]string, e
 	return lo.Map(files, func(key string, _ int) string {
 		return strings.TrimSuffix(key, util.ExtSVG)
 	}), nil
-}
-
-func ListCSharp(prjKey string, fs filesystem.FileLoader, logger util.Logger) []string {
-	prjDirs := lo.Filter(fs.ListDirectories(".", nil, logger), func(dir string, _ int) bool {
-		return strings.HasPrefix(strings.ToLower(dir), prjKey)
-	})
-	return lo.FlatMap(prjDirs, func(prj string, _ int) []string {
-		return lo.Map(fs.ListExtension(prj+"/wwwroot/svg", "svg", nil, true, logger), func(svg string, _ int) string {
-			return fmt.Sprintf("%s@%s", svg, strings.TrimPrefix(strings.ToLower(prj), prjKey))
-		})
-	})
 }
 
 func Content(prj string, fs filesystem.FileLoader, key string) (string, error) {

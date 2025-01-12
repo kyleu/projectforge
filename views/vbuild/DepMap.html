@@ -44,7 +44,7 @@
         <li>
           <input id="accordion-{%s k %}" type="checkbox" hidden />
           <label for="accordion-{%s k %}">
-            <div class="right">{%d len(v) %}</div>
+            <div class="right" title="{%d len(v) %} different versions among the projects">{%d len(v) %}</div>
             {%= components.ExpandCollapse(3, ps) %} {%s k %}
           </label>
           <div class="bd"><div><div>

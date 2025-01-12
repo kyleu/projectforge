@@ -102,7 +102,11 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.E().S(k)
 //line views/vbuild/DepMap.html:46
 		qw422016.N().S(`">
-            <div class="right">`)
+            <div class="right" title="`)
+//line views/vbuild/DepMap.html:47
+		qw422016.N().D(len(v))
+//line views/vbuild/DepMap.html:47
+		qw422016.N().S(` different versions among the projects">`)
 //line views/vbuild/DepMap.html:47
 		qw422016.N().D(len(v))
 //line views/vbuild/DepMap.html:47
