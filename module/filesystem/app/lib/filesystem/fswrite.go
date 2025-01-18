@@ -6,12 +6,18 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Writer interface {
 	io.Writer
 	io.WriterAt
 	io.Closer
+}
+
+func (f *FileSystem) WriteJSONFile(path string, x any, mode FileMode, overwrite bool) error {
+	return f.WriteFile(path, append(util.ToJSONBytes(x, true), '\n'), mode, overwrite)
 }
 
 func (f *FileSystem) WriteFile(path string, content []byte, mode FileMode, overwrite bool) error {

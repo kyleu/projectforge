@@ -77,8 +77,7 @@ func (s *Service) Save(log *Log) error {
 	if !strings.Contains(fn, "har/") {
 		fn = path.Join("har", fn)
 	}
-	b := util.ToJSONBytes(&Wrapper{Log: log}, true)
-	return s.FS.WriteFile(fn, b, filesystem.DefaultMode, true)
+	return s.FS.WriteJSONFile(fn, &Wrapper{Log: log}, filesystem.DefaultMode, true)
 }
 
 func (s *Service) Search(_ context.Context, _ filter.ParamSet, q string, logger util.Logger) (result.Results, error) {

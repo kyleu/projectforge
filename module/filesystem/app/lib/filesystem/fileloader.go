@@ -15,6 +15,7 @@ type FileLoader interface {
 	FileReader(fn string) (Reader, error)
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode FileMode, overwrite bool) error
+	WriteJSONFile(path string, x any, mode FileMode, overwrite bool) error
 	FileWriter(fn string, createIfNeeded bool, appendMode bool) (Writer, error)
 	CopyFile(src string, tgt string) error
 	CopyRecursive(src string, tgt string, ignore []string, logger util.Logger) error

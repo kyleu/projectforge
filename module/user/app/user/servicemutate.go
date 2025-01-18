@@ -31,8 +31,7 @@ func (s *Service) Update(ctx context.Context, _ any, model *User, logger util.Lo
 
 func (s *Service) Save(ctx context.Context, logger util.Logger, models ...*User) error {
 	for _, model := range models {
-		b := util.ToJSONBytes(model, true)
-		err := s.files.WriteFile(dirFor(model.ID), b, filesystem.DefaultMode, true)
+		err := s.files.WriteJSONFile(dirFor(model.ID), model, filesystem.DefaultMode, true)
 		if err != nil {
 			return err
 		}

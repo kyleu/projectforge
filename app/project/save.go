@@ -30,25 +30,18 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	if err != nil {
 		return err
 	}
-	j := util.ToJSON(prj)
-	err = tgtFS.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
+	err = tgtFS.WriteJSONFile(fn, prj, filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write project file to [%s]", fn)
 	}
 
-	if _ = prj.ModuleArgExport(s, logger); prj.ExportArgs != nil {
-		if len(prj.ExportArgs.Config) > 0 {
-			fn := ConfigDir + "/export/config.json"
-			err = tgtFS.WriteFile(fn, util.ToJSONBytes(prj.ExportArgs.Config, true), filesystem.DefaultMode, true)
-			if err != nil {
-				return errors.Wrapf(err, "unable to write project file to [%s]", fn)
-			}
-		}
-		for _, m := range prj.ExportArgs.Models {
-			err = s.SaveExportModel(tgtFS, m)
-			if err != nil {
-				return err
-			}
+	err = prj.ModuleArgExport(s, logger)
+	if err != nil {
+		return errors.Wrapf(err, "unable to load [%s] export configuration", prj.Key)
+	}
+	if prj.ExportArgs != nil {
+		if err = s.SaveExportArgs(tgtFS, prj.ExportArgs); err != nil {
+			return errors.Wrapf(err, "unable to save export args for [%s]", prj.Key)
 		}
 	}
 
@@ -59,10 +52,42 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	return nil
 }
 
+func (s *Service) SaveExportArgs(fs filesystem.FileLoader, args *model.Args) error {
+	if len(args.Config) > 0 {
+		if err := s.SaveExportConfig(fs, args.Config); err != nil {
+			return err
+		}
+	}
+	if len(args.Groups) > 0 {
+		if err := s.SaveExportGroups(fs, args.Groups); err != nil {
+			return err
+		}
+	}
+	for _, m := range args.Models {
+		if err := s.SaveExportModel(fs, m); err != nil {
+			return err
+		}
+	}
+	for _, e := range args.Enums {
+		if err := s.SaveExportEnum(fs, e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *Service) SaveExportConfig(fs filesystem.FileLoader, cfg util.ValueMap) error {
+	fn := ConfigDir + "/export/config.json"
+	err := fs.WriteJSONFile(fn, cfg, filesystem.DefaultMode, true)
+	if err != nil {
+		return errors.Wrapf(err, "unable to write export config file to [%s]", fn)
+	}
+	return nil
+}
+
 func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups) error {
 	fn := fmt.Sprintf("%s/export/groups.json", ConfigDir)
-	j := util.ToJSON(g)
-	err := fs.WriteFile(fn, []byte(j), filesystem.DefaultMode, true)
+	err := fs.WriteJSONFile(fn, g, filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write export groups file to [%s]", fn)
 	}
@@ -74,8 +99,7 @@ func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model) er
 		return nil
 	}
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl.Name)
-	j := util.ToJSONBytes(mdl, true)
-	err := fs.WriteFile(fn, j, filesystem.DefaultMode, true)
+	err := fs.WriteJSONFile(fn, mdl, filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write export model file to [%s]", fn)
 	}
@@ -92,8 +116,7 @@ func (s *Service) DeleteExportModel(fs filesystem.FileLoader, mdl string, logger
 
 func (s *Service) SaveExportEnum(fs filesystem.FileLoader, e *enum.Enum) error {
 	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e.Name)
-	j := util.ToJSONBytes(e, true)
-	err := fs.WriteFile(fn, j, filesystem.DefaultMode, true)
+	err := fs.WriteJSONFile(fn, e, filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrapf(err, "unable to write export enum file to [%s]", fn)
 	}

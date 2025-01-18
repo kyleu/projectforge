@@ -50,8 +50,7 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 			return err
 		}
 	}
-	b := util.ToJSONBytes(t, true)
-	err := s.files.WriteFile(filepath.Join(s.root, t.Key+util.ExtJSON), b, filesystem.DefaultMode, true)
+	err := s.files.WriteJSONFile(filepath.Join(s.root, t.Key+util.ExtJSON), t, filesystem.DefaultMode, true)
 	if err != nil {
 		logger.Warnf("can't save theme [%s]: %+v", t.Key, err)
 	}
