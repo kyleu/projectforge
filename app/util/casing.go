@@ -7,13 +7,13 @@ import (
 	"github.com/samber/lo"
 )
 
-func StringToCamel(s string, extraAcronyms ...string) string {
-	return acr(toCamelInitCase(s, true), extraAcronyms...)
+func StringToProper(s string, extraAcronyms ...string) string {
+	return acr(toProperCase(s, true), extraAcronyms...)
 }
 
 func StringToTitle(s string, extraAcronyms ...string) string {
 	ret := strings.Builder{}
-	runes := []rune(StringToCamel(s, extraAcronyms...))
+	runes := []rune(StringToProper(s, extraAcronyms...))
 	lo.ForEach(runes, func(c rune, idx int) {
 		if idx > 0 && idx < len(runes)-1 && unicode.IsUpper(c) {
 			if !unicode.IsUpper(runes[idx+1]) {
@@ -27,15 +27,15 @@ func StringToTitle(s string, extraAcronyms ...string) string {
 	return ret.String()
 }
 
-func StringToLowerCamel(s string, extraAcronyms ...string) string {
-	return acr(toCamelInitCase(s, false), extraAcronyms...)
+func StringToCamel(s string, extraAcronyms ...string) string {
+	return acr(toProperCase(s, false), extraAcronyms...)
 }
 
 func StringToSnake(s string, extraAcronyms ...string) string {
 	return acr(toDelimited(s, '_'), extraAcronyms...)
 }
 
-func toCamelInitCase(s string, initCase bool) string {
+func toProperCase(s string, initCase bool) string {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return s

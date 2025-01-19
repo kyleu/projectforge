@@ -76,7 +76,7 @@ func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
 				continue
 			}
 		}
-		msg += fmt.Sprintf(", %s: %s", util.StringToCamel(extraKey), t)
+		msg += fmt.Sprintf(", %s: %s", util.StringToProper(extraKey), t)
 	}
 	msg += "}"
 	return msg

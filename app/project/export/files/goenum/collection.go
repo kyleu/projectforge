@@ -119,7 +119,7 @@ func blockGetByName(e *enum.Enum) *golang.Block {
 }
 
 func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, error) {
-	prop := util.StringToCamel(efk)
+	prop := util.StringToProper(efk)
 	dflt := "\"\""
 	goType := t
 	switch t {
@@ -163,7 +163,7 @@ func possibleLogger(gxBlock *golang.Block, e *enum.Enum, prop string) {
 }
 
 func blockGetByPropShared(e *enum.Enum, efk string, t string) (*golang.Block, error) {
-	prop := util.StringToCamel(efk)
+	prop := util.StringToProper(efk)
 	goType := t
 	if t == types.KeyTimestamp || t == types.KeyTimestampZoned {
 		goType = timePointer

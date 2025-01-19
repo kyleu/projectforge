@@ -22,7 +22,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	extraKeys := ef.Order
 	if len(extraKeys) > 0 {
 		extraKeyNames := lo.Map(extraKeys, func(x string, _ int) string {
-			return util.StringToCamel(x)
+			return util.StringToProper(x)
 		})
 		maxLength := util.StringArrayMaxLength(extraKeyNames)
 		structBlock.WB()
@@ -31,7 +31,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 			if t == types.KeyTimestamp || t == types.KeyTimestampZoned {
 				t = timePointer
 			}
-			structBlock.WF("\t%s %s", util.StringPad(util.StringToCamel(x), maxLength), t)
+			structBlock.WF("\t%s %s", util.StringPad(util.StringToProper(x), maxLength), t)
 		}
 	}
 	structBlock.W("}")

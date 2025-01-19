@@ -18,7 +18,7 @@ func LoadRef(col *model.Column, models model.Models, extraTypes model.Models) (*
 		mdl = extraTypes.Get(ret.K)
 	}
 	if mdl == nil {
-		deref := util.StringToLowerCamel(strings.TrimPrefix(ret.K, "*"))
+		deref := util.StringToCamel(strings.TrimPrefix(ret.K, "*"))
 		mdl = models.Get(deref)
 		if mdl == nil {
 			mdl = extraTypes.Get(deref)

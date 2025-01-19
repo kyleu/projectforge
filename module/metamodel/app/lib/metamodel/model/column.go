@@ -66,11 +66,11 @@ func (c *Column) NameQuoted() string {
 }
 
 func (c *Column) Camel() string {
-	return util.StringToLowerCamel(c.Name, c.acronyms...)
+	return util.StringToCamel(c.Name, c.acronyms...)
 }
 
 func (c *Column) CamelNoReplace() string {
-	return util.StringToLowerCamel(c.Name)
+	return util.StringToCamel(c.Name)
 }
 
 func (c *Column) CamelPlural() string {
@@ -79,7 +79,7 @@ func (c *Column) CamelPlural() string {
 
 func (c *Column) Proper() string {
 	if c.ProperOverride == "" {
-		return util.StringToCamel(c.Name, c.acronyms...)
+		return util.StringToProper(c.Name, c.acronyms...)
 	}
 	return c.ProperOverride
 }

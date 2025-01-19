@@ -45,7 +45,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 		lo.ForEach(split, func(comp string, idx int) {
 			name := strings.TrimSuffix(comp, util.ExtMarkdown)
 			addFolder := func() {
-				i := &menu.Item{Key: name, Title: util.StringToCamel(name), Icon: "folder"}
+				i := &menu.Item{Key: name, Title: util.StringToProper(name), Icon: "folder"}
 				mi.Children = append(mi.Children, i)
 				slices.SortFunc(mi.Children, func(l *menu.Item, r *menu.Item) int {
 					return cmp.Compare(l.Title, r.Title)
@@ -76,7 +76,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 
 func addChild(p string, name string) *menu.Item {
 	r := "/" + path.Join("docs", p)
-	title := util.StringToCamel(name)
+	title := util.StringToProper(name)
 	b, err := doc.FS.ReadFile(p + util.ExtMarkdown)
 	if err != nil {
 		panic(err)

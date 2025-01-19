@@ -14,7 +14,7 @@ type SVG struct {
 }
 
 func (s *SVG) Proper() string {
-	return util.StringToCamel(s.Key)
+	return util.StringToProper(s.Key)
 }
 
 type SVGs []*SVG

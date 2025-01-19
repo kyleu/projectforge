@@ -42,9 +42,9 @@ func (e *Enum) TitleLower() string {
 
 func (e *Enum) Proper() string {
 	if e.ProperOverride == "" {
-		return util.StringToCamel(e.Name, e.acronyms...)
+		return util.StringToProper(e.Name, e.acronyms...)
 	}
-	return util.StringToCamel(e.ProperOverride, e.acronyms...)
+	return util.StringToProper(e.ProperOverride, e.acronyms...)
 }
 
 func (e *Enum) ProperPlural() string {
@@ -67,7 +67,7 @@ func (e *Enum) IconSafe() string {
 }
 
 func (e *Enum) Camel() string {
-	return util.StringToLowerCamel(e.Name, e.acronyms...)
+	return util.StringToCamel(e.Name, e.acronyms...)
 }
 
 func (e *Enum) CamelLower() string {
@@ -162,7 +162,7 @@ func (e *Enum) Breadcrumbs() string {
 
 func (e *Enum) ValuesCamel() []string {
 	return lo.Map(e.Values, func(x *Value, _ int) string {
-		return util.StringToCamel(x.Key, e.acronyms...)
+		return util.StringToProper(x.Key, e.acronyms...)
 	})
 }
 

@@ -1,8 +1,7 @@
 {
   "name": "Metamodel",
   "icon": "cog",
-  "description": "Internal model representation for Project Forge export models",
-  "hidden": true,
+  "description": "Golang representation of models, enums, and types",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

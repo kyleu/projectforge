@@ -20,8 +20,8 @@ type StringTest struct {
 func (t *StringTest) Test() error {
 	var res string
 	switch t.Type {
-	case "camel":
-		res = util.StringToCamel(t.TestValue)
+	case "proper":
+		res = util.StringToProper(t.TestValue)
 	case "snake":
 		res = util.StringToSnake(t.TestValue)
 	default:
@@ -34,14 +34,14 @@ func (t *StringTest) Test() error {
 }
 
 var titleTests = []*StringTest{
-	{TestValue: "SimpleCamelCase", Expected: "Simple Camel Case"},
+	{TestValue: "SimpleProperCase", Expected: "Simple Proper Case"},
 	{TestValue: "CSVFilesAreCoolButTXTRules", Expected: "CSV Files Are Cool But TXT Rules"},
 	{TestValue: "MediaTypes", Expected: "Media Types"},
 	{TestValue: "ID", Expected: "ID"},
 	{TestValue: "Id", Expected: "ID"},
 	{TestValue: "id", Expected: "ID"},
 	{TestValue: "bigXMLBlob", Expected: "Big XML Blob"},
-	{TestValue: "bigXMLBlob", Expected: "BigXMLBlob", Type: "camel"},
+	{TestValue: "bigXMLBlob", Expected: "BigXMLBlob", Type: "proper"},
 	{TestValue: "bigXMLBlob", Expected: "big_xml_blob", Type: "snake"},
 	// {TestValue: "bigBlobXMLs", Expected: "big_blob_xmls", Type: "snake"},
 	// {TestValue: "SetOfIDs", Expected: "Set of IDs"},

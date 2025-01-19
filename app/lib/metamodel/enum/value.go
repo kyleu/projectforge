@@ -37,7 +37,7 @@ type Value struct {
 }
 
 func (x *Value) Proper() string {
-	return util.StringToCamel(x.Key)
+	return util.StringToProper(x.Key)
 }
 
 func (x *Value) Title() string {

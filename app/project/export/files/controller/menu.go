@@ -64,7 +64,7 @@ func menuBlockV(models model.Models, args *model.Args, groups map[string][]strin
 			continue
 		}
 		k, g := grp.Key, groups[grp.Key]
-		n := util.StringToCamel(k, args.Acronyms...)
+		n := util.StringToProper(k, args.Acronyms...)
 		msg := fmt.Sprintf("\tmenuGroup%s = &menu.Item{Key: %q, Title: %q", util.StringPad(n, maxGroupLength), grp.Key, grp.String())
 		if grp.Icon != "" {
 			msg += fmt.Sprintf(", Icon: %q", grp.Icon)
@@ -107,7 +107,7 @@ func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
 		gm.W("\treturn menu.Items{")
 		for _, g := range args.Groups {
 			if !g.Provided {
-				gm.WF("\t\tmenuGroup%s,", util.StringToCamel(g.Proper(), args.Acronyms...))
+				gm.WF("\t\tmenuGroup%s,", util.StringToProper(g.Proper(), args.Acronyms...))
 			}
 		}
 		for _, o := range orphans {

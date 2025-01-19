@@ -37,7 +37,7 @@ func (g *Group) TitleSafe() string {
 }
 
 func (g *Group) Proper() string {
-	return util.StringToCamel(g.Key)
+	return util.StringToProper(g.Key)
 }
 
 func (g *Group) String() string {
