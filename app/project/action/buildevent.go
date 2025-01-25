@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -122,6 +123,10 @@ func onSize(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
+func onClientInstall(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
+}
+
 func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, err := build.Full(ctx, pm.Prj, pm.Logger)
@@ -148,5 +153,15 @@ func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	if err != nil {
 		return r.WithError(err)
 	}
+	return r
+}
+
+func onCoverage(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	ret, logs, err := build.Coverage(ctx, pm.FS, r.Args.GetStringOpt("scope"), pm.Logger)
+	r.Logs = append(r.Logs, logs...)
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.Data = util.ValueMap{"x": ret}
 	return r
 }

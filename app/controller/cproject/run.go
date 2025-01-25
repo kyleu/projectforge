@@ -46,10 +46,20 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 				return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
 			}
 		}
-		if isBuild && phase == "" {
-			ps.Data = action.AllBuilds
-			page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
-			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+		if isBuild {
+			if phase == "" {
+				ps.Data = action.AllBuilds
+				page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
+				return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+			}
+			b := action.AllBuilds.Get(phase)
+			if b.Expensive {
+				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
+					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
+					page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
+					return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+				}
+			}
 		}
 		result := action.Apply(ps.Context, actionParams(prj.Key, actT, cfg, as, ps.Logger))
 		if result == nil {
@@ -58,7 +68,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		if result.Project == nil {
 			result.Project = prj
 		}
-		if redir, ok := result.Data.(string); ok {
+		if redir, e := util.Cast[string](result.Data); e == nil {
 			return redir, nil
 		}
 		ps.Data = result

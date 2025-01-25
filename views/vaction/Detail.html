@@ -12,7 +12,7 @@
   {%- if len(cfg) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} Config</h3>
-    <div class="overflow full-width">
+    <div class="mt overflow full-width">
       <table>
         <tbody>
           {%- for _, k := range cfg.Keys() -%}
@@ -54,6 +54,14 @@
         </table>
       </div>
     </div>
+  </div>
+  {%- endif -%}
+  {%- if res.Data != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`mountain`, ps) %} Data</h3>
+    <ul class="mt">
+      {%= components.JSON(res.Data) %}
+    </ul>
   </div>
   {%- endif -%}
   {%- for _, mr := range res.Modules -%}

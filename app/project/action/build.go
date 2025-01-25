@@ -17,6 +17,7 @@ type Build struct {
 	Key         string `json:"key"`
 	Title       string `json:"title,omitempty"`
 	Description string `json:"description,omitempty"`
+	Expensive   bool   `json:"expensive,omitempty"`
 
 	Run func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result `json:"-"`
 }
@@ -33,10 +34,10 @@ func simpleProc(ctx context.Context, cmd string, path string, ret *Result, logge
 	return ret
 }
 
-func simpleBuild(key string, title string, cmd string) *Build {
+func simpleBuild(key string, title string, cmd string, expensive bool) *Build {
 	return &Build{Key: key, Title: title, Description: "Runs [" + cmd + "]", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, cmd, pm.Prj.Path, ret, pm.Logger)
-	}}
+	}, Expensive: expensive}
 }
 
 const ciDesc = "Installs dependencies for the TypeScript client"
@@ -57,9 +58,9 @@ func (b Builds) Get(key string) *Build {
 
 var (
 	buildFull          = &Build{Key: "full", Title: "Full Build", Description: "Builds the TypeScript and Go code", Run: onFull}
-	buildBuild         = simpleBuild("build", "Build", "make build")
+	buildBuild         = simpleBuild("build", "Build", "make build", false)
 	buildStart         = &Build{Key: "start", Title: "Start", Description: "Starts the prebuilt project binary", Run: onStart}
-	buildClean         = simpleBuild("clean", "Clean", "make clean")
+	buildClean         = simpleBuild("clean", "Clean", "make clean", false)
 	buildDeps          = &Build{Key: "deps", Title: "Dependencies", Description: "Manages Go dependencies", Run: onDeps}
 	buildImports       = &Build{Key: "imports", Title: "Imports", Description: "Organizes the imports in source files and templates", Run: onImports}
 	buildCodeStats     = &Build{Key: "codestats", Title: "Code Stats", Description: "View statistics about the code in your project", Run: onCodeStats}
@@ -67,26 +68,23 @@ var (
 	buildPackages      = &Build{Key: "packages", Title: "Packages", Description: "Visualize your application's packages", Run: onPackages}
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
 	buildSize          = &Build{Key: "size", Title: "Binary Size", Description: "Visualizes the file size of the binary", Run: onSize}
-	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy")
-	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension))
-	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension))
-	buildLintClient    = simpleBuild("lint-client", "Lint Client", filepath.Join("bin", "check-client."+build.ScriptExtension))
-	buildTemplates     = simpleBuild("templates", "Templates", filepath.Join("bin", "templates."+build.ScriptExtension))
-	buildClientInstall = &Build{
-		Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-			return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
-		},
-	}
-	buildClientBuild = simpleBuild("clientBuild", "Client Build", filepath.Join("bin", "build", "client."+build.ScriptExtension))
-	buildDeployments = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
-	buildTest        = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy", false)
+	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension), false)
+	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension), true)
+	buildLintClient    = simpleBuild("lint-client", "Lint Client", filepath.Join("bin", "check-client."+build.ScriptExtension), false)
+	buildTemplates     = simpleBuild("templates", "Templates", filepath.Join("bin", "templates."+build.ScriptExtension), false)
+	buildClientInstall = &Build{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: onClientInstall}
+	buildClientBuild   = simpleBuild("clientBuild", "Client Build", filepath.Join("bin", "build", "client."+build.ScriptExtension), false)
+	buildDeployments   = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
+	buildTest          = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, filepath.Join("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
-	}}
+	}, Expensive: true}
+	buildCoverage = &Build{Key: "coverage", Title: "Code Coverage", Description: "Runs unit tests, displaying a coverage report", Run: onCoverage, Expensive: true}
 )
 
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildCodeStats, buildIgnored, buildPackages, buildCleanup, buildSize,
-	buildTidy, buildFormat, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest,
+	buildTidy, buildFormat, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest, buildCoverage,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

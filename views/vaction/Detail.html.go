@@ -42,7 +42,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 		components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vaction/Detail.html:14
 		qw422016.N().S(` Config</h3>
-    <div class="overflow full-width">
+    <div class="mt overflow full-width">
       <table>
         <tbody>
 `)
@@ -147,108 +147,128 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:58
 	}
 //line views/vaction/Detail.html:59
-	for _, mr := range res.Modules {
+	if res.Data != nil {
 //line views/vaction/Detail.html:59
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vaction/Detail.html:61
+		components.StreamSVGIcon(qw422016, `mountain`, ps)
+//line views/vaction/Detail.html:61
+		qw422016.N().S(` Data</h3>
+    <ul class="mt">
+      `)
+//line views/vaction/Detail.html:63
+		components.StreamJSON(qw422016, res.Data)
+//line views/vaction/Detail.html:63
+		qw422016.N().S(`
+    </ul>
+  </div>
+`)
+//line views/vaction/Detail.html:66
+	}
+//line views/vaction/Detail.html:67
+	for _, mr := range res.Modules {
+//line views/vaction/Detail.html:67
 		qw422016.N().S(`    <div class="card">
       <div class="right">`)
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:69
 		qw422016.E().S(util.MicrosToMillis(mr.Duration))
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:69
 		qw422016.N().S(`</div>
       <h3 title="`)
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:70
 		qw422016.E().S(strings.Join(mr.Keys, `, `))
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:70
 		qw422016.N().S(`">`)
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:70
 		components.StreamSVGIcon(qw422016, `archive`, ps)
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:70
 		qw422016.N().S(` `)
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:70
 		qw422016.E().S(util.StringPlural(len(mr.Keys), "Module"))
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:70
 		qw422016.N().S(`</h3>
       <div class="right">`)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:71
 		qw422016.N().S(res.StatusLog())
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:71
 		qw422016.N().S(`</div>
       <div class="mts">
         <em>`)
-//line views/vaction/Detail.html:65
+//line views/vaction/Detail.html:73
 		qw422016.E().S(mr.Status)
-//line views/vaction/Detail.html:65
+//line views/vaction/Detail.html:73
 		qw422016.N().S(`</em>
 `)
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:74
 		if len(mr.Actions) > 0 {
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:74
 			qw422016.N().S(`        <h4>Actions</h4>
 `)
-//line views/vaction/Detail.html:68
+//line views/vaction/Detail.html:76
 			for _, a := range mr.Actions {
-//line views/vaction/Detail.html:68
+//line views/vaction/Detail.html:76
 				qw422016.N().S(`          <a href="`)
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:77
 				qw422016.E().S(a.URL())
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:77
 				qw422016.N().S(`"><button>`)
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:77
 				qw422016.E().S(a.Title)
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:77
 				qw422016.N().S(`</button></a>
 `)
-//line views/vaction/Detail.html:70
+//line views/vaction/Detail.html:78
 			}
-//line views/vaction/Detail.html:71
+//line views/vaction/Detail.html:79
 		}
-//line views/vaction/Detail.html:72
+//line views/vaction/Detail.html:80
 		diffs := mr.DiffsFiltered(includeSkipped)
 
-//line views/vaction/Detail.html:73
+//line views/vaction/Detail.html:81
 		if len(diffs) > 0 {
-//line views/vaction/Detail.html:73
+//line views/vaction/Detail.html:81
 			qw422016.N().S(`        <div class="overflow">
         `)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:83
 			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, cfg, as, ps)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:83
 			qw422016.N().S(`
         </div>
       </div>
 `)
-//line views/vaction/Detail.html:78
+//line views/vaction/Detail.html:86
 		}
-//line views/vaction/Detail.html:78
+//line views/vaction/Detail.html:86
 		qw422016.N().S(`    </div>
 `)
-//line views/vaction/Detail.html:80
+//line views/vaction/Detail.html:88
 	}
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 }
 
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 func WriteDetail(qq422016 qtio422016.Writer, cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	StreamDetail(qw422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 }
 
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	WriteDetail(qb422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	qs422016 := string(qb422016.B)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 	return qs422016
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:89
 }
