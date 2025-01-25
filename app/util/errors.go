@@ -34,12 +34,10 @@ func GetErrorDetail(e error, includeStack bool) *ErrorDetail {
 	var cause *ErrorDetail
 
 	if includeStack {
-		t, ok := e.(stackTracer)
-		if ok {
+		if t, err := Cast[stackTracer](e); err == nil {
 			stack = t.StackTrace()
 		}
-		u, ok := e.(unwrappable)
-		if ok {
+		if u, err := Cast[unwrappable](e); err == nil {
 			cause = GetErrorDetail(u.Unwrap(), includeStack)
 		}
 	}

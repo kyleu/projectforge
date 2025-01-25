@@ -28,9 +28,9 @@ func runDeps(prj *project.Project, res *action.Result, r *http.Request, as *app.
 	if res.HasErrors() {
 		return "", errors.New(strings.Join(res.Errors, ", "))
 	}
-	deps, ok := res.Data.(build.Dependencies)
-	if !ok {
-		return "", errors.Errorf("data is of type [%T], expected [Dependencies]", res.Data)
+	deps, err := util.Cast[build.Dependencies](res.Data)
+	if err != nil {
+		return "", err
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Dependencies", prj.Key), deps)
 	page := &vbuild.Deps{Project: prj, BuildResult: res, Dependencies: deps}

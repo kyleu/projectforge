@@ -81,8 +81,8 @@ func logResult(t action.Type, r *action.Result, logger util.Logger) {
 		})
 	}
 	if r.Data != nil {
-		deps, ok := r.Data.(build.Dependencies)
-		if ok {
+		deps, err := util.Cast[build.Dependencies](r.Data)
+		if err == nil {
 			lo.ForEach(deps, func(dep *build.Dependency, _ int) {
 				logger.Infof(dep.String())
 			})

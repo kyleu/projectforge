@@ -1,5 +1,7 @@
 package types
 
+import "projectforge.dev/projectforge/app/util"
+
 type Wrapped struct {
 	K string `json:"k"`
 	T Type   `json:"t,omitempty"`
@@ -8,8 +10,7 @@ type Wrapped struct {
 var _ Type = (*Wrapped)(nil)
 
 func Wrap(t Type) *Wrapped {
-	w, ok := t.(*Wrapped)
-	if ok {
+	if w, err := util.Cast[*Wrapped](t); err == nil {
 		return w
 	}
 	return &Wrapped{K: t.Key(), T: t}
@@ -44,13 +45,13 @@ func (x *Wrapped) Equals(tgt *Wrapped) bool {
 }
 
 func (x *Wrapped) IsOption() bool {
-	_, ok := x.T.(*Option)
-	return ok
+	_, err := util.Cast[*Option](x.T)
+	return err == nil
 }
 
 func (x *Wrapped) EnumKey() string {
-	e, ok := x.T.(*Enum)
-	if !ok {
+	e, err := util.Cast[*Enum](x.T)
+	if err != nil {
 		return ""
 	}
 	return e.Ref

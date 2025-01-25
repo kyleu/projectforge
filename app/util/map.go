@@ -29,8 +29,8 @@ func ValueMapFrom(m map[string]any) ValueMap {
 
 func (m ValueMap) Add(kvs ...any) {
 	for i := 0; i < len(kvs); i += 2 {
-		k, ok := kvs[i].(string)
-		if !ok {
+		k, err := Cast[string](kvs[i])
+		if err != nil {
 			k = fmt.Sprintf("error-invalid-type:%T", kvs[i])
 		}
 		m[k] = kvs[i+1]
@@ -183,8 +183,8 @@ func ValueMapGet[T any](m ValueMap, pth string) (T, error) {
 	if err != nil {
 		return DefaultValue[T](), err
 	}
-	ret, ok := x.(T)
-	if !ok {
+	ret, err := Cast[T](x)
+	if err != nil {
 		var df T
 		return df, errors.Errorf("map value is of type [%T], expected [%T]", x, df)
 	}

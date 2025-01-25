@@ -20,9 +20,9 @@ func runCodeStats(prj *project.Project, res *action.Result, r *http.Request, as 
 	if res.HasErrors() {
 		return "", errors.New(strings.Join(res.Errors, ", "))
 	}
-	stats, ok := res.Data.(*action.CodeStats)
-	if !ok {
-		return "", errors.Errorf("data is of type [%T], expected [Dependencies]", res.Data)
+	stats, err := util.Cast[*action.CodeStats](res.Data)
+	if err != nil {
+		return "", err
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Code Stats", prj.Key), stats)
 	page := &vbuild.CodeStats{Project: prj, Result: res, Stats: stats}
@@ -38,9 +38,9 @@ func runAllCodeStats(cfg util.ValueMap, prjs project.Projects, r *http.Request, 
 		if res.HasErrors() {
 			return "", errors.New(strings.Join(res.Errors, ", "))
 		}
-		stats, ok := res.Data.(*action.CodeStats)
-		if !ok {
-			return "", errors.Errorf("data is of type [%T], expected [Pkgs]", res.Data)
+		stats, err := util.Cast[*action.CodeStats](res.Data)
+		if err != nil {
+			return "", err
 		}
 		ret[prj.Key] = res
 		statsMap[prj.Key] = stats

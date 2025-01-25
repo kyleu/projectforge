@@ -137,14 +137,14 @@ func ArrayFromAny[T any](dest any) []T {
 	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {
 		return lo.Times(rfl.Len(), func(i int) T {
 			x := rfl.Index(i).Interface()
-			if t, ok := x.(T); ok {
+			if t, err := Cast[T](x); err == nil {
 				return t
 			}
 			var t T
 			return t
 		})
 	}
-	if t, ok := dest.(T); ok {
+	if t, err := Cast[T](dest); err == nil {
 		return []T{t}
 	}
 	return nil

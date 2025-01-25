@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Type interface {
@@ -16,17 +18,17 @@ type Type interface {
 type Types []Type
 
 func TypeAs[T Type](t Type) T {
-	l, ok := t.(T)
-	if ok {
+	l, err := util.Cast[T](t)
+	if err == nil {
 		return l
 	}
-	w, ok := t.(*Wrapped)
-	if !ok {
+	w, err := util.Cast[*Wrapped](t)
+	if err != nil {
 		var ret T
 		return ret
 	}
-	l, ok = w.T.(T)
-	if !ok {
+	l, err = util.Cast[T](w.T)
+	if err != nil {
 		var ret T
 		return ret
 	}

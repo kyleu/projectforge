@@ -66,7 +66,7 @@ func EnumImports(ts types.Types, pkg string, models model.Models, enums enum.Enu
 				ret = append(ret, AppImport(ep))
 			}
 		case types.KeyList:
-			w, _ := t.(*types.Wrapped)
+			w := util.CastOK[*types.Wrapped](t)
 			if x := w.ListType(); t != nil && x.Key() == types.KeyEnum {
 				e, err := model.AsEnumInstance(x, enums)
 				if err != nil {

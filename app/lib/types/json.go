@@ -28,7 +28,7 @@ func (x *JSON) String() string {
 }
 
 func (x *JSON) From(v any) any {
-	if s, ok := v.(string); ok {
+	if s, err := util.Cast[string](v); err == nil {
 		ret, _ := util.FromJSONAny([]byte(s))
 		return ret
 	}

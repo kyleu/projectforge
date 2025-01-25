@@ -100,8 +100,8 @@ func loadProfile(session util.ValueMap) (*user.Profile, error) {
 	}
 	s, ok := x.(string)
 	if !ok {
-		m, ok := x.(map[string]any)
-		if !ok {
+		m, err := util.Cast[map[string]any](x)
+		if err != nil {
 			return user.DefaultProfile.Clone(), nil
 		}
 		s = util.ToJSON(m)

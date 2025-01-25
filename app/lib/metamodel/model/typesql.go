@@ -44,8 +44,9 @@ func ToSQLType(t types.Type, database string) (string, error) {
 		return keyJSONB, nil
 	case types.KeyString:
 		if database == util.DatabaseSQLServer {
-			s, ok := types.Wrap(t).T.(*types.String)
-			if !ok {
+			x := types.Wrap(t).T
+			s, err := util.Cast[*types.String](x)
+			if err != nil {
 				return keyNVarcharMax, nil
 			}
 			if s.MaxLength > 0 {

@@ -24,6 +24,8 @@ func (t *StringTest) Test() error {
 		res = util.StringToProper(t.TestValue)
 	case "snake":
 		res = util.StringToSnake(t.TestValue)
+	case "camel":
+		res = util.StringToCamel(t.TestValue)
 	default:
 		res = util.StringToTitle(t.TestValue)
 	}
@@ -43,6 +45,7 @@ var titleTests = []*StringTest{
 	{TestValue: "bigXMLBlob", Expected: "Big XML Blob"},
 	{TestValue: "bigXMLBlob", Expected: "BigXMLBlob", Type: "proper"},
 	{TestValue: "bigXMLBlob", Expected: "big_xml_blob", Type: "snake"},
+	{TestValue: "bigXMLBlob", Expected: "bigXMLBlob", Type: "camel"},
 	// {TestValue: "bigBlobXMLs", Expected: "big_blob_xmls", Type: "snake"},
 	// {TestValue: "SetOfIDs", Expected: "Set of IDs"},
 	// {TestValue: "Set Of IDs", Expected: "set_of_ids", Type: "snake"},

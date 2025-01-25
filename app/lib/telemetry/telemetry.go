@@ -90,8 +90,8 @@ func spanCreate(ctx context.Context, spanName string, logger util.Logger, opts .
 	tr := otel.GetTracerProvider().Tracer(util.AppKey)
 	ssos := []trace.SpanStartOption{trace.WithSpanKind(trace.SpanKindServer)}
 	lo.ForEach(opts, func(opt any, _ int) {
-		o, ok := opt.(trace.SpanStartOption)
-		if ok {
+		o, err := util.Cast[trace.SpanStartOption](opt)
+		if err == nil {
 			ssos = append(ssos, o)
 		}
 	})

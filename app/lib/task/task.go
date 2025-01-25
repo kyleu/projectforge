@@ -114,7 +114,7 @@ func (t *Task) ResultLogFn(logger util.Logger, fns ...exec.OutFn) ResultLogFn {
 	return func(key string, data any) {
 		for _, fn := range fns {
 			var b []byte
-			if s, ok := data.(string); ok {
+			if s, err := util.Cast[string](data); err == nil {
 				b = []byte(s)
 			} else {
 				util.ToJSONBytes(data, true)

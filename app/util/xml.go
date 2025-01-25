@@ -31,7 +31,7 @@ func ToXMLBytes(x any, indent bool) ([]byte, error) {
 	if indent {
 		enc.Indent("", "  ")
 	}
-	if m, ok := x.(map[string]any); ok {
+	if m, err := Cast[map[string]any](x); err == nil {
 		x = ValueMap(m)
 	}
 	err := enc.Encode(x) //nolint:errchkxml // no chance of error

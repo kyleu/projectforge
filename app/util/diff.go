@@ -87,28 +87,28 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 	case []any:
 		ret = append(ret, diffArrays(t, r, ignored, path...)...)
 	case Diffs:
-		rm, _ := r.(Diffs)
+		rm := CastOK[Diffs](r)
 		lo.ForEach(t, func(v *Diff, idx int) {
 			rv := rm[idx]
 			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append([]string{}, path...)...)...)
 		})
 	case int64:
-		i, _ := r.(int64)
+		i := CastOK[int64](r)
 		if t != i {
 			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
 		}
 	case int:
-		i, _ := r.(int)
+		i := CastOK[int](r)
 		if t != i {
 			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
 		}
 	case float64:
-		i, _ := r.(float64)
-		if t != i {
-			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+		f := CastOK[float64](r)
+		if t != f {
+			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(f)))
 		}
 	case string:
-		s, _ := r.(string)
+		s := CastOK[string](r)
 		if t != s {
 			ret = append(ret, NewDiff(strings.Join(path, "."), t, s))
 		}
@@ -127,7 +127,7 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 
 func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	rm, _ := r.([]any)
+	rm := CastOK[[]any](r)
 	lo.ForEach(l, func(v any, idx int) {
 		if len(rm) > idx {
 			rv := rm[idx]
@@ -146,9 +146,9 @@ func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {
 
 func diffMaps(l map[string]any, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	rm, ok := r.(map[string]any)
-	if !ok {
-		rm, _ = r.(ValueMap)
+	rm, err := Cast[map[string]any](r)
+	if err != nil {
+		rm = CastOK[ValueMap](r)
 	}
 	for k, v := range l {
 		if lo.Contains(ignored, k) {
@@ -170,7 +170,7 @@ func diffMaps(l map[string]any, r any, ignored []string, path ...string) Diffs {
 
 func diffIntMaps(l map[string]int, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
-	rm, _ := r.(map[string]int)
+	rm := CastOK[map[string]int](r)
 	for k, v := range l {
 		if lo.Contains(ignored, k) {
 			continue

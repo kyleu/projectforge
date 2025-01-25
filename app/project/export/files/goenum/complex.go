@@ -95,7 +95,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnScanBlock.W("\t\treturn nil")
 	fnScanBlock.W("\t}")
 	fnScanBlock.W("\tif converted, err := driver.String.ConvertValue(value); err == nil {")
-	fnScanBlock.W("\t\tif str, ok := converted.(string); ok {")
+	fnScanBlock.W("\t\tif str, err := util.Cast[string](converted); err == nil {")
 	fnScanBlock.WF("\t\t\t*%s = All%s.Get(str, nil)", e.FirstLetter(), e.ProperPlural())
 	fnScanBlock.W("\t\t\treturn nil")
 	fnScanBlock.W("\t\t}")
