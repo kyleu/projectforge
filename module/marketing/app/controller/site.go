@@ -22,7 +22,7 @@ func Site(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		if _, ok := page.(*verror.NotFound); ok {
+		if _, err := util.Cast[*verror.NotFound](page); err != nil {
 			w.WriteHeader(http.StatusNotFound)
 		}
 		if redir != "" {

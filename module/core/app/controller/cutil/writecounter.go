@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type WriteCounter struct {
@@ -42,8 +44,8 @@ func (w *WriteCounter) WriteHeader(statusCode int) {
 }
 
 func (w *WriteCounter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
-	h, ok := w.ResponseWriter.(http.Hijacker)
-	if !ok {
+	h, err := util.Cast[http.Hijacker](w.ResponseWriter)
+	if err != nil {
 		return nil, nil, errors.Errorf("can't process response of type [%T]", w.ResponseWriter)
 	}
 	return h.Hijack()

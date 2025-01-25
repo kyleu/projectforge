@@ -43,8 +43,8 @@ func GetFromSession(key string, websess util.ValueMap) (string, error) {
 	if !ok {
 		return "", errors.Errorf("could not find a matching session value with key [%s] for this request", key)
 	}
-	s, ok := value.(string)
-	if !ok {
+	s, err := util.Cast[string](value)
+	if err != nil {
 		return "", errors.Errorf("session value with key [%s] is of type [%T], not [string]", key, value)
 	}
 	return s, nil

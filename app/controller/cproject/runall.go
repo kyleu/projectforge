@@ -74,6 +74,8 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				return runAllPkgs(cfg, prjs, r, as, ps)
 			case statsKey:
 				return runAllCodeStats(cfg, prjs, r, as, ps)
+			case coverageKey:
+				return runAllCoverage(cfg, prjs, r, as, ps)
 			case "lint":
 				return "", errors.New("can't run multiple instances of golangcilint")
 			case "full":

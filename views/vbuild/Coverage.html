@@ -1,0 +1,123 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/project/action"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vproject"
+) %}
+
+{% code type Coverage struct {
+  layout.Basic
+  Project *project.Project
+  Result *action.Result
+  Coverage *action.Coverage
+} %}
+
+{% func (p *Coverage) Body(as *app.State, ps *cutil.PageState) %}
+  {%= components.PlotAssets() %}
+  {%- code prj := p.Project -%}
+  {%= vproject.Summary(prj, "Code Coverage", nil, &action.TypeBuild, nil, ps) %}
+  {%= BuildOptions(prj.Key, false, ps) %}
+
+  {%- if p.Result != nil && len(p.Result.Errors) > 0 -%}
+  <div class="card">
+    <h3>Error</h3>
+    {%- for _, e := range p.Result.Errors -%}
+    <p class="error">{%s e %}</p>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+
+  <div class="card">
+    <div class="right"><a href="#modal-coverage-{%s p.Project.Key %}"><button type="button">View as Chart</button></a></div>
+    <h3>Code Coverage</h3>
+    {%= codeCoverage(p.Project.Key, p.Coverage, ps) %}
+  </div>
+{% endfunc %}
+
+{% code type CoverageAll struct {
+  layout.Basic
+  Projects project.Projects
+  Results map[string]*action.Result
+  Coverage map[string]*action.Coverage
+} %}
+
+{% func (p *CoverageAll) Body(as *app.State, ps *cutil.PageState) %}
+  {%= components.PlotAssets() %}
+  <div class="card">
+    <h3>Code Coverage</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, prj := range p.Projects -%}
+        {%- code
+          res := p.Results[prj.Key]
+          stats := p.Coverage[prj.Key]
+        -%}
+        <li>
+          <input id="accordion-{%s prj.Key %}" type="checkbox" hidden />
+          <label for="accordion-{%s prj.Key %}">
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(prj.IconSafe(), 16, 16, "icon", ps) %} {%s prj.Title() %}
+          </label>
+          <div class="bd"><div><div>
+            {%= vproject.Summary(prj, "Code Coverage", nil, nil, nil, ps) %}
+            {%- if res != nil && len(res.Errors) > 0 -%}
+            <div class="card">
+              <h3>Error</h3>
+              {%- for _, e := range res.Errors -%}
+              <p class="error">{%s e %}</p>
+              {%- endfor -%}
+            </div>
+            {%- endif -%}
+            <div class="card">
+              <div class="right"><a href="#modal-coverage-{%s prj.Key %}"><button type="button">View as Chart</button></a></div>
+              <h3>Code Coverage</h3>
+              {%- if stats == nil -%}
+              <em>no stats available</em>
+              {%- else -%}
+              {%= codeCoverage(prj.Key, stats, ps) %}
+              {%- endif -%}
+            </div>
+          </div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func codeCoverage(key string, cv *action.Coverage, ps *cutil.PageState) %}
+  <div class="overflow full-width mt">
+    <table class="expanded min-200">
+      <thead>
+        <tr>
+          <th>Package</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, pkg := range cv.Packages.Keys() -%}
+        <tr>
+          <td>{%s pkg %}</td>
+          <td>{%s cv.Packages.GetStringOpt(pkg) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  <div id="modal-coverage-{%s key %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content" style="width: 100%;">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Coverage Chart</h2>
+      </div>
+      <div class="modal-body">
+        <div class="overflow full-width mt">
+          {%s= cv.SVG %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

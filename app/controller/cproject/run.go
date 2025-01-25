@@ -16,9 +16,10 @@ import (
 )
 
 const (
-	depsKey  = "deps"
-	pkgsKey  = "packages"
-	statsKey = "codestats"
+	depsKey     = "deps"
+	pkgsKey     = "packages"
+	statsKey    = "codestats"
+	coverageKey = "coverage"
 )
 
 //nolint:gocognit
@@ -81,6 +82,9 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 			}
 			if phase == statsKey {
 				return runCodeStats(prj, result, r, as, ps)
+			}
+			if phase == coverageKey {
+				return runCoverage(prj, result, r, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
 			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())

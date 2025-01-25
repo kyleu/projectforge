@@ -157,11 +157,11 @@ func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onCoverage(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
-	ret, logs, err := build.Coverage(ctx, pm.FS, r.Args.GetStringOpt("scope"), pm.Logger)
+	ret, logs, err := runCoverage(ctx, pm.FS, r.Args.GetStringOpt("scope"), pm.Logger)
 	r.Logs = append(r.Logs, logs...)
 	if err != nil {
 		return r.WithError(err)
 	}
-	r.Data = util.ValueMap{"x": ret}
+	r.Data = ret
 	return r
 }

@@ -140,14 +140,14 @@ func processList(cell any, cellStr string) string {
 	if cellStr == helper.TextNil {
 		return "'[]'"
 	}
-	a, ok := cell.([]any)
-	if !ok {
-		s, ok := cell.([]string)
-		if ok {
+	a, err := util.Cast[[]any](cell)
+	if err != nil {
+		s, err := util.Cast[[]string](cell)
+		if err == nil {
 			a = lo.ToAnySlice(s)
 		} else {
-			str, ok := cell.(string)
-			if ok {
+			str, err := util.Cast[string](cell)
+			if err == nil {
 				return "'" + str + "'"
 			}
 			return "'[\"error:invalid_type\"]'"
