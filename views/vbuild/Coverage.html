@@ -19,7 +19,6 @@
   {%= components.PlotAssets() %}
   {%- code prj := p.Project -%}
   {%= vproject.Summary(prj, "Code Coverage", nil, &action.TypeBuild, nil, ps) %}
-  {%= BuildOptions(prj.Key, false, ps) %}
 
   {%- if p.Result != nil && len(p.Result.Errors) > 0 -%}
   <div class="card">
@@ -114,9 +113,7 @@
         <h2>Coverage Chart</h2>
       </div>
       <div class="modal-body">
-        <div class="overflow full-width mt">
-          {%s= cv.SVG %}
-        </div>
+        <div class="overflow full-width">{%s= cv.SVG %}</div>
       </div>
     </div>
   </div>

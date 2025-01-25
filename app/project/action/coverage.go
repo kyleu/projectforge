@@ -44,15 +44,16 @@ func runCoverage(ctx context.Context, fs filesystem.FileLoader, scope string, lo
 
 	ret := &Coverage{Packages: testMap}
 
-	treemapCmd := "go-cover-treemap -coverprofile ./tmp/coverage.out > ./tmp/coverage.svg"
+	treemapCmd := "go-cover-treemap -padding 0 -coverprofile ./tmp/coverage.out > ./tmp/coverage.svg"
 	if _, err := ex.Cmd(ctx, "coverage-run", treemapCmd, fs.Root(), logger); err != nil {
 		return nil, ex.Logs, errors.Wrapf(err, "unable to run [%s] for treemap generation", testCmd)
 	}
 
 	b, err := fs.ReadFile("./tmp/coverage.svg")
-	if err == nil {
-		ret.SVG = string(b)
+	if err != nil {
+		return nil, ex.Logs, errors.Wrap(err, "unable to read SVG from treemap generation")
 	}
+	ret.SVG = string(b)
 
 	return ret, logs, nil
 }

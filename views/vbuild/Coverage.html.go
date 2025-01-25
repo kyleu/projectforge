@@ -55,81 +55,76 @@ func (p *Coverage) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	vproject.StreamSummary(qw422016, prj, "Code Coverage", nil, &action.TypeBuild, nil, ps)
 //line views/vbuild/Coverage.html:21
 	qw422016.N().S(`
-  `)
-//line views/vbuild/Coverage.html:22
-	StreamBuildOptions(qw422016, prj.Key, false, ps)
-//line views/vbuild/Coverage.html:22
-	qw422016.N().S(`
 
 `)
-//line views/vbuild/Coverage.html:24
+//line views/vbuild/Coverage.html:23
 	if p.Result != nil && len(p.Result.Errors) > 0 {
-//line views/vbuild/Coverage.html:24
+//line views/vbuild/Coverage.html:23
 		qw422016.N().S(`  <div class="card">
     <h3>Error</h3>
 `)
-//line views/vbuild/Coverage.html:27
+//line views/vbuild/Coverage.html:26
 		for _, e := range p.Result.Errors {
-//line views/vbuild/Coverage.html:27
+//line views/vbuild/Coverage.html:26
 			qw422016.N().S(`    <p class="error">`)
-//line views/vbuild/Coverage.html:28
+//line views/vbuild/Coverage.html:27
 			qw422016.E().S(e)
-//line views/vbuild/Coverage.html:28
+//line views/vbuild/Coverage.html:27
 			qw422016.N().S(`</p>
 `)
-//line views/vbuild/Coverage.html:29
+//line views/vbuild/Coverage.html:28
 		}
-//line views/vbuild/Coverage.html:29
+//line views/vbuild/Coverage.html:28
 		qw422016.N().S(`  </div>
 `)
-//line views/vbuild/Coverage.html:31
+//line views/vbuild/Coverage.html:30
 	}
-//line views/vbuild/Coverage.html:31
+//line views/vbuild/Coverage.html:30
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="#modal-coverage-`)
-//line views/vbuild/Coverage.html:34
+//line views/vbuild/Coverage.html:33
 	qw422016.E().S(p.Project.Key)
-//line views/vbuild/Coverage.html:34
+//line views/vbuild/Coverage.html:33
 	qw422016.N().S(`"><button type="button">View as Chart</button></a></div>
     <h3>Code Coverage</h3>
     `)
-//line views/vbuild/Coverage.html:36
+//line views/vbuild/Coverage.html:35
 	streamcodeCoverage(qw422016, p.Project.Key, p.Coverage, ps)
-//line views/vbuild/Coverage.html:36
+//line views/vbuild/Coverage.html:35
 	qw422016.N().S(`
   </div>
 `)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 }
 
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 func (p *Coverage) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 }
 
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 func (p *Coverage) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	qs422016 := string(qb422016.B)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 	return qs422016
-//line views/vbuild/Coverage.html:38
+//line views/vbuild/Coverage.html:37
 }
 
-//line views/vbuild/Coverage.html:40
+//line views/vbuild/Coverage.html:39
 type CoverageAll struct {
 	layout.Basic
 	Projects project.Projects
@@ -137,150 +132,150 @@ type CoverageAll struct {
 	Coverage map[string]*action.Coverage
 }
 
-//line views/vbuild/Coverage.html:47
+//line views/vbuild/Coverage.html:46
 func (p *CoverageAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/Coverage.html:47
+//line views/vbuild/Coverage.html:46
 	qw422016.N().S(`
   `)
-//line views/vbuild/Coverage.html:48
+//line views/vbuild/Coverage.html:47
 	components.StreamPlotAssets(qw422016)
-//line views/vbuild/Coverage.html:48
+//line views/vbuild/Coverage.html:47
 	qw422016.N().S(`
   <div class="card">
     <h3>Code Coverage</h3>
     <div class="mt">
       <ul class="accordion">
 `)
-//line views/vbuild/Coverage.html:53
+//line views/vbuild/Coverage.html:52
 	for _, prj := range p.Projects {
-//line views/vbuild/Coverage.html:55
+//line views/vbuild/Coverage.html:54
 		res := p.Results[prj.Key]
 		stats := p.Coverage[prj.Key]
 
-//line views/vbuild/Coverage.html:57
+//line views/vbuild/Coverage.html:56
 		qw422016.N().S(`        <li>
           <input id="accordion-`)
-//line views/vbuild/Coverage.html:59
+//line views/vbuild/Coverage.html:58
 		qw422016.E().S(prj.Key)
-//line views/vbuild/Coverage.html:59
+//line views/vbuild/Coverage.html:58
 		qw422016.N().S(`" type="checkbox" hidden />
           <label for="accordion-`)
-//line views/vbuild/Coverage.html:60
+//line views/vbuild/Coverage.html:59
 		qw422016.E().S(prj.Key)
-//line views/vbuild/Coverage.html:60
+//line views/vbuild/Coverage.html:59
 		qw422016.N().S(`">
             `)
-//line views/vbuild/Coverage.html:61
+//line views/vbuild/Coverage.html:60
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vbuild/Coverage.html:61
+//line views/vbuild/Coverage.html:60
 		qw422016.N().S(` `)
-//line views/vbuild/Coverage.html:61
+//line views/vbuild/Coverage.html:60
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vbuild/Coverage.html:61
+//line views/vbuild/Coverage.html:60
 		qw422016.N().S(` `)
-//line views/vbuild/Coverage.html:61
+//line views/vbuild/Coverage.html:60
 		qw422016.E().S(prj.Title())
-//line views/vbuild/Coverage.html:61
+//line views/vbuild/Coverage.html:60
 		qw422016.N().S(`
           </label>
           <div class="bd"><div><div>
             `)
-//line views/vbuild/Coverage.html:64
+//line views/vbuild/Coverage.html:63
 		vproject.StreamSummary(qw422016, prj, "Code Coverage", nil, nil, nil, ps)
-//line views/vbuild/Coverage.html:64
+//line views/vbuild/Coverage.html:63
 		qw422016.N().S(`
 `)
-//line views/vbuild/Coverage.html:65
+//line views/vbuild/Coverage.html:64
 		if res != nil && len(res.Errors) > 0 {
-//line views/vbuild/Coverage.html:65
+//line views/vbuild/Coverage.html:64
 			qw422016.N().S(`            <div class="card">
               <h3>Error</h3>
 `)
-//line views/vbuild/Coverage.html:68
+//line views/vbuild/Coverage.html:67
 			for _, e := range res.Errors {
-//line views/vbuild/Coverage.html:68
+//line views/vbuild/Coverage.html:67
 				qw422016.N().S(`              <p class="error">`)
-//line views/vbuild/Coverage.html:69
+//line views/vbuild/Coverage.html:68
 				qw422016.E().S(e)
-//line views/vbuild/Coverage.html:69
+//line views/vbuild/Coverage.html:68
 				qw422016.N().S(`</p>
 `)
-//line views/vbuild/Coverage.html:70
+//line views/vbuild/Coverage.html:69
 			}
-//line views/vbuild/Coverage.html:70
+//line views/vbuild/Coverage.html:69
 			qw422016.N().S(`            </div>
 `)
-//line views/vbuild/Coverage.html:72
+//line views/vbuild/Coverage.html:71
 		}
-//line views/vbuild/Coverage.html:72
+//line views/vbuild/Coverage.html:71
 		qw422016.N().S(`            <div class="card">
               <div class="right"><a href="#modal-coverage-`)
-//line views/vbuild/Coverage.html:74
+//line views/vbuild/Coverage.html:73
 		qw422016.E().S(prj.Key)
-//line views/vbuild/Coverage.html:74
+//line views/vbuild/Coverage.html:73
 		qw422016.N().S(`"><button type="button">View as Chart</button></a></div>
               <h3>Code Coverage</h3>
 `)
-//line views/vbuild/Coverage.html:76
+//line views/vbuild/Coverage.html:75
 		if stats == nil {
-//line views/vbuild/Coverage.html:76
+//line views/vbuild/Coverage.html:75
 			qw422016.N().S(`              <em>no stats available</em>
 `)
-//line views/vbuild/Coverage.html:78
+//line views/vbuild/Coverage.html:77
 		} else {
-//line views/vbuild/Coverage.html:78
+//line views/vbuild/Coverage.html:77
 			qw422016.N().S(`              `)
-//line views/vbuild/Coverage.html:79
+//line views/vbuild/Coverage.html:78
 			streamcodeCoverage(qw422016, prj.Key, stats, ps)
-//line views/vbuild/Coverage.html:79
+//line views/vbuild/Coverage.html:78
 			qw422016.N().S(`
 `)
-//line views/vbuild/Coverage.html:80
+//line views/vbuild/Coverage.html:79
 		}
-//line views/vbuild/Coverage.html:80
+//line views/vbuild/Coverage.html:79
 		qw422016.N().S(`            </div>
           </div></div></div>
         </li>
 `)
-//line views/vbuild/Coverage.html:84
+//line views/vbuild/Coverage.html:83
 	}
-//line views/vbuild/Coverage.html:84
+//line views/vbuild/Coverage.html:83
 	qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 }
 
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 func (p *CoverageAll) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 }
 
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 func (p *CoverageAll) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	qs422016 := string(qb422016.B)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 	return qs422016
-//line views/vbuild/Coverage.html:88
+//line views/vbuild/Coverage.html:87
 }
 
-//line views/vbuild/Coverage.html:90
+//line views/vbuild/Coverage.html:89
 func streamcodeCoverage(qw422016 *qt422016.Writer, key string, cv *action.Coverage, ps *cutil.PageState) {
-//line views/vbuild/Coverage.html:90
+//line views/vbuild/Coverage.html:89
 	qw422016.N().S(`
   <div class="overflow full-width mt">
     <table class="expanded min-200">
@@ -292,32 +287,32 @@ func streamcodeCoverage(qw422016 *qt422016.Writer, key string, cv *action.Covera
       </thead>
       <tbody>
 `)
-//line views/vbuild/Coverage.html:100
+//line views/vbuild/Coverage.html:99
 	for _, pkg := range cv.Packages.Keys() {
-//line views/vbuild/Coverage.html:100
+//line views/vbuild/Coverage.html:99
 		qw422016.N().S(`        <tr>
           <td>`)
-//line views/vbuild/Coverage.html:102
+//line views/vbuild/Coverage.html:101
 		qw422016.E().S(pkg)
-//line views/vbuild/Coverage.html:102
+//line views/vbuild/Coverage.html:101
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vbuild/Coverage.html:103
+//line views/vbuild/Coverage.html:102
 		qw422016.E().S(cv.Packages.GetStringOpt(pkg))
-//line views/vbuild/Coverage.html:103
+//line views/vbuild/Coverage.html:102
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vbuild/Coverage.html:105
+//line views/vbuild/Coverage.html:104
 	}
-//line views/vbuild/Coverage.html:105
+//line views/vbuild/Coverage.html:104
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
   <div id="modal-coverage-`)
-//line views/vbuild/Coverage.html:109
+//line views/vbuild/Coverage.html:108
 	qw422016.E().S(key)
-//line views/vbuild/Coverage.html:109
+//line views/vbuild/Coverage.html:108
 	qw422016.N().S(`" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content" style="width: 100%;">
@@ -326,42 +321,40 @@ func streamcodeCoverage(qw422016 *qt422016.Writer, key string, cv *action.Covera
         <h2>Coverage Chart</h2>
       </div>
       <div class="modal-body">
-        <div class="overflow full-width mt">
-          `)
-//line views/vbuild/Coverage.html:118
+        <div class="overflow full-width">`)
+//line views/vbuild/Coverage.html:116
 	qw422016.N().S(cv.SVG)
-//line views/vbuild/Coverage.html:118
-	qw422016.N().S(`
-        </div>
+//line views/vbuild/Coverage.html:116
+	qw422016.N().S(`</div>
       </div>
     </div>
   </div>
 `)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 }
 
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 func writecodeCoverage(qq422016 qtio422016.Writer, key string, cv *action.Coverage, ps *cutil.PageState) {
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	streamcodeCoverage(qw422016, key, cv, ps)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 }
 
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 func codeCoverage(key string, cv *action.Coverage, ps *cutil.PageState) string {
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	writecodeCoverage(qb422016, key, cv, ps)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	qs422016 := string(qb422016.B)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 	return qs422016
-//line views/vbuild/Coverage.html:123
+//line views/vbuild/Coverage.html:120
 }
