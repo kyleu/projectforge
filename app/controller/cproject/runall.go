@@ -54,10 +54,14 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		}
 		actT := action.TypeFromString(actS)
 
-		if actT.Matches(action.TypeAudit) {
+		if actT.Expensive(cfg) {
 			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
 				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-				page := &vpage.Load{URL: r.URL.String(), Title: "Auditing all projects"}
+				x := actT.String()
+				if actT.Matches(action.TypeBuild) {
+					x += ":" + cfg.GetStringOpt("phase")
+				}
+				page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] action for all projects", x)}
 				return controller.Render(r, as, page, ps, "projects", "Audit**"+actT.Icon)
 			}
 		}

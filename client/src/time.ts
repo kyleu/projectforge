@@ -76,7 +76,7 @@ export function relativeTime(el: HTMLElement): string {
   return ret;
 }
 
-export function timeInit() {
+export function timeInit(): [(el: HTMLElement) => void, (el: HTMLElement) => string] {
   els(".timestamp").forEach((el) => {
     wireTime(el);
   });

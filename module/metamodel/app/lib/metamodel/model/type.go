@@ -101,7 +101,7 @@ func ToGoString(t types.Type, nullable bool, prop string, alwaysString bool) str
 			return fmt.Sprintf("%s.String()", prop)
 		}
 		return prop
-	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap{{{ if .HasModule "numeric" }}}, types.KeyNumeric{{{ end }}}:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap:
 		return fmt.Sprintf("util.ToJSONCompact(%s)", prop)
 	case types.KeyDate:
 		if alwaysString {

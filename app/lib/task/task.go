@@ -20,6 +20,7 @@ type Task struct {
 	Tags          []string        `json:"tags,omitempty"`
 	Fields        util.FieldDescs `json:"fields,omitempty"`
 	Dangerous     string          `json:"dangerous,omitempty"`
+	Expensive     bool            `json:"expensive,omitempty"`
 	WebURL        string          `json:"webURL,omitempty"`
 	MaxConcurrent int             `json:"maxConcurrent,omitempty"`
 	fns           []TaskFn
@@ -59,7 +60,7 @@ func (t *Task) WebPath() string {
 func (t *Task) Clone() *Task {
 	return &Task{
 		Key: t.Key, Title: t.Title, Category: t.Category, Icon: t.Icon, Description: t.Description, Tags: t.Tags,
-		Fields: t.Fields, Dangerous: t.Dangerous, WebURL: t.WebURL, MaxConcurrent: t.MaxConcurrent, fns: t.fns,
+		Fields: t.Fields, Dangerous: t.Dangerous, Expensive: t.Expensive, WebURL: t.WebURL, MaxConcurrent: t.MaxConcurrent, fns: t.fns,
 	}
 }
 

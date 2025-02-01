@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/exec"
@@ -85,7 +87,7 @@
 {% func ExecScript(debug bool, id string, connectURL string, terminal bool, ps *cutil.PageState, extraHandlers ...string) %}
   <script>
     window.addEventListener('load', () => {
-      {{{ .CleanKey }}}.socketLog({%v debug %}, document.getElementById("{%s id %}"), {%v terminal %}, "{%s= connectURL %}");
+      {{{ .CleanKey }}}.socketLog({%v debug %}, document.getElementById("{%s id %}"), {%v terminal %}, "{%s= connectURL %}", [{%s= strings.Join(extraHandlers, `, `) %}]);
     })
   </script>
 {% endfunc %}

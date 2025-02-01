@@ -12,7 +12,7 @@ import {tagsInit} from "./tags";{{{ if .HasModule "richedit" }}}
 import {editorInit} from "./editor";{{{ end }}}
 import {formInit} from "./form";
 import {themeInit} from "./theme";{{{ if .HasModule "websocket" }}}
-import {socketInit} from "./socket";{{{ end }}}{{{ if .HasModule "process" }}}
+import {Message, socketInit} from "./socket";{{{ end }}}{{{ if .HasModule "process" }}}
 import {socketLog} from "./socketlog";{{{ end }}}
 import {appInit} from "./app";
 
@@ -27,7 +27,7 @@ declare global {
       flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
       Socket: unknown;{{{ end }}}{{{ if .HasModule "process" }}}
-      socketLog: (debug: boolean, tbody: HTMLElement, url: string, extraHandlers: [...(m: unknown) => void]) => void;{{{ end }}}
+      socketLog: (debug: boolean, tbody: HTMLElement, url: string, extraHandlers: Array<(m: Message) => void>) => void;{{{ end }}}
     };
     audit: (s: string, ...args: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any{{{ if .HasModule "jsx" }}}
     JSX: (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}

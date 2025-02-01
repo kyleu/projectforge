@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/exec"
@@ -85,7 +87,7 @@
 {% func ExecScript(debug bool, id string, connectURL string, terminal bool, ps *cutil.PageState, extraHandlers ...string) %}
   <script>
     window.addEventListener('load', () => {
-      projectforge.socketLog({%v debug %}, document.getElementById("{%s id %}"), {%v terminal %}, "{%s= connectURL %}");
+      projectforge.socketLog({%v debug %}, document.getElementById("{%s id %}"), {%v terminal %}, "{%s= connectURL %}", [{%s= strings.Join(extraHandlers, `, `) %}]);
     })
   </script>
 {% endfunc %}

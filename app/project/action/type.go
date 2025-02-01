@@ -68,9 +68,12 @@ func (t *Type) UnmarshalJSON(data []byte) error {
 func (t *Type) Expensive(cfg util.ValueMap) bool {
 	if t.Matches(TypeBuild) {
 		switch cfg.GetStringOpt("phase") {
-		case buildDeps.Key, buildLint.Key, buildFull.Key:
+		case buildDeps.Key, buildLint.Key, buildFull.Key, buildTest.Key:
 			return true
 		}
+	}
+	if t.Matches(TypeAudit) {
+		return true
 	}
 	return false
 }

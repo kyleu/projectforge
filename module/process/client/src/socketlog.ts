@@ -1,7 +1,7 @@
 import {Message, Socket} from "./socket";
 import {req} from "./dom";
 
-export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boolean, url: string, extraHandlers: [...(m: Message) => void]) {
+export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boolean, url: string, extraHandlers: Array<(m: Message) => void>) {
   const o = () => {
     if (debug) {
       console.log("[socket]: open");
