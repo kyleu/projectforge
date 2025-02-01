@@ -3,6 +3,7 @@ package cproject
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -11,6 +12,8 @@ import (
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 const dblpipe = "||"
@@ -118,4 +121,13 @@ func getProjectWithArgs(r *http.Request, as *app.State, logger util.Logger) (*pr
 		return nil, err
 	}
 	return prj, nil
+}
+
+func HandleLoad(cfg util.ValueMap, u *url.URL, title string) layout.Page {
+	if cfg.GetStringOpt("hasloaded") == util.BoolTrue {
+		return nil
+	}
+	cutil.URLAddQuery(u, "hasloaded", util.BoolTrue)
+	page := &vpage.Load{URL: u.String(), Title: title}
+	return page
 }

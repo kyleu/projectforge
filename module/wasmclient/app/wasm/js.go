@@ -5,6 +5,7 @@
 package wasm
 
 import (
+	"fmt"
 	"syscall/js"
 	"time"
 
@@ -32,7 +33,7 @@ func (w *WASM) Log(level string, occurred time.Time, loggerName string, message 
 
 func (w *WASM) call(fn string, args ...any) js.Value {
 	if x := js.Global().Get(fn); x.IsUndefined() {
-		w.logger.Warnf("function [%s] is not defined", fn)
+		println(fmt.Sprintf("function [%s], called with [%d] arguments, is not defined", fn, len(args))) //nolint:forbidigo
 		return js.Undefined()
 	} else {
 		return js.Global().Call(fn, args...)

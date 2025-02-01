@@ -47,7 +47,7 @@ func ToSQLType(t types.Type, database string) (string, error) {
 			x := types.Wrap(t).T
 			s, err := util.Cast[*types.String](x)
 			if err != nil {
-				return keyNVarcharMax, nil
+				return keyNVarcharMax, nil //nolint:nilerr
 			}
 			if s.MaxLength > 0 {
 				return fmt.Sprintf("nvarchar(%d)", s.MaxLength), nil

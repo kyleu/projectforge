@@ -9,15 +9,18 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+type parseTest[T any] struct {
+	name       string
+	input      any
+	path       string
+	allowEmpty bool
+	want       T
+	wantErr    bool
+}
+
 func TestParseBool(t *testing.T) {
-	tests := []struct {
-		name       string
-		input      any
-		path       string
-		allowEmpty bool
-		want       bool
-		wantErr    bool
-	}{
+	t.Parallel()
+	tests := []parseTest[bool]{
 		{"valid bool true", true, "test", false, true, false},
 		{"valid bool false", false, "test", false, false, false},
 		{"valid string true", "true", "test", false, true, false},
@@ -29,6 +32,7 @@ func TestParseBool(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := util.ParseBool(tt.input, tt.path, tt.allowEmpty)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseBool() error = %v, wantErr %v", err, tt.wantErr)
@@ -42,14 +46,8 @@ func TestParseBool(t *testing.T) {
 }
 
 func TestParseInt64(t *testing.T) {
-	tests := []struct {
-		name       string
-		input      any
-		path       string
-		allowEmpty bool
-		want       int64
-		wantErr    bool
-	}{
+	t.Parallel()
+	tests := []parseTest[int64]{
 		{"valid int", 42, "test", false, 42, false},
 		{"valid int32", int32(42), "test", false, 42, false},
 		{"valid int64", int64(42), "test", false, 42, false},
@@ -62,6 +60,7 @@ func TestParseInt64(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := util.ParseInt64(tt.input, tt.path, tt.allowEmpty)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseInt64() error = %v, wantErr %v", err, tt.wantErr)
@@ -75,15 +74,9 @@ func TestParseInt64(t *testing.T) {
 }
 
 func TestParseTime(t *testing.T) {
+	t.Parallel()
 	now := time.Now()
-	tests := []struct {
-		name       string
-		input      any
-		path       string
-		allowEmpty bool
-		want       *time.Time
-		wantErr    bool
-	}{
+	tests := []parseTest[*time.Time]{
 		{"valid time", now, "test", false, &now, false},
 		{"valid pointer", &now, "test", false, &now, false},
 		{"valid string RFC3339", util.TimeToFullMS(&now), "test", false, &now, false},
@@ -94,6 +87,7 @@ func TestParseTime(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := util.ParseTime(tt.input, tt.path, tt.allowEmpty)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseTime() error = %v, wantErr %v", err, tt.wantErr)
@@ -109,15 +103,9 @@ func TestParseTime(t *testing.T) {
 }
 
 func TestParseUUID(t *testing.T) {
+	t.Parallel()
 	validUUID := uuid.New()
-	tests := []struct {
-		name       string
-		input      any
-		path       string
-		allowEmpty bool
-		want       *uuid.UUID
-		wantErr    bool
-	}{
+	tests := []parseTest[*uuid.UUID]{
 		{"valid UUID", validUUID, "test", false, &validUUID, false},
 		{"valid UUID pointer", &validUUID, "test", false, &validUUID, false},
 		{"valid string", validUUID.String(), "test", false, &validUUID, false},
@@ -128,6 +116,7 @@ func TestParseUUID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := util.ParseUUID(tt.input, tt.path, tt.allowEmpty)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseUUID() error = %v, wantErr %v", err, tt.wantErr)
@@ -143,15 +132,9 @@ func TestParseUUID(t *testing.T) {
 }
 
 func TestParseMap(t *testing.T) {
+	t.Parallel()
 	validMap := util.ValueMap{"key": "value"}
-	tests := []struct {
-		name       string
-		input      any
-		path       string
-		allowEmpty bool
-		want       util.ValueMap
-		wantErr    bool
-	}{
+	tests := []parseTest[util.ValueMap]{
 		{"valid map", validMap, "test", false, validMap, false},
 		{"empty map not allowed", util.ValueMap{}, "test", false, nil, true},
 		{"empty map allowed", util.ValueMap{}, "test", true, util.ValueMap{}, false},
@@ -163,6 +146,7 @@ func TestParseMap(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := util.ParseMap(tt.input, tt.path, tt.allowEmpty)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseMap() error = %v, wantErr %v", err, tt.wantErr)

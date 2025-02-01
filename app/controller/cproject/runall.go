@@ -15,7 +15,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vaction"
-	"projectforge.dev/projectforge/views/vpage"
 )
 
 func RunAllActions(w http.ResponseWriter, r *http.Request) {
@@ -55,13 +54,11 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		actT := action.TypeFromString(actS)
 
 		if actT.Expensive(cfg) {
-			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
-				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-				x := actT.String()
-				if actT.Matches(action.TypeBuild) {
-					x += ":" + cfg.GetStringOpt("phase")
-				}
-				page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] action for all projects", x)}
+			x := actT.String()
+			if actT.Matches(action.TypeBuild) {
+				x += ":" + cfg.GetStringOpt("phase")
+			}
+			if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] action for all projects", x)); page != nil {
 				return controller.Render(r, as, page, ps, "projects", "Audit**"+actT.Icon)
 			}
 		}
@@ -82,12 +79,6 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				return runAllCoverage(cfg, prjs, r, as, ps)
 			case "lint":
 				return "", errors.New("can't run multiple instances of golangcilint")
-			case "full":
-				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
-					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-					page := &vpage.Load{URL: r.URL.String(), Title: "Building all projects"}
-					return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
-				}
 			}
 		}
 		results := action.ApplyAll(ps.Context, prjs, actT, cfg, as, ps.Logger)

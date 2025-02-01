@@ -12,7 +12,6 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vaction"
 	"projectforge.dev/projectforge/views/vbuild"
-	"projectforge.dev/projectforge/views/vpage"
 )
 
 const (
@@ -40,25 +39,22 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		}
 		isBuild := actT.Matches(action.TypeBuild)
 		phase := cfg.GetStringOpt("phase")
+		bc := []string{"projects", prj.Key, actT.Breadcrumb()}
 		if actT.Expensive(cfg) {
-			if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
-				cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-				page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
-				return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+			if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())); page != nil {
+				return controller.Render(r, as, page, ps, bc...)
 			}
 		}
 		if isBuild {
 			if phase == "" {
 				ps.Data = action.AllBuilds
 				page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
-				return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+				return controller.Render(r, as, page, ps, bc...)
 			}
 			b := action.AllBuilds.Get(phase)
 			if b.Expensive {
-				if cfg.GetStringOpt("hasloaded") != util.BoolTrue {
-					cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-					page := &vpage.Load{URL: r.URL.String(), Title: fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())}
-					return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+				if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())); page != nil {
+					return controller.Render(r, as, page, ps, bc...)
 				}
 			}
 		}
@@ -87,11 +83,11 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 				return runCoverage(prj, result, r, as, ps)
 			}
 			page := &vbuild.BuildResult{Project: prj, Cfg: cfg, BuildResult: result}
-			return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+			return controller.Render(r, as, page, ps, bc...)
 		}
 
 		page := &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: result}}
-		return controller.Render(r, as, page, ps, "projects", prj.Key, actT.Breadcrumb())
+		return controller.Render(r, as, page, ps, bc...)
 	})
 }
 

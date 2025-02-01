@@ -14,7 +14,6 @@ import (
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/svg"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/vpage"
 	"projectforge.dev/projectforge/views/vsvg"
 )
 
@@ -144,9 +143,8 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
-			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-			page := &vpage.Load{URL: r.URL.String(), Title: "Generating icons"}
+		cfg := cutil.QueryArgsMap(r.URL)
+		if page := HandleLoad(cfg, r.URL, "Generating icons"); page != nil {
 			return controller.Render(r, as, page, ps, "projects", prj.Key, svgBC(prj), "App Icon")
 		}
 		content, err := svg.Content(prj.Key, fs, key)
@@ -176,9 +174,8 @@ func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		if r.URL.Query().Get("hasloaded") != util.BoolTrue {
-			cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
-			page := &vpage.Load{URL: r.URL.String(), Title: "Generating app icons"}
+		cfg := cutil.QueryArgsMap(r.URL)
+		if page := HandleLoad(cfg, r.URL, "Generating app icons"); page != nil {
 			return controller.Render(r, as, page, ps, "projects", prj.Key, svgBC(prj), "Refresh App Icon")
 		}
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
