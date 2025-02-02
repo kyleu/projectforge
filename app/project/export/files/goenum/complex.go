@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
+func structComplex(e *enum.Enum, identityProper string, identityFn string, g *golang.File) []*golang.Block {
 	g.AddImport(helper.ImpAppUtil, helper.ImpDBDriver, helper.ImpErrors, helper.ImpFmt, helper.ImpLo, helper.ImpStrings, helper.ImpXML)
 	structBlock := golang.NewBlock(e.Proper(), "struct")
 	structBlock.WF("type %s struct {", e.Proper())
@@ -38,7 +38,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 
 	fnStringBlock := golang.NewBlock(e.Proper()+".String", "method")
 	fnStringBlock.WF("func (%s %s) String() string {", e.FirstLetter(), e.Proper())
-	fnStringBlock.WF("\treturn %s.Key", e.FirstLetter())
+	fnStringBlock.WF("\treturn %s.%s", e.FirstLetter(), identityProper)
 	fnStringBlock.W("}")
 
 	fnNameSafeBlock := golang.NewBlock(e.Proper()+".NameSafe", "method")
@@ -56,7 +56,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 
 	fnJSONOutBlock := golang.NewBlock(e.Proper()+".MarshalJSON", "method")
 	fnJSONOutBlock.WF("func (%s %s) MarshalJSON() ([]byte, error) {", e.FirstLetter(), e.Proper())
-	fnJSONOutBlock.WF("\treturn util.ToJSONBytes(%s.Key, false), nil", e.FirstLetter())
+	fnJSONOutBlock.WF("\treturn util.ToJSONBytes(%s.%s, false), nil", e.FirstLetter(), identityProper)
 	fnJSONOutBlock.W("}")
 
 	fnJSONInBlock := golang.NewBlock(e.Proper()+".UnmarshalJSON", "method")
@@ -65,13 +65,13 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnJSONInBlock.W("\tif err != nil {")
 	fnJSONInBlock.W("\t\treturn err")
 	fnJSONInBlock.W("\t}")
-	fnJSONInBlock.WF("\t*%s = All%s.Get(key, nil)", e.FirstLetter(), e.ProperPlural())
+	fnJSONInBlock.WF("\t*%s = All%s.Get%s(key, nil)", e.FirstLetter(), e.ProperPlural(), identityFn)
 	fnJSONInBlock.W("\treturn nil")
 	fnJSONInBlock.W("}")
 
 	fnXMLOutBlock := golang.NewBlock(e.Proper()+".MarshalXML", "method")
 	fnXMLOutBlock.WF("func (%s %s) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {", e.FirstLetter(), e.Proper())
-	fnXMLOutBlock.WF("\treturn enc.EncodeElement(%s.Key, start)", e.FirstLetter())
+	fnXMLOutBlock.WF("\treturn enc.EncodeElement(%s.%s, start)", e.FirstLetter(), identityProper)
 	fnXMLOutBlock.W("}")
 
 	fnXMLInBlock := golang.NewBlock(e.Proper()+".UnmarshalXML", "method")
@@ -80,13 +80,13 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnXMLInBlock.W("\tif err := dec.DecodeElement(&key, &start); err != nil {")
 	fnXMLInBlock.W("\t\treturn err")
 	fnXMLInBlock.W("\t}")
-	fnXMLInBlock.WF("\t*%s = All%s.Get(key, nil)", e.FirstLetter(), e.ProperPlural())
+	fnXMLInBlock.WF("\t*%s = All%s.Get%s(key, nil)", e.FirstLetter(), e.ProperPlural(), identityFn)
 	fnXMLInBlock.W("\treturn nil")
 	fnXMLInBlock.W("}")
 
 	fnValueBlock := golang.NewBlock(e.Proper()+".Value", "method")
 	fnValueBlock.WF("func (%s %s) Value() (driver.Value, error) {", e.FirstLetter(), e.Proper())
-	fnValueBlock.WF("\treturn %s.Key, nil", e.FirstLetter())
+	fnValueBlock.WF("\treturn %s.%s, nil", e.FirstLetter(), identityProper)
 	fnValueBlock.W("}")
 
 	fnScanBlock := golang.NewBlock(e.Proper()+".Scan", "method")
@@ -96,7 +96,7 @@ func structComplex(e *enum.Enum, g *golang.File) []*golang.Block {
 	fnScanBlock.W("\t}")
 	fnScanBlock.W("\tif converted, err := driver.String.ConvertValue(value); err == nil {")
 	fnScanBlock.W("\t\tif str, err := util.Cast[string](converted); err == nil {")
-	fnScanBlock.WF("\t\t\t*%s = All%s.Get(str, nil)", e.FirstLetter(), e.ProperPlural())
+	fnScanBlock.WF("\t\t\t*%s = All%s.Get%s(str, nil)", e.FirstLetter(), e.ProperPlural(), identityFn)
 	fnScanBlock.W("\t\t\treturn nil")
 	fnScanBlock.W("\t\t}")
 	fnScanBlock.W("\t}")

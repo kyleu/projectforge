@@ -1,6 +1,7 @@
 package goenum
 
 import (
+	"projectforge.dev/projectforge/app/util"
 	"strings"
 
 	"projectforge.dev/projectforge/app/file"
@@ -17,9 +18,17 @@ func Enum(e *enum.Enum, linebreak string) (*file.File, error) {
 	if e.Simple() {
 		g.AddBlocks(structSimple(e)...)
 	} else {
-		g.AddBlocks(structComplex(e, g)...)
-		g.AddBlocks(enumStructParse(e))
-		coll, err := structCollection(e)
+		identity := "key"
+		identityProper := "Key"
+		identityFn := ""
+		if i := e.Config.GetStringOpt("identity"); i != "" {
+			identity = i
+			identityProper = util.StringToProper(identity)
+			identityFn = "By" + identityProper
+		}
+		g.AddBlocks(structComplex(e, identityProper, identityFn, g)...)
+		g.AddBlocks(enumStructParse(e, identityFn))
+		coll, err := structCollection(e, identityProper)
 		if err != nil {
 			return nil, err
 		}
@@ -28,14 +37,14 @@ func Enum(e *enum.Enum, linebreak string) (*file.File, error) {
 	return g.Render(linebreak)
 }
 
-func enumStructParse(e *enum.Enum) *golang.Block {
+func enumStructParse(e *enum.Enum, identityFn string) *golang.Block {
 	ret := golang.NewBlock(e.Proper(), "parse")
 	ret.WF("func %sParse(logger util.Logger, keys ...string) %s {", e.Proper(), e.ProperPlural())
 	ret.W("\tif len(keys) == 0 {")
 	ret.W("\t\treturn nil")
 	ret.W("\t}")
 	ret.WF("\treturn lo.Map(keys, func(x string, _ int) %s {", e.Proper())
-	ret.WF("\t\treturn All%s.Get(x, logger)", e.ProperPlural())
+	ret.WF("\t\treturn All%s.Get%s(x, logger)", e.ProperPlural(), identityFn)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
