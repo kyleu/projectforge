@@ -103,7 +103,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </script>
   `)
 //line views/vtask/Detail.html:51
-		StreamSocketContent(qw422016, as, "task-output", p.Task, p.SocketURL, ps, "processMessage(m)")
+		StreamSocketContent(qw422016, as, "task-output", p.Task, p.SocketURL, ps, "processMessage")
 //line views/vtask/Detail.html:51
 		qw422016.N().S(`
 `)
