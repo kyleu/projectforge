@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"slices"
 	"strings"
 
@@ -13,11 +14,20 @@ import (
 
 const msgEqSPrint = "\t\tmsg := fmt.Sprintf(\""
 
-func controllerCreateForm(m *model.Model, grp *model.Column, models model.Models, prefix string) *golang.Block {
+func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, models model.Models, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create", "form")
+	if n := m.Config.GetStringOpt("_new"); n != "" {
+		if strings.HasPrefix(n, "redir:") {
+			ret.WF("\t\treturn %q, nil", strings.TrimPrefix(n, "redir:"))
+			ret.W("\t})")
+			ret.W("}")
+			return ret
+		}
+	}
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 	}
+	g.AddImport(helper.ImpAppUtil)
 	var decls []string
 	if grp != nil {
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))

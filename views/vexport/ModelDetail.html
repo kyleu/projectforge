@@ -102,7 +102,7 @@
         <tr><th>Seed Data</th><td><a href="{%s baseURL %}/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
         {%- endif -%}
         {%- if len(model.Config) > 0 -%}
-        <tr><th>Config</th><td>{%= components.JSON(model.Config) %}</td></tr>
+        <tr><th>Config</th><td>{%= view.Map(true, model.Config, ps) %}</td></tr>
         {%- endif -%}
         {%- if len(model.Links) > 0 -%}
         <tr><th>Links</th><td>{%= components.JSON(model.Links) %}</td></tr>

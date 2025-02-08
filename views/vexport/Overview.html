@@ -9,6 +9,7 @@
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -22,7 +23,7 @@
   <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a></div>
     <h3>{%= components.SVGIcon(`print`, ps) %} Export Configuration</h3>
-    {%= components.JSON(p.Args.Config) %}
+    {%= view.Map(true, p.Args.Config, ps) %}
   </div>
   <div class="card">
     <div class="right"><a href="/p/{%s p.Project.Key %}/export/groups"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a></div>

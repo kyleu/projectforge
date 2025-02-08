@@ -6,6 +6,7 @@
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/vexport"
 ) %}
 
@@ -15,7 +16,7 @@
   {%- if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" -%}
   <h3>{%= components.SVGIcon(`print`, ps) %} Export Configuration</h3>
   <div class="clear"></div>
-  {%= components.JSON(ea.Config) %}
+  {%= view.Map(true, ea.Config, ps) %}
   <hr />
   {%- endif -%}
   {%- if len(ea.Groups) > 0 -%}

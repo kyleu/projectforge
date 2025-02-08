@@ -28,7 +28,7 @@ func Controller(m *model.Model, args *model.Args, linebreak string) (*file.File,
 	if len(m.Group) > 0 {
 		g.AddImport(helper.ImpAppController)
 	}
-	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpHTTP, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil)
+	g.AddImport(helper.ImpFmt, helper.ImpErrors, helper.ImpHTTP, helper.ImpApp, helper.ImpCutil)
 	g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	g.AddImport(helper.ViewImport(m.PackageWithGroup("v")))
 
@@ -42,7 +42,7 @@ func Controller(m *model.Model, args *model.Args, linebreak string) (*file.File,
 	}
 	g.AddBlocks(cl, controllerDetail(g, args.Models, m, nil, args.Audit(m), prefix))
 	g.AddBlocks(
-		controllerCreateForm(m, nil, args.Models, prefix), controllerRandom(m, prefix), controllerCreate(m, nil, prefix),
+		controllerCreateForm(g, m, nil, args.Models, prefix), controllerRandom(m, prefix), controllerCreate(m, nil, prefix),
 		controllerEditForm(m, nil, prefix), controllerEdit(m, nil, prefix), controllerDelete(m, nil, prefix),
 	)
 	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))

@@ -377,7 +377,7 @@ func streammodelSummary(qw422016 *qt422016.Writer, baseURL string, model *model.
 //line views/vexport/ModelDetail.html:104
 		qw422016.N().S(`        <tr><th>Config</th><td>`)
 //line views/vexport/ModelDetail.html:105
-		components.StreamJSON(qw422016, model.Config)
+		view.StreamMap(qw422016, true, model.Config, ps)
 //line views/vexport/ModelDetail.html:105
 		qw422016.N().S(`</td></tr>
 `)
