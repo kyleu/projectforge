@@ -84,7 +84,18 @@ func serviceCreate(g *golang.File, m *model.Model, audit bool) (*golang.Block, e
 		ret.W("\t\treturn arg.ToData()")
 		ret.W("\t})")
 	}
-	ret.W("\treturn s.db.Insert(ctx, q, tx, logger, vals...)")
+	if m.HasTag("events") {
+		ret.W("\terr := s.db.Insert(ctx, q, tx, logger, vals...)")
+		ret.W("\tif s.Events != nil {")
+		ret.W("\t\tif e := s.Events.Create(ctx, tx, logger, models...); e != nil {")
+		ret.WF("\t\t\treturn errors.Wrap(e, \"error processing [create] events for %s\")", m.Proper())
+		ret.W("\t\t}")
+		ret.W("\t}")
+		ret.W("\treturn err")
+	} else {
+		ret.W("\treturn s.db.Insert(ctx, q, tx, logger, vals...)")
+	}
+
 	ret.W("}")
 	return ret, nil
 }
@@ -105,6 +116,13 @@ func serviceCreateChunked(m *model.Model) *golang.Block {
 	ret.W("\t\t}")
 	ret.W("\t\tprogress.Increment(len(chunk), logger)")
 	ret.W("\t}")
+	if m.HasTag("events") {
+		ret.W("\tif s.Events != nil {")
+		ret.W("\t\tif e := s.Events.Create(ctx, tx, logger, models...); e != nil {")
+		ret.WF("\t\t\treturn errors.Wrap(e, \"error processing [createChunked] events for %s\")", m.Proper())
+		ret.W("\t\t}")
+		ret.W("\t}")
+	}
 	ret.W("\treturn nil")
 	ret.W("}")
 	return ret
@@ -153,6 +171,13 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	ret.WE(1)
 	if audit {
 		serviceAuditApply(g, m, ret)
+	}
+	if m.HasTag("events") {
+		ret.W("\tif s.Events != nil {")
+		ret.W("\t\tif e := s.Events.Save(ctx, tx, logger, model); e != nil {")
+		ret.WF("\t\t\treturn errors.Wrap(e, \"error processing [update] events for %s\")", m.Proper())
+		ret.W("\t\t}")
+		ret.W("\t}")
 	}
 	ret.W("\treturn nil")
 	ret.W("}")
@@ -248,7 +273,17 @@ func serviceSave(g *golang.File, m *model.Model, audit bool) (*golang.Block, err
 		ret.W("\t\t}")
 		ret.W("\t}")
 	}
-	ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
+	if m.HasTag("events") {
+		ret.W("\terr := s.db.Insert(ctx, q, tx, logger, data...)")
+		ret.W("\tif s.Events != nil {")
+		ret.W("\t\tif e := s.Events.Save(ctx, tx, logger, models...); e != nil {")
+		ret.WF("\t\t\treturn errors.Wrap(e, \"error processing [save] events for %s\")", m.Proper())
+		ret.W("\t\t}")
+		ret.W("\t}")
+		ret.W("\treturn err")
+	} else {
+		ret.W("\treturn s.db.Insert(ctx, q, tx, logger, data...)")
+	}
 	ret.W("}")
 	return ret, nil
 }
@@ -269,6 +304,13 @@ func serviceSaveChunked(m *model.Model) *golang.Block {
 	ret.W("\t\t}")
 	ret.W("\t\tprogress.Increment(len(chunk), logger)")
 	ret.W("\t}")
+	if m.HasTag("events") {
+		ret.W("\tif s.Events != nil {")
+		ret.W("\t\tif e := s.Events.Save(ctx, tx, logger, models...); e != nil {")
+		ret.WF("\t\t\treturn errors.Wrap(e, \"error processing [saveChunked] events for %s\")", m.Proper())
+		ret.W("\t\t}")
+		ret.W("\t}")
+	}
 	ret.W("\treturn nil")
 	ret.W("}")
 	return ret

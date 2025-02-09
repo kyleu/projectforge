@@ -48,7 +48,7 @@ func Service(m *model.Model, args *model.Args, linebreak string) (*file.File, er
 		g.AddImport(helper.ImpAudit)
 	}
 
-	g.AddBlocks(typeAssert(g, m, args.Enums), serviceStruct(isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
+	g.AddBlocks(typeAssert(g, m, args.Enums), serviceStruct(m, isRO, isAudit), serviceNew(m, isRO, isAudit), serviceDefaultFilters(m))
 	return g.Render(linebreak)
 }
 
@@ -81,7 +81,7 @@ func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block 
 	return ret
 }
 
-func serviceStruct(isRO bool, isAudit bool) *golang.Block {
+func serviceStruct(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("Service", "struct")
 	ret.W("type Service struct {")
 	size := 2
@@ -97,6 +97,12 @@ func serviceStruct(isRO bool, isAudit bool) *golang.Block {
 	}
 	if isAudit {
 		ret.WF("\t%s *audit.Service", util.StringPad("audit", size))
+	}
+	if m.HasTag("events") {
+		if len(m.PKs()) == 1 {
+			ret.WB()
+			ret.WF("\tEvents svc.ServiceEvents[*%s, %s]", m.Proper(), m.PKs()[0].Type)
+		}
 	}
 	ret.W("}")
 	return ret

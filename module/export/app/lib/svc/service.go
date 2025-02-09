@@ -53,3 +53,9 @@ type ServiceSoftDeleteID[Mdl Model, Seq any, ID any] interface {
 	Get(ctx context.Context, tx *sqlx.Tx, id ID, includeDeleted bool, logger util.Logger) (Mdl, error)
 	GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, includeDeleted bool, logger util.Logger, ids ...ID) (Seq, error)
 }
+
+type ServiceEvents[Mdl Model, ID any] interface {
+	Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...Mdl) error
+	Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, models ...Mdl) error
+	Delete(ctx context.Context, tx *sqlx.Tx, logger util.Logger, ids ...ID) error
+}
