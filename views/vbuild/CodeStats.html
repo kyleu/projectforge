@@ -5,6 +5,7 @@
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vaction"
   "projectforge.dev/projectforge/views/vproject"
 ) %}
 
@@ -32,7 +33,7 @@
 
   <div class="card">
     <h3>Code Stats</h3>
-    {%= codeStats(p.Project.Key, p.Stats, ps) %}
+    {%= vaction.RenderCodeStats(p.Project.Key, p.Stats, ps) %}
   </div>
 {% endfunc %}
 
@@ -74,94 +75,13 @@
               {%- if stats == nil -%}
               <em>no stats available</em>
               {%- else -%}
-              {%= codeStats(prj.Key, stats, ps) %}
+              {%= vaction.RenderCodeStats(prj.Key, stats, ps) %}
               {%- endif -%}
             </div>
           </div></div></div>
         </li>
         {%- endfor -%}
       </ul>
-    </div>
-  </div>
-{% endfunc %}
-
-{% func codeStats(key string, ci *action.CodeStats, ps *cutil.PageState) %}
-  <div class="overflow full-width mt">
-    <div id="codestats_{%s key %}"></div>
-  </div>
-  <div class="overflow full-width mt">
-    <table class="expanded min-200">
-      <thead>
-        <tr>
-          <th class="shrink">Type</th>
-          <th>Code</th>
-          <th>Comments</th>
-          <th>Blanks</th>
-          <th>Files</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%- for _, t := range ci.Types -%}
-        <tr>
-          <td>{%s t.Name %}</td>
-          <td>{%d t.Code %}</td>
-          <td>{%d t.Comments %}</td>
-          <td>{%d t.Blanks %}</td>
-          <td><a href="#modal-{%s key %}-{%s t.Name %}">{%d len(t.Files) %}</a></td>
-        </tr>
-        {%- endfor -%}
-        {%- code t := ci.Total -%}
-        <tr style="border-top: var(--border);">
-          <td style="border-top: var(--border);" class="nowrap"><em>{%s t.Name %}</em></td>
-          <td style="border-top: var(--border);">{%d t.Code %}</td>
-          <td style="border-top: var(--border);">{%d t.Comments %}</td>
-          <td style="border-top: var(--border);">{%d t.Blanks %}</td>
-          <td style="border-top: var(--border);"><a href="#modal-{%s key %}-{%s t.Name %}">{%d len(t.Files) %}</a></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  {%- for _, t := range ci.Types -%}
-    {%= codeModal(key, t, ps) %}
-  {%- endfor -%}
-  {%= codeModal(key, ci.Total, ps) %}
-  {%= components.PlotHorizontalBar("codestats_" + key, ci.ToMaps(), "files", "name", "[" + key + "] Code Stats", 92) %}
-{% endfunc %}
-
-{% func codeModal(key string, t *action.CodeType, ps *cutil.PageState) %}
-  <div id="modal-{%s key %}-{%s t.Name %}" class="modal" style="display: none;">
-    <a class="backdrop" href="#"></a>
-    <div class="modal-content" style="min-width: 90%;">
-      <div class="modal-header">
-        <a href="#" class="modal-close">×</a>
-        <h2>{%s t.Name %} Files</h2>
-      </div>
-      <div class="modal-body">
-        <div class="overflow full-width">
-          <table class="expanded min-200">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Comments</th>
-                <th>Blanks</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-            {%- for _, x := range t.Files -%}
-            <tr>
-              <td><a href="/p/{%s key %}/fs/{%s x.Name %}">{%s x.Name %}</a></td>
-              <td>{%d x.Code %}</td>
-              <td>{%d x.Comments %}</td>
-              <td>{%d x.Blanks %}</td>
-              <td>{%d x.Total() %}</td>
-            </tr>
-            {%- endfor -%}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   </div>
 {% endfunc %}

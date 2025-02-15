@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -41,7 +43,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		phase := cfg.GetStringOpt("phase")
 		bc := []string{"projects", prj.Key, actT.Breadcrumb()}
 		if actT.Expensive(cfg) {
-			if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())); page != nil {
+			if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] for [%s]", actT.Title, prj.Title())); page != nil {
 				return controller.Render(r, as, page, ps, bc...)
 			}
 		}
@@ -52,6 +54,9 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 				return controller.Render(r, as, page, ps, bc...)
 			}
 			b := action.AllBuilds.Get(phase)
+			if b == nil {
+				return "", errors.Errorf("unknown phase [%s]", phase)
+			}
 			if b.Expensive {
 				if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())); page != nil {
 					return controller.Render(r, as, page, ps, bc...)

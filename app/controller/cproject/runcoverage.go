@@ -26,7 +26,7 @@ func runCoverage(prj *project.Project, res *action.Result, r *http.Request, as *
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Code Coverage", prj.Key), coverage)
 	page := &vbuild.Coverage{Project: prj, Result: res, Coverage: coverage}
-	return controller.Render(r, as, page, ps, "projects", prj.Key, "Dependency Management")
+	return controller.Render(r, as, page, ps, "projects", prj.Key, "Code Coverage")
 }
 
 func runAllCoverage(cfg util.ValueMap, prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {

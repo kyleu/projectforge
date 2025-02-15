@@ -121,7 +121,7 @@
         </tr>
 
         {%- if hist := r.History(); hist != nil -%}
-        {%= displayHistory(hist) %}
+        {%= displayHistory(r.Project, hist) %}
         {%- elseif cleanData := r.CleanData(); len(cleanData) > 0 -%}
         <tr>
           <th class="shrink">Data</th>
@@ -133,35 +133,109 @@
   </div>
 {% endfunc %}
 
-{% func displayHistory(res *git.HistoryResult) %}
-      {%- if res.Args.Since != nil -%}
-      <tr>
-        <th>Since</th>
-        <td>{%s util.TimeToFull(res.Args.Since) %}</td>
-      </tr>
-      {%- endif -%}
-      {%- if len(res.Args.Authors) > 0 -%}
-      <tr>
-        <th>Authors</th>
-        <td>{%s strings.Join(res.Args.Authors, ", ") %}</td>
-      </tr>
-      {%- endif -%}
-      {%- if res.Args.Limit > 0 -%}
-      <tr>
-        <th>Limit</th>
-        <td>{%d res.Args.Limit %}</td>
-      </tr>
-      {%- endif -%}
-      {%- if len(res.Entries) > 0 -%}
-      <tr>
-        <th>Entries ({%d len(res.Entries) %})</th>
-        <td>
-          {%- for _, e := range res.Entries -%}
-            {%= displayEntry(res.Args, e) %}
-          {%- endfor -%}
-        </td>
-      </tr>
-      {%- endif -%}
+{% func displayHistory(key string, res *git.HistoryResult) %}
+  {%- if res.Args.Since != nil -%}
+  <tr>
+    <th>Since</th>
+    <td>{%s util.TimeToFull(res.Args.Since) %}</td>
+  </tr>
+  {%- endif -%}
+  {%- if len(res.Args.Authors) > 0 -%}
+  <tr>
+    <th>Authors</th>
+    <td>{%s strings.Join(res.Args.Authors, ", ") %}</td>
+  </tr>
+  {%- endif -%}
+  {%- if res.Args.Limit > 0 -%}
+  <tr>
+    <th>Limit</th>
+    <td>{%d res.Args.Limit %}</td>
+  </tr>
+  {%- endif -%}
+  {%- if len(res.Entries) > 0 -%}
+  {%= renderPlot(key, res.Entries) %}
+  <tr>
+    <th>Entries ({%d len(res.Entries) %})</th>
+    <td>
+      {%- for _, e := range res.Entries -%}
+        {%= displayEntry(res.Args, e) %}
+      {%- endfor -%}
+    </td>
+  </tr>
+  {%- endif -%}
+{% endfunc %}
+
+{% func renderPlot(key string, e git.HistoryEntries) %}
+  {%= components.PlotAssets() %}
+  <tr>
+    <th>Commit Summary</th>
+    <td>
+      <div id="{%s key %}-plot"></div>
+      <div class="mt">
+        {%- code authors := e.Authors() -%}
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Commits</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for _, x := range authors -%}
+            <tr>
+              <td class="shrink">{%s x.Key %}</td>
+              <td>{%s x.Name %}</td>
+              <td>{%d x.Count %}</td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+      <script type="module">
+        const authors = {%s= util.ToJSON(authors) %};
+
+        function createPlot(div) {
+          function render() {
+            const height = {%d (len(authors) * 24) + 48 %};
+            const width = div.clientWidth;
+            const plot = Plot.plot({
+              height,
+              width,
+              color: {
+                legend: false,
+              },
+              marks: [
+                Plot.barX(authors, {
+                  x: "count",
+                  fill: "key",
+                  y: "key",
+                  title: d => `${d.name}: ${d.count}`,
+                  marginLeft: 256,
+                })
+              ]
+            });
+            div.innerHTML = "";
+            div.appendChild(plot);
+          }
+
+          window.addEventListener('resize', render);
+          render();
+
+          return () => {
+            window.removeEventListener('resize', render);
+          };
+        }
+
+        function go() {
+          const div = document.querySelector("#{%s key %}-plot");
+          const cancel = createPlot(div);
+        }
+
+        document.addEventListener("DOMContentLoaded", go);
+      </script>
+    </td>
+  </tr>
 {% endfunc %}
 
 {% func displayEntry(args *git.HistoryArgs, e *git.HistoryEntry) %}
@@ -178,7 +252,7 @@
     }
     u += "&commit=" + e.SHA
   -%}
-  <div class="card ml0">
+  <div class="padding border mb">
     <div class="right"><em>{%s util.TimeToFull(&e.Occurred) %}</em></div>
     <h4><a href="{%s u %}">{%s e.SHA %}</a></h4>
     <div class="mt">{%s e.Message %}</div>

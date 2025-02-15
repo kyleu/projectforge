@@ -34,7 +34,22 @@
 {%- func accordion(as *app.State, ps *cutil.PageState) -%}
   <div class="card">
     <h3>Accordion</h3>
-
+    <ul class="accordion">
+      <li>
+        <input id="accordion-a" type="checkbox" hidden="hidden" />
+        <label for="accordion-a">{%= components.ExpandCollapse(3, ps) %} Option A</label>
+        <div class="bd"><div><div>
+          Option A!
+        </div></div></div>
+      </li>
+      <li>
+        <input id="accordion-c" type="checkbox" hidden="hidden" />
+        <label for="accordion-c">{%= components.ExpandCollapse(3, ps) %} Option B (no animation)</label>
+        <div class="bd-no-animation">
+          Option B!
+        </div>
+      </li>
+    </ul>
   </div>
 {%- endfunc -%}
 

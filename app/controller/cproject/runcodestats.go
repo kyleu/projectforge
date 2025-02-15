@@ -26,7 +26,7 @@ func runCodeStats(prj *project.Project, res *action.Result, r *http.Request, as 
 	}
 	ps.SetTitleAndData(fmt.Sprintf("[%s] Code Stats", prj.Key), stats)
 	page := &vbuild.CodeStats{Project: prj, Result: res, Stats: stats}
-	return controller.Render(r, as, page, ps, "projects", prj.Key, "Dependency Management")
+	return controller.Render(r, as, page, ps, "projects", prj.Key, "Code Stats")
 }
 
 func runAllCodeStats(cfg util.ValueMap, prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {

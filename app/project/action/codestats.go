@@ -12,7 +12,7 @@ import (
 )
 
 func onCodeStats(_ context.Context, pm *PrjAndMods, r *Result) *Result {
-	x, err := runCodeStats(pm.Prj.Path)
+	x, err := runCodeStats(pm.Prj.Path, false)
 	if err != nil {
 		return r.WithError(err)
 	}
@@ -20,7 +20,7 @@ func onCodeStats(_ context.Context, pm *PrjAndMods, r *Result) *Result {
 	return r
 }
 
-func runCodeStats(pth string) (*CodeStats, error) {
+func runCodeStats(pth string, recursive bool) (*CodeStats, error) {
 	cmd := `tokei . -o json --exclude "*.html.go"  --exclude "*.sql.go"`
 	ex := exec.NewExec("tokei", 0, cmd, pth, false)
 	if err := ex.Run(); err != nil {
@@ -35,6 +35,9 @@ func runCodeStats(pth string) (*CodeStats, error) {
 	}
 	cs, err := util.FromJSONMap(bytes.TrimSpace(b))
 	if err != nil {
+		if !recursive {
+			return runCodeStats(pth, true)
+		}
 		return nil, err
 	}
 	ci := newCodeStats()
@@ -99,8 +102,8 @@ func (c *CodeType) Add(x *CodeType) {
 type CodeTypes []*CodeType
 
 type CodeStats struct {
-	Types CodeTypes
-	Total *CodeType
+	Types CodeTypes `json:"types"`
+	Total *CodeType `json:"total"`
 }
 
 func newCodeStats() *CodeStats {

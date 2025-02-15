@@ -59,9 +59,15 @@
   {%- if res.Data != nil -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`mountain`, ps) %} Data</h3>
-    <ul class="mt">
-      {%= components.JSON(res.Data) %}
-    </ul>
+    {%- switch t := res.Data.(type) -%}
+    {%- case string -%}
+    <pre>{%s t %}</pre>
+    {%- case *action.AuditResult -%}
+    {%= components.PlotAssets() %}
+    {%= RenderAudit(res.Project.Key, t, as, ps) %}
+    {%- default -%}
+    {%= components.JSON(res.Data) %}
+    {%- endswitch -%}
   </div>
   {%- endif -%}
   {%- for _, mr := range res.Modules -%}
@@ -82,8 +88,8 @@
         <div class="overflow">
         {%= renderDiffs(res.Project.Key, res.Action, diffs, cfg, as, ps) %}
         </div>
+        {%- endif -%}
       </div>
-      {%- endif -%}
     </div>
   {%- endfor -%}
 {% endfunc %}

@@ -12,23 +12,24 @@ import (
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vaction"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/vbuild/CodeStats.html:11
+//line views/vbuild/CodeStats.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vbuild/CodeStats.html:11
+//line views/vbuild/CodeStats.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vbuild/CodeStats.html:11
+//line views/vbuild/CodeStats.html:12
 type CodeStats struct {
 	layout.Basic
 	Project *project.Project
@@ -36,95 +37,95 @@ type CodeStats struct {
 	Stats   *action.CodeStats
 }
 
-//line views/vbuild/CodeStats.html:18
+//line views/vbuild/CodeStats.html:19
 func (p *CodeStats) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:18
+//line views/vbuild/CodeStats.html:19
 	qw422016.N().S(`
   `)
-//line views/vbuild/CodeStats.html:19
+//line views/vbuild/CodeStats.html:20
 	components.StreamPlotAssets(qw422016)
-//line views/vbuild/CodeStats.html:19
+//line views/vbuild/CodeStats.html:20
 	qw422016.N().S(`
 `)
-//line views/vbuild/CodeStats.html:20
+//line views/vbuild/CodeStats.html:21
 	prj := p.Project
 
-//line views/vbuild/CodeStats.html:20
+//line views/vbuild/CodeStats.html:21
 	qw422016.N().S(`  `)
-//line views/vbuild/CodeStats.html:21
+//line views/vbuild/CodeStats.html:22
 	vproject.StreamSummary(qw422016, prj, "Code Stats", nil, &action.TypeBuild, nil, ps)
-//line views/vbuild/CodeStats.html:21
+//line views/vbuild/CodeStats.html:22
 	qw422016.N().S(`
   `)
-//line views/vbuild/CodeStats.html:22
+//line views/vbuild/CodeStats.html:23
 	StreamBuildOptions(qw422016, prj.Key, false, ps)
-//line views/vbuild/CodeStats.html:22
+//line views/vbuild/CodeStats.html:23
 	qw422016.N().S(`
 
 `)
-//line views/vbuild/CodeStats.html:24
+//line views/vbuild/CodeStats.html:25
 	if p.Result != nil && len(p.Result.Errors) > 0 {
-//line views/vbuild/CodeStats.html:24
+//line views/vbuild/CodeStats.html:25
 		qw422016.N().S(`  <div class="card">
     <h3>Error</h3>
 `)
-//line views/vbuild/CodeStats.html:27
+//line views/vbuild/CodeStats.html:28
 		for _, e := range p.Result.Errors {
-//line views/vbuild/CodeStats.html:27
+//line views/vbuild/CodeStats.html:28
 			qw422016.N().S(`    <p class="error">`)
-//line views/vbuild/CodeStats.html:28
+//line views/vbuild/CodeStats.html:29
 			qw422016.E().S(e)
-//line views/vbuild/CodeStats.html:28
+//line views/vbuild/CodeStats.html:29
 			qw422016.N().S(`</p>
 `)
-//line views/vbuild/CodeStats.html:29
+//line views/vbuild/CodeStats.html:30
 		}
-//line views/vbuild/CodeStats.html:29
+//line views/vbuild/CodeStats.html:30
 		qw422016.N().S(`  </div>
 `)
-//line views/vbuild/CodeStats.html:31
+//line views/vbuild/CodeStats.html:32
 	}
-//line views/vbuild/CodeStats.html:31
+//line views/vbuild/CodeStats.html:32
 	qw422016.N().S(`
   <div class="card">
     <h3>Code Stats</h3>
     `)
-//line views/vbuild/CodeStats.html:35
-	streamcodeStats(qw422016, p.Project.Key, p.Stats, ps)
-//line views/vbuild/CodeStats.html:35
+//line views/vbuild/CodeStats.html:36
+	vaction.StreamRenderCodeStats(qw422016, p.Project.Key, p.Stats, ps)
+//line views/vbuild/CodeStats.html:36
 	qw422016.N().S(`
   </div>
 `)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 }
 
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 func (p *CodeStats) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 }
 
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 func (p *CodeStats) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 	return qs422016
-//line views/vbuild/CodeStats.html:37
+//line views/vbuild/CodeStats.html:38
 }
 
-//line views/vbuild/CodeStats.html:39
+//line views/vbuild/CodeStats.html:40
 type CodeStatsAll struct {
 	layout.Basic
 	Projects  project.Projects
@@ -132,413 +133,138 @@ type CodeStatsAll struct {
 	CodeStats map[string]*action.CodeStats
 }
 
-//line views/vbuild/CodeStats.html:46
+//line views/vbuild/CodeStats.html:47
 func (p *CodeStatsAll) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:46
+//line views/vbuild/CodeStats.html:47
 	qw422016.N().S(`
   `)
-//line views/vbuild/CodeStats.html:47
+//line views/vbuild/CodeStats.html:48
 	components.StreamPlotAssets(qw422016)
-//line views/vbuild/CodeStats.html:47
+//line views/vbuild/CodeStats.html:48
 	qw422016.N().S(`
   <div class="card">
     <h3>Code Stats</h3>
     <div class="mt">
       <ul class="accordion">
 `)
-//line views/vbuild/CodeStats.html:52
+//line views/vbuild/CodeStats.html:53
 	for _, prj := range p.Projects {
-//line views/vbuild/CodeStats.html:54
+//line views/vbuild/CodeStats.html:55
 		res := p.Results[prj.Key]
 		stats := p.CodeStats[prj.Key]
 
-//line views/vbuild/CodeStats.html:56
+//line views/vbuild/CodeStats.html:57
 		qw422016.N().S(`        <li>
           <input id="accordion-`)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:59
 		qw422016.E().S(prj.Key)
-//line views/vbuild/CodeStats.html:58
+//line views/vbuild/CodeStats.html:59
 		qw422016.N().S(`" type="checkbox" hidden />
           <label for="accordion-`)
-//line views/vbuild/CodeStats.html:59
+//line views/vbuild/CodeStats.html:60
 		qw422016.E().S(prj.Key)
-//line views/vbuild/CodeStats.html:59
+//line views/vbuild/CodeStats.html:60
 		qw422016.N().S(`">
             `)
-//line views/vbuild/CodeStats.html:60
+//line views/vbuild/CodeStats.html:61
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vbuild/CodeStats.html:60
+//line views/vbuild/CodeStats.html:61
 		qw422016.N().S(` `)
-//line views/vbuild/CodeStats.html:60
+//line views/vbuild/CodeStats.html:61
 		components.StreamSVGRef(qw422016, prj.IconSafe(), 16, 16, "icon", ps)
-//line views/vbuild/CodeStats.html:60
+//line views/vbuild/CodeStats.html:61
 		qw422016.N().S(` `)
-//line views/vbuild/CodeStats.html:60
+//line views/vbuild/CodeStats.html:61
 		qw422016.E().S(prj.Title())
-//line views/vbuild/CodeStats.html:60
+//line views/vbuild/CodeStats.html:61
 		qw422016.N().S(`
           </label>
           <div class="bd"><div><div>
             `)
-//line views/vbuild/CodeStats.html:63
+//line views/vbuild/CodeStats.html:64
 		vproject.StreamSummary(qw422016, prj, "Code Stats", nil, nil, nil, ps)
-//line views/vbuild/CodeStats.html:63
+//line views/vbuild/CodeStats.html:64
 		qw422016.N().S(`
 `)
-//line views/vbuild/CodeStats.html:64
+//line views/vbuild/CodeStats.html:65
 		if res != nil && len(res.Errors) > 0 {
-//line views/vbuild/CodeStats.html:64
+//line views/vbuild/CodeStats.html:65
 			qw422016.N().S(`            <div class="card">
               <h3>Error</h3>
 `)
-//line views/vbuild/CodeStats.html:67
+//line views/vbuild/CodeStats.html:68
 			for _, e := range res.Errors {
-//line views/vbuild/CodeStats.html:67
+//line views/vbuild/CodeStats.html:68
 				qw422016.N().S(`              <p class="error">`)
-//line views/vbuild/CodeStats.html:68
+//line views/vbuild/CodeStats.html:69
 				qw422016.E().S(e)
-//line views/vbuild/CodeStats.html:68
+//line views/vbuild/CodeStats.html:69
 				qw422016.N().S(`</p>
 `)
-//line views/vbuild/CodeStats.html:69
+//line views/vbuild/CodeStats.html:70
 			}
-//line views/vbuild/CodeStats.html:69
+//line views/vbuild/CodeStats.html:70
 			qw422016.N().S(`            </div>
 `)
-//line views/vbuild/CodeStats.html:71
+//line views/vbuild/CodeStats.html:72
 		}
-//line views/vbuild/CodeStats.html:71
+//line views/vbuild/CodeStats.html:72
 		qw422016.N().S(`            <div class="card">
               <h3>Code Stats</h3>
 `)
-//line views/vbuild/CodeStats.html:74
+//line views/vbuild/CodeStats.html:75
 		if stats == nil {
-//line views/vbuild/CodeStats.html:74
+//line views/vbuild/CodeStats.html:75
 			qw422016.N().S(`              <em>no stats available</em>
 `)
-//line views/vbuild/CodeStats.html:76
+//line views/vbuild/CodeStats.html:77
 		} else {
-//line views/vbuild/CodeStats.html:76
+//line views/vbuild/CodeStats.html:77
 			qw422016.N().S(`              `)
-//line views/vbuild/CodeStats.html:77
-			streamcodeStats(qw422016, prj.Key, stats, ps)
-//line views/vbuild/CodeStats.html:77
+//line views/vbuild/CodeStats.html:78
+			vaction.StreamRenderCodeStats(qw422016, prj.Key, stats, ps)
+//line views/vbuild/CodeStats.html:78
 			qw422016.N().S(`
 `)
-//line views/vbuild/CodeStats.html:78
+//line views/vbuild/CodeStats.html:79
 		}
-//line views/vbuild/CodeStats.html:78
+//line views/vbuild/CodeStats.html:79
 		qw422016.N().S(`            </div>
           </div></div></div>
         </li>
 `)
-//line views/vbuild/CodeStats.html:82
+//line views/vbuild/CodeStats.html:83
 	}
-//line views/vbuild/CodeStats.html:82
+//line views/vbuild/CodeStats.html:83
 	qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 }
 
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 func (p *CodeStatsAll) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	p.StreamBody(qw422016, as, ps)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 }
 
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 func (p *CodeStatsAll) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	p.WriteBody(qb422016, as, ps)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:86
+//line views/vbuild/CodeStats.html:87
 	return qs422016
-//line views/vbuild/CodeStats.html:86
-}
-
-//line views/vbuild/CodeStats.html:88
-func streamcodeStats(qw422016 *qt422016.Writer, key string, ci *action.CodeStats, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:88
-	qw422016.N().S(`
-  <div class="overflow full-width mt">
-    <div id="codestats_`)
-//line views/vbuild/CodeStats.html:90
-	qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:90
-	qw422016.N().S(`"></div>
-  </div>
-  <div class="overflow full-width mt">
-    <table class="expanded min-200">
-      <thead>
-        <tr>
-          <th class="shrink">Type</th>
-          <th>Code</th>
-          <th>Comments</th>
-          <th>Blanks</th>
-          <th>Files</th>
-        </tr>
-      </thead>
-      <tbody>
-`)
-//line views/vbuild/CodeStats.html:104
-	for _, t := range ci.Types {
-//line views/vbuild/CodeStats.html:104
-		qw422016.N().S(`        <tr>
-          <td>`)
-//line views/vbuild/CodeStats.html:106
-		qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:106
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vbuild/CodeStats.html:107
-		qw422016.N().D(t.Code)
-//line views/vbuild/CodeStats.html:107
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vbuild/CodeStats.html:108
-		qw422016.N().D(t.Comments)
-//line views/vbuild/CodeStats.html:108
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vbuild/CodeStats.html:109
-		qw422016.N().D(t.Blanks)
-//line views/vbuild/CodeStats.html:109
-		qw422016.N().S(`</td>
-          <td><a href="#modal-`)
-//line views/vbuild/CodeStats.html:110
-		qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:110
-		qw422016.N().S(`-`)
-//line views/vbuild/CodeStats.html:110
-		qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:110
-		qw422016.N().S(`">`)
-//line views/vbuild/CodeStats.html:110
-		qw422016.N().D(len(t.Files))
-//line views/vbuild/CodeStats.html:110
-		qw422016.N().S(`</a></td>
-        </tr>
-`)
-//line views/vbuild/CodeStats.html:112
-	}
-//line views/vbuild/CodeStats.html:113
-	t := ci.Total
-
-//line views/vbuild/CodeStats.html:113
-	qw422016.N().S(`        <tr style="border-top: var(--border);">
-          <td style="border-top: var(--border);" class="nowrap"><em>`)
-//line views/vbuild/CodeStats.html:115
-	qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:115
-	qw422016.N().S(`</em></td>
-          <td style="border-top: var(--border);">`)
-//line views/vbuild/CodeStats.html:116
-	qw422016.N().D(t.Code)
-//line views/vbuild/CodeStats.html:116
-	qw422016.N().S(`</td>
-          <td style="border-top: var(--border);">`)
-//line views/vbuild/CodeStats.html:117
-	qw422016.N().D(t.Comments)
-//line views/vbuild/CodeStats.html:117
-	qw422016.N().S(`</td>
-          <td style="border-top: var(--border);">`)
-//line views/vbuild/CodeStats.html:118
-	qw422016.N().D(t.Blanks)
-//line views/vbuild/CodeStats.html:118
-	qw422016.N().S(`</td>
-          <td style="border-top: var(--border);"><a href="#modal-`)
-//line views/vbuild/CodeStats.html:119
-	qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:119
-	qw422016.N().S(`-`)
-//line views/vbuild/CodeStats.html:119
-	qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:119
-	qw422016.N().S(`">`)
-//line views/vbuild/CodeStats.html:119
-	qw422016.N().D(len(t.Files))
-//line views/vbuild/CodeStats.html:119
-	qw422016.N().S(`</a></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-`)
-//line views/vbuild/CodeStats.html:124
-	for _, t := range ci.Types {
-//line views/vbuild/CodeStats.html:124
-		qw422016.N().S(`    `)
-//line views/vbuild/CodeStats.html:125
-		streamcodeModal(qw422016, key, t, ps)
-//line views/vbuild/CodeStats.html:125
-		qw422016.N().S(`
-`)
-//line views/vbuild/CodeStats.html:126
-	}
-//line views/vbuild/CodeStats.html:126
-	qw422016.N().S(`  `)
-//line views/vbuild/CodeStats.html:127
-	streamcodeModal(qw422016, key, ci.Total, ps)
-//line views/vbuild/CodeStats.html:127
-	qw422016.N().S(`
-  `)
-//line views/vbuild/CodeStats.html:128
-	components.StreamPlotHorizontalBar(qw422016, "codestats_"+key, ci.ToMaps(), "files", "name", "["+key+"] Code Stats", 92)
-//line views/vbuild/CodeStats.html:128
-	qw422016.N().S(`
-`)
-//line views/vbuild/CodeStats.html:129
-}
-
-//line views/vbuild/CodeStats.html:129
-func writecodeStats(qq422016 qtio422016.Writer, key string, ci *action.CodeStats, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:129
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:129
-	streamcodeStats(qw422016, key, ci, ps)
-//line views/vbuild/CodeStats.html:129
-	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:129
-}
-
-//line views/vbuild/CodeStats.html:129
-func codeStats(key string, ci *action.CodeStats, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:129
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:129
-	writecodeStats(qb422016, key, ci, ps)
-//line views/vbuild/CodeStats.html:129
-	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:129
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:129
-	return qs422016
-//line views/vbuild/CodeStats.html:129
-}
-
-//line views/vbuild/CodeStats.html:131
-func streamcodeModal(qw422016 *qt422016.Writer, key string, t *action.CodeType, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:131
-	qw422016.N().S(`
-  <div id="modal-`)
-//line views/vbuild/CodeStats.html:132
-	qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:132
-	qw422016.N().S(`-`)
-//line views/vbuild/CodeStats.html:132
-	qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:132
-	qw422016.N().S(`" class="modal" style="display: none;">
-    <a class="backdrop" href="#"></a>
-    <div class="modal-content" style="min-width: 90%;">
-      <div class="modal-header">
-        <a href="#" class="modal-close">×</a>
-        <h2>`)
-//line views/vbuild/CodeStats.html:137
-	qw422016.E().S(t.Name)
-//line views/vbuild/CodeStats.html:137
-	qw422016.N().S(` Files</h2>
-      </div>
-      <div class="modal-body">
-        <div class="overflow full-width">
-          <table class="expanded min-200">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Comments</th>
-                <th>Blanks</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-`)
-//line views/vbuild/CodeStats.html:152
-	for _, x := range t.Files {
-//line views/vbuild/CodeStats.html:152
-		qw422016.N().S(`            <tr>
-              <td><a href="/p/`)
-//line views/vbuild/CodeStats.html:154
-		qw422016.E().S(key)
-//line views/vbuild/CodeStats.html:154
-		qw422016.N().S(`/fs/`)
-//line views/vbuild/CodeStats.html:154
-		qw422016.E().S(x.Name)
-//line views/vbuild/CodeStats.html:154
-		qw422016.N().S(`">`)
-//line views/vbuild/CodeStats.html:154
-		qw422016.E().S(x.Name)
-//line views/vbuild/CodeStats.html:154
-		qw422016.N().S(`</a></td>
-              <td>`)
-//line views/vbuild/CodeStats.html:155
-		qw422016.N().D(x.Code)
-//line views/vbuild/CodeStats.html:155
-		qw422016.N().S(`</td>
-              <td>`)
-//line views/vbuild/CodeStats.html:156
-		qw422016.N().D(x.Comments)
-//line views/vbuild/CodeStats.html:156
-		qw422016.N().S(`</td>
-              <td>`)
-//line views/vbuild/CodeStats.html:157
-		qw422016.N().D(x.Blanks)
-//line views/vbuild/CodeStats.html:157
-		qw422016.N().S(`</td>
-              <td>`)
-//line views/vbuild/CodeStats.html:158
-		qw422016.N().D(x.Total())
-//line views/vbuild/CodeStats.html:158
-		qw422016.N().S(`</td>
-            </tr>
-`)
-//line views/vbuild/CodeStats.html:160
-	}
-//line views/vbuild/CodeStats.html:160
-	qw422016.N().S(`            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-`)
-//line views/vbuild/CodeStats.html:167
-}
-
-//line views/vbuild/CodeStats.html:167
-func writecodeModal(qq422016 qtio422016.Writer, key string, t *action.CodeType, ps *cutil.PageState) {
-//line views/vbuild/CodeStats.html:167
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vbuild/CodeStats.html:167
-	streamcodeModal(qw422016, key, t, ps)
-//line views/vbuild/CodeStats.html:167
-	qt422016.ReleaseWriter(qw422016)
-//line views/vbuild/CodeStats.html:167
-}
-
-//line views/vbuild/CodeStats.html:167
-func codeModal(key string, t *action.CodeType, ps *cutil.PageState) string {
-//line views/vbuild/CodeStats.html:167
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vbuild/CodeStats.html:167
-	writecodeModal(qb422016, key, t, ps)
-//line views/vbuild/CodeStats.html:167
-	qs422016 := string(qb422016.B)
-//line views/vbuild/CodeStats.html:167
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vbuild/CodeStats.html:167
-	return qs422016
-//line views/vbuild/CodeStats.html:167
+//line views/vbuild/CodeStats.html:87
 }
