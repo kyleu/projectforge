@@ -22,8 +22,11 @@
   opacity: 0;
 }
 
-.margin {
-  margin: var(--padding);
+.border {
+  border: var(--border);
+}
+.no-border {
+  border: 0 !important;
 }
 
 .bt {
@@ -52,6 +55,13 @@
 }
 .br0 {
   border-right: 0;
+}
+
+.margin {
+  margin: var(--padding);
+}
+.no-margin {
+  margin: 0 !important;
 }
 
 .mt {
@@ -92,6 +102,13 @@
 }
 .mr0 {
   margin-right: 0;
+}
+
+.padding {
+  padding: var(--padding);
+}
+.no-padding {
+  padding: 0 !important;
 }
 
 .pt {
@@ -160,14 +177,6 @@
 
 .pointer {
   cursor: pointer;
-}
-
-.no-padding {
-  padding: 0 !important;
-}
-
-.margin {
-  margin: var(--padding);
 }
 
 .break-word {

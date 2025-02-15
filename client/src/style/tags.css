@@ -7,7 +7,6 @@
 .tag-editor .tags .item, .tag-view .tags .item {
   background-color: var(--color-background-muted);
   margin-right: var(--padding-small);
-  margin-bottom: var(--padding-small);
 
   box-sizing: border-box;
   min-width: var(--text-height);
