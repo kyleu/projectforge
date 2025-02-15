@@ -1,7 +1,7 @@
 {
   "name": "Expression",
   "icon": "gamepad",
-  "description": "Exposes CEL engine for evaluating arbitrary expressions",
+  "description": "Exposes Common Expression Language (CEL) engine for evaluating arbitrary expressions",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

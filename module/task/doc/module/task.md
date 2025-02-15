@@ -10,4 +10,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-TODO
+A task service will be available in the core services, and UI is available in `./views/vtask`.

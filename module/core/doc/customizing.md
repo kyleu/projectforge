@@ -16,7 +16,7 @@ You can find it in `app/services.go`.
 ### HTTP Controllers
 
 - All controller actions live in `app/controller`. Normal HTTP actions should use the `controller.Act` helper method, which extracts a session and injects dependencies.
-- Your method is provided an `cutil.PageState` which contains user and session information, and includes `Title` and `Data` fields, used for HTML title and data repsonses.
+- Your method is provided an `cutil.PageState` which contains user and session information, and includes `Title` and `Data` fields, used for HTML title and data responses.
 - Every action supports content negotiation, you can pass a `Content-Type` header, or add [`?t=json`, `?t=yaml`, or `?t=xml`], to any URL.
 
 ### CLI Actions

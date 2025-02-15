@@ -10,4 +10,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-Simply add markdown files to `./doc` and they'll show up in the menu.
+Simply add Markdown files to `./doc` and they'll show up in the menu.

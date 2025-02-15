@@ -10,4 +10,4 @@ Licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0)
 
 ### Usage
 
-TODO
+See `./views/components/edit/RichEditor.html` for usage.
