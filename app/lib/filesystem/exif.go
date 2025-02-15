@@ -13,11 +13,11 @@ import (
 func ExifExtract(b []byte) (util.ValueMap, error) {
 	x, err := exif.SearchAndExtractExif(b)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to extract exif data")
+		return nil, errors.Wrap(err, "unable to extract exif data")
 	}
 	entries, _, err := exif.GetFlatExifDataUniversalSearch(x, nil, true)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to extract exif data")
+		return nil, errors.Wrap(err, "unable to extract exif data")
 	}
 	ret := lo.SliceToMap(entries, func(t exif.ExifTag) (string, any) {
 		return t.TagName, strings.TrimSuffix(strings.TrimPrefix(t.Formatted, "["), "]")

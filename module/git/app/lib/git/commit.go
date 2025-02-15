@@ -21,7 +21,7 @@ func (s *Service) Commit(ctx context.Context, msg string, logger util.Logger) (*
 func gitCommit(ctx context.Context, path string, message string, logger util.Logger) (string, error) {
 	_, err := gitCmd(ctx, "add .", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		return "", err

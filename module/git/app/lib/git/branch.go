@@ -10,7 +10,7 @@ import (
 func gitBranch(ctx context.Context, path string, logger util.Logger) string {
 	out, err := gitCmd(ctx, "branch --show-current", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "norepo"
 		}
 		return "error: " + err.Error()

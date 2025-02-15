@@ -36,7 +36,7 @@ func (s *Service) Outdated(ctx context.Context, logger util.Logger) (*Result, er
 func gitOutdated(ctx context.Context, path string, logger util.Logger) (string, int, error) {
 	out, err := gitCmd(ctx, "rev-parse HEAD", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", 0, nil
 		}
 		return "", 0, err

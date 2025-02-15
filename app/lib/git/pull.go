@@ -36,7 +36,7 @@ func (s *Service) Pull(ctx context.Context, logger util.Logger) (*Result, error)
 func gitPull(ctx context.Context, path string, logger util.Logger) (string, error) {
 	out, err := gitCmd(ctx, "pull -q", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		if strings.Contains(out, "divergent branches") {

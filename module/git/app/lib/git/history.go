@@ -44,7 +44,7 @@ func gitHistory(ctx context.Context, path string, args *HistoryArgs, logger util
 
 	out, err := gitCmd(ctx, cmd, path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return nil, nil
 		}
 		return nil, err

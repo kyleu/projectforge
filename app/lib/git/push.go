@@ -36,7 +36,7 @@ func (s *Service) Push(ctx context.Context, logger util.Logger) (*Result, error)
 func gitPush(ctx context.Context, path string, logger util.Logger) (string, error) {
 	out, err := gitCmd(ctx, "push", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		return "", err

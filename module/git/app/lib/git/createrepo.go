@@ -19,7 +19,7 @@ func (s *Service) CreateRepo(ctx context.Context, logger util.Logger) (*Result, 
 func gitCreateRepo(ctx context.Context, path string, logger util.Logger) error {
 	_, err := gitCmd(ctx, "git init", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return nil
 		}
 		return err

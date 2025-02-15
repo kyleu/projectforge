@@ -43,7 +43,7 @@ func (s *Service) Status(ctx context.Context, logger util.Logger) (*Result, erro
 func gitStatus(ctx context.Context, path string, logger util.Logger) (int, int, []string, error) {
 	out, err := gitCmd(ctx, "status --porcelain -b", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return 0, 0, nil, nil
 		}
 		return 0, 0, nil, err

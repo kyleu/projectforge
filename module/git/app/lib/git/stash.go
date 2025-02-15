@@ -11,7 +11,7 @@ import (
 func (s *Service) gitStash(ctx context.Context, path string, logger util.Logger) (string, error) {
 	out, err := gitCmd(ctx, "stash", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		return "", errors.Wrap(err, "unable to apply stash")
@@ -22,7 +22,7 @@ func (s *Service) gitStash(ctx context.Context, path string, logger util.Logger)
 func (s *Service) gitStashPop(ctx context.Context, path string, logger util.Logger) (string, error) {
 	out, err := gitCmd(ctx, "stash pop", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		return "", errors.Wrap(err, "unable to pop stash")

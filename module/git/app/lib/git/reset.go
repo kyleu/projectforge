@@ -32,7 +32,7 @@ func (s *Service) Reset(ctx context.Context, logger util.Logger) (*Result, error
 func gitReset(ctx context.Context, path string, logger util.Logger) (string, error) {
 	out, err := gitCmd(ctx, "reset --hard", path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		return "", err

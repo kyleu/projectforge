@@ -1,0 +1,25 @@
+package git
+
+import (
+	"context"
+
+	"github.com/pkg/errors"
+
+	"{{{ .Package }}}/app/lib/telemetry"
+	"{{{ .Package }}}/app/util"
+)
+
+func checkGH() error {
+	return nil
+}
+
+func ghCmd(ctx context.Context, args string, path string, logger util.Logger) (string, error) {
+	exit, out, err := telemetry.RunProcessSimple(ctx, "gh "+args, path, logger)
+	if err != nil {
+		return "", errors.Wrapf(err, "can't run [gh %s] for path [%s]", args, path)
+	}
+	if exit != 0 {
+		return out, errors.Errorf("gh cmd [gh %s] returned exit code [%d] for path [%s]: %s", args, exit, path, out)
+	}
+	return out, nil
+}

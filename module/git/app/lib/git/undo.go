@@ -20,7 +20,7 @@ func gitResetSoft(ctx context.Context, path string, logger util.Logger) (string,
 	currBranch := gitBranch(ctx, path, logger)
 	_, err := gitCmd(ctx, fmt.Sprintf("reset --soft %s~1", currBranch), path, logger)
 	if err != nil {
-		if isNoRepo(err) {
+		if isNotRepo(err) {
 			return "", nil
 		}
 		return "", err
