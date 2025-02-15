@@ -2,13 +2,13 @@ package controller
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"slices"
 	"strings"
 
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
