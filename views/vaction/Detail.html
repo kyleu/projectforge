@@ -9,16 +9,17 @@
 ) %}
 
 {% func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) %}
-  {%- if len(cfg) > 0 -%}
+  {%- code trimmedCfg := cfg.WithoutKeys("hasloaded") -%}
+  {%- if len(trimmedCfg) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} Config</h3>
     <div class="mt overflow full-width">
       <table>
         <tbody>
-          {%- for _, k := range cfg.Keys() -%}
+          {%- for _, k := range trimmedCfg.Keys() -%}
           <tr>
             <th class="shrink">{%s k %}</th>
-            <td>{%v cfg[k] %}</td>
+            <td>{%v trimmedCfg[k] %}</td>
           </tr>
           {%- endfor -%}
         </tbody>

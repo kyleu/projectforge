@@ -4,6 +4,8 @@ const (
 	TextArg         = "Arg"
 	TextCommaSpace  = ", "
 	TextDrop        = "Drop"
+	TextElse        = "{%% else %%}"
+	TextElseExtra   = "{%%%% else %%%%}"
 	TextEndAnchor   = "</a>"
 	TextEndFunc     = "{%% endfunc %%}"
 	TextEndIf       = "{%% endif %%}"

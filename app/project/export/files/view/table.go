@@ -82,7 +82,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("        {%%- for _, model := range models -%%}")
 	ret.W("        <tr>")
 	lo.ForEach(summCols, func(col *model.Column, _ int) {
-		viewTableColumn(g, ret, models, m, true, col, helper.TextModelPrefix, "", 5, enums)
+		viewTableColumn(ret, models, m, true, col, helper.TextModelPrefix, "", 5, enums)
 	})
 	ret.W("        </tr>")
 	ret.W("        {%%- endfor -%%}")

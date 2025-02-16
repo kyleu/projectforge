@@ -39,7 +39,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.W("\t\t} else {")
 		ret.WF("\t\t\tret, err = as.Services.%s.Search(ps.Context, q, nil, prms%s, ps.Logger)", m.Proper(), suffix)
 		ret.WE(3, `""`)
-		ret.W("\t\t\tif len(ret) == 1 {")
+		ret.W("\t\t\tif len(ret) == 1 && !cutil.IsContentTypeJSON(cutil.GetContentType(r)) {")
 		if len(m.Group) == 0 {
 			ret.W("\t\t\t\treturn FlashAndRedir(true, \"single result found\", ret[0].WebPath(), ps)")
 		} else {

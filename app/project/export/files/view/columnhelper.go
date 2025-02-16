@@ -16,8 +16,8 @@ import (
 var (
 	ind1             = "  "
 	anchorIcon       = "<a title=%q href=%q>%s</a>"
-	anchorMsgNotNull = `%s  ` + anchorIcon
-	anchorMsg        = "%s  {%%%% if %s%s != nil %%%%}" + anchorIcon + helper.TextEndIfExtra
+	anchorMsgNotNull = `%s ` + anchorIcon
+	anchorMsg        = "%s {%%%% if %s%s != nil %%%%}" + anchorIcon + helper.TextEndIfExtra
 	linkStart        = "  <a href=\""
 )
 
@@ -33,47 +33,39 @@ func colRow(ind string, col *model.Column, u string, viewString string, pathKey 
 }
 
 func viewColumn(
-	key string, g *golang.Template, ret *golang.Block,
-	m *model.Model, col *model.Column,
-	toStrings string, link bool, modelKey string,
-	indent int, models model.Models, enums enum.Enums, pathKey string,
+	key string, ret *golang.Block, m *model.Model, col *model.Column, call string,
+	link bool, modelKey string, indent int, models model.Models, enums enum.Enums, pathKey string,
 ) {
-	prefix := ""
-	if idx := strings.Index(toStrings, "||"); idx > -1 {
-		prefix = toStrings[:idx]
-		toStrings = toStrings[idx+2:]
-	}
 	ind := util.StringRepeat(ind1, indent)
 	rels := m.RelationsFor(col)
+	cv := col.ToGoViewString(modelKey, true, false, enums, key)
 	if len(rels) == 0 {
-		cv := col.ToGoViewString(modelKey, true, false, enums, key)
 		ret.W(colRow(ind, col, ModelLinkURL(m, modelKey, enums), cv, pathKey, link))
 		return
 	}
 
 	ret.W(ind + helper.TextTDStart)
-	cv := col.ToGoViewString(modelKey, true, false, enums, key)
-	if col.PK && link {
-		ret.W(ind + linkStart + ModelLinkURL(m, modelKey, enums) + "\">" + cv + toStrings + helper.TextEndAnchor)
-	} else {
-		ret.W(ind + ind1 + cv + toStrings)
-	}
-
+	ret.W(ind + ind1 + "{%% if x := " + call + "; x != nil %%}")
+	strs := []string{"{%%s x.TitleString() %%}"}
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		if lo.Contains(rel.Src, col.Name) {
 			relModel := models.Get(rel.Table)
 			icon := fmt.Sprintf("{%%%%= components.SVGLink(`%s`, ps) %%%%}", relModel.Icon)
 			if icons := relModel.Columns.WithFormat("icon"); len(icons) == 1 {
-				msg := `{%%%% if x := %s; x != nil %%%%}{%%%%= components.SVGLink(x.%s, ps) %%%%}{%%%% else %%%%}%s{%%%% endif %%%%}`
-				icon = fmt.Sprintf(msg, prefix, icons[0].IconDerived(), icon)
+				icon = "{%%= components.SVGLink(x." + icons[0].IconDerived() + ", ps) %%}"
 			}
-			wp := `{%% if x := ` + prefix + `; x != nil %%}{%%s x.WebPath(` + pathKey + `...) %%}{%% endif %%}`
+			wp := `{%%s x.WebPath(` + pathKey + `...) %%}`
 			if col.Nullable && !col.Type.Scalar() {
-				ret.WF(anchorMsg, ind, modelKey, col.Proper(), relModel.Title(), wp, icon)
+				strs = append(strs, fmt.Sprintf(anchorMsg, "", modelKey, col.Proper(), relModel.Title(), wp, icon))
 			} else {
-				ret.WF(anchorMsgNotNull, ind, relModel.Title(), wp, icon)
+				strs = append(strs, fmt.Sprintf(anchorMsgNotNull, "", relModel.Title(), wp, icon))
 			}
 		}
 	})
+	ret.W(ind + ind1 + strings.Join(strs, ""))
+	ret.W(ind + ind1 + "{%% else %%}")
+	ret.W(ind + ind1 + cv)
+	ret.W(ind + ind1 + "{%% endif %%}")
+
 	ret.W(ind + helper.TextTDEnd)
 }

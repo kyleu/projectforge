@@ -22,7 +22,7 @@
   {%- code svc := p.Services[key] -%}
   <div class="card">
     <div class="right"><em>{%s svc.Type.Title %}</em></div>
-    <h3><a href="/admin/database/{%s key %}">{%= components.SVGIcon(`database`, ps) %} {%s svc.Key %}</a></h3>
+    <h3><a href="/admin/database/{%s key %}">{%= components.SVGIcon(`database`, ps) %}</a> <a href="/admin/database/{%s key %}">{%s svc.Key %}</a></h3>
   </div>
   {%- endfor -%}
 {% endfunc %}

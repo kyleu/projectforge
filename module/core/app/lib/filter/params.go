@@ -132,7 +132,12 @@ func (p *Params) OrderByString() string {
 		if !o.Asc {
 			dir = " desc"
 		}
-		return fmt.Sprintf("%q%s", o.Column, dir)
+		col := o.Column
+		tx := TransformedColumns[p.Key]
+		if x, ok := tx[col]; ok {
+			col = x
+		}
+		return fmt.Sprintf("%q%s", col, dir)
 	})
 	return strings.Join(ret, ", ")
 }
@@ -162,8 +167,10 @@ func (p *Params) Filtered(key string, available []string, logger util.Logger) *P
 			if containsCol {
 				allowed = append(allowed, o)
 			} else {
-				const msg = "no column [%s] for [%s] available in allowed columns [%s]"
-				logger.Warnf(msg, o.Column, p.Key, util.StringArrayOxfordComma(available, "and"))
+				if logger != nil {
+					const msg = "no column [%s] for [%s] available in allowed columns [%s]"
+					logger.Warnf(msg, o.Column, p.Key, util.StringArrayOxfordComma(available, "and"))
+				}
 			}
 		})
 		return &Params{Key: p.Key, Orderings: allowed, Limit: p.Limit, Offset: p.Offset}

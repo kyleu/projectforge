@@ -100,7 +100,7 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 		qw422016.N().S(`
   `)
 //line views/layout/Head.html:24
-		qw422016.N().S(assets.ScriptElement(`client.js`, true))
+		qw422016.N().S(assets.ScriptElement(`client.js`, false))
 //line views/layout/Head.html:24
 	}
 //line views/layout/Head.html:24

@@ -75,7 +75,7 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 	if err != nil {
 		return nil, err
 	}
-	vdt, err := exportViewDetailTable(g, m, args.Models, args.Enums)
+	vdt, err := exportViewDetailTable(m, args.Models, args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +168,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relation
 	return ret, nil
 }
 
-func exportViewDetailTable(g *golang.Template, m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
+func exportViewDetailTable(m *model.Model, models model.Models, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("DetailTable", "func")
 	ret.W("{%% func DetailTable(p *Detail, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"mt overflow full-width\">")
@@ -188,7 +188,7 @@ func exportViewDetailTable(g *golang.Template, m *model.Model, models model.Mode
 			hlp = "\"{%%s " + hlp + " %%}\""
 		}
 		ret.WF(`          <th class="shrink" title=%s>%s</th>`, hlp, col.Title())
-		viewDetailColumn(g, ret, models, m, false, col, "p.Model.", 5, enums)
+		viewDetailColumn(ret, models, m, false, col, "p.Model.", 5, enums)
 		ret.W("        </tr>")
 		if col.HasTag("debug-only") {
 			ret.W(ind5 + helper.TextEndIfDash)
