@@ -2,7 +2,6 @@ package action
 
 import (
 	"bytes"
-	"context"
 	"strings"
 
 	"github.com/samber/lo"
@@ -10,15 +9,6 @@ import (
 	"projectforge.dev/projectforge/app/lib/exec"
 	"projectforge.dev/projectforge/app/util"
 )
-
-func onCodeStats(_ context.Context, pm *PrjAndMods, r *Result) *Result {
-	x, err := runCodeStats(pm.Prj.Path, false)
-	if err != nil {
-		return r.WithError(err)
-	}
-	r.Data = x
-	return r
-}
 
 func runCodeStats(pth string, recursive bool) (*CodeStats, error) {
 	cmd := `tokei . -o json --exclude "*.html.go"  --exclude "*.sql.go"`

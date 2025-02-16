@@ -5,9 +5,12 @@ import (
 	"math"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 const (
+	dateFmtDateStr = "Monday, January 2 2006"
 	dateFmtFull    = "2006-01-02 15:04:05"
 	dateFmtFullMS  = "2006-01-02 15:04:05.000000"
 	dateFmtHours   = "15:04:05"
@@ -51,6 +54,10 @@ func TimeToVerbose(d *time.Time) string {
 	return TimeToString(d, dateFmtVerbose)
 }
 
+func TimeToDateString(d *time.Time) string {
+	return TimeToString(d, dateFmtDateStr)
+}
+
 func TimeToYMD(d *time.Time) string {
 	return TimeToString(d, dateFmtYMD)
 }
@@ -81,6 +88,17 @@ func TimeFromVerbose(s string) (*time.Time, error) {
 
 func TimeFromYMD(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtYMD)
+}
+
+func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
+	if s == "" {
+		return nil, nil
+	}
+	ret, err := time.Parse(fmt, s)
+	if err != nil {
+		return nil, errors.Errorf("invalid date string [%s], expected [%s]", s, fmt)
+	}
+	return &ret, nil
 }
 
 func FormatSeconds(x float64) string {

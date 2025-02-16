@@ -76,15 +76,12 @@ func TimeFromStringSimple(s string) *time.Time {
 	return ret
 }
 
-func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
-	if s == "" {
-		return nil, nil
+func TimePlusDays(t *time.Time, days int) *time.Time {
+	if t == nil {
+		return nil
 	}
-	ret, err := time.Parse(fmt, s)
-	if err != nil {
-		return nil, errors.Errorf("invalid date string [%s], expected [%s]", s, fmt)
-	}
-	return &ret, nil
+	ret := t.AddDate(0, 0, days)
+	return &ret
 }
 
 func TimeMax(ts ...*time.Time) *time.Time {
