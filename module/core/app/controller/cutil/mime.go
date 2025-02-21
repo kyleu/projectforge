@@ -138,7 +138,7 @@ func RespondDownload(filename string, ba []byte, w *WriteCounter) (string, error
 	return RespondMIME(filename, "application/octet-stream", ba, w)
 }
 
-func GetContentType(r *http.Request) string {
+func GetContentTypes(r *http.Request) (string, string) {
 	ret := r.Header.Get(HeaderAccept)
 	if ret == "" {
 		ret = r.Header.Get(HeaderContentType)
@@ -149,20 +149,25 @@ func GetContentType(r *http.Request) string {
 	t := r.URL.Query().Get("t")
 	switch t {
 	case util.KeyDebug:
-		return mimeDebug
+		return mimeDebug, t
 	case util.KeyCSV:
-		return mimeCSV
+		return mimeCSV, t
 	case util.KeyJSON:
-		return mimeJSON
+		return mimeJSON, t
 	case util.KeyTOML:
-		return mimeTOML
+		return mimeTOML, t
 	case util.KeyXML:
-		return mimeXML
+		return mimeXML, t
 	case util.KeyYAML, "yml":
-		return mimeYAML
+		return mimeYAML, t
 	default:
-		return strings.TrimSpace(ret)
+		return strings.TrimSpace(ret), t
 	}
+}
+
+func GetContentType(r *http.Request) string {
+	ret, _ := GetContentTypes(r)
+	return ret
 }
 
 func IsContentTypeCSV(c string) bool {

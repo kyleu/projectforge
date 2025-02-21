@@ -9,7 +9,7 @@
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func Nav(as *app.State, ps *cutil.PageState) %}
+{% func Nav(as *app.State, ps *cutil.PageState) %}{%- if !ps.HideHeader -%}
 <nav id="navbar">
   <a class="logo" href="{%s ps.RootPath %}" title="{%s util.AppName %} {%s as.BuildInfo.String() %}">{%= components.SVGSimple(ps.RootIcon, 32, ps) %}</a>
   <div class="breadcrumbs">
@@ -30,7 +30,7 @@
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
   {%= Menu(ps) %}
   {%- endif -%}
-</nav>{% endfunc %}
+</nav>{%- endif -%}{% endfunc %}
 
 {% func NavItem(link string, title string, icon string, description string, last bool, ps *cutil.PageState) %}{% stripspace %}
   {% code shouldLink := link != "" || (last && ps.Method == http.MethodGet) %}

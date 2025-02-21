@@ -101,6 +101,10 @@ button:disabled, button[disabled]{
   }
 }
 
+#content.noheader {
+  margin-top: 0;
+}
+
 #content.nomenu {
   margin-left: 0;
 }

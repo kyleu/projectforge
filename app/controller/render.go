@@ -70,21 +70,25 @@ func Render(r *http.Request, as *app.State, page layout.Page, ps *cutil.PageStat
 	}
 
 	ps.Breadcrumbs = append(ps.Breadcrumbs, breadcrumbs...)
-	ct := cutil.GetContentType(r)
+	ct, renderType := cutil.GetContentTypes(r)
 	if ps.Data != nil {
 		if handled, err := maybeRender(ct); handled || err != nil {
 			return "", err
 		}
 	}
 	startNanos := util.TimeCurrentNanos()
-	if ps.DefaultFormat == "" {
-		ps.W.Header().Set(cutil.HeaderContentType, "text/html; charset=UTF-8")
-		views.WriteRender(ps.W, page, as, ps)
-		ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
-		return "", nil
+	if ps.DefaultFormat != "" {
+		if handled, err := maybeRender(ps.DefaultFormat); handled || err != nil {
+			return "", err
+		}
+		return "", errors.Errorf("unable to process format [%s]", ps.DefaultFormat)
 	}
-	if handled, err := maybeRender(ps.DefaultFormat); handled || err != nil {
-		return "", err
+	ps.W.Header().Set(cutil.HeaderContentType, "text/html; charset=UTF-8")
+	if renderType == "print" {
+		ps.HideHeader = true
+		ps.HideMenu = true
 	}
-	return "", errors.Errorf("unable to process format [%s]", ps.DefaultFormat)
+	views.WriteRender(ps.W, page, as, ps)
+	ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
+	return "", nil
 }

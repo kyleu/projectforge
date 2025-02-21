@@ -99,9 +99,13 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 	qw422016.N().S(`
 <main id="content"`)
 //line views/Render.html:30
-	if ps.HideMenu {
+	if cl := ps.MainClasses(); cl != `` {
 //line views/Render.html:30
-		qw422016.N().S(` class="nomenu"`)
+		qw422016.N().S(` class="`)
+//line views/Render.html:30
+		qw422016.E().S(cl)
+//line views/Render.html:30
+		qw422016.N().S(`"`)
 //line views/Render.html:30
 	}
 //line views/Render.html:30

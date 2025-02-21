@@ -27,7 +27,7 @@
 <!-- {%s cutil.PageComment %} -->
 <head>{%= page.Head(as, ps) %}</head>
 <body{%- if clsDecl := ps.ClassDecl(); clsDecl != `-` -%}{%s= clsDecl %}{%- if ps.Action != "" -%}{% space %}data-action="{%s ps.Action %}"{%- endif -%}{% space %}data-version="{%s as.BuildInfo.Version %}"{%- endif -%}>{%- if len(ps.Flashes) > 0 -%}{%= renderFlashes(ps.Flashes) %}{%- endif -%}{%= page.Nav(as, ps) %}
-<main id="content"{% if ps.HideMenu %} class="nomenu"{% endif %}>{%= page.Body(as, ps) %}</main>
+<main id="content"{% if cl := ps.MainClasses(); cl != `` %} class="{%s cl %}"{% endif %}>{%= page.Body(as, ps) %}</main>
 {%= renderIcons(ps.Icons) %}</body>
 </html>
 {% endfunc %}

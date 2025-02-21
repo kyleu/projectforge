@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -21,7 +20,7 @@ func viewDetailColumn(ret *golang.Block, models model.Models, m *model.Model, li
 	if err != nil {
 		panic(err)
 	}
-	viewColumn(util.KeyDetail, ret, m, col, call, link, modelKey, indent, models, enums, "p.Paths")
+	viewColumn(util.KeyDetail, ret, m, col, call, link, modelKey, indent, models, enums, false, "p.Paths")
 }
 
 func ModelLinkURL(m *model.Model, prefix string, enums enum.Enums) string {
@@ -40,11 +39,5 @@ func viewDetailColumnString(rels model.Relations, models model.Models, m *model.
 	lCols := rel.SrcColumns(m)
 	lNames := strings.Join(lCols.ProperNames(), "")
 
-	relTitles := relModel.Columns.WithTag("title")
-	if len(relTitles) == 0 {
-		if relPks := relModel.PKs(); slices.Equal(relPks.Names(), rel.Tgt) {
-			return "", nil
-		}
-	}
 	return fmt.Sprintf("p.%sBy%s", relModel.Proper(), lNames), nil
 }

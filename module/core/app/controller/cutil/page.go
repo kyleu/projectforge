@@ -60,6 +60,7 @@ type PageState struct {
 	RootTitle      string            `json:"rootTitle,omitempty"`{{{ if .HasModule "search" }}}
 	SearchPath     string            `json:"searchPath,omitempty"`{{{ end }}}
 	ProfilePath    string            `json:"profilePath,omitempty"`
+	HideHeader     bool              `json:"hideHeader,omitempty"`
 	HideMenu       bool              `json:"hideMenu,omitempty"`
 	NoScript       bool              `json:"noScript,omitempty"`
 	ForceRedirect  string            `json:"forceRedirect,omitempty"`
@@ -210,4 +211,15 @@ func (p *PageState) ClassDecl() string {
 func (p *PageState) SetTitleAndData(title string, data any) {
 	p.Title = title
 	p.Data = data
+}
+
+func (p *PageState) MainClasses() string {
+	var ret []string
+	if p.HideHeader {
+		ret = append(ret, "noheader")
+	}
+	if p.HideMenu {
+		ret = append(ret, "nomenu")
+	}
+	return strings.Join(ret, " ")
 }

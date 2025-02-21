@@ -14,11 +14,9 @@ import (
 )
 
 var (
-	ind1             = "  "
-	anchorIcon       = "<a title=%q href=%q>%s</a>"
-	anchorMsgNotNull = `%s ` + anchorIcon
-	anchorMsg        = "%s {%%%% if %s%s != nil %%%%}" + anchorIcon + helper.TextEndIfExtra
-	linkStart        = "  <a href=\""
+	ind1       = "  "
+	anchorIcon = "<a title=%q href=%q>%s</a>"
+	anchorMsg  = `%s ` + anchorIcon
 )
 
 func colRow(ind string, col *model.Column, u string, viewString string, pathKey string, link bool) string {
@@ -34,7 +32,7 @@ func colRow(ind string, col *model.Column, u string, viewString string, pathKey 
 
 func viewColumn(
 	key string, ret *golang.Block, m *model.Model, col *model.Column, call string,
-	link bool, modelKey string, indent int, models model.Models, enums enum.Enums, pathKey string,
+	link bool, modelKey string, indent int, models model.Models, enums enum.Enums, chk bool, pathKey string,
 ) {
 	ind := util.StringRepeat(ind1, indent)
 	rels := m.RelationsFor(col)
@@ -45,7 +43,11 @@ func viewColumn(
 	}
 
 	ret.W(ind + helper.TextTDStart)
-	ret.W(ind + ind1 + "{%% if x := " + call + "; x != nil %%}")
+	if chk {
+		ret.W(ind + ind1 + "{%% if " + modelKey + col.Proper() + " != nil %%}{%% if x := " + call + "; x != nil %%}")
+	} else {
+		ret.W(ind + ind1 + "{%% if x := " + call + "; x != nil %%}")
+	}
 	strs := []string{"{%%s x.TitleString() %%}"}
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		if lo.Contains(rel.Src, col.Name) {
@@ -55,17 +57,16 @@ func viewColumn(
 				icon = "{%%= components.SVGLink(x." + icons[0].IconDerived() + ", ps) %%}"
 			}
 			wp := `{%%s x.WebPath(` + pathKey + `...) %%}`
-			if col.Nullable && !col.Type.Scalar() {
-				strs = append(strs, fmt.Sprintf(anchorMsg, "", modelKey, col.Proper(), relModel.Title(), wp, icon))
-			} else {
-				strs = append(strs, fmt.Sprintf(anchorMsgNotNull, "", relModel.Title(), wp, icon))
-			}
+			strs = append(strs, fmt.Sprintf(anchorMsg, "", relModel.Title(), wp, icon))
 		}
 	})
 	ret.W(ind + ind1 + strings.Join(strs, ""))
 	ret.W(ind + ind1 + "{%% else %%}")
 	ret.W(ind + ind1 + cv)
-	ret.W(ind + ind1 + "{%% endif %%}")
-
+	if chk {
+		ret.W(ind + ind1 + "{%% endif %%}{%% endif %%}")
+	} else {
+		ret.W(ind + ind1 + "{%% endif %%}")
+	}
 	ret.W(ind + helper.TextTDEnd)
 }

@@ -32,108 +32,111 @@ var (
 //line views/layout/Nav.html:12
 func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Nav.html:12
-	qw422016.N().S(`
-<nav id="navbar">
+	if !ps.HideHeader {
+//line views/layout/Nav.html:12
+		qw422016.N().S(`<nav id="navbar">
   <a class="logo" href="`)
 //line views/layout/Nav.html:14
-	qw422016.E().S(ps.RootPath)
+		qw422016.E().S(ps.RootPath)
 //line views/layout/Nav.html:14
-	qw422016.N().S(`" title="`)
+		qw422016.N().S(`" title="`)
 //line views/layout/Nav.html:14
-	qw422016.E().S(util.AppName)
+		qw422016.E().S(util.AppName)
 //line views/layout/Nav.html:14
-	qw422016.N().S(` `)
+		qw422016.N().S(` `)
 //line views/layout/Nav.html:14
-	qw422016.E().S(as.BuildInfo.String())
+		qw422016.E().S(as.BuildInfo.String())
 //line views/layout/Nav.html:14
-	qw422016.N().S(`">`)
+		qw422016.N().S(`">`)
 //line views/layout/Nav.html:14
-	components.StreamSVGSimple(qw422016, ps.RootIcon, 32, ps)
+		components.StreamSVGSimple(qw422016, ps.RootIcon, 32, ps)
 //line views/layout/Nav.html:14
-	qw422016.N().S(`</a>
+		qw422016.N().S(`</a>
   <div class="breadcrumbs">
 `)
 //line views/layout/Nav.html:16
-	extra := util.Choose(len(ps.Breadcrumbs) == 0, " simple", "")
+		extra := util.Choose(len(ps.Breadcrumbs) == 0, " simple", "")
 
 //line views/layout/Nav.html:16
-	qw422016.N().S(`    <a href="`)
+		qw422016.N().S(`    <a href="`)
 //line views/layout/Nav.html:17
-	qw422016.E().S(ps.RootPath)
+		qw422016.E().S(ps.RootPath)
 //line views/layout/Nav.html:17
-	qw422016.N().S(`" class="nav-root-icon`)
+		qw422016.N().S(`" class="nav-root-icon`)
 //line views/layout/Nav.html:17
-	qw422016.E().S(extra)
+		qw422016.E().S(extra)
 //line views/layout/Nav.html:17
-	qw422016.N().S(`" title="`)
+		qw422016.N().S(`" title="`)
 //line views/layout/Nav.html:17
-	qw422016.E().S(util.AppName)
+		qw422016.E().S(util.AppName)
 //line views/layout/Nav.html:17
-	qw422016.N().S(`">`)
+		qw422016.N().S(`">`)
 //line views/layout/Nav.html:17
-	components.StreamSVGBreadcrumb(qw422016, ps.RootIcon, ps)
+		components.StreamSVGBreadcrumb(qw422016, ps.RootIcon, ps)
 //line views/layout/Nav.html:17
-	qw422016.N().S(`</a>
+		qw422016.N().S(`</a>
     <a class="link nav-root-item`)
 //line views/layout/Nav.html:18
-	qw422016.E().S(extra)
+		qw422016.E().S(extra)
 //line views/layout/Nav.html:18
-	qw422016.N().S(`" href="`)
+		qw422016.N().S(`" href="`)
 //line views/layout/Nav.html:18
-	qw422016.E().S(ps.RootPath)
+		qw422016.E().S(ps.RootPath)
 //line views/layout/Nav.html:18
-	qw422016.N().S(`">`)
+		qw422016.N().S(`">`)
 //line views/layout/Nav.html:18
-	qw422016.E().S(ps.RootTitle)
+		qw422016.E().S(ps.RootTitle)
 //line views/layout/Nav.html:18
-	qw422016.N().S(`</a>`)
+		qw422016.N().S(`</a>`)
 //line views/layout/Nav.html:18
-	StreamNavItems(qw422016, ps)
+		StreamNavItems(qw422016, ps)
 //line views/layout/Nav.html:18
-	qw422016.N().S(`
+		qw422016.N().S(`
   </div>
 `)
 //line views/layout/Nav.html:20
-	if ps.SearchPath != "-" {
+		if ps.SearchPath != "-" {
 //line views/layout/Nav.html:20
-		qw422016.N().S(`  <form action="`)
+			qw422016.N().S(`  <form action="`)
 //line views/layout/Nav.html:21
-		qw422016.E().S(ps.SearchPath)
+			qw422016.E().S(ps.SearchPath)
 //line views/layout/Nav.html:21
-		qw422016.N().S(`" class="search" title="search">
+			qw422016.N().S(`" class="search" title="search">
     <input id="search-input" type="search" name="q" placeholder=" " />
     <div class="search-image" style="display: none;"><svg><use xlink:href="#svg-searchbox" /></svg></div>
   </form>
 `)
 //line views/layout/Nav.html:25
-	}
+		}
 //line views/layout/Nav.html:25
-	qw422016.N().S(`  `)
+		qw422016.N().S(`  `)
 //line views/layout/Nav.html:26
-	StreamHelp(qw422016, as, ps)
+		StreamHelp(qw422016, as, ps)
 //line views/layout/Nav.html:26
-	qw422016.N().S(`
+		qw422016.N().S(`
   `)
 //line views/layout/Nav.html:27
-	StreamProfileLink(qw422016, as, ps)
+		StreamProfileLink(qw422016, as, ps)
 //line views/layout/Nav.html:27
-	qw422016.N().S(`
+		qw422016.N().S(`
 `)
 //line views/layout/Nav.html:28
-	if !ps.HideMenu {
+		if !ps.HideMenu {
 //line views/layout/Nav.html:28
-		qw422016.N().S(`  <input type="checkbox" id="menu-toggle-input" style="display: none;" />
+			qw422016.N().S(`  <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
   `)
 //line views/layout/Nav.html:31
-		StreamMenu(qw422016, ps)
+			StreamMenu(qw422016, ps)
 //line views/layout/Nav.html:31
-		qw422016.N().S(`
+			qw422016.N().S(`
 `)
 //line views/layout/Nav.html:32
-	}
+		}
 //line views/layout/Nav.html:32
-	qw422016.N().S(`</nav>`)
+		qw422016.N().S(`</nav>`)
+//line views/layout/Nav.html:33
+	}
 //line views/layout/Nav.html:33
 }
 
