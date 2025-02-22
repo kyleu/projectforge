@@ -19,7 +19,23 @@
   <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
   <link rel="icon" href="{%s assets.URL(`logo.svg`) %}" type="image/svg+xml">
   <style>
-    {%s= thm.CSS(2) %}  </style>
+    {%s= thm.CSS(2) %}  </style>{%- if ps.HideHeader && ps.HideMenu -%}{%= inlineResources() %}{%- else -%}
   {%s= assets.StylesheetElement(`client.css`) %}{% if !ps.NoScript %}
-  {%s= assets.ScriptElement(`client.js`, false) %}{% endif %}
+  {%s= assets.ScriptElement(`client.js`, false) %}{% endif %}{%- endif -%}
 {% endfunc %}
+
+{% func inlineResources() %}{% stripspace %}
+  {% code
+    csv, err := assets.Embed("client.css")
+    if err != nil {
+      panic(err)
+    }
+    js, err := assets.Embed("client.js")
+    if err != nil {
+      panic(err)
+    }
+  %}
+  <style>{%s= string(csv.Bytes) %}</style>
+  <script>{%s= string(js.Bytes) %}</script>
+{% endstripspace %}{% endfunc %}
+

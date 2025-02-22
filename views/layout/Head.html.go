@@ -90,22 +90,28 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Head.html:22
 	qw422016.N().S(thm.CSS(2))
 //line views/layout/Head.html:22
-	qw422016.N().S(`  </style>
-  `)
+	qw422016.N().S(`  </style>`)
+//line views/layout/Head.html:22
+	if ps.HideHeader && ps.HideMenu {
+//line views/layout/Head.html:22
+		streaminlineResources(qw422016)
+//line views/layout/Head.html:22
+	} else {
+//line views/layout/Head.html:22
+		qw422016.N().S(`  `)
 //line views/layout/Head.html:23
-	qw422016.N().S(assets.StylesheetElement(`client.css`))
+		qw422016.N().S(assets.StylesheetElement(`client.css`))
 //line views/layout/Head.html:23
-	if !ps.NoScript {
+		if !ps.NoScript {
 //line views/layout/Head.html:23
-		qw422016.N().S(`
+			qw422016.N().S(`
   `)
 //line views/layout/Head.html:24
-		qw422016.N().S(assets.ScriptElement(`client.js`, false))
+			qw422016.N().S(assets.ScriptElement(`client.js`, false))
+//line views/layout/Head.html:24
+		}
 //line views/layout/Head.html:24
 	}
-//line views/layout/Head.html:24
-	qw422016.N().S(`
-`)
 //line views/layout/Head.html:25
 }
 
@@ -133,4 +139,55 @@ func Head(as *app.State, ps *cutil.PageState) string {
 //line views/layout/Head.html:25
 	return qs422016
 //line views/layout/Head.html:25
+}
+
+//line views/layout/Head.html:27
+func streaminlineResources(qw422016 *qt422016.Writer) {
+//line views/layout/Head.html:29
+	csv, err := assets.Embed("client.css")
+	if err != nil {
+		panic(err)
+	}
+	js, err := assets.Embed("client.js")
+	if err != nil {
+		panic(err)
+	}
+
+//line views/layout/Head.html:37
+	qw422016.N().S(`<style>`)
+//line views/layout/Head.html:38
+	qw422016.N().S(string(csv.Bytes))
+//line views/layout/Head.html:38
+	qw422016.N().S(`</style><script>`)
+//line views/layout/Head.html:39
+	qw422016.N().S(string(js.Bytes))
+//line views/layout/Head.html:39
+	qw422016.N().S(`</script>`)
+//line views/layout/Head.html:40
+}
+
+//line views/layout/Head.html:40
+func writeinlineResources(qq422016 qtio422016.Writer) {
+//line views/layout/Head.html:40
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/layout/Head.html:40
+	streaminlineResources(qw422016)
+//line views/layout/Head.html:40
+	qt422016.ReleaseWriter(qw422016)
+//line views/layout/Head.html:40
+}
+
+//line views/layout/Head.html:40
+func inlineResources() string {
+//line views/layout/Head.html:40
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/layout/Head.html:40
+	writeinlineResources(qb422016)
+//line views/layout/Head.html:40
+	qs422016 := string(qb422016.B)
+//line views/layout/Head.html:40
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/layout/Head.html:40
+	return qs422016
+//line views/layout/Head.html:40
 }
