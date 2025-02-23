@@ -59,7 +59,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				x += ":" + cfg.GetStringOpt("phase")
 			}
 			if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] action for all projects", x)); page != nil {
-				return controller.Render(r, as, page, ps, "projects", "Audit**"+actT.Icon)
+				return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 			}
 		}
 

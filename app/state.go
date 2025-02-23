@@ -66,3 +66,28 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
 	return s.Services.Close(ctx, logger)
 }
+
+func Bootstrap(bi *BuildInfo, cfgDir string, port uint16, debug bool, logger util.Logger) (*State, error) {
+	fs, err := filesystem.NewFileSystem(cfgDir, false, "")
+	if err != nil {
+		return nil, err
+	}
+
+	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	st, err := NewState(debug, bi, fs, !telemetryDisabled, port, logger)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
+	defer span.Complete()
+	t := util.TimerStart()
+	svcs, err := NewServices(ctx, st, logger)
+	if err != nil {
+		return nil, err
+	}
+	logger.Debugf("created app state in [%s]", util.MicrosToMillis(t.End()))
+	st.Services = svcs
+
+	return st, nil
+}

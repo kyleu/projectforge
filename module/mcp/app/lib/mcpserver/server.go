@@ -5,7 +5,14 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
+	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/util"
+)
+
+var (
+	BuildInfo *app.BuildInfo
+	ConfigDir string
+	Debug     bool
 )
 
 type Server struct {

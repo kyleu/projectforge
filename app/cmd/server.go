@@ -48,7 +48,7 @@ func startServer(flags *Flags) error {
 }
 
 func loadServer(flags *Flags, logger util.Logger) (*app.State, http.Handler, util.Logger, error) {
-	st, err := buildDefaultAppState(flags, logger)
+	st, err := app.Bootstrap(_buildInfo, _flags.ConfigDir, _flags.Port, _flags.Debug, logger)
 	if err != nil {
 		return nil, nil, logger, err
 	}
