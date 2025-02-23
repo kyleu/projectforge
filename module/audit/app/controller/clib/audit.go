@@ -25,7 +25,7 @@ func AuditList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(auditDefaultTitle, ret)
-		return controller.Render(r, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, "admin", "Audit")
+		return controller.Render(r, as, &vaudit.List{Models: ret, Params: ps.Params}, ps, keyAdmin, "Audit")
 	})
 }
 
@@ -40,7 +40,7 @@ func AuditDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child auditrecords")
 		}
-		return controller.Render(r, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(r, as, &vaudit.Detail{Model: ret, Params: ps.Params, Records: records}, ps, keyAdmin, auditBreadcrumb, ret.String())
 	})
 }
 
@@ -48,7 +48,7 @@ func AuditCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("audit.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &audit.Audit{}
 		ps.SetTitleAndData("Create [Audit]", ret)
-		return controller.Render(r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
+		return controller.Render(r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, keyAdmin, auditBreadcrumb, "Create")
 	})
 }
 
@@ -56,7 +56,7 @@ func AuditCreateFormRandom(w http.ResponseWriter, r *http.Request) {
 	controller.Act("audit.create.form.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := audit.Random()
 		ps.SetTitleAndData("Create Random [Audit]", ret)
-		return controller.Render(r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, "admin", auditBreadcrumb, "Create")
+		return controller.Render(r, as, &vaudit.Edit{Model: ret, IsNew: true}, ps, keyAdmin, auditBreadcrumb, "Create")
 	})
 }
 
@@ -82,7 +82,7 @@ func AuditEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit ["+ret.String()+"]", ret)
-		return controller.Render(r, as, &vaudit.Edit{Model: ret}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(r, as, &vaudit.Edit{Model: ret}, ps, keyAdmin, auditBreadcrumb, ret.String())
 	})
 }
 
@@ -132,7 +132,7 @@ func RecordDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(ret.String(), ret)
-		return controller.Render(r, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, "admin", auditBreadcrumb, ret.String())
+		return controller.Render(r, as, &vaudit.RecordDetail{Model: ret, Audit: aud}, ps, keyAdmin, auditBreadcrumb, ret.String())
 	})
 }
 

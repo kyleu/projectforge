@@ -29,15 +29,15 @@
   {%- for _, arg := range columns -%}
     {%- switch arg.Type -%}
     {%- case "bool" -%}
-      {%= BoolTable(arg.Key, arg.Title, values.GetBoolOpt(arg.Key), 3, arg.Description) %}
+      {%= BoolTable(arg.Key, arg.TitleSafe(), values.GetBoolOpt(arg.Key), 3, arg.Description) %}
     {%- case "textarea" -%}
-      {%= TextareaTable(arg.Key, "", arg.Title, 12, values.GetStringOpt(arg.Key), 3, arg.Description) %}
+      {%= TextareaTable(arg.Key, "", arg.TitleSafe(), 12, values.GetStringOpt(arg.Key), 3, arg.Description) %}
     {%- case "number", "int" -%}
-      {%= IntTable(arg.Key, "", arg.Title, values.GetIntOpt(arg.Key), 3, arg.Description) %}
+      {%= IntTable(arg.Key, "", arg.TitleSafe(), values.GetIntOpt(arg.Key), 3, arg.Description) %}
     {%- case "float" -%}
-      {%= FloatTable(arg.Key, "", arg.Title, values.GetFloatOpt(arg.Key), 3, arg.Description) %}
+      {%= FloatTable(arg.Key, "", arg.TitleSafe(), values.GetFloatOpt(arg.Key), 3, arg.Description) %}
     {%- default -%}
-      {%= DatalistTable(arg.Key, "", arg.Title, values.GetStringOpt(arg.Key), arg.Choices, nil, 3, arg.Description) %}
+      {%= DatalistTable(arg.Key, "", arg.TitleSafe(), values.GetStringOpt(arg.Key), arg.Choices, nil, 3, arg.Description) %}
     {%- endswitch -%}
   {%- endfor -%}
 {% endstripspace %}{% endfunc %}

@@ -19,7 +19,7 @@ const socketIcon = "eye"
 
 func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState, path ...string) (string, error) {
 	bc := func(extra ...string) []string {
-		return append([]string{"admin", "Sockets||/admin/sockets"}, extra...)
+		return append([]string{keyAdmin, "Sockets||/admin/sockets"}, extra...)
 	}
 	if len(path) == 0 {
 		chans, conns, taps := as.Services.Socket.Status()

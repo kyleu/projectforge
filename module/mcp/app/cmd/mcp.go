@@ -18,16 +18,11 @@ func runMCP(ctx context.Context) error {
 	if err := initIfNeeded(); err != nil {
 		return err
 	}
-	mcpserver.BuildInfo = _buildInfo
-	mcpserver.ConfigDir = _flags.ConfigDir
-	mcpserver.Debug = _flags.Debug
-
+	mcpserver.InitMCP(_buildInfo, _flags.Debug)
 	mcp, err := mcpserver.NewServer(ctx, _version)
 	if err != nil {
 		return err
 	}
-	// $PF_SECTION_START(tools)$
-	// $PF_SECTION_END(tools)$
 	if err := mcp.Serve(ctx); err != nil {
 		return err
 	}

@@ -122,7 +122,7 @@ func argsAndCategory(r *http.Request) (util.ValueMap, string) {
 }
 
 func taskBC(t *task.Task, extra ...string) []string {
-	ret := []string{"admin", "Tasks||/admin/task**task"}
+	ret := []string{keyAdmin, "Tasks||/admin/task**task"}
 	if t != nil {
 		ret = append(ret, t.TitleSafe()+"||"+t.WebPath()+"**"+t.IconSafe())
 	}

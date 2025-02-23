@@ -10,10 +10,14 @@ import (
 )
 
 var (
-	BuildInfo *app.BuildInfo
-	ConfigDir string
-	Debug     bool
+	buildInfo *app.BuildInfo
+	debug     bool
 )
+
+func InitMCP(bi *app.BuildInfo, debug bool) {
+	buildInfo = bi
+	debug = debug
+}
 
 type Server struct {
 	MCP   *server.MCPServer
@@ -22,7 +26,10 @@ type Server struct {
 
 func NewServer(ctx context.Context, version string) (*Server, error) {
 	ms := server.NewMCPServer(util.AppName, version)
-	return &Server{MCP: ms, Tools: make(map[string]*Tool)}, nil
+	mcp := &Server{MCP: ms, Tools: make(map[string]*Tool)}
+	// $PF_SECTION_START(tools)$
+	// $PF_SECTION_END(tools)$
+	return mcp, nil
 }
 
 func (s *Server) AddTools(tools ...*Tool) error {

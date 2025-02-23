@@ -34,7 +34,7 @@ func DatabaseList(w http.ResponseWriter, r *http.Request) {
 			}
 			svcs[key] = svc
 		}
-		return controller.Render(r, as, &vdatabase.List{Keys: keys, Services: svcs}, ps, "admin", "Database")
+		return controller.Render(r, as, &vdatabase.List{Keys: keys, Services: svcs}, ps, keyAdmin, "Database")
 	})
 }
 
@@ -109,5 +109,5 @@ func getDatabaseService(r *http.Request) (*database.Service, error) {
 }
 
 func databaseBC(key string, args ...string) []string {
-	return append([]string{"admin", "Database||/admin/database", fmt.Sprintf("%s||%s%s", key, dbRoute, key)}, args...)
+	return append([]string{keyAdmin, "Database||/admin/database", fmt.Sprintf("%s||%s%s", key, dbRoute, key)}, args...)
 }

@@ -16,7 +16,7 @@ type FieldDesc struct {
 	Choices     []string `json:"choices,omitempty"`
 }
 
-func (d FieldDesc) Parse(q any) (any, error) {
+func (d *FieldDesc) Parse(q any) (any, error) {
 	switch d.Type {
 	case "bool", "boolean":
 		return ParseBool(q, "", true)
@@ -35,6 +35,13 @@ func (d FieldDesc) Parse(q any) (any, error) {
 	default:
 		return nil, errors.Errorf("unable to parse [%s] value from string [%s]", d.Type, q)
 	}
+}
+
+func (d *FieldDesc) TitleSafe() string {
+	if d.Title != "" {
+		return d.Title
+	}
+	return d.Key
 }
 
 type FieldDescs []*FieldDesc

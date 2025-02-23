@@ -17,7 +17,7 @@ func ScheduleList(w http.ResponseWriter, r *http.Request) {
 		jobs := as.Services.Schedule.ListJobs()
 		ps.SetTitleAndData("Schedules", jobs)
 		ecs := as.Services.Schedule.ExecCounts
-		return controller.Render(r, as, &vadmin.Schedule{Jobs: jobs, ExecCounts: ecs}, ps, "admin", scheduleBC)
+		return controller.Render(r, as, &vadmin.Schedule{Jobs: jobs, ExecCounts: ecs}, ps, keyAdmin, scheduleBC)
 	})
 }
 
@@ -38,6 +38,6 @@ func ScheduleDetail(w http.ResponseWriter, r *http.Request) {
 
 		ps.SetTitleAndData(job.ID.String(), job)
 		page := &vadmin.ScheduleDetail{Job: job, Result: res, ExecCount: ec}
-		return controller.Render(r, as, page, ps, "admin", scheduleBC, job.ID.String())
+		return controller.Render(r, as, page, ps, keyAdmin, scheduleBC, job.ID.String())
 	})
 }

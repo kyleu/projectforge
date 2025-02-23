@@ -157,23 +157,23 @@ func StreamTableEditorNoTable(qw422016 *qt422016.Writer, key string, columns []*
 //line views/components/edit/TableEdit.html:31
 		case "bool":
 //line views/components/edit/TableEdit.html:32
-			StreamBoolTable(qw422016, arg.Key, arg.Title, values.GetBoolOpt(arg.Key), 3, arg.Description)
+			StreamBoolTable(qw422016, arg.Key, arg.TitleSafe(), values.GetBoolOpt(arg.Key), 3, arg.Description)
 //line views/components/edit/TableEdit.html:33
 		case "textarea":
 //line views/components/edit/TableEdit.html:34
-			StreamTextareaTable(qw422016, arg.Key, "", arg.Title, 12, values.GetStringOpt(arg.Key), 3, arg.Description)
+			StreamTextareaTable(qw422016, arg.Key, "", arg.TitleSafe(), 12, values.GetStringOpt(arg.Key), 3, arg.Description)
 //line views/components/edit/TableEdit.html:35
 		case "number", "int":
 //line views/components/edit/TableEdit.html:36
-			StreamIntTable(qw422016, arg.Key, "", arg.Title, values.GetIntOpt(arg.Key), 3, arg.Description)
+			StreamIntTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetIntOpt(arg.Key), 3, arg.Description)
 //line views/components/edit/TableEdit.html:37
 		case "float":
 //line views/components/edit/TableEdit.html:38
-			StreamFloatTable(qw422016, arg.Key, "", arg.Title, values.GetFloatOpt(arg.Key), 3, arg.Description)
+			StreamFloatTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetFloatOpt(arg.Key), 3, arg.Description)
 //line views/components/edit/TableEdit.html:39
 		default:
 //line views/components/edit/TableEdit.html:40
-			StreamDatalistTable(qw422016, arg.Key, "", arg.Title, values.GetStringOpt(arg.Key), arg.Choices, nil, 3, arg.Description)
+			StreamDatalistTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetStringOpt(arg.Key), arg.Choices, nil, 3, arg.Description)
 //line views/components/edit/TableEdit.html:41
 		}
 //line views/components/edit/TableEdit.html:42
