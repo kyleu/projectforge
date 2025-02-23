@@ -1,4 +1,6 @@
 {% import (
+  "time"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
@@ -7,12 +9,16 @@
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
-{% code type About struct { layout.Basic } %}
+{% code type About struct {
+  layout.Basic
+  Version string
+  Started time.Time
+} %}
 
 {% func (p *About) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`app`, ps) %} {%s util.AppName %}</h3>
-    <em>v{%s as.BuildInfo.Version %}, started {%= view.TimestampRelative(&as.Started, false) %}</em>
+    <em>v{%s p.Version %}, started {%= view.TimestampRelative(&p.Started, false) %}</em>
   </div>
   <div class="card">
     <h3>About</h3>

@@ -54,7 +54,7 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 		dls := download.GetLinks(as.BuildInfo.Version)
 		data := util.ValueMap{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		ps.SetTitleAndData("Downloads", data)
-		page = &vsite.Download{Links: dls}
+		page = &vsite.Download{Links: dls, Version: as.BuildInfo.Version}
 	case keyInstall:
 		page, err = mdTemplate("This static page contains installation instructions", "installation.md", "code", ps)
 	case keyCustomizing:

@@ -9,6 +9,7 @@
 
 {% code type Settings struct {
   layout.Basic
+  BuildInfo *app.BuildInfo
 } %}
 
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
@@ -16,7 +17,7 @@
     {%- if util.AppSource != "" -%}
     <div class="right"><a target="_blank" rel="noopener noreferrer" href="{%s util.AppSource %}"><button>GitHub</button></a></div>
     {%- endif -%}
-    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGIcon(`cog`, ps) %} {%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    <h3 title="github:{%s p.BuildInfo.Commit %}">{%= components.SVGIcon(`cog`, ps) %} {%s util.AppName %} {%s p.BuildInfo.String() %}</h3>
     {%- if util.AppLegal != "" -%}
     <div class="mt">{%s= util.AppLegal %}</div>
     {%- endif -%}

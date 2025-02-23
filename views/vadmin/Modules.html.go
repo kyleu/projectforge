@@ -33,66 +33,67 @@ var (
 type Modules struct {
 	layout.Basic
 	Modules []*debug.Module
+	Version string
 }
 
-//line views/vadmin/Modules.html:17
+//line views/vadmin/Modules.html:18
 func (p *Modules) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Modules.html:17
+//line views/vadmin/Modules.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vadmin/Modules.html:19
+//line views/vadmin/Modules.html:20
 	qw422016.E().S(util.AppName)
-//line views/vadmin/Modules.html:19
+//line views/vadmin/Modules.html:20
 	qw422016.N().S(` v`)
-//line views/vadmin/Modules.html:19
-	qw422016.E().S(as.BuildInfo.Version)
-//line views/vadmin/Modules.html:19
+//line views/vadmin/Modules.html:20
+	qw422016.E().S(p.Version)
+//line views/vadmin/Modules.html:20
 	qw422016.N().S(`</div>
     <h3>`)
-//line views/vadmin/Modules.html:20
+//line views/vadmin/Modules.html:21
 	components.StreamSVGIcon(qw422016, `archive`, ps)
-//line views/vadmin/Modules.html:20
+//line views/vadmin/Modules.html:21
 	qw422016.N().S(` Go Modules</h3>
     `)
-//line views/vadmin/Modules.html:21
+//line views/vadmin/Modules.html:22
 	streammoduleTable(qw422016, p.Modules, ps)
-//line views/vadmin/Modules.html:21
+//line views/vadmin/Modules.html:22
 	qw422016.N().S(`
   </div>
 `)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 }
 
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 func (p *Modules) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 }
 
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 func (p *Modules) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 	return qs422016
-//line views/vadmin/Modules.html:23
+//line views/vadmin/Modules.html:24
 }
 
-//line views/vadmin/Modules.html:25
+//line views/vadmin/Modules.html:26
 func streammoduleTable(qw422016 *qt422016.Writer, mods []*debug.Module, ps *cutil.PageState) {
-//line views/vadmin/Modules.html:25
+//line views/vadmin/Modules.html:26
 	qw422016.N().S(`
     <div class="overflow full-width">
       <table class="mt">
@@ -104,58 +105,58 @@ func streammoduleTable(qw422016 *qt422016.Writer, mods []*debug.Module, ps *cuti
         </thead>
         <tbody>
 `)
-//line views/vadmin/Modules.html:35
+//line views/vadmin/Modules.html:36
 	for _, m := range mods {
-//line views/vadmin/Modules.html:35
+//line views/vadmin/Modules.html:36
 		qw422016.N().S(`          <tr>
             <td>`)
-//line views/vadmin/Modules.html:37
+//line views/vadmin/Modules.html:38
 		view.StreamURL(qw422016, "https://"+m.Path, m.Path, true, ps)
-//line views/vadmin/Modules.html:37
+//line views/vadmin/Modules.html:38
 		qw422016.N().S(`</td>
             <td title="`)
-//line views/vadmin/Modules.html:38
+//line views/vadmin/Modules.html:39
 		qw422016.E().S(m.Sum)
-//line views/vadmin/Modules.html:38
+//line views/vadmin/Modules.html:39
 		qw422016.N().S(`">`)
-//line views/vadmin/Modules.html:38
+//line views/vadmin/Modules.html:39
 		qw422016.E().S(m.Version)
-//line views/vadmin/Modules.html:38
+//line views/vadmin/Modules.html:39
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vadmin/Modules.html:40
+//line views/vadmin/Modules.html:41
 	}
-//line views/vadmin/Modules.html:40
+//line views/vadmin/Modules.html:41
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
 `)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 }
 
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 func writemoduleTable(qq422016 qtio422016.Writer, mods []*debug.Module, ps *cutil.PageState) {
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	streammoduleTable(qw422016, mods, ps)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 }
 
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 func moduleTable(mods []*debug.Module, ps *cutil.PageState) string {
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	writemoduleTable(qb422016, mods, ps)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 	return qs422016
-//line views/vadmin/Modules.html:44
+//line views/vadmin/Modules.html:45
 }

@@ -12,11 +12,12 @@
 {% code type Modules struct {
   layout.Basic
   Modules []*debug.Module
+  Version string
 } %}
 
 {% func (p *Modules) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right">{%s util.AppName %} v{%s as.BuildInfo.Version %}</div>
+    <div class="right">{%s util.AppName %} v{%s p.Version %}</div>
     <h3>{%= components.SVGIcon(`archive`, ps) %} Go Modules</h3>
     {%= moduleTable(p.Modules, ps) %}
   </div>

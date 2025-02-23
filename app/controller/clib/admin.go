@@ -26,7 +26,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 	controller.Act(key, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if len(path) == 0 {
 			ps.SetTitleAndData("Administration", "administration")
-			return controller.Render(r, as, &vadmin.Settings{}, ps, "admin")
+			return controller.Render(r, as, &vadmin.Settings{BuildInfo: as.BuildInfo}, ps, "admin")
 		}
 		ps.DefaultNavIcon = "cog"
 		switch path[0] {
@@ -69,7 +69,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 		case "modules":
 			di := util.DebugBuildInfo().Deps
 			ps.SetTitleAndData("Modules", di)
-			return controller.Render(r, as, &vadmin.Modules{Modules: di}, ps, "admin", "Modules**robot")
+			return controller.Render(r, as, &vadmin.Modules{Modules: di, Version: as.BuildInfo.Version}, ps, "admin", "Modules**robot")
 		case "request":
 			ps.SetTitleAndData("Request Debug", cutil.RequestCtxToMap(r, as, ps))
 			return controller.Render(r, as, &vadmin.Request{Req: r, Rsp: w}, ps, "admin", "Request**download")
