@@ -1,0 +1,10 @@
+{
+  "name": "MCP Server",
+  "icon": "gamepad",
+  "description": "Provides a CLI interface for running Model Context Protocol requests",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/mcp",
+  "technology": ["mcp"]
+}

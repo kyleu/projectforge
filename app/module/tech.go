@@ -18,6 +18,7 @@ var techLookup = map[string][]string{
 	"graphql-go":    {"graphql-go", "https://github.com/graphql-go/graphql", "graphql"},
 	"ios":           {"iOS", "https://www.apple.com/ios", "apple"},
 	"markdown":      {"Markdown", "https://en.wikipedia.org/wiki/Markdown"},
+	"mcp":           {"Model Context Protocol", "https://modelcontextprotocol.io", "gamepad"},
 	"mysql":         {"MySQL", "https://www.mysql.org"},
 	"notarytool":    {"notarytool", "https://developer.apple.com", "apple"},
 	"observable":    {"Observable", "https://observablehq.com/framework", "book"},
