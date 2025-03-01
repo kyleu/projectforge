@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -22,6 +23,7 @@ type Result struct {
 	Summary  string        `json:"summary,omitempty"`
 	Logs     []string      `json:"logs,omitempty"`
 	Data     any           `json:"data,omitempty"`
+	Tags     []string      `json:"tags,omitempty"`
 	Metadata util.ValueMap `json:"metadata,omitempty"`
 	Success  bool          `json:"success"`
 	Error    string        `json:"error,omitempty"`
@@ -54,6 +56,14 @@ func (r *Result) AddLogs(msgs ...string) {
 			fn("log", msg)
 		}
 	}
+}
+
+func (r *Result) AddTags(tags ...string) {
+	r.Tags = util.ArraySorted(lo.Uniq(append(r.Tags, tags...)))
+}
+
+func (r *Result) HasTag(tag string) bool {
+	return lo.Contains(r.Tags, tag)
 }
 
 func (r *Result) Complete(data any, errs ...error) *Result {

@@ -67,6 +67,12 @@ func (r Results) Statuses() ([]string, map[string]Results) {
 	return keys, m
 }
 
+func (r Results) AllTags() []string {
+	return util.ArraySorted(lo.Uniq(lo.FlatMap(r, func(x *Result, _ int) []string {
+		return x.Tags
+	})))
+}
+
 func (r Results) String() string {
 	return fmt.Sprintf("[%s]", strings.Join(lo.Map(r, func(x *Result, _ int) string {
 		return x.String()

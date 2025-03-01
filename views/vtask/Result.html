@@ -32,6 +32,10 @@
       <a href="#modal-result-{%s res.ID.String() %}" title="JSON"><button>{%= components.SVGButton(`code`, ps) %}</button></a>
     </div>
     <h3>{%= components.SVGIcon("cog", ps) %} {%s res.Task.TitleSafe() %} Result</h3>
+    {%- if len(res.Tags) > 0 -%}
+    <div class="clear"></div>
+    <div class="right mts">{%= view.Tags(res.Tags, nil) %}</div>
+    {%- endif -%}
     <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
     <div class="mt">
       {%= renderResult(res, as, ps) %}
@@ -56,6 +60,10 @@
       <a href="#modal-result" title="JSON"><button>{%= components.SVGButton(`code`, ps) %}</button></a>
     </div>
     <h3>{%= components.SVGIcon("cog", ps) %} {%s res.Task.TitleSafe() %} Result</h3>
+    {%- if len(res.Tags) > 0 -%}
+    <div class="clear"></div>
+    <div class="right mts">{%= view.Tags(res.Tags, nil) %}</div>
+    {%- endif -%}
     <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
     <div class="mt">
       {%= renderResult(res, as, ps) %}
