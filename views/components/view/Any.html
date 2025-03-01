@@ -70,13 +70,13 @@
       {%- else -%}
         {% code arr, extra := util.ArrayLimit(t, 8) %}
         {%- for idx, e := range arr -%}
-          <div class="flex bt">
-            <div class="mrs mts"><em>{%d idx + 1 %}</em></div>
-            <div class="">{%= Any(e, ps) %}</div>
+          <div class="flex bb">
+            <div class="mts mrs mbs"><em>{%d idx + 1 %}</em></div>
+            <div class="mts mbs">{%= Any(e, ps) %}</div>
           </div>
         {%- endfor -%}
         {% if extra > 0 %}
-          <div class="bb"><em>...and{% space %}{%d extra %}{% space %}more</em></div>
+          <div class="mts"><em>...and{% space %}{%d extra %}{% space %}more</em></div>
         {% endif %}
       {%- endif -%}
     {% case fmt.Stringer %}

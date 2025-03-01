@@ -34,6 +34,8 @@
 
 .tabs .input:checked + .label {
   background-color: var(--color-background);
+  border-left: var(--border);
+  border-right: var(--border);
 }
 
 .tabs .panel {
