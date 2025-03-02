@@ -17,7 +17,7 @@
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outFile": "../assets/{{{ .Key }}}.js",
+    "outFile": "../assets/client.js",
     "removeComments": true,
     "preserveConstEnums": true,
     "preserveWatchOutput": true,
