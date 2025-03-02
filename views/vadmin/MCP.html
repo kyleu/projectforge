@@ -1,0 +1,51 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/mcpserver"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/edit"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type MCP struct {
+  layout.Basic
+  Tools map[string]*mcpserver.Tool
+  Tool *mcpserver.Tool
+  Args util.ValueMap
+  Result string
+} %}
+
+{% func (p *MCP) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`chart`, ps) %} Model Context Protocol Tools</h3>
+    <ul class="mt">
+      {%- for _, k := range util.MapKeysSorted(p.Tools) -%}
+      {%- code t := p.Tools[k] -%}
+      <li>
+        <a href="/admin/mcp/tool/{%s t.Name %}"><strong>{%s t.Name %}</strong></a>
+        {%- if p.Tool == nil -%}
+        <div><em>{%s t.Description %}</em></div>
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {%- if p.Tool != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Tool.Name %}</h3>
+    <em>{%s p.Tool.Description %}</em>
+    <div class="mt">
+      {%= edit.TableEditor("args", p.Tool.Args, p.Args, "/admin/mcp/tool/" + p.Tool.Name, "post", "Run") %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if p.Result != "" -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`file`, ps) %} Result</h3>
+    <div class="mt">
+      <pre>{%s p.Result %}</pre>
+    </div>
+  </div>
+  {%- endif -%}
+{% endfunc %}

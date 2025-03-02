@@ -19,6 +19,7 @@ require (
 	github.com/gorilla/websocket v1.5.3
 	github.com/hexops/gotextdiff v1.0.3
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
+	github.com/mark3labs/mcp-go v0.9.0
 	github.com/mileusna/useragent v1.3.5
 	github.com/muesli/coral v1.0.0
 	github.com/muesli/gamut v0.3.1
