@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -23,10 +24,11 @@ var (
 )
 
 type Flags struct {
-	Address   string
-	Port      uint16
-	ConfigDir string
-	Debug     bool
+	Address    string
+	Port       uint16
+	ConfigDir  string
+	WorkingDir string
+	Debug      bool
 }
 
 func (f *Flags) Addr() string {
@@ -38,10 +40,11 @@ func (f *Flags) Addr() string {
 
 func (f *Flags) Clone(port uint16) *Flags {
 	return &Flags{
-		Address:   f.Address,
-		Port:      port,
-		ConfigDir: f.ConfigDir,
-		Debug:     f.Debug,
+		Address:    f.Address,
+		Port:       port,
+		ConfigDir:  f.ConfigDir,
+		WorkingDir: f.WorkingDir,
+		Debug:      f.Debug,
 	}
 }
 
@@ -56,6 +59,11 @@ func initIfNeeded() error {
 	}
 	if _buildInfo == nil {
 		return errors.New("no build info")
+	}
+	if _flags.WorkingDir != "" && _flags.WorkingDir != "." {
+		if err := os.Chdir(_flags.WorkingDir); err != nil {
+			return errors.Wrapf(err, "failed to change working directory to [%s]", _flags.WorkingDir)
+		}
 	}
 	if _flags.ConfigDir == "" {
 		_flags.ConfigDir = configdir.LocalConfig(util.AppName)
