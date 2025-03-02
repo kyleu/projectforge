@@ -11,6 +11,7 @@
     "jsxFactory": "JSX",{{{ end }}}
     "listFiles": false,
     "module": "none",
+    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitOverride": true,

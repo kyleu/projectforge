@@ -8,8 +8,6 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
     }
   };
 
-  let currRow: HTMLElement | null = null;
-
   const newRow = () => {
     if (terminal) {
       const row = document.createElement("tr");
@@ -18,14 +16,14 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
       const textTD = document.createElement("td");
       row.append(numTH, textTD);
       parentEl.append(row);
-      currRow = textTD;
-    } else {
-      const div = document.createElement("div");
-      parentEl.append(div);
-      currRow = div;
+      return textTD;
     }
+    const div = document.createElement("div");
+    parentEl.append(div);
+    return div;
   };
 
+  let currRow: HTMLElement | null = null;
   const r = (m: Message) => {
     if (m.cmd !== "output") {
       if (extraHandlers.length === 0) {
@@ -40,12 +38,12 @@ export function socketLog(debug: boolean, parentEl: HTMLElement, terminal: boole
     if (m.param.html === undefined) {
       console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
     }
-    const html = m.param.html;
+    const html = m.param.html as string[];
 
     let content = "";
     for (const x of html) {
       if (!currRow) {
-        newRow();
+        currRow = newRow();
       }
       if (x === "\n") {
         if (content === "") {

@@ -27,7 +27,7 @@ declare global {
       flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
       Socket: unknown;{{{ end }}}{{{ if .HasModule "process" }}}
-      socketLog: (debug: boolean, tbody: HTMLElement, url: string, extraHandlers: Array<(m: Message) => void>) => void;{{{ end }}}
+      socketLog: (debug: boolean, parentEl: HTMLElement, terminal: boolean, url: string, extraHandlers: Array<(m: Message) => void>) => void;{{{ end }}}
     };
     audit: (s: string, ...args: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any{{{ if .HasModule "jsx" }}}
     JSX: (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}

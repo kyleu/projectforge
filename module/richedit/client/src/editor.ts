@@ -11,7 +11,7 @@ function extractEditor(el: HTMLElement) {
   const columns: Column[] = JSON.parse(columnsStr.replace(/\\"/gu, "\""));
 
   const inp: HTMLTextAreaElement = req<HTMLTextAreaElement>("textarea", el);
-  let curr: unknown[] = JSON.parse(inp.value);
+  let curr: { [key: string]: unknown; }[] = JSON.parse(inp.value);
   if (curr === undefined || curr === null) {
     curr = [];
   }

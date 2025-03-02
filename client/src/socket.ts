@@ -3,7 +3,7 @@ let appUnloading = false;
 export type Message = {
   readonly channel: string;
   readonly cmd: string;
-  readonly param: unknown;
+  readonly param: { [key: string]: unknown };
 }
 
 function socketUrl(u?: string) {
