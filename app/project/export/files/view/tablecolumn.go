@@ -39,10 +39,6 @@ func getTableColumnString(m *model.Model, modelKey string, rels model.Relations,
 	if prefix != "" {
 		k = prefix + relModel.ProperPlural()
 	}
-	relTitles := relModel.Columns.WithTag("title")
-	if len(relTitles) == 0 {
-		relTitles = relModel.PKs()
-	}
 	if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
 		return fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper()), true, nil
 	}

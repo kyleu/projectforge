@@ -14,9 +14,9 @@ var (
 	debug     bool
 )
 
-func InitMCP(bi *app.BuildInfo, debug bool) {
+func InitMCP(bi *app.BuildInfo, dbg bool) {
 	buildInfo = bi
-	debug = debug
+	debug = dbg
 }
 
 type Server struct {
@@ -46,4 +46,8 @@ func (s *Server) AddTools(tools ...*Tool) error {
 
 func (s *Server) Serve(ctx context.Context) error {
 	return server.ServeStdio(s.MCP)
+}
+
+func MCPConfig() (*app.BuildInfo, bool) {
+	return buildInfo, debug
 }

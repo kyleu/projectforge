@@ -166,11 +166,9 @@ func (p *Params) Filtered(key string, available []string, logger util.Logger) *P
 			})
 			if containsCol {
 				allowed = append(allowed, o)
-			} else {
-				if logger != nil {
-					const msg = "no column [%s] for [%s] available in allowed columns [%s]"
-					logger.Warnf(msg, o.Column, p.Key, util.StringArrayOxfordComma(available, "and"))
-				}
+			} else if logger != nil {
+				const msg = "no column [%s] for [%s] available in allowed columns [%s]"
+				logger.Warnf(msg, o.Column, p.Key, util.StringArrayOxfordComma(available, "and"))
 			}
 		})
 		return &Params{Key: p.Key, Orderings: allowed, Limit: p.Limit, Offset: p.Offset}

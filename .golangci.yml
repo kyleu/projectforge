@@ -170,7 +170,7 @@ linters:
     # - structcheck # deprecated
     - stylecheck
     # - tagliatelle
-    - tenv
+    # - tenv
     - testpackage
     - thelper
     - tparallel
@@ -179,6 +179,7 @@ linters:
     # - unparam
     - unused
     - usestdlibvars
+    - usetesting
     # - varcheck # deprecated
     # - varnamelen
     - wastedassign

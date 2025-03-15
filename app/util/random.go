@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/samber/lo"
+	"github.com/samber/lo/mutable"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
@@ -93,7 +94,10 @@ func RandomURL() *url.URL {
 
 func RandomElements[T any](slice []T, idx int) []T {
 	if len(slice) <= idx {
-		return lo.Shuffle(slice)
+		x := make([]T, len(slice))
+		copy(slice, x)
+		mutable.Shuffle(x)
+		return x
 	}
 	return lo.Map(lo.Range(idx), func(_ int, _ int) T {
 		return slice[RandomInt(len(slice))]

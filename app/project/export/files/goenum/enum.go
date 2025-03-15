@@ -18,12 +18,10 @@ func Enum(e *enum.Enum, linebreak string) (*file.File, error) {
 	if e.Simple() {
 		g.AddBlocks(structSimple(e)...)
 	} else {
-		identity := "key"
 		identityProper := "Key"
 		identityFn := ""
 		if i := e.Config.GetStringOpt("identity"); i != "" {
-			identity = i
-			identityProper = util.StringToProper(identity)
+			identityProper = util.StringToProper(i)
 			identityFn = "By" + identityProper
 		}
 		g.AddBlocks(structComplex(e, identityProper, identityFn, g)...)

@@ -32,7 +32,7 @@ func EncryptMessage(key []byte, message string, logger Logger) (string, error) {
 		return "", errors.Wrap(err, "could not encrypt")
 	}
 
-	stream := cipher.NewCFBEncrypter(block, iv)
+	stream := cipher.NewCTR(block, iv)
 	stream.XORKeyStream(cipherText[aes.BlockSize:], byteMsg)
 
 	return base64.StdEncoding.EncodeToString(cipherText), nil
@@ -55,7 +55,7 @@ func DecryptMessage(key []byte, message string, logger Logger) (string, error) {
 	iv := cipherText[:aes.BlockSize]
 	cipherText = cipherText[aes.BlockSize:]
 
-	stream := cipher.NewCFBDecrypter(block, iv)
+	stream := cipher.NewCTR(block, iv)
 	stream.XORKeyStream(cipherText, cipherText)
 
 	return string(cipherText), nil

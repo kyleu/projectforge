@@ -33,6 +33,7 @@ require (
 	github.com/spf13/afero v1.12.0
 	github.com/uudashr/gocognit v1.2.0
 	github.com/valyala/quicktemplate v1.8.0
+	github.com/yuin/goldmark v1.4.13
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0
 	go.opentelemetry.io/otel v1.34.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.34.0
