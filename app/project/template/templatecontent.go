@@ -83,22 +83,22 @@ func (t *TemplateContext) IgnoredQuoted() string {
 }
 
 func (t *TemplateContext) TypeScriptProjectContent() string {
-	return strings.Join(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
+	ret := strings.Join(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
 		return strings.HasPrefix(x, "ts:")
 	}), func(x string, _ int) string {
-		return strings.Join([]string{
-			"",
-			"",
-			"esbuild.build({",
-			`  entryPoints: ["src/game/game.ts"],`,
-			"  bundle: true,",
-			"  minify: true,",
-			"  sourcemap: true,",
-			`  outfile: "../assets/game.js",`,
-			"  logLevel: \"info\"",
-			"});",
-		}, "\n")
+		x = strings.TrimPrefix(x, "ts:")
+		ss := util.NewStringSlice([]string{"", ""})
+		ss.Push("esbuild.build({")
+		ss.Pushf(`  entryPoints: ["src/%s/%s.ts"],`, x, x)
+		ss.Push("  bundle: true,")
+		ss.Push("  minify: true,")
+		ss.Push("  sourcemap: true,")
+		ss.Pushf(`  outfile: "../assets/%s.js",`, x)
+		ss.Push(`  logLevel: "info"`)
+		ss.Push("});")
+		return ss.Join("\n")
 	}), "\n")
+	return ret
 }
 
 func (t *TemplateContext) HasModules(keys ...string) bool {

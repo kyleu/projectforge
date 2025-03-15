@@ -8,7 +8,7 @@ cd "$dir/.."
 
 if [ -f ".env" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
-    if [[ ! $line =~ ^#.* ]]; then
+    if [[ -n "$line" && ! $line =~ ^#.* ]]; then
       export "${line?}"
     fi
   done < ".env"

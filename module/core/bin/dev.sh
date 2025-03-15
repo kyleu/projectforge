@@ -19,7 +19,7 @@ export {{{ .CleanKey }}}_encryption_key=TEMP_SECRET_KEY
 # include env file
 if [ -f ".env" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
-    if [[ ! $line =~ ^#.* ]]; then
+    if [[ -n "$line" && ! $line =~ ^#.* ]]; then
       export "${line?}"
     fi
   done < ".env"
