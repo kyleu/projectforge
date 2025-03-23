@@ -28,7 +28,7 @@ func ItemFromString(bc string, dflt string) *Item {
 		icon = bc[iconIdx+2:]
 		bc = bc[:iconIdx]
 	}
-	bcLink := ""
+	var bcLink string
 	if bci := strings.Index(bc, "||"); bci > -1 {
 		bcLink = bc[bci+2:]
 		bc = bc[:bci]

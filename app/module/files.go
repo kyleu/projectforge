@@ -60,14 +60,7 @@ func (s *Service) loadFiles(mod *Module, ret map[string]*file.File, isPrivate bo
 		if err != nil {
 			return err
 		}
-		pkg := ""
-		if f != "" {
-			spl := strings.Split(f, "/")
-			if len(spl) > 1 {
-				pkg = spl[len(spl)-2]
-			}
-		}
-		fl := file.NewFile(f, mode, b, pkg, logger)
+		fl := file.NewFile(f, mode, b)
 		ret[fl.FullPath()] = fl
 	}
 	return nil

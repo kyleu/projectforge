@@ -23,7 +23,7 @@ func Services(args *model.Args, linebreak string) (*file.File, error) {
 		g.AddImport(helper.AppImport(m.PackageWithGroup("")))
 	}
 
-	svcSize := 0
+	var svcSize int
 	lo.ForEach(args.Models.WithService(), func(m *model.Model, _ int) {
 		if len(m.Proper()) > svcSize {
 			svcSize = len(m.Proper())

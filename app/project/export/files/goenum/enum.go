@@ -19,7 +19,7 @@ func Enum(e *enum.Enum, linebreak string) (*file.File, error) {
 		g.AddBlocks(structSimple(e)...)
 	} else {
 		identityProper := "Key"
-		identityFn := ""
+		var identityFn string
 		if i := e.Config.GetStringOpt("identity"); i != "" {
 			identityProper = util.StringToProper(i)
 			identityFn = "By" + identityProper

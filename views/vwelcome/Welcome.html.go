@@ -190,11 +190,11 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   </form>
   <script>
     function initWelcomeForm() {
-      var key = document.getElementById("welcome-key");
-      var homepage = document.getElementById("welcome-homepage");
-      var org = document.getElementById("welcome-org");
-      var pkg = document.getElementById("welcome-package");
-      var sourcecode = document.getElementById("welcome-sourcecode");
+      const key = document.getElementById("welcome-key");
+      const homepage = document.getElementById("welcome-homepage");
+      const org = document.getElementById("welcome-org");
+      const pkg = document.getElementById("welcome-package");
+      const sourcecode = document.getElementById("welcome-sourcecode");
       org.onchange = function() {
         if (pkg.value === "") {
           pkg.value = "github.com/" + org.value + "/" + key.value;
@@ -207,35 +207,34 @@ func (p *Welcome) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         }
       }
     }
-
     document.addEventListener("DOMContentLoaded", initWelcomeForm);
   </script>
 `)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 }
 
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 func (p *Welcome) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	p.StreamBody(qw422016, as, ps)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	qt422016.ReleaseWriter(qw422016)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 }
 
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 func (p *Welcome) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	p.WriteBody(qb422016, as, ps)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	qs422016 := string(qb422016.B)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 	return qs422016
-//line views/vwelcome/Welcome.html:101
+//line views/vwelcome/Welcome.html:100
 }

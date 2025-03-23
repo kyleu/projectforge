@@ -126,7 +126,7 @@ func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) 
 	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
 	ret.WF("func %s(w http.ResponseWriter, r *http.Request) {", name)
-	grpStr := ""
+	var grpStr string
 	if grp != nil {
 		grpStr = grp.Name + "."
 	}

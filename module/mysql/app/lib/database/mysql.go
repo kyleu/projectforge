@@ -31,7 +31,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	if x := util.GetEnv(prefix + cfgHost); x != "" {
 		h = x
 	}
-	p := 0
+	var p int
 	if x := util.GetEnv(prefix + cfgPort); x != "" {
 		px, _ := strconv.ParseInt(x, 10, 32)
 		p = int(px)
@@ -40,7 +40,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	if x := util.GetEnv(prefix + cfgUser); x != "" {
 		u = x
 	}
-	pw := ""
+	var pw string
 	if x := util.GetEnv(prefix + cfgPassword); x != "" {
 		pw = x
 	}
@@ -48,7 +48,7 @@ func MySQLParamsFromEnv(key string, defaultUser string, prefix string) *MySQLPar
 	if x := util.GetEnv(prefix + cfgDatabase); x != "" {
 		d = x
 	}
-	s := ""
+	var s string
 	if x := util.GetEnv(prefix + cfgSchema); x != "" {
 		s = x
 	}

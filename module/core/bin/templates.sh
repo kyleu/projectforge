@@ -13,7 +13,7 @@ function tmpl {
   if test -f "$ftgt"; then
     mv "$ftgt" "$fsrc"
   fi
-  qtc -ext $2 -dir "$1" 2> >(grep -v Compiling)
+  qtc -ext "$2" -dir "$1" 2> >(grep -v Compiling)
 }
 
 function check {
@@ -32,12 +32,12 @@ function check {
 
     if cmp -s "$fsrc" "$ftgt"; then
       if [ "$FORCE" = "force" ]; then
-        tmpl $1 $2
+        tmpl "$1" "$2"
       else
         rm "$ftgt"
       fi
     else
-      tmpl $1 $2
+      tmpl "$1" "$2"
     fi
   fi
 }

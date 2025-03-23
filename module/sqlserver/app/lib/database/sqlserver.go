@@ -34,7 +34,7 @@ func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLS
 	if x := util.GetEnv(prefix + cfgHost); x != "" {
 		h = x
 	}
-	p := 0
+	var p int
 	if x := util.GetEnv(prefix + cfgPort); x != "" {
 		px, _ := strconv.ParseInt(x, 10, 32)
 		p = int(px)

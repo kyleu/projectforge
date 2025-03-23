@@ -36,7 +36,7 @@ func (i *Import) WithAlias(a string) *Import {
 }
 
 func (i *Import) Render() string {
-	alias := ""
+	var alias string
 	if i.Alias != "" {
 		alias = i.Alias + " "
 	}

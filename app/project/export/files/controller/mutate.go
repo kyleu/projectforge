@@ -58,13 +58,15 @@ func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, mod
 
 	ret.W("\t\t}")
 
+	var bc string
 	if grp == nil {
 		ret.WF("\t\tps.SetTitleAndData(\"Create [%s]\", ret)", m.Proper())
 	} else {
+		bc = grp.BC()
 		ret.WF("\t\tps.SetTitleAndData(fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg), ret)", grp.TitleLower(), grp.Camel())
 	}
 	ret.W("\t\tps.Data = ret")
-	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), grp.BC())
+	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), bc)
 	ret.W("\t})")
 	ret.W("}")
 	return ret
@@ -105,14 +107,16 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 
 func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit", "form")
+	var bc string
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
+		bc = grp.BC()
 	}
 	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)
 	checkGrp(ret, grp)
 	ret.W("\t\tps.SetTitleAndData(\"Edit \"+ret.String(), ret)")
-	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), grp.BC())
+	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret}, ps, %s%s, ret.String())", prefix, m.Package, m.Breadcrumbs(), bc)
 	ret.W("\t})")
 	ret.W("}")
 	return ret

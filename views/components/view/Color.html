@@ -4,5 +4,5 @@
 ) %}
 
 {% func Color(clr string, cls string, ps *cutil.PageState) %}{% stripspace %}
-  <div style="background-color: {%s clr %}; color: {%s theme.TextColorFor(clr) %}" class="{%s cls %}">{%v clr %}</div>
+  <div style="background-color: {%s clr %}; color: {%s theme.TextColorFor(clr) %};" class="{%s cls %}">{%v clr %}</div>
 {% endstripspace %}{% endfunc %}

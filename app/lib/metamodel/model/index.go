@@ -20,7 +20,7 @@ type Index struct {
 }
 
 func (i *Index) SQL() string {
-	t := ""
+	var t string
 	if i.Unique {
 		t = " unique"
 	}

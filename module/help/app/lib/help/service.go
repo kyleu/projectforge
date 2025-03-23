@@ -37,7 +37,7 @@ func loadEntries(logger util.Logger) (Entries, error) {
 	if err != nil {
 		logger.Errorf("unable to build documentation menu: %+v", err)
 	}
-	hd, ft := "", ""
+	var hd, ft string
 	if slices.Contains(keys, "_header") {
 		hd, _ = help.Content("_header.md")
 	}
@@ -69,7 +69,7 @@ func entryFor(key string, hd string, ft string, indent int) (*Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	title := ""
+	var title string
 	if strings.HasPrefix(md, "#") {
 		if idx := strings.Index(md, "\n"); idx > -1 {
 			title = strings.TrimSpace(strings.ReplaceAll(md[:idx], "#", ""))

@@ -36,13 +36,13 @@ git fetch --tags
 TGT=${1-none}
 if [[ $TGT == "none" ]]; then
   TGT=$(git describe --match "v[0-9]*" --tags --abbrev=0 | sed -e 's/v//g')
-  TGT=$(echo ${TGT} | awk -F. -v OFS=. '{$NF++;print}')
+  TGT=$(echo "${TGT}" | awk -F. -v OFS=. '{$NF++;print}')
 fi
 if [[ ${TGT:0:1} == "v" ]]; then
   TGT="${TGT:1}"
 fi
 
-echo $TGT
+echo "$TGT"
 
 pat="^[0-9]"
 if [[ $TGT =~ $pat ]]; then

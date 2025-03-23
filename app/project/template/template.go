@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type TemplateContext struct {
+type Context struct {
 	Key         string            `json:"key"`
 	Name        string            `json:"name,omitempty"`
 	Exec        string            `json:"exec,omitempty"`
@@ -37,7 +37,7 @@ type TemplateContext struct {
 	Linebreak      string         `json:"-"`
 }
 
-func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOffsets map[string]int, linebreak string) *TemplateContext {
+func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOffsets map[string]int, linebreak string) *Context {
 	i := p.Info
 	if i == nil {
 		i = &project.Info{}
@@ -64,7 +64,7 @@ func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOff
 		cv = append(cv, p.Info.ConfigVars...)
 	}
 
-	ret := &TemplateContext{
+	ret := &Context{
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
 		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
 		Ignore: p.Ignore, IgnoreGrep: ignoreGrep, Modules: p.Modules, Tags: p.Tags,

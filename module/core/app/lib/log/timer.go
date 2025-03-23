@@ -6,7 +6,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type LogFn func(t *Timer, log string, elapsed int)
+type Fn func(t *Timer, log string, elapsed int)
 
 // Timer lets you measure laps. It is not safe for concurrent use.
 type Timer struct {
@@ -19,10 +19,10 @@ type Timer struct {
 	index       int
 	acc         int
 	persistLogs bool
-	fns         []LogFn
+	fns         []Fn
 }
 
-func NewTimer(key string, persistLogs bool, logger util.Logger, fns ...LogFn) *Timer {
+func NewTimer(key string, persistLogs bool, logger util.Logger, fns ...Fn) *Timer {
 	return &Timer{Key: key, Log: logger, Timer: util.TimerStart(), initial: util.TimerStart(), persistLogs: persistLogs, fns: fns}
 }
 

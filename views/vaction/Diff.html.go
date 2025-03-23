@@ -86,8 +86,6 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 		} else {
 //line views/vaction/Diff.html:47
 			view.StreamURL(qw422016, "/p/"+prjKey+"/fs/"+d.Path, d.Path, true, ps)
-//line views/vaction/Diff.html:47
-			qw422016.N().S(`</td>`)
 //line views/vaction/Diff.html:48
 		}
 //line views/vaction/Diff.html:48

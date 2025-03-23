@@ -19,7 +19,7 @@ var (
 	anchorMsg  = `%s ` + anchorIcon
 )
 
-func colRow(ind string, col *model.Column, u string, viewString string, pathKey string, link bool) string {
+func colRow(ind string, col *model.Column, u string, viewString string, link bool) string {
 	ret := viewString
 	if col.HasTag("title") {
 		ret = "<strong>" + ret + "</strong>"
@@ -38,7 +38,7 @@ func viewColumn(
 	rels := m.RelationsFor(col)
 	cv := col.ToGoViewString(modelKey, true, false, enums, key)
 	if len(rels) == 0 {
-		ret.W(colRow(ind, col, ModelLinkURL(m, modelKey, enums), cv, pathKey, link))
+		ret.W(colRow(ind, col, ModelLinkURL(modelKey), cv, link))
 		return
 	}
 

@@ -28,7 +28,7 @@ func table(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	if m.Columns.HasFormat(model.FmtCountry.Key) || m.Columns.HasFormat(model.FmtSI.Key) {
 		g.AddImport(helper.ImpAppUtil)
 	}
-	imps, err := helper.EnumImports(m.Columns.WithoutDisplays(util.KeyDetail).Types(), m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err := helper.EnumImports(m.Columns.WithoutDisplays(util.KeyDetail).Types(), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	restCols := xCols.WithoutTags("list-first")
 	summCols := append(slices.Clone(firstCols), restCols...)
 	ret := golang.NewBlock("Table", "func")
-	suffix := ""
+	var suffix string
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)

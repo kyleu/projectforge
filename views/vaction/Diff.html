@@ -44,7 +44,7 @@
               {%- if strings.Contains(d.Path, "..") || d.Status.Matches(diff.StatusNew) -%}
               {%s d.Path %}
               {%- else -%}
-              {%= view.URL("/p/" + prjKey + "/fs/" + d.Path, d.Path, true, ps) %}</td>
+              {%= view.URL("/p/" + prjKey + "/fs/" + d.Path, d.Path, true, ps) %}
               {%- endif -%}
             </td>
             <td>{%s d.Status.StringFor(act.Key) %}</td>

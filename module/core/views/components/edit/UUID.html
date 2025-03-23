@@ -7,7 +7,7 @@
 
 {% func UUID(key string, id string, value *uuid.UUID, placeholder ...string) %}{% stripspace %}
   {%- code
-    v := ""
+    var v string
     if value != nil {
       v = value.String()
     }

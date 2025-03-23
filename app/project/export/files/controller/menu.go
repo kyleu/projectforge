@@ -133,7 +133,7 @@ func menuItemForModel(m *model.Model, models model.Models, acronyms []string) *m
 }
 
 func menuSerialize(m *menu.Item, prefix string, top bool) []string {
-	ws := ""
+	var ws string
 	if !top {
 		ws = "\t"
 	}

@@ -33,7 +33,7 @@ var (
 	}
 )
 
-func (t *TemplateContext) servicesNames() ([]string, []string, int) {
+func (t *Context) servicesNames() ([]string, []string, int) {
 	var svcs []string
 	for _, key := range templateServicesOrder {
 		if t.HasModule(key) {
@@ -50,7 +50,7 @@ func (t *TemplateContext) servicesNames() ([]string, []string, int) {
 	return svcs, names, maxNameLength
 }
 
-func (t *TemplateContext) ServicesDefinition() string {
+func (t *Context) ServicesDefinition() string {
 	svcs, names, maxNameLength := t.servicesNames()
 	if len(svcs) == 0 {
 		return "type CoreServices struct{}"
@@ -66,7 +66,7 @@ func (t *TemplateContext) ServicesDefinition() string {
 	return ret.Join("\n")
 }
 
-func (t *TemplateContext) ServicesImports() string {
+func (t *Context) ServicesImports() string {
 	svcs, _, _ := t.servicesNames()
 	ret := &util.StringSlice{}
 	for _, svc := range svcs {
@@ -83,7 +83,7 @@ func (t *TemplateContext) ServicesImports() string {
 	return strings.TrimPrefix(ret.Join("\n"), "\t")
 }
 
-func (t *TemplateContext) ServicesConstructor() string {
+func (t *Context) ServicesConstructor() string {
 	svcs, names, maxNameLength := t.servicesNames()
 	if len(svcs) == 0 {
 		return "CoreServices{}"

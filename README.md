@@ -61,7 +61,7 @@ A project managed by Project Forge...
 | [Export](module/export/doc/module/export.md)                     | Generates code based on the project's schema                                                   |
 | [Expression](module/expression/doc/module/expression.md)         | Exposes CEL engine for evaluating arbitrary expressions                                        |
 | [Filesystem](module/filesystem/doc/module/filesystem.md)         | Provides an abstraction around local and remote filesystems                                    |
-| [Git](module/graphql/doc/module/git.md)                          | Helper classes for performing operations on git repositories                                   |
+| [Git](module/git/doc/module/git.md)                              | Helper classes for performing operations on git repositories                                   |
 | [GraphQL](module/graphql/doc/module/graphql.md)                  | Supports GraphQL APIs within your application                                                  |
 | [Help](module/help/doc/module/help.md)                           | Provides Markdown help files that integrate into the UI                                        |
 | [HTTP Archive](module/har/doc/module/har.md)                     | Provides classes for parsing HTTP Archive (*.har) files                                        |
@@ -89,7 +89,7 @@ A project managed by Project Forge...
 | [Search](module/search/doc/module/search.md)                     | Adds search facilities to the top-level navigation bar                                         |
 | [SQL Server](module/sqlserver/doc/module/sqlserver.md)           | Provides an API for accessing MSSQL databases                                                  |
 | [SQLite](module/sqlite/doc/module/sqlite.md)                     | Provides an API for accessing SQLite databases                                                 |
-| [Task](module/themecatalog/doc/module/task.md)                   | Provides an engine for executing and monitoring tasks                                          |
+| [Task](module/task/doc/module/task.md)                           | Provides an engine for executing and monitoring tasks                                          |
 | [Theme Catalog](module/themecatalog/doc/module/themecatalog.md)  | Includes a dozen default themes, and facilities to create additional                           |
 | [Types](module/types/doc/module/types.md)                        | Classes for representing common data types                                                     |
 | [Upgrade](module/upgrade/doc/module/upgrade.md)                  | Provides in-place version upgrades using GitHub Releases                                       |

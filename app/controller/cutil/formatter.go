@@ -81,7 +81,7 @@ func FormatString(content string, l chroma.Lexer, lineNumLinkAndTitle ...string)
 		ret = strings.ReplaceAll(ret, `<span class="err">$</span>`, `<span class="mi">$</span>`)
 	}
 	if len(lineNumLinkAndTitle) > 0 {
-		title := ""
+		var title string
 		if len(lineNumLinkAndTitle) > 1 {
 			title = lineNumLinkAndTitle[1]
 		}
@@ -140,7 +140,7 @@ func FormatMarkdownClean(s string, icon string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	title := ""
+	var title string
 	if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
 		if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
 			title = s[h1Idx+4 : h1EndIdx]

@@ -34,9 +34,9 @@ func (r *Result) WithError(err error) *Result {
 	msg := "error encountered"
 	if err != nil {
 		msg = err.Error()
-	}
-	if r.logger != nil {
-		r.logger.Warnf("action error: %+v", err.Error())
+		if r.logger != nil {
+			r.logger.Warnf("action error: %+v", err.Error())
+		}
 	}
 	r.Status = util.KeyError
 	r.Errors = append(r.Errors, msg)
@@ -98,7 +98,7 @@ func (r *Result) AsError() error {
 }
 
 func (r *Result) StatusLog() string {
-	fileCount := 0
+	var fileCount int
 	lo.ForEach(r.Modules, func(m *module.Result, _ int) {
 		lo.ForEach(m.Diffs, func(d *diff.Diff, _ int) {
 			if d.Status != diff.StatusSkipped {

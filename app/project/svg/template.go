@@ -16,7 +16,7 @@ func template(svgs SVGs, linebreak string) string {
 		out.WriteString(linebreak)
 	}
 
-	maxKeyLength := 0
+	var maxKeyLength int
 	var keys []string
 	lo.ForEach(svgs, func(svg *SVG, _ int) {
 		if len(svg.Key) > maxKeyLength {

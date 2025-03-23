@@ -10,8 +10,8 @@ echo "packaging modules..."
 
 function copyModule {
   echo "updating [$1] module"
-  cd $1
-  touch *
+  cd "$1"
+  touch -- *
   touch .*
   zip -q -r -X "../../build/dist/projectforge_module_$1.zip" .
   cd ..

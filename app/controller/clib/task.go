@@ -124,7 +124,7 @@ func argsAndCategory(r *http.Request) (util.ValueMap, string) {
 func taskBC(t *task.Task, extra ...string) []string {
 	ret := []string{keyAdmin, "Tasks||/admin/task**task"}
 	if t != nil {
-		ret = append(ret, t.TitleSafe()+"||"+t.WebPath()+"**"+t.IconSafe())
+		ret = append(ret, t.Breadcrumb())
 	}
 	return append(ret, extra...)
 }

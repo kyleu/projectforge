@@ -11,7 +11,7 @@
 {% func Summary(prj *project.Project, title string, args util.ValueMap, act *action.Type, ex exec.Execs, ps *cutil.PageState, path ...string) %}
   <div class="card">
     {%- code
-      q := ""
+      var q string
       if args != nil {
         q = args.GetStringOpt(`q`)
       }

@@ -35,7 +35,7 @@ func (s *Service) UserList(params *filter.Params) Statuses {
 	params = filter.ParamsWithDefaultOrdering("connection", params)
 	ret := make(Statuses, 0)
 	ret = append(ret, systemStatus)
-	idx := 0
+	var idx int
 	lo.ForEach(lo.Values(s.connections), func(conn *Connection, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret = append(ret, conn.ToStatus())
@@ -48,7 +48,7 @@ func (s *Service) UserList(params *filter.Params) Statuses {
 func (s *Service) ChannelList(params *filter.Params) []string {
 	params = filter.ParamsWithDefaultOrdering("channel", params)
 	ret := &util.StringSlice{}
-	idx := 0
+	var idx int
 	lo.ForEach(util.MapKeysSorted(s.channels), func(conn string, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret.Push(conn)

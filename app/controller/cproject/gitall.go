@@ -65,7 +65,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				page := &vpage.Args{URL: url, Directions: "Choose your options", Results: argRes, Hidden: hidden}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")
 			}
-			results, err = gitHistoryAll(prjs, r, as, ps)
+			results, err = gitHistoryAll(prjs, r, ps)
 		case git.ActionMagic.Key:
 			argRes := util.FieldDescsCollect(r, gitMagicArgs)
 			if argRes.HasMissing() {
@@ -76,7 +76,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 				page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Hidden: hidden, Warning: warning}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")
 			}
-			results, err = gitMagicAll(prjs, r, as, ps)
+			results, err = gitMagicAll(prjs, r, ps)
 		case git.ActionUndoCommit.Key:
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 				return git.NewService(prj.Key, prj.Path).UndoCommit(ps.Context, ps.Logger)
@@ -101,7 +101,7 @@ func gitAll(prjs project.Projects, f func(prj *project.Project) (*git.Result, er
 	return results, util.ErrorMerge(errs...)
 }
 
-func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (git.Results, error) {
+func gitHistoryAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) (git.Results, error) {
 	path := r.URL.Query().Get("path")
 	since, _ := util.TimeFromString(r.URL.Query().Get("since"))
 	authors := util.StringSplitAndTrim(r.URL.Query().Get("authors"), ",")
@@ -113,7 +113,7 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, as *app.State, ps *cu
 	})
 }
 
-func gitMagicAll(prjs project.Projects, r *http.Request, as *app.State, ps *cutil.PageState) (git.Results, error) {
+func gitMagicAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) (git.Results, error) {
 	message := r.URL.Query().Get("message")
 	dryRun := cutil.QueryStringBool(r, "dryRun")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {

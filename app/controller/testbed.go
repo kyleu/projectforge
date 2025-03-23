@@ -23,7 +23,7 @@ var (
 
 func Testbed(w http.ResponseWriter, r *http.Request) {
 	Act("testbed", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key := ""
+		var key string
 		var param any
 		var ret any
 		frm, _ := cutil.ParseForm(r, ps.RequestBody)
@@ -65,7 +65,7 @@ func md(as *app.State, ps *cutil.PageState) any {
 	svc := markdown.NewService()
 	data := []byte("# Hello!\n\nTest Markdown")
 	ret := svc.Parse(data)
-	html := svc.HTML(ret, data, 0)
+	html := svc.HTML(ret, data)
 	return html
 }
 

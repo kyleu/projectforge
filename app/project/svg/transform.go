@@ -60,7 +60,7 @@ func Transform(tgt string, b []byte, url string) (*SVG, error) {
 }
 
 func transformNodes(nodes []xmlNode) (string, error) {
-	ret := ""
+	var ret string
 	for _, node := range nodes {
 		findAttr := func(k string) *xml.Attr {
 			for _, a := range node.Attrs {

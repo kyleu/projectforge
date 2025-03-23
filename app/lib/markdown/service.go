@@ -23,7 +23,7 @@ func (s *Service) Parse(data []byte) ast.Node {
 	return s.Parser.Parse(reader)
 }
 
-func (s *Service) HTML(n ast.Node, data []byte, depth int) string {
+func (s *Service) HTML(n ast.Node, data []byte) string {
 	switch n.Type() {
 	case ast.TypeDocument:
 		return fmt.Sprintf("Document: %s", string(n.Text(data)))

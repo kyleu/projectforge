@@ -24,7 +24,7 @@ func MarkdownTable(header []string, rows [][]string, linebreak string) (string, 
 	add := func(x []string) {
 		line := "| "
 		lo.ForEach(x, func(v string, vi int) {
-			mx := 0
+			var mx int
 			if vi < len(maxes) {
 				mx = maxes[vi]
 			}

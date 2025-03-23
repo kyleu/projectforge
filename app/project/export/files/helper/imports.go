@@ -54,10 +54,6 @@ func ViewImport(path string) *model.Import {
 	return &model.Import{Type: model.ImportTypeApp, Value: "{{{ .Package }}}/views/" + path}
 }
 
-func ImpSlicesForGo(v string) *model.Import {
-	return ImpSlices
-}
-
 func ImportsForTypes(ctx string, database string, ts ...types.Type) model.Imports {
 	return lo.FlatMap(ts, func(t types.Type, _ int) []*model.Import {
 		return importsForType(ctx, t, database)

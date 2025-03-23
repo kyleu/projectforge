@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (t *TemplateContext) CIContent() string {
+func (t *Context) CIContent() string {
 	if t.Info == nil {
 		return ""
 	}
@@ -28,7 +28,7 @@ func (t *TemplateContext) CIContent() string {
 	}
 }
 
-func (t *TemplateContext) ConfigVarsContent() string {
+func (t *Context) ConfigVarsContent() string {
 	ret, err := util.MarkdownTable([]string{"Name", "Type", "Description"}, t.ConfigVars.Array(t.Key), t.Linebreak)
 	if err != nil {
 		return "ERROR: " + err.Error()
@@ -36,7 +36,7 @@ func (t *TemplateContext) ConfigVarsContent() string {
 	return ret
 }
 
-func (t *TemplateContext) ExtraFilesContent() string {
+func (t *Context) ExtraFilesContent() string {
 	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
 		return ""
 	}
@@ -47,7 +47,7 @@ func (t *TemplateContext) ExtraFilesContent() string {
 	return ret.Join(t.Linebreak)
 }
 
-func (t *TemplateContext) ExtraFilesDocker() string {
+func (t *Context) ExtraFilesDocker() string {
 	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
 		return ""
 	}
@@ -57,14 +57,14 @@ func (t *TemplateContext) ExtraFilesDocker() string {
 	return strings.Join(ret, "")
 }
 
-func (t *TemplateContext) GoBinaryContent() string {
+func (t *Context) GoBinaryContent() string {
 	if t.Info == nil || t.Info.GoBinary == "" || t.Info.GoBinary == goStdBin {
 		return ""
 	}
 	return fmt.Sprintf("\n    gobinary: %q", t.Info.GoBinary)
 }
 
-func (t *TemplateContext) IgnoredSetting() string {
+func (t *Context) IgnoredSetting() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
@@ -73,7 +73,7 @@ func (t *TemplateContext) IgnoredSetting() string {
 	}), "\n")
 }
 
-func (t *TemplateContext) IgnoredQuoted() string {
+func (t *Context) IgnoredQuoted() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
@@ -82,7 +82,7 @@ func (t *TemplateContext) IgnoredQuoted() string {
 	}), "")
 }
 
-func (t *TemplateContext) TypeScriptProjectContent() string {
+func (t *Context) TypeScriptProjectContent() string {
 	ret := strings.Join(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
 		return strings.HasPrefix(x, "ts:")
 	}), func(x string, _ int) string {
@@ -101,32 +101,32 @@ func (t *TemplateContext) TypeScriptProjectContent() string {
 	return ret
 }
 
-func (t *TemplateContext) HasModules(keys ...string) bool {
+func (t *Context) HasModules(keys ...string) bool {
 	return lo.ContainsBy(keys, func(key string) bool {
 		return lo.Contains(t.Modules, key)
 	})
 }
 
-func (t *TemplateContext) HasModule(key string) bool {
+func (t *Context) HasModule(key string) bool {
 	return t.HasModules(key)
 }
 
-func (t *TemplateContext) Public() bool {
+func (t *Context) Public() bool {
 	return t.Build == nil || !t.Build.Private
 }
 
-func (t *TemplateContext) Private() bool {
+func (t *Context) Private() bool {
 	return t.Build == nil && t.Build.Private
 }
 
-func (t *TemplateContext) Acronyms() string {
+func (t *Context) Acronyms() string {
 	if t.Info == nil || len(t.Info.Acronyms) == 0 {
 		return ""
 	}
 	return strings.Join(util.StringArrayQuoted(t.Info.Acronyms), ", ")
 }
 
-func (t *TemplateContext) CoreStruct() string {
+func (t *Context) CoreStruct() string {
 	ret := &util.StringSlice{}
 	if t.HasModule("") {
 		ret.Push("...")

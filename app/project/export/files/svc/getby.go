@@ -71,7 +71,7 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	msg = fmt.Sprintf(msg, key, args, getSuffix(m), m.ProperPlural())
 	ret.W(msg)
 	ret.W("\tparams = filters(params)")
-	placeholder := ""
+	var placeholder string
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}

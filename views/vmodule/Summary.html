@@ -11,7 +11,7 @@
 {% func Summary(mod *module.Module, args util.ValueMap, ps *cutil.PageState, path ...string) %}
   <div class="card">
     {%- code
-      q := ""
+      var q string
       if args != nil {
         q = args.GetStringOpt(`q`)
       }

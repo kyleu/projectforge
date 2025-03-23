@@ -1,6 +1,6 @@
 package template
 
-func (t *TemplateContext) AuditData() string {
+func (t *Context) AuditData() string {
 	if t.SQLServer() {
 		return "[]any{a.ID.String(), a.App, a.Act, a.Client, a.Server, a.User, util.ToJSON(a.Metadata), a.Message, a.Started, a.Completed}"
 	}
@@ -10,7 +10,7 @@ func (t *TemplateContext) AuditData() string {
 	return "[]any{a.ID, a.App, a.Act, a.Client, a.Server, a.User, a.Metadata, a.Message, a.Started, a.Completed}"
 }
 
-func (t *TemplateContext) AuditRecordData() string {
+func (t *Context) AuditRecordData() string {
 	if t.SQLServer() {
 		return "[]any{a.ID.String(), a.AuditID.String(), a.T, a.PK, util.ToJSON(a.Changes), util.ToJSON(a.Metadata), a.Occurred}"
 	}

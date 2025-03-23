@@ -15,7 +15,7 @@ import (
 func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *model.Column, audit bool, prefix string) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, prefix, grp, util.KeyDetail)
-	grpHistory := ""
+	var grpHistory string
 	if grp != nil {
 		controllerArgFor(grp, ret, `""`, 2)
 		grpHistory = fmt.Sprintf(", %q", grp.Camel())
@@ -154,7 +154,7 @@ func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, 
 	argVals := make([]string, 0, len(rrels))
 	lo.ForEach(rrels, func(rrel *model.Relation, _ int) {
 		rm := models.Get(rrel.Table)
-		delSuffix := ""
+		var delSuffix string
 		if rm.IsSoftDelete() {
 			delSuffix = ", incDel"
 		}

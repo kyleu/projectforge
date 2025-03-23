@@ -54,7 +54,7 @@ func Service(m *model.Model, args *model.Args, linebreak string) (*file.File, er
 
 func typeAssert(g *golang.File, m *model.Model, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock("assert", "type")
-	suffix := ""
+	var suffix string
 	if m.IsSoftDelete() {
 		suffix += "SoftDelete"
 	}
@@ -110,7 +110,7 @@ func serviceStruct(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 
 func serviceNew(m *model.Model, isRO bool, isAudit bool) *golang.Block {
 	ret := golang.NewBlock("NewService", "func")
-	newSuffix, callSuffix := "", ""
+	var newSuffix, callSuffix string
 	if isRO {
 		newSuffix = ", dbRead *database.Service"
 		callSuffix = ", dbRead: dbRead"

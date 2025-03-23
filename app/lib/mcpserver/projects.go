@@ -19,7 +19,7 @@ var ProjectsTool = &Tool{
 	Fn: projectsHandler,
 }
 
-func projectsHandler(ctx context.Context, args util.ValueMap, req mcp.CallToolRequest) (string, error) {
+func projectsHandler(_ context.Context, args util.ValueMap, _ mcp.CallToolRequest) (string, error) {
 	id, _ := args.GetString("id", true)
 	logger, _ := log.InitLogging(false)
 	svc := project.NewService()

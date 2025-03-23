@@ -15,7 +15,7 @@ type File struct {
 	Content string              `json:"-"`
 }
 
-func NewFile(path string, mode filesystem.FileMode, b []byte, pkg string, logger util.Logger) *File {
+func NewFile(path string, mode filesystem.FileMode, b []byte) *File {
 	p, n := util.StringSplitPath(path)
 	return &File{Type: getType(n), Path: util.StringSplitPathAndTrim(p), Name: n, Mode: mode, Content: string(b)}
 }

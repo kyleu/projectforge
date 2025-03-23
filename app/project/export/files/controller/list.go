@@ -14,14 +14,14 @@ import (
 func controllerList(g *golang.File, m *model.Model, grp *model.Column, models model.Models, enums enum.Enums, prefix string) (*golang.Block, error) {
 	ret := blockFor(m, prefix, grp, "list")
 	meth := "List"
-	grpArgs := ""
+	var grpArgs string
 	if grp != nil {
 		meth = helper.TextGetBy + grp.Title()
 		grpArgs = helper.TextCommaSpace + grp.Camel() + helper.TextArg
 		controllerArgFor(grp, ret, `""`, 2)
 	}
 
-	suffix := ""
+	var suffix string
 	if m.IsSoftDelete() {
 		suffix = helper.TextCommaSpace + incDel
 	}
@@ -79,9 +79,9 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.WF("\t\t%sIDsBy%s := lo.Map(ret, func(x %s, _ int) %s {", relModel.Camel(), srcCol.Proper(), m.Pointer(), gt)
 		ret.WF("\t\t\treturn x.%s", srcCol.Proper())
 		ret.W("\t\t})")
-		suffix := ""
+		var sfx string
 		if relModel.IsSoftDelete() {
-			suffix = ", false"
+			sfx = ", false"
 		}
 		c := fmt.Sprintf("%sIDsBy%s", relModel.Camel(), srcCol.Proper())
 		if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
@@ -89,7 +89,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 			c = "util.ArrayDereference(" + c + ")"
 		}
 		call := "\t\t%sBy%s, err := as.Services.%s.GetMultiple(ps.Context, nil, nil%s, ps.Logger, %s...)"
-		ret.WF(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), suffix, c)
+		ret.WF(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), sfx, c)
 		ret.WE(2, `""`)
 
 		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper())
@@ -103,7 +103,11 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	}
 	ret.WF("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
 	render := "\t\treturn %sRender(r, as, page, ps, %s%s)"
-	ret.WF(render, prefix, m.Breadcrumbs(), grp.BC())
+	var bc string
+	if grp != nil {
+		bc = grp.BC()
+	}
+	ret.WF(render, prefix, m.Breadcrumbs(), bc)
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil

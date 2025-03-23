@@ -30,7 +30,7 @@ func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error)
 	}
 	g.AddImport(imps...)
 	g.AddImport(helper.ImpLo)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error)
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(g, m, args.Models, args.Enums, args.ExtraTypes, args.Database)
+	mrm, err := modelRowToModel(m, args.Models, args.Enums, args.ExtraTypes, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 }
 
 //nolint:gocognit
-func modelRowToModel(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, database string) (*golang.Block, error) {
+func modelRowToModel(m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, database string) (*golang.Block, error) {
 	ba := func(decoder string) string {
 		return "[]byte(" + decoder + ")"
 	}

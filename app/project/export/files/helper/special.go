@@ -52,7 +52,7 @@ func SpecialImports(cols model.Columns, pkg string, models model.Models, enums e
 	return ret, nil
 }
 
-func EnumImports(ts types.Types, pkg string, models model.Models, enums enum.Enums) (model.Imports, error) {
+func EnumImports(ts types.Types, pkg string, enums enum.Enums) (model.Imports, error) {
 	var ret model.Imports
 	for _, t := range ts {
 		switch t.Key() {

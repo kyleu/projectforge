@@ -15,8 +15,7 @@ import (
 func Routes(args *model.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
-	g.AddBlocks(routeConsts(g, args))
-	g.AddBlocks(routes(g, args))
+	g.AddBlocks(routeConsts(), routes(g, args))
 	lo.ForEach(args.Models.WithController().SortedRoutes(), func(m *model.Model, _ int) {
 		if len(m.Group) == 0 {
 			g.AddImport(helper.ImpAppController)
@@ -28,7 +27,7 @@ func Routes(args *model.Args, linebreak string) (*file.File, error) {
 	return g.Render(linebreak)
 }
 
-func routeConsts(g *golang.File, args *model.Args) *golang.Block {
+func routeConsts() *golang.Block {
 	ret := golang.NewBlock("routeConsts", "const")
 	ret.W(`const routeNew, routeRandom, routeEdit, routeDelete = "/_new", "/_random", "/edit", "/delete"`)
 	return ret

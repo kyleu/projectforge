@@ -21,23 +21,23 @@ func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, e
 		return nil, err
 	}
 	g.AddImport(imps...)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("map")...)
-	g.AddBlocks(modelToMap(g, m, args.Enums, args.Database))
-	if b, e := modelFromMap(g, m, args.Models, args.Enums, args.ExtraTypes, args.Database); e == nil {
+	g.AddBlocks(modelToMap(m))
+	if b, e := modelFromMap(g, m, args.Models, args.Enums, args.ExtraTypes); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return nil, e
 	}
-	g.AddBlocks(modelToOrderedMap(g, m, args.Enums, args.Database))
+	g.AddBlocks(modelToOrderedMap(m))
 	return g.Render(linebreak)
 }
 
-func modelToMap(g *golang.File, m *model.Model, enums enum.Enums, database string) *golang.Block {
+func modelToMap(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Package+"ToMap", "func")
 	ret.WF("func (%s *%s) ToMap() util.ValueMap {", m.FirstLetter(), m.Proper())
 	content := strings.Join(lo.Map(m.Columns, func(col *model.Column, _ int) string {
@@ -48,7 +48,7 @@ func modelToMap(g *golang.File, m *model.Model, enums enum.Enums, database strin
 	return ret
 }
 
-func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, database string) (*golang.Block, error) {
+func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models) (*golang.Block, error) {
 	cols := m.Columns.NotDerived().WithoutTags("created", "updated")
 	pks := cols.PKs()
 	nonPKs := cols.NonPKs()
@@ -89,7 +89,7 @@ func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enu
 	return ret, nil
 }
 
-func modelToOrderedMap(g *golang.File, m *model.Model, enums enum.Enums, database string) *golang.Block {
+func modelToOrderedMap(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Package+"ToOrderedMap", "func")
 	ret.WF("func (%s *%s) ToOrderedMap() *util.OrderedMap[any] {", m.FirstLetter(), m.Proper())
 	content := strings.Join(lo.Map(m.Columns, func(col *model.Column, _ int) string {

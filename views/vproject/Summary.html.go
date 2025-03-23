@@ -35,7 +35,7 @@ func StreamSummary(qw422016 *qt422016.Writer, prj *project.Project, title string
   <div class="card">
 `)
 //line views/vproject/Summary.html:14
-	q := ""
+	var q string
 	if args != nil {
 		q = args.GetStringOpt(`q`)
 	}

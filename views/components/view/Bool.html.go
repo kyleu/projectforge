@@ -73,7 +73,7 @@ func StreamBoolIcon(qw422016 *qt422016.Writer, b bool, size int, cls string, ps 
 	if cls == "" {
 		cls = "inline"
 	}
-	extra := ""
+	var extra string
 	switch len(titles) {
 	case 0:
 		if b {

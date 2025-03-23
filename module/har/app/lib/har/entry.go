@@ -59,7 +59,7 @@ func (e *Entry) Cleaned() *Entry {
 }
 
 func (e *Entry) ToRequest(ctx context.Context, ignoreCookies bool) (*http.Request, error) {
-	body := ""
+	var body string
 
 	if e.Request.PostData != nil {
 		if len(e.Request.PostData.Params) == 0 {

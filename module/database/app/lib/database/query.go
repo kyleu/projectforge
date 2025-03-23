@@ -136,14 +136,14 @@ func (s *Service) Get(ctx context.Context, row any, q string, tx *sqlx.Tx, logge
 	f := s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", row), q, logger, values)
 	if tx == nil {
 		err = s.db.GetContext(ctx, row, q, values...)
-		count := 0
+		var count int
 		if row != nil {
 			count = 1
 		}
 		defer f(count, "ran [get] query without transaction", err, row)
 	} else {
 		err = tx.GetContext(ctx, row, q, values...)
-		count := 0
+		var count int
 		if row != nil {
 			count = 1
 		}

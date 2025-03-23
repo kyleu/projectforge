@@ -34,7 +34,7 @@ func StreamColor(qw422016 *qt422016.Writer, clr string, cls string, ps *cutil.Pa
 //line views/components/view/Color.html:7
 	qw422016.E().S(theme.TextColorFor(clr))
 //line views/components/view/Color.html:7
-	qw422016.N().S(`" class="`)
+	qw422016.N().S(`;" class="`)
 //line views/components/view/Color.html:7
 	qw422016.E().S(cls)
 //line views/components/view/Color.html:7

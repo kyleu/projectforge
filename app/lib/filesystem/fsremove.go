@@ -32,10 +32,15 @@ func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 		dir, e := f.f.Open(p)
 		if e != nil && logger != nil {
 			logger.Warnf("cannot open path [%s] for removal: %+v", path, e)
+			return nil
+		}
+		if dir == nil {
+			return errors.Errorf("path [%s] does not exist", path)
 		}
 		files, e := dir.Readdir(0)
 		if e != nil && logger != nil {
 			logger.Warnf("cannot read path [%s] for removal: %+v", path, e)
+			return nil
 		}
 		for _, file := range files {
 			err = f.RemoveRecursive(filepath.Join(path, file.Name()), logger)

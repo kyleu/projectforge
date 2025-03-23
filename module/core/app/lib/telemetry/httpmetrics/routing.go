@@ -32,7 +32,7 @@ func (p *Metrics) WrapHandler(router *mux.Router) http.HandlerFunc {
 }
 
 func computeApproximateRequestSize(r *http.Request, out chan int) {
-	s := 0
+	var s int
 	if r.URL != nil {
 		s += len(r.URL.Path)
 		s += len(r.URL.Host)

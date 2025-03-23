@@ -65,7 +65,7 @@ func ArrayLimit[T any](x []T, limit int) ([]T, int) {
 }
 
 func StringArrayOxfordComma(names []string, separator string) string {
-	ret := ""
+	var ret string
 	lo.ForEach(names, func(name string, idx int) {
 		if idx > 0 {
 			if idx == (len(names) - 1) {

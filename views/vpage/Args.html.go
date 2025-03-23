@@ -59,7 +59,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`</h3>
 `)
 //line views/vpage/Args.html:25
-	onsubmit := ""
+	var onsubmit string
 	if p.Warning != "" {
 		onsubmit = fmt.Sprintf(` onsubmit="return confirm('%s')"`, strings.ReplaceAll(strings.ReplaceAll(p.Warning, "'", "\\'"), "\"", ""))
 	}
@@ -73,7 +73,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:30
 	qw422016.N().S(onsubmit)
 //line views/vpage/Args.html:30
-	qw422016.N().S(`">
+	qw422016.N().S(`>
 `)
 //line views/vpage/Args.html:31
 	for k, v := range p.Hidden {

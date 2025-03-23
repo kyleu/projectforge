@@ -12,101 +12,101 @@ import (
 
 const goStdBin, keyUser = "go", "user"
 
-func (t *TemplateContext) Title() string {
+func (t *Context) Title() string {
 	if t.Name != "" {
 		return t.Name
 	}
 	return t.Key
 }
 
-func (t *TemplateContext) CleanKey() string {
+func (t *Context) CleanKey() string {
 	return project.CleanKey(t.Key)
 }
 
-func (t *TemplateContext) CleanName() string {
+func (t *Context) CleanName() string {
 	return project.CleanKey(t.Name)
 }
 
-func (t *TemplateContext) NotebookPort() int {
+func (t *Context) NotebookPort() int {
 	return t.Port + 10
 }
 
-func (t *TemplateContext) KeyProper() string {
+func (t *Context) KeyProper() string {
 	return strings.ToUpper(t.Key[:1]) + t.Key[1:]
 }
 
-func (t *TemplateContext) NameCompressed() string {
+func (t *Context) NameCompressed() string {
 	return strings.ReplaceAll(t.Name, " ", "")
 }
 
-func (t *TemplateContext) SourceTrimmed() string {
+func (t *Context) SourceTrimmed() string {
 	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
 }
 
-func (t *TemplateContext) DangerousOK() bool {
+func (t *Context) DangerousOK() bool {
 	return !t.Build.SafeMode
 }
 
-func (t *TemplateContext) ModuleMarkdown() string {
+func (t *Context) ModuleMarkdown() string {
 	return strings.Join(util.ArraySorted(lo.Map(t.Modules, func(m string, _ int) string {
 		return fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m)
 	})), t.Linebreak)
 }
 
-func (t *TemplateContext) PortIncremented(i int) int {
+func (t *Context) PortIncremented(i int) int {
 	return t.Port + i
 }
 
-func (t *TemplateContext) BuildAndroid() bool {
+func (t *Context) BuildAndroid() bool {
 	ret := t.HasModules("android") && t.Build.Android
 	return ret
 }
 
-func (t *TemplateContext) BuildIOS() bool {
+func (t *Context) BuildIOS() bool {
 	return t.HasModules("ios") && t.Build.IOS
 }
 
-func (t *TemplateContext) BuildDesktop() bool {
+func (t *Context) BuildDesktop() bool {
 	return t.HasModules("desktop") && t.Build.Desktop
 }
 
-func (t *TemplateContext) BuildMobile() bool {
+func (t *Context) BuildMobile() bool {
 	return t.BuildIOS() || t.BuildAndroid()
 }
 
-func (t *TemplateContext) BuildWASM() bool {
+func (t *Context) BuildWASM() bool {
 	return t.HasModules("wasmserver") && t.Build.WASM
 }
 
-func (t *TemplateContext) BuildNotarize() bool {
+func (t *Context) BuildNotarize() bool {
 	return t.HasModules("notarize") && t.Build.Notarize
 }
 
-func (t *TemplateContext) UsesLib() bool {
+func (t *Context) UsesLib() bool {
 	return t.BuildMobile() || t.Build.Desktop
 }
 
-func (t *TemplateContext) HasSlack() bool {
+func (t *Context) HasSlack() bool {
 	return t.Info.Slack != ""
 }
 
-func (t *TemplateContext) HasAccount() bool {
+func (t *Context) HasAccount() bool {
 	return t.HasModules("oauth")
 }
 
-func (t *TemplateContext) HasUser() bool {
+func (t *Context) HasUser() bool {
 	return t.HasModules(keyUser)
 }
 
-func (t *TemplateContext) IsNotarized() bool {
+func (t *Context) IsNotarized() bool {
 	return t.HasModule("notarize") && t.Build != nil && t.Build.Notarize
 }
 
-func (t *TemplateContext) IsArmAndMips() bool {
+func (t *Context) IsArmAndMips() bool {
 	return t.Build.HasArm() && t.Build.LinuxMIPS
 }
 
-func (t *TemplateContext) DatabaseUIOpts() (bool, bool, bool) {
+func (t *Context) DatabaseUIOpts() (bool, bool, bool) {
 	cfg, _ := t.Config.GetMap("databaseui", true)
 	if len(cfg) == 0 {
 		return true, false, false
@@ -117,26 +117,26 @@ func (t *TemplateContext) DatabaseUIOpts() (bool, bool, bool) {
 	return sqleditor, readonly, saveuser
 }
 
-func (t *TemplateContext) DatabaseUISQLEditor() bool {
+func (t *Context) DatabaseUISQLEditor() bool {
 	sqleditor, _, _ := t.DatabaseUIOpts()
 	return sqleditor
 }
 
-func (t *TemplateContext) DatabaseUIReadOnly() bool {
+func (t *Context) DatabaseUIReadOnly() bool {
 	_, readonly, _ := t.DatabaseUIOpts()
 	return readonly
 }
 
-func (t *TemplateContext) DatabaseUISaveUser() bool {
+func (t *Context) DatabaseUISaveUser() bool {
 	_, _, saveUser := t.DatabaseUIOpts()
 	return saveUser
 }
 
-func (t *TemplateContext) GoVersionSafe() string {
+func (t *Context) GoVersionSafe() string {
 	return util.OrDefault(t.Info.GoVersion, project.DefaultGoVersion)
 }
 
-func (t *TemplateContext) GoMajorVersionSafe() string {
+func (t *Context) GoMajorVersionSafe() string {
 	v := util.OrDefault(t.Info.GoVersion, project.DefaultGoVersion)
 	if strings.Count(v, ".") <= 1 {
 		return v
@@ -144,11 +144,11 @@ func (t *TemplateContext) GoMajorVersionSafe() string {
 	return v[:strings.LastIndex(v, ".")]
 }
 
-func (t *TemplateContext) GoBinarySafe() string {
+func (t *Context) GoBinarySafe() string {
 	return util.OrDefault(t.Info.GoBinary, goStdBin)
 }
 
-func (t *TemplateContext) Placeholder(idx int) string {
+func (t *Context) Placeholder(idx int) string {
 	if t.DatabaseEngine == util.DatabasePostgreSQL || t.DatabaseEngine == util.DatabaseSQLite {
 		return fmt.Sprintf("$%d", idx)
 	}
@@ -158,33 +158,33 @@ func (t *TemplateContext) Placeholder(idx int) string {
 	return "?"
 }
 
-func (t *TemplateContext) TypeUUID() string {
+func (t *Context) TypeUUID() string {
 	if t.DatabaseEngine == util.DatabaseSQLite {
 		return "text"
 	}
 	return "uuid"
 }
 
-func (t *TemplateContext) HasExport() bool {
+func (t *Context) HasExport() bool {
 	return t.HasModules("export")
 }
 
-func (t *TemplateContext) MySQL() bool {
+func (t *Context) MySQL() bool {
 	return t.DatabaseEngine == util.DatabaseMySQL || t.HasModule(util.DatabaseMySQL)
 }
 
-func (t *TemplateContext) PostgreSQL() bool {
+func (t *Context) PostgreSQL() bool {
 	return t.DatabaseEngine == util.DatabasePostgreSQL || t.HasModule(util.DatabasePostgreSQL)
 }
 
-func (t *TemplateContext) SQLite() bool {
+func (t *Context) SQLite() bool {
 	return t.DatabaseEngine == util.DatabaseSQLite || t.HasModule(util.DatabaseSQLite)
 }
 
-func (t *TemplateContext) SQLServer() bool {
+func (t *Context) SQLServer() bool {
 	return t.DatabaseEngine == util.DatabaseSQLServer || t.HasModule(util.DatabaseSQLServer)
 }
 
-func (t *TemplateContext) SQLServerOnly() bool {
+func (t *Context) SQLServerOnly() bool {
 	return t.SQLServer() && !t.MySQL() && !t.PostgreSQL() && !t.SQLite()
 }

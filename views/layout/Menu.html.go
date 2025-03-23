@@ -424,7 +424,7 @@ func streammenuBadge(qw422016 *qt422016.Writer, i *menu.Item, indent int, ps *cu
 //line views/layout/Menu.html:115
 	if i.Badge != "" {
 //line views/layout/Menu.html:117
-		badgeTitle := ""
+		var badgeTitle string
 		if idx := strings.Index(i.Badge, "**"); idx > -1 {
 			badgeTitle = fmt.Sprintf(" title=%q", i.Badge[idx+2:])
 			i.Badge = i.Badge[:idx]

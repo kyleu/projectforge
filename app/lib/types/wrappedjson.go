@@ -27,7 +27,7 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	var wu wrappedUnmarshal
 	err := util.FromJSON(data, &wu)
 	if err != nil {
-		str := ""
+		var str string
 		newErr := util.FromJSON(data, &str)
 		if newErr != nil {
 			return err
@@ -66,17 +66,17 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 	case KeyList:
 		var tgt *List
 		tgt, err = util.FromJSONObj[*List](wu.T)
-		if tgt.V == nil {
+		if err == nil && tgt.V == nil {
 			tgt.V = NewAny()
 		}
 		t = tgt
 	case KeyMap:
 		var tgt *Map
 		tgt, err = util.FromJSONObj[*Map](wu.T)
-		if tgt.K == nil {
+		if err == nil && tgt.K == nil {
 			tgt.K = NewString()
 		}
-		if tgt.V == nil {
+		if err == nil && tgt.V == nil {
 			tgt.V = NewAny()
 		}
 		t = tgt

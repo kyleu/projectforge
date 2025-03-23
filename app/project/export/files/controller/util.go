@@ -42,7 +42,7 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 			return x.Camel() + helper.TextArg
 		}
 	})
-	suffix := ""
+	var suffix string
 	if m.IsSoftDelete() {
 		suffix = ", includeDeleted"
 		ret.W("\tincludeDeleted := " + incDel)

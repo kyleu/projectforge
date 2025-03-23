@@ -61,7 +61,7 @@ func (s *Service) Close() {
 var upgrader = websocket.Upgrader{EnableCompression: true}
 
 func (s *Service) Upgrade(
-	ctx context.Context, w http.ResponseWriter, r *http.Request, channel string,
+	_ context.Context, w http.ResponseWriter, r *http.Request, channel string,
 	profile *user.Profile, handler Handler, logger util.Logger,
 ) (uuid.UUID, error) {
 	conn, err := upgrader.Upgrade(w, r, nil)

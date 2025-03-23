@@ -114,7 +114,7 @@
 {% func menuBadge(i *menu.Item, indent int, ps *cutil.PageState) %}{% stripspace %}
   {% if i.Badge != "" %}
     {%- code
-      badgeTitle := ""
+      var badgeTitle string
       if idx := strings.Index(i.Badge, "**"); idx > -1 {
         badgeTitle = fmt.Sprintf(" title=%q", i.Badge[idx+2:])
         i.Badge = i.Badge[:idx]

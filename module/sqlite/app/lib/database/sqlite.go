@@ -38,11 +38,11 @@ func SQLiteParamsFromEnv(key string, prefix string) *SQLiteParams {
 	if x := util.GetEnv(prefix + cfgFile); x != "" {
 		key = x
 	}
-	u := ""
+	var u string
 	if x := util.GetEnv(prefix + cfgUser); x != "" {
 		u = x
 	}
-	p := ""
+	var p string
 	if x := util.GetEnv(prefix + cfgPassword); x != "" {
 		p = x
 	}

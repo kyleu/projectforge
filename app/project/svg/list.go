@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func List(prj string, fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
+func List(fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
 	files := fs.ListExtension("client/src/svg", "svg", nil, true, logger)
 	return lo.Map(files, func(key string, _ int) string {
 		return strings.TrimSuffix(key, util.ExtSVG)
@@ -30,7 +30,7 @@ func Remove(prj string, fs filesystem.FileLoader, key string, logger util.Logger
 }
 
 func Contents(key string, fs filesystem.FileLoader, logger util.Logger) ([]string, map[string]string, error) {
-	files, err := List(key, fs, logger)
+	files, err := List(fs, logger)
 	if err != nil {
 		return nil, nil, err
 	}

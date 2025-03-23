@@ -47,7 +47,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
 `)
 //line views/vbuild/DepMap.html:25
-	suffix := ""
+	var suffix string
 	if len(p.Tags) > 0 {
 		suffix = "&tags=" + strings.Join(p.Tags, ",")
 	}

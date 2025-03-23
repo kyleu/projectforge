@@ -156,7 +156,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	lo.ForEach(pks, func(pk *model.Column, _ int) {
 		pkVals = append(pkVals, helper.TextModelPrefix+pk.Proper())
 	})
-	placeholder := ""
+	var placeholder string
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
@@ -219,7 +219,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 	lo.ForEach(pks, func(pk *model.Column, _ int) {
 		pkVals = append(pkVals, helper.TextModelPrefix+pk.Proper())
 	})
-	placeholder := ""
+	var placeholder string
 	if database == util.DatabaseSQLServer {
 		placeholder = "@"
 	}
@@ -248,7 +248,7 @@ func serviceSave(g *golang.File, m *model.Model, audit bool) (*golang.Block, err
 		return nil, err
 	}
 	q := strings.Join(m.PKs().NamesQuoted(), ", ")
-	pkOpt := ""
+	var pkOpt string
 	ret.WF("\tq := database.SQLUpsert(tableQuoted%s, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Type)", pkOpt, q)
 	ret.WF("\tdata := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())
 	ret.W("\t\treturn model.ToData()")

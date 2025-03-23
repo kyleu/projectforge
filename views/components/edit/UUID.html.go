@@ -28,7 +28,7 @@ var (
 //line views/components/edit/UUID.html:8
 func StreamUUID(qw422016 *qt422016.Writer, key string, id string, value *uuid.UUID, placeholder ...string) {
 //line views/components/edit/UUID.html:10
-	v := ""
+	var v string
 	if value != nil {
 		v = value.String()
 	}

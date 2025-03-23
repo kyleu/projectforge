@@ -9,7 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type TaskFn func(ctx context.Context, res *Result, logger util.Logger) *Result
+type Fn func(ctx context.Context, res *Result, logger util.Logger) *Result
 
 type Task struct {
 	Key           string          `json:"key"`
@@ -23,10 +23,10 @@ type Task struct {
 	Expensive     bool            `json:"expensive,omitempty"`
 	WebURL        string          `json:"webURL,omitempty"`
 	MaxConcurrent int             `json:"maxConcurrent,omitempty"`
-	fns           []TaskFn
+	fns           []Fn
 }
 
-func NewTask(key string, title string, cat string, icon string, desc string, fns ...TaskFn) *Task {
+func NewTask(key string, title string, cat string, icon string, desc string, fns ...Fn) *Task {
 	if title == "" {
 		title = util.StringToTitle(key)
 	}
@@ -57,6 +57,10 @@ func (t *Task) WebPath() string {
 	return "/admin/task/" + t.Key
 }
 
+func (t *Task) Breadcrumb() string {
+	return fmt.Sprintf("%s||%s**%s", t.TitleSafe(), t.WebPath(), t.IconSafe())
+}
+
 func (t *Task) Clone() *Task {
 	return &Task{
 		Key: t.Key, Title: t.Title, Category: t.Category, Icon: t.Icon, Description: t.Description, Tags: t.Tags,
@@ -64,7 +68,7 @@ func (t *Task) Clone() *Task {
 	}
 }
 
-func (t *Task) WithFunction(fn TaskFn) *Task {
+func (t *Task) WithFunction(fn Fn) *Task {
 	ret := t.Clone()
 	ret.fns = append(ret.fns, fn)
 	return ret

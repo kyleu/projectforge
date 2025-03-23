@@ -15,17 +15,17 @@ import (
 
 func Profile(w http.ResponseWriter, r *http.Request) {
 	controller.Act("profile", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return profileAction(w, r, as, ps)
+		return profileAction(r, as, ps)
 	})
 }
 
 func ProfileSite(w http.ResponseWriter, r *http.Request) {
 	controller.ActSite("profile", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return profileAction(w, r, as, ps)
+		return profileAction(r, as, ps)
 	})
 }
 
-func profileAction(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
+func profileAction(r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	ps.SetTitleAndData("Profile", ps.Profile)
 	thm := as.Themes.Get(ps.Profile.Theme, ps.Logger)
 

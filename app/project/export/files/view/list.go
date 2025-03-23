@@ -53,7 +53,7 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 
 func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret := golang.NewBlock("ListBody", "func")
-	suffix := ""
+	var suffix string
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)
@@ -76,7 +76,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	ret.W(`    <div class="right mrs large-buttons">`)
 	if len(links) > 0 {
 		for _, link := range m.Links {
-			icon := ""
+			var icon string
 			if link.Icon != "" {
 				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%}", link.Icon)
 			}

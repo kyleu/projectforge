@@ -45,7 +45,7 @@ func FlashAndRedir(success bool, msg string, redir string, ps *cutil.PageState) 
 }
 
 func ReturnToReferrer(msg string, dflt string, ps *cutil.PageState) (string, error) {
-	refer := ""
+	var refer string
 	referX, ok := ps.Session[csession.ReferKey]
 	if ok {
 		refer, ok = referX.(string)

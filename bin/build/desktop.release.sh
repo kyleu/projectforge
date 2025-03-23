@@ -23,8 +23,8 @@ mkdir -p tmp/release
 cd "tmp/release"
 
 id=$(docker create projectforge)
-docker cp $id:/dist - > ./desktop.tar
-docker rm -v $id
+docker cp "$id":/dist - > ./desktop.tar
+docker rm -v "$id"
 tar -xvf "desktop.tar"
 rm "desktop.tar"
 

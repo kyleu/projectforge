@@ -85,7 +85,7 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 			if _, exists := ret.Get(k); exists {
 				continue
 			}
-			typ := ""
+			var typ string
 			switch x.(type) {
 			case string:
 				typ = types.KeyString

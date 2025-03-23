@@ -16,7 +16,7 @@ func ReplaceEnvVars(s string, logger Logger) string {
 			orig := s[sIdx : sIdx+eIdx+1]
 
 			n := orig[2 : len(orig)-1]
-			d := ""
+			var d string
 
 			dIdx := strings.Index(orig, "|")
 			if dIdx > -1 {

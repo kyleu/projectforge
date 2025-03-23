@@ -128,7 +128,7 @@ func (p *Params) GetOrdering(col string) *Ordering {
 
 func (p *Params) OrderByString() string {
 	ret := lo.Map(p.Orderings, func(o *Ordering, _ int) string {
-		dir := ""
+		var dir string
 		if !o.Asc {
 			dir = " desc"
 		}
@@ -181,7 +181,7 @@ func (p *Params) IsDefault() bool {
 }
 
 func (p *Params) String() string {
-	ol := ""
+	var ol string
 	if p.Offset > 0 {
 		ol += fmt.Sprintf("%d/", p.Offset)
 	}

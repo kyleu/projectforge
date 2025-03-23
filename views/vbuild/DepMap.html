@@ -22,7 +22,7 @@
 
 {% func (p *DepMap) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    suffix := ""
+    var suffix string
     if len(p.Tags) > 0 {
       suffix = "&tags=" + strings.Join(p.Tags, ",")
     }

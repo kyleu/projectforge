@@ -13,7 +13,7 @@ import (
 )
 
 func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
-	prefix := ""
+	var prefix string
 	if grp != nil {
 		prefix = "By" + grp.Proper()
 	}
@@ -46,7 +46,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	})
 
 	ret := golang.NewBlock("search", "func")
-	grpTxt := ""
+	var grpTxt string
 	if grp == nil {
 		wc := "(" + strings.Join(clauses, " or ") + ")"
 		ret.WF("const searchClause = `%s`", wc)
@@ -87,7 +87,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 }
 
 func serviceSearchEntries(m *model.Model, grp *model.Column, database string) (*golang.Block, error) {
-	prefix := ""
+	var prefix string
 	if grp != nil {
 		prefix = "By" + grp.Proper()
 	}

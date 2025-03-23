@@ -32,7 +32,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 		return nil, err
 	}
 	g.AddImport(imps...)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	g.AddImport(m.Imports.Supporting("model")...)
 
 	if !m.SkipController() {
-		g.AddBlocks(defaultRoute(m), routeMethod(m))
+		g.AddBlocks(defaultRoute(m), routeMethod())
 	}
 	g.AddBlocks(typeAssert(m))
 
@@ -103,7 +103,7 @@ func defaultRoute(m *model.Model) *golang.Block {
 	return ret
 }
 
-func routeMethod(m *model.Model) *golang.Block {
+func routeMethod() *golang.Block {
 	ret := golang.NewBlock("Route", "func")
 	ret.W("func Route(paths ...string) string {")
 	ret.W("\tif len(paths) == 0 {")

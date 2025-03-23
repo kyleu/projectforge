@@ -45,7 +45,7 @@ func markup(key string, bytes []byte) (string, error) {
 }
 
 func loadSVGs(prj string, fs filesystem.FileLoader, logger util.Logger) (SVGs, error) {
-	files, _ := List(prj, fs, logger)
+	files, _ := List(fs, logger)
 	svgs := make(SVGs, 0, len(files))
 	for _, f := range files {
 		s, err := Content(prj, fs, f)

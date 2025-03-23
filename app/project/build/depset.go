@@ -139,8 +139,8 @@ func setDepProcessLine(line string, curr map[string]map[string][]string, key str
 
 		if existing, ok := curr[dep.Key]; ok {
 			v := line[start : start+offset]
-			newVer := ""
-			newCount := 0
+			var newVer string
+			var newCount int
 			for kx, vx := range existing {
 				if len(vx) > newCount {
 					newCount = len(vx)

@@ -46,7 +46,7 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 			g.AddImport(helper.ViewImport(rm.PackageWithGroup("v")))
 		}
 	})
-	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Models, args.Enums)
+	imps, err := helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, err
 		g.AddImport(helper.AppImport("lib/audit"))
 		g.AddImport(helper.ViewImport("vaudit"))
 	}
-	vdb, err := exportViewDetailBody(g, m, rrs, args.Audit(m), args.Models, args.Enums)
+	vdb, err := exportViewDetailBody(m, rrs, args.Audit(m))
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Mod
 	return ret
 }
 
-func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relations, audit bool, models model.Models, enums enum.Enums) (*golang.Block, error) {
+func exportViewDetailBody(m *model.Model, rrs model.Relations, audit bool) (*golang.Block, error) {
 	ret := golang.NewBlock("DetailBody", "func")
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -140,7 +140,7 @@ func exportViewDetailBody(g *golang.Template, m *model.Model, rrs model.Relation
 				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
 			})
 			u := strings.ReplaceAll(link.URL, "{}", strings.Join(paths, "/"))
-			icon := ""
+			var icon string
 			if link.Icon != "" {
 				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
 			}

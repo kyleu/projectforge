@@ -23,15 +23,15 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 	if columns == "" {
 		columns = "*"
 	}
-	whereClause := ""
+	var whereClause string
 	if where != "" {
 		whereClause = whereC + where
 	}
-	groupByClause := ""
+	var groupByClause string
 	if groupBy != "" {
 		groupByClause = " group by " + groupBy
 	}
-	orderByClause := ""
+	var orderByClause string
 	if orderBy != "" {
 		orderByClause = " order by " + orderBy
 	}
@@ -51,8 +51,8 @@ func SQLSelectGrouped(columns string, tables string, where string, groupBy strin
 			return selectC + columns + fromC + tables + whereClause + groupByClause + orderByClause + offsetClause + limitClause
 		}
 	}
-	limitClause := ""
-	offsetClause := ""
+	var limitClause string
+	var offsetClause string
 	if limit > 0 {
 		limitClause = fmt.Sprintf(" limit %d", limit)
 	}
@@ -87,7 +87,7 @@ func SQLInsertReturning(table string, columns []string, rows int, returning []st
 }
 
 func SQLUpdate(table string, columns []string, where string, dbt *DBType) string {
-	whereClause := ""
+	var whereClause string
 	if where != "" {
 		whereClause = whereC + where
 	}
