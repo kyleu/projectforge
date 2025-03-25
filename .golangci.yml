@@ -1,95 +1,6 @@
-# Requires golangci-lint 1.49.0; `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
-issues:
-  max-issues-per-linter: 0
-  max-same-issues: 0
-  exclude-dirs:
-    - /data
-    - /module
-    - /testproject
-
-output:
-  sort-results: true
-
-linters-settings:
-  cyclop:
-    max-complexity: 32
-  dupl:
-    threshold: 512
-  exhaustive:
-    default-signifies-exhaustive: true
-  funlen:
-    lines: 100
-    statements: 100
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(projectforge.dev/projectforge)
-  goconst:
-    min-len: 2
-    min-occurrences: 2
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    disabled-checks:
-      - commentedOutCode
-      - hugeParam
-      - paramTypeCombine
-      - rangeValCopy
-      - typeDefFirst
-      - unnamedResult
-      - whyNoLint
-  gocyclo:
-    min-complexity: 30
-  goimports:
-    local-prefixes: projectforge.dev/projectforge
-  golint:
-    min-confidence: 0
-  gomnd:
-    checks:
-      - argument
-      - assign
-      - case
-      - condition
-      - operation
-      - return
-  gosec:
-    excludes:
-      - G115
-  govet:
-    settings:
-      printf:
-        funcs:
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
-  lll:
-    line-length: 160
-  maligned:
-    suggest-new: true
-  misspell:
-    locale: US
-  nestif:
-    min-complexity: 10
-  nolintlint:
-    allow-leading-space: false # don't require machine-readable nolint directives (i.e. with no leading space)
-    allow-unused: false # report any unused nolint directives
-    require-explanation: false # don't require an explanation for nolint directives
-    require-specific: true # don't require nolint directives to be specific about which linter is being skipped
-  revive:
-    rules:
-      - name: blank-imports
-        disabled: true
-  stylecheck:
-    checks: ["all", "-ST1003"]
-
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
     - asasalint
     - asciicheck
@@ -99,27 +10,18 @@ linters:
     - contextcheck
     - copyloopvar
     - cyclop
-    # - deadcode # deprecated
     - decorder
-    # - depguard
     - dogsled
-    # - dupl
     - durationcheck
     - err113
     - errcheck
     - errchkjson
     - errname
     - errorlint
-    # - execinquery # deprecated
     - exhaustive
-    # - exhaustivestruct # deprecated
-    # - exhaustruct
-    # - exportloopref # deprecated
     - forbidigo
     - forcetypeassert
     - funlen
-    - gci
-    # - gochecknoglobals
     - gochecknoinits
     - gocognit
     - goconst
@@ -127,34 +29,22 @@ linters:
     - gocyclo
     - godot
     - godox
-    - gofmt
-    - gofumpt
     - goheader
-    - goimports
-    # - gomnd
     - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
-    - gosimple
     - govet
     - grouper
-    # - ifshort # deprecated
     - importas
     - ineffassign
-    # - interfacebloat
-    # - interfacer # deprecated
-    # - ireturn
     - lll
     - maintidx
     - makezero
-    # - maligned # deprecated
     - misspell
     - nakedret
     - nestif
     - nilerr
-    # - nilnil
-    # - nlreturn
     - noctx
     - nolintlint
     - paralleltest
@@ -164,25 +54,113 @@ linters:
     - reassign
     - revive
     - rowserrcheck
-    # - scopelint # deprecated
     - sqlclosecheck
     - staticcheck
-    # - structcheck # deprecated
-    - stylecheck
-    # - tagliatelle
-    # - tenv
     - testpackage
     - thelper
     - tparallel
-    - typecheck
     - unconvert
-    # - unparam
     - unused
     - usestdlibvars
     - usetesting
-    # - varcheck # deprecated
-    # - varnamelen
     - wastedassign
-    # - whitespace # crashes with template files
-    # - wrapcheck
-    # - wsl # way too picky
+  settings:
+    cyclop:
+      max-complexity: 32
+    dupl:
+      threshold: 512
+    exhaustive:
+      default-signifies-exhaustive: true
+    funlen:
+      lines: 100
+      statements: 100
+    goconst:
+      min-len: 2
+      min-occurrences: 2
+    gocritic:
+      disabled-checks:
+        - commentedOutCode
+        - hugeParam
+        - paramTypeCombine
+        - rangeValCopy
+        - typeDefFirst
+        - unnamedResult
+        - whyNoLint
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+    gocyclo:
+      min-complexity: 30
+    gosec:
+      excludes:
+        - G115
+    govet:
+      settings:
+        printf:
+          funcs:
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+    lll:
+      line-length: 160
+    misspell:
+      locale: US
+    nestif:
+      min-complexity: 10
+    nolintlint:
+      require-explanation: false
+      require-specific: true
+      allow-unused: false
+    revive:
+      rules:
+        - name: blank-imports
+          disabled: true
+    staticcheck:
+      checks:
+        - -ST1003
+        - all
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - /data
+      - /module
+      - /testproject
+      - third_party$
+      - builtin$
+      - examples$
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(projectforge.dev/projectforge)
+    goimports:
+      local-prefixes:
+        - projectforge.dev/projectforge
+  exclusions:
+    generated: lax
+    paths:
+      - /data
+      - /module
+      - /testproject
+      - third_party$
+      - builtin$
+      - examples$
