@@ -130,10 +130,7 @@ linters:
       - common-false-positives
       - legacy
       - std-error-handling
-    paths:
-      - /data
-      - /module
-      - /testproject
+    paths:{{{ .IgnoredSetting }}}
       - third_party$
       - builtin$
       - examples$
