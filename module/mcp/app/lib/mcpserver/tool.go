@@ -2,7 +2,6 @@ package mcpserver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -37,11 +36,11 @@ func (t Tool) Handler() server.ToolHandlerFunc {
 	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		args := util.ValueMapFrom(req.Params.Arguments)
 		if t.Fn == nil {
-			return mcp.NewToolResultError(fmt.Sprintf("no handler for tool [%s]", t.Name)), nil
+			return nil, errors.Errorf("no handler for tool [%s]", t.Name)
 		}
 		ret, err := t.Fn(ctx, args, req)
 		if err != nil {
-			return mcp.NewToolResultError(fmt.Sprintf("errors running [%s] with arguments %s: %+v", t.Name, util.ToJSONCompact(args), err)), nil
+			return nil, errors.Errorf("errors running [%s] with arguments %s: %+v", t.Name, util.ToJSONCompact(args), err)
 		}
 		return mcp.NewToolResultText(ret), nil
 	}
