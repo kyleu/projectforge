@@ -1,0 +1,10 @@
+{
+  "name": "Grep Search",
+  "icon": "file",
+  "description": "Provides a mechanism for searching with ripgrep",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/grep",
+  "technology": ["ripgrep"]
+}
