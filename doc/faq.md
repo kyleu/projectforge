@@ -43,6 +43,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `filesystem`: An abstraction around local and remote filesystems
 - `git`: Helper classes for performing operations on git repositories
 - `graphql`: Supports GraphQL APIs within your application
+- `grep`: Provides a mechanism for searching with `ripgrep`
 - `har`: Utilities for working with HTTP Archive files
 - `help`: Markdown-backed help files that integrate into the UI
 - `ios`: Webview-based application and iOS build

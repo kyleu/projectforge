@@ -63,6 +63,7 @@ A project managed by Project Forge...
 | [Filesystem](module/filesystem/doc/module/filesystem.md)         | Provides an abstraction around local and remote filesystems                                    |
 | [Git](module/git/doc/module/git.md)                              | Helper classes for performing operations on git repositories                                   |
 | [GraphQL](module/graphql/doc/module/graphql.md)                  | Supports GraphQL APIs within your application                                                  |
+| [Grep Search](module/databaseui/doc/module/grep.md)              | Provides a mechanism for searching with ripgrep                                                |
 | [Help](module/help/doc/module/help.md)                           | Provides Markdown help files that integrate into the UI                                        |
 | [HTTP Archive](module/har/doc/module/har.md)                     | Provides classes for parsing HTTP Archive (*.har) files                                        |
 | [iOS App](module/ios/doc/module/ios.md)                          | Webview-based application and iOS build                                                        |

@@ -10,7 +10,6 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/lib/markdown"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vtest"
@@ -39,8 +38,6 @@ func Testbed(w http.ResponseWriter, r *http.Request) {
 			ret = strings.Join(echoModules(as.Services.Modules.ModulesVisible()), "\n")
 		case "openapi":
 			ret = openAPI(as, ps)
-		case "markdown":
-			ret = md(as, ps)
 		default:
 			return "", errors.Errorf("unhandled key [%s]", key)
 		}
@@ -59,14 +56,6 @@ func Testbed(w http.ResponseWriter, r *http.Request) {
 
 func openAPI(as *app.State, ps *cutil.PageState) any {
 	return as.Services.Projects.Projects().Get(util.AppKey)
-}
-
-func md(as *app.State, ps *cutil.PageState) any {
-	svc := markdown.NewService()
-	data := []byte("# Hello!\n\nTest Markdown")
-	ret := svc.Parse(data)
-	html := svc.HTML(ret, data)
-	return html
 }
 
 func echoModules(mods module.Modules) []string {
