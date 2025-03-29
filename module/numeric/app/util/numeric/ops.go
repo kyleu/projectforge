@@ -68,9 +68,9 @@ func (n Numeric) AbsLog10() float64 {
 }
 
 func (n Numeric) Pow(other Numeric) Numeric {
-	//UN-SAFETY: Accuracy not guaranteed beyond ~9~11 decimal places.
+	// UN-SAFETY: Accuracy not guaranteed beyond ~9~11 decimal places.
 
-	//Fast track: If (this.exponent*value) is an integer and mantissa^value fits in a Number, we can do a very fast method.
+	// Fast track: If (this.exponent*value) is an integer and mantissa^value fits in a Number, we can do a very fast method.
 	temp := float64(n.exponent) * other.ToFloat()
 	if isInteger(temp) && !math.IsInf(temp, 0) && math.Abs(temp) < ExpLimit {
 		newMantissa := math.Pow(n.mantissa, other.ToFloat())
@@ -79,16 +79,16 @@ func (n Numeric) Pow(other Numeric) Numeric {
 		}
 	}
 
-	//Same speed and usually more accurate. (An arbitrary-precision version of this calculation is used in break_break_infinity.js, sacrificing performance for utter accuracy.)
-	var newExponent = math.Trunc(temp)
-	var residue = temp - newExponent
+	// Same speed and usually more accurate. (An arbitrary-precision version of this calculation is used in break_break_infinity.js, sacrificing performance for utter accuracy.)
+	newExponent := math.Trunc(temp)
+	residue := temp - newExponent
 	newMantissa := math.Pow(10, other.ToFloat()*math.Log10(n.mantissa)+residue)
 	if !math.IsInf(newMantissa, 0) {
 		return normalize(newMantissa, int64(newExponent))
 	}
 
-	//UN-SAFETY: This should return NaN when mantissa is negative and value is noninteger.
-	var result = other.Multiply(FromFloat(n.AbsLog10())).Pow10() //this is 2x faster and gives same values AFAIK
+	// UN-SAFETY: This should return NaN when mantissa is negative and value is noninteger.
+	result := other.Multiply(FromFloat(n.AbsLog10())).Pow10() // this is 2x faster and gives same values AFAIK
 	if n.Sign() == -1 && FromFloat(math.Mod(other.ToFloat(), 2)).Equals(One) {
 		return result.Negate()
 	}
