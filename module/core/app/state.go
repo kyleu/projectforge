@@ -13,6 +13,7 @@ import (
 	"{{{ .Package }}}/app/lib/database"{{{ end }}}{{{ if .HasModule "filesystem" }}}
 	"{{{ .Package }}}/app/lib/filesystem"{{{ end }}}{{{ if .HasModule "graphql" }}}
 	"{{{ .Package }}}/app/lib/graphql"{{{ end }}}
+	"{{{ .Package }}}/app/lib/log"
 	"{{{ .Package }}}/app/lib/telemetry"
 	"{{{ .Package }}}/app/lib/theme"{{{ if .HasUser }}}
 	"{{{ .Package }}}/app/user"{{{ end }}}
@@ -153,4 +154,24 @@ func Bootstrap(bi *BuildInfo{{{ if .HasModule "filesystem" }}}, cfgDir string{{{
 	st.Services = svcs
 
 	return st, nil
+}
+
+func BootstrapRunDefault[T any](bi *BuildInfo, fn func(as *State, logger util.Logger) (T, error)) (T, error) {
+	logger, _ := log.InitLogging(false)
+	as, err := Bootstrap(bi{{{ if .HasModule "filesystem" }}}, util.ConfigDir{{{ end }}}, 0, false, logger)
+	if err != nil {
+		var dflt T
+		return dflt, err
+	}
+	ret, err := fn(as, logger)
+	if err != nil {
+		var dflt T
+		return dflt, err
+	}
+	err = as.Close(context.Background(), logger)
+	if err != nil {
+		var dflt T
+		return dflt, err
+	}
+	return ret, nil
 }

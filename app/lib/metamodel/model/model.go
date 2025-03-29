@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -45,8 +44,7 @@ func (m *Model) HasTag(t string) bool {
 
 func (m *Model) AddTag(t string) {
 	if !m.HasTag(t) {
-		m.Tags = append(m.Tags, t)
-		slices.Sort(m.Tags)
+		m.Tags = util.ArraySorted(append(m.Tags, t))
 	}
 }
 
@@ -139,7 +137,7 @@ func (m *Model) AllSearches(db string) []string {
 	if !m.HasTag("search") {
 		return m.Search
 	}
-	ret := util.NewStringSlice(slices.Clone(m.Search))
+	ret := util.NewStringSlice(util.ArrayCopy(m.Search))
 	lo.ForEach(m.Columns, func(c *Column, _ int) {
 		if c.Search {
 			x := fmt.Sprintf("%q", c.SQL())

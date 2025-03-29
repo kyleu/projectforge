@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"slices"
 	"strings"
 	"sync"
 
@@ -81,7 +80,7 @@ func (d DebugStatements) Add(st *DebugStatement) DebugStatements {
 func GetDebugStatements(key string) DebugStatements {
 	statementsMu.Lock()
 	defer statementsMu.Unlock()
-	return slices.Clone(statements[key])
+	return util.ArrayCopy(statements[key])
 }
 
 func GetDebugStatement(key string, idx int) *DebugStatement {

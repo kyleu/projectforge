@@ -38,7 +38,7 @@ func Imports(self string, fix bool, targetPath string, fs filesystem.FileLoader,
 }
 
 func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targetPath string) ([]string, diff.Diffs, error) {
-	if !(strings.HasSuffix(fn, util.ExtGo) || strings.HasSuffix(fn, util.ExtHTML)) {
+	if !strings.HasSuffix(fn, util.ExtGo) && !strings.HasSuffix(fn, util.ExtHTML) {
 		return nil, nil, nil
 	}
 	var ret diff.Diffs

@@ -75,8 +75,8 @@ func (r *Result) Merge(tgt *Result) *Result {
 		Status:   util.OrDefault(r.Status, tgt.Status),
 		Args:     r.Args.Merge(tgt.Args),
 		Modules:  append(append(module.Results{}, r.Modules...), tgt.Modules...),
-		Logs:     append(append([]string{}, r.Logs...), tgt.Logs...),
-		Errors:   append(append([]string{}, r.Errors...), tgt.Errors...),
+		Logs:     append(util.ArrayCopy(r.Logs), tgt.Logs...),
+		Errors:   append(util.ArrayCopy(r.Errors), tgt.Errors...),
 		Duration: r.Duration + tgt.Duration,
 		logger:   util.OrDefault(r.logger, tgt.logger),
 	}

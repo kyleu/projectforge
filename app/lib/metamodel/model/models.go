@@ -44,7 +44,7 @@ func (m Models) Sorted() Models {
 }
 
 func (m Models) SortedDisplay() Models {
-	ret := slices.Clone(m)
+	ret := util.ArrayCopy(m)
 	slices.SortFunc(ret, func(l *Model, r *Model) int {
 		if l.SortIndex == r.SortIndex {
 			return cmp.Compare(l.Name, r.Name)
@@ -55,7 +55,7 @@ func (m Models) SortedDisplay() Models {
 }
 
 func (m Models) SortedRoutes() Models {
-	ret := slices.Clone(m)
+	ret := util.ArrayCopy(m)
 	slices.SortFunc(ret, func(l *Model, r *Model) int {
 		return cmp.Compare(r.PackageWithGroup(""), l.PackageWithGroup(""))
 	})

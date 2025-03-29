@@ -6,226 +6,225 @@ package vadmin
 
 //line views/vadmin/Sitemap.html:1
 import (
-	"slices"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cmenu"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vadmin/Sitemap.html:12
+//line views/vadmin/Sitemap.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vadmin/Sitemap.html:12
+//line views/vadmin/Sitemap.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vadmin/Sitemap.html:12
+//line views/vadmin/Sitemap.html:11
 type Sitemap struct {
 	layout.Basic
 }
 
-//line views/vadmin/Sitemap.html:16
+//line views/vadmin/Sitemap.html:15
 func (p *Sitemap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:16
+//line views/vadmin/Sitemap.html:15
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vadmin/Sitemap.html:18
+//line views/vadmin/Sitemap.html:17
 	components.StreamSVGIcon(qw422016, `star`, ps)
-//line views/vadmin/Sitemap.html:18
+//line views/vadmin/Sitemap.html:17
 	qw422016.N().S(` Sitemap</h3>
     <div class="mt">
       `)
-//line views/vadmin/Sitemap.html:20
+//line views/vadmin/Sitemap.html:19
 	StreamSitemapDetail(qw422016, ps.Menu, 1, ps)
-//line views/vadmin/Sitemap.html:20
+//line views/vadmin/Sitemap.html:19
 	qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 }
 
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 func (p *Sitemap) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 }
 
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 func (p *Sitemap) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 	return qs422016
-//line views/vadmin/Sitemap.html:23
+//line views/vadmin/Sitemap.html:22
 }
 
-//line views/vadmin/Sitemap.html:25
+//line views/vadmin/Sitemap.html:24
 func StreamSitemapDetail(qw422016 *qt422016.Writer, m menu.Items, indent int, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:26
+//line views/vadmin/Sitemap.html:25
 	components.StreamIndent(qw422016, true, 1)
-//line views/vadmin/Sitemap.html:26
+//line views/vadmin/Sitemap.html:25
 	qw422016.N().S(`<div class="mt">`)
-//line views/vadmin/Sitemap.html:28
+//line views/vadmin/Sitemap.html:27
 	components.StreamIndent(qw422016, true, 2)
-//line views/vadmin/Sitemap.html:28
+//line views/vadmin/Sitemap.html:27
 	qw422016.N().S(`<ul class="level-0">`)
-//line views/vadmin/Sitemap.html:30
+//line views/vadmin/Sitemap.html:29
 	for _, i := range m {
-//line views/vadmin/Sitemap.html:31
+//line views/vadmin/Sitemap.html:30
 		if i.Key != "" {
-//line views/vadmin/Sitemap.html:32
+//line views/vadmin/Sitemap.html:31
 			streamsitemapItemDetail(qw422016, i, []string{}, ps.Breadcrumbs, 3, ps)
+//line views/vadmin/Sitemap.html:32
+		}
 //line views/vadmin/Sitemap.html:33
-		}
+	}
 //line views/vadmin/Sitemap.html:34
-	}
-//line views/vadmin/Sitemap.html:35
 	components.StreamIndent(qw422016, true, 2)
-//line views/vadmin/Sitemap.html:35
+//line views/vadmin/Sitemap.html:34
 	qw422016.N().S(`</ul>`)
-//line views/vadmin/Sitemap.html:37
+//line views/vadmin/Sitemap.html:36
 	components.StreamIndent(qw422016, true, 1)
-//line views/vadmin/Sitemap.html:37
+//line views/vadmin/Sitemap.html:36
 	qw422016.N().S(`</div>`)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 }
 
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 func WriteSitemapDetail(qq422016 qtio422016.Writer, m menu.Items, indent int, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	StreamSitemapDetail(qw422016, m, indent, ps)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 }
 
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 func SitemapDetail(m menu.Items, indent int, ps *cutil.PageState) string {
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	WriteSitemapDetail(qb422016, m, indent, ps)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 	return qs422016
-//line views/vadmin/Sitemap.html:39
+//line views/vadmin/Sitemap.html:38
 }
 
-//line views/vadmin/Sitemap.html:41
+//line views/vadmin/Sitemap.html:40
 func streamsitemapItemDetail(qw422016 *qt422016.Writer, i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:42
+//line views/vadmin/Sitemap.html:41
 	components.StreamIndent(qw422016, true, indent)
-//line views/vadmin/Sitemap.html:42
+//line views/vadmin/Sitemap.html:41
 	qw422016.N().S(`<li><div class="mts">`)
-//line views/vadmin/Sitemap.html:45
+//line views/vadmin/Sitemap.html:44
 	components.StreamIndent(qw422016, true, indent+1)
-//line views/vadmin/Sitemap.html:45
+//line views/vadmin/Sitemap.html:44
 	qw422016.N().S(`<a href="`)
-//line views/vadmin/Sitemap.html:46
+//line views/vadmin/Sitemap.html:45
 	qw422016.E().S(i.Route)
-//line views/vadmin/Sitemap.html:46
+//line views/vadmin/Sitemap.html:45
 	qw422016.N().S(`" title="`)
-//line views/vadmin/Sitemap.html:46
+//line views/vadmin/Sitemap.html:45
 	qw422016.E().S(i.Desc())
-//line views/vadmin/Sitemap.html:46
+//line views/vadmin/Sitemap.html:45
 	qw422016.N().S(`">`)
-//line views/vadmin/Sitemap.html:47
+//line views/vadmin/Sitemap.html:46
 	if i.Icon != "" {
-//line views/vadmin/Sitemap.html:48
+//line views/vadmin/Sitemap.html:47
 		components.StreamSVGRef(qw422016, i.Icon, 16, 16, "icon", ps)
-//line views/vadmin/Sitemap.html:48
+//line views/vadmin/Sitemap.html:47
 		qw422016.N().S(` `)
+//line views/vadmin/Sitemap.html:48
+	}
 //line views/vadmin/Sitemap.html:49
-	}
-//line views/vadmin/Sitemap.html:50
 	qw422016.E().S(i.Title)
-//line views/vadmin/Sitemap.html:50
+//line views/vadmin/Sitemap.html:49
 	qw422016.N().S(`</a><div><em>`)
-//line views/vadmin/Sitemap.html:52
+//line views/vadmin/Sitemap.html:51
 	qw422016.E().S(i.Desc())
-//line views/vadmin/Sitemap.html:52
+//line views/vadmin/Sitemap.html:51
 	qw422016.N().S(`</em></div>`)
-//line views/vadmin/Sitemap.html:53
+//line views/vadmin/Sitemap.html:52
 	if len(i.Children) > 0 {
-//line views/vadmin/Sitemap.html:53
+//line views/vadmin/Sitemap.html:52
 		qw422016.N().S(`<ul class="level-`)
-//line views/vadmin/Sitemap.html:54
+//line views/vadmin/Sitemap.html:53
 		qw422016.N().D(len(path))
-//line views/vadmin/Sitemap.html:54
+//line views/vadmin/Sitemap.html:53
 		qw422016.N().S(`">`)
-//line views/vadmin/Sitemap.html:55
+//line views/vadmin/Sitemap.html:54
 		for _, kid := range i.Children {
-//line views/vadmin/Sitemap.html:56
+//line views/vadmin/Sitemap.html:55
 			if kid.Key != "" {
+//line views/vadmin/Sitemap.html:56
+				streamsitemapItemDetail(qw422016, kid, append(util.ArrayCopy(path), i.Key), breadcrumbs, indent+2, ps)
 //line views/vadmin/Sitemap.html:57
-				streamsitemapItemDetail(qw422016, kid, append(slices.Clone(path), i.Key), breadcrumbs, indent+2, ps)
-//line views/vadmin/Sitemap.html:58
 			}
-//line views/vadmin/Sitemap.html:59
+//line views/vadmin/Sitemap.html:58
 		}
-//line views/vadmin/Sitemap.html:59
+//line views/vadmin/Sitemap.html:58
 		qw422016.N().S(`</ul>`)
-//line views/vadmin/Sitemap.html:61
+//line views/vadmin/Sitemap.html:60
 	}
-//line views/vadmin/Sitemap.html:61
+//line views/vadmin/Sitemap.html:60
 	qw422016.N().S(`</div>`)
-//line views/vadmin/Sitemap.html:63
+//line views/vadmin/Sitemap.html:62
 	components.StreamIndent(qw422016, true, indent)
-//line views/vadmin/Sitemap.html:63
+//line views/vadmin/Sitemap.html:62
 	qw422016.N().S(`</li>`)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 }
 
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 func writesitemapItemDetail(qq422016 qtio422016.Writer, i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	streamsitemapItemDetail(qw422016, i, path, breadcrumbs, indent, ps)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 }
 
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 func sitemapItemDetail(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) string {
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	writesitemapItemDetail(qb422016, i, path, breadcrumbs, indent, ps)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 	return qs422016
-//line views/vadmin/Sitemap.html:65
+//line views/vadmin/Sitemap.html:64
 }

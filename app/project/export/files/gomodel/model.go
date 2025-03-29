@@ -65,7 +65,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 	}
 	g.AddBlocks(str, c)
 
-	g.AddBlocks(modelClone(m), modelString(g, m), modelTitle(g, m))
+	g.AddBlocks(modelClone(g, m), modelString(g, m), modelTitle(g, m))
 	if len(m.PKs()) > 1 {
 		if pk, e := modelToPK(m, args.Enums); e == nil {
 			g.AddBlocks(pk)

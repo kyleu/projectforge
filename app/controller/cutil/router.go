@@ -42,9 +42,7 @@ func WireRouter(r *mux.Router, notFound http.HandlerFunc, logger util.Logger) (h
 func AddRoute(method string, path string) {
 	curr := AppRoutesList[method]
 	if !slices.Contains(curr, path) {
-		curr = append(curr, path)
-		slices.Sort(curr)
-		AppRoutesList[method] = curr
+		AppRoutesList[method] = util.ArraySorted(append(curr, path))
 	}
 }
 

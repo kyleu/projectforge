@@ -64,10 +64,10 @@ func (n Nodes) Get(pth ...string) *Node {
 }
 
 func (n Nodes) Merge(x Nodes) Nodes {
-	ret := slices.Clone(n)
+	ret := util.ArrayCopy(n)
 	for _, xn := range x {
 		if curr := ret.Get(xn.Name); curr != nil {
-			curr.Tags = lo.Uniq(append(slices.Clone(curr.Tags), xn.Tags...))
+			curr.Tags = lo.Uniq(append(util.ArrayCopy(curr.Tags), xn.Tags...))
 			if len(curr.Children) == 0 && len(xn.Children) > 0 {
 				curr.Children = xn.Children
 			} else {

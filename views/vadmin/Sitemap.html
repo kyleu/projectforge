@@ -1,10 +1,9 @@
 {% import (
-  "slices"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cmenu"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/menu"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -54,7 +53,7 @@
       <ul class="level-{%d len(path) %}">
         {% for _, kid := range i.Children %}
           {% if kid.Key != "" %}
-            {%= sitemapItemDetail(kid, append(slices.Clone(path), i.Key), breadcrumbs, indent + 2, ps) %}
+            {%= sitemapItemDetail(kid, append(util.ArrayCopy(path), i.Key), breadcrumbs, indent + 2, ps) %}
           {% endif %}
         {% endfor %}
       </ul>

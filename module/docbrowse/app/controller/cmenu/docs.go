@@ -32,10 +32,9 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 	if err != nil {
 		logger.Errorf("unable to build documentation menu: %+v", err)
 	}
-	slices.Sort(paths)
 
 	ret := &menu.Item{Key: "docs", Title: "Documentation", Icon: "folder"}
-	for _, p := range paths {
+	for _, p := range util.ArraySorted(paths) {
 		if p == "." || strings.HasPrefix(p, "module/") || !strings.HasSuffix(p, util.ExtMarkdown) {
 			continue
 		}

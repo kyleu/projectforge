@@ -21,7 +21,7 @@ func LoadDepsEasyMode(key string, fs filesystem.FileLoader) (Dependencies, error
 	lines := util.StringSplitLines(string(bytes))
 	ret := make(Dependencies, 0, len(lines))
 	for _, line := range lines {
-		if !(strings.HasPrefix(line, "\t") && strings.Contains(line, " v")) {
+		if !strings.HasPrefix(line, "\t") || !strings.Contains(line, " v") {
 			continue
 		}
 		start := strings.Index(line, " v")

@@ -11,13 +11,14 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type runFn func(ctx context.Context, st *app.State, logger util.Logger) (any, error)
+type runFn func(ctx context.Context, st *app.State, args util.ValueMap, logger util.Logger) (any, error)
 
 type Sandbox struct {
-	Key   string `json:"key,omitempty"`
-	Title string `json:"title,omitempty"`
-	Icon  string `json:"icon,omitempty"`
-	Run   runFn  `json:"-"`
+	Key   string          `json:"key,omitempty"`
+	Title string          `json:"title,omitempty"`
+	Icon  string          `json:"icon,omitempty"`
+	Args  util.FieldDescs `json:"args,omitempty"`
+	Run   runFn           `json:"-"`
 }
 
 type Sandboxes []*Sandbox

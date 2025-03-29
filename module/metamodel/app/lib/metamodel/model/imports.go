@@ -114,9 +114,9 @@ func (i Imports) renderByType(t ImportType) []string {
 
 func (i Imports) Add(imports ...*Import) Imports {
 	if i == nil {
-		return slices.Clone(imports)
+		return util.ArrayCopy(imports)
 	}
-	ret := slices.Clone(i)
+	ret := util.ArrayCopy(i)
 	lo.ForEach(imports, func(imp *Import, _ int) {
 		hit := lo.ContainsBy(ret, func(x *Import) bool {
 			return x.Value == imp.Value

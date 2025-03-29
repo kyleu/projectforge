@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"slices"
 	"strings"
 
 	"github.com/muesli/coral"
@@ -41,7 +40,7 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 		lo.ForEach(action.AllBuilds, func(x *action.Build, _ int) {
 			k := x.Key
 			fx := func(_ *coral.Command, args []string) error {
-				return actionF(ctx, t, append(slices.Clone(args), k))
+				return actionF(ctx, t, append(util.ArrayCopy(args), k))
 			}
 			ret.AddCommand(&coral.Command{Use: x.Key, Short: x.Description, RunE: fx})
 		})

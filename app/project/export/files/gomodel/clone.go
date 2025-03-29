@@ -8,22 +8,24 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func modelClone(m *model.Model) *golang.Block {
+func modelClone(g *golang.File, m *model.Model) *golang.Block {
 	ret := golang.NewBlock("Clone", "func")
 	ret.WF("func (%s *%s) Clone() *%s {", m.FirstLetter(), m.Proper(), m.Proper())
 	calls := lo.Map(m.Columns.NotDerived(), func(col *model.Column, _ int) string {
-		decl := col.Proper()
 		switch col.Type.Key() {
 		case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference:
-			decl += ".Clone()"
+			return fmt.Sprintf("%s.%s.Clone(),", m.FirstLetter(), col.Proper())
 		case types.KeyList:
-			decl += "[:]"
+			g.AddImport(helper.ImpAppUtil)
+			return fmt.Sprintf("util.ArrayCopy(%s.%s),", m.FirstLetter(), col.Proper())
+		default:
+			return fmt.Sprintf("%s.%s,", m.FirstLetter(), col.Proper())
 		}
-		return fmt.Sprintf("%s.%s,", m.FirstLetter(), decl)
 	})
 	lines := util.JoinLines(calls, " ", 120)
 	if len(lines) == 1 && len(lines[0]) < 100 {

@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/module"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vsite"
@@ -63,7 +64,7 @@ func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, 
 		return path, nil, err
 	}
 	u := mod.FeaturesFilePath()
-	bc := append([]string{}, path[:2]...)
+	bc := util.ArrayCopy(path[:2])
 	bc = append(bc, "Files||"+u)
 	lo.ForEach(path[3:], func(x string, _ int) {
 		u += "/" + x

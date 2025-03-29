@@ -2,10 +2,10 @@
 package user
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Users []*User
@@ -51,5 +51,5 @@ func (u Users) TitleStrings(nilTitle string) []string {
 }
 
 func (u Users) Clone() Users {
-	return slices.Clone(u)
+	return util.ArrayCopy(u)
 }

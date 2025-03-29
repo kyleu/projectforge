@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"projectforge.dev/projectforge/app/util"
@@ -36,7 +35,7 @@ func (x *Reference) From(v any) any {
 }
 
 func (x *Reference) Path() util.Pkg {
-	ret := slices.Clone(x.Pkg)
+	ret := util.ArrayCopy(x.Pkg)
 	return append(ret, strings.TrimPrefix(x.K, "*"))
 }
 

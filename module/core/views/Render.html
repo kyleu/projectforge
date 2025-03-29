@@ -1,6 +1,5 @@
 {% import (
   "fmt"
-  "slices"
   "strings"
 
   "{{{ .Package }}}/app"
@@ -50,10 +49,9 @@
 {% endstripspace %}{% endfunc %}
 
 {% func renderIcons(icons []string) %}{% stripspace %}
-  {%- code slices.Sort(icons) -%}
   {% if len(icons) > 0 %}
     <div class="icon-list" style="display: none;">{% newline %}
-      {% for _, icon := range icons %}
+      {% for _, icon := range util.ArraySorted(icons) %}
       {% space %}{% space %}{%= components.SVG(icon) %}{% newline %}
       {% endfor %}
     </div>{% newline %}

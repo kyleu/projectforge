@@ -131,8 +131,7 @@ func (c *Column) HasTag(t string) bool {
 
 func (c *Column) AddTag(t string) {
 	if !lo.Contains(c.Tags, t) {
-		c.Tags = append(c.Tags, t)
-		slices.Sort(c.Tags)
+		c.Tags = util.ArraySorted(append(c.Tags, t))
 	}
 }
 

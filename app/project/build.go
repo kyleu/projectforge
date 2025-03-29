@@ -52,12 +52,13 @@ func (b *Build) HasArm() bool {
 }
 
 func (b *Build) Empty() bool {
-	return !(b.Private || b.Changelog || b.TestsFail || b.NoScript || b.Simple ||
+	ret := b.Private || b.Changelog || b.TestsFail || b.NoScript || b.Simple ||
 		b.Desktop || b.Notarize || b.Signing || b.SafeMode ||
 		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos ||
 		b.FreeBSD || b.NetBSD || b.OpenBSD || b.Plan9 || b.Solaris ||
-		b.Homebrew || b.NFPMS || b.BOM || b.Snapcraft)
+		b.Homebrew || b.NFPMS || b.BOM || b.Snapcraft
+	return !ret
 }
 
 func (b *Build) ToMap() map[string]bool {

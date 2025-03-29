@@ -40,10 +40,10 @@ func typesCreate(enums enum.Enums, database string) *golang.Block {
 		lo.ForEach(e.Values, func(x *enum.Value, _ int) {
 			q = append(q, fmt.Sprintf("'%s'", strings.ReplaceAll(x.Key, "'", "''")))
 		})
-		switch {
-		case database == util.DatabaseSQLite:
+		switch database {
+		case util.DatabaseSQLite:
 			ret.WF(helper.TextSQLComment+"skipping definition of enum [%s], since SQLite does not support custom types", e.Name)
-		case database == util.DatabaseSQLServer:
+		case util.DatabaseSQLServer:
 			ret.WF(helper.TextSQLComment+"skipping definition of enum [%s], since SQL Server does not support custom types", e.Name)
 		default:
 			ret.W("do $$ begin")

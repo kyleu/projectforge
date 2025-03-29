@@ -36,7 +36,7 @@ func (d Diffs) String() string {
 }
 
 func (d Diffs) Sorted() Diffs {
-	ret := slices.Clone(d)
+	ret := ArrayCopy(d)
 	slices.SortFunc(ret, func(l *Diff, r *Diff) int {
 		return cmp.Compare(l.Path, r.Path)
 	})
@@ -90,7 +90,7 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 		rm := CastOK[Diffs](r)
 		lo.ForEach(t, func(v *Diff, idx int) {
 			rv := rm[idx]
-			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append([]string{}, path...)...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, ArrayCopy(path)...)...)
 		})
 	case int64:
 		i := CastOK[int64](r)
@@ -131,14 +131,14 @@ func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {
 	lo.ForEach(l, func(v any, idx int) {
 		if len(rm) > idx {
 			rv := rm[idx]
-			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(ArrayCopy(path), fmt.Sprint(idx))...)...)
 		} else {
-			ret = append(ret, DiffObjectsIgnoring(v, nil, ignored, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, nil, ignored, append(ArrayCopy(path), fmt.Sprint(idx))...)...)
 		}
 	})
 	if len(rm) > len(l) {
 		for i := len(l); i < len(rm); i++ {
-			ret = append(ret, DiffObjectsIgnoring(nil, rm[i], ignored, append(append([]string{}, path...), fmt.Sprint(i))...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, rm[i], ignored, append(ArrayCopy(path), fmt.Sprint(i))...)...)
 		}
 	}
 	return ret
@@ -155,14 +155,14 @@ func diffMaps(l map[string]any, r any, ignored []string, path ...string) Diffs {
 			continue
 		}
 		rv := rm[k]
-		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
+		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(ArrayCopy(path), k)...)...)
 	}
 	for k, v := range rm {
 		if lo.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {
-			ret = append(ret, DiffObjectsIgnoring(nil, v, ignored, append(append([]string{}, path...), k)...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, v, ignored, append(ArrayCopy(path), k)...)...)
 		}
 	}
 	return ret
@@ -176,14 +176,14 @@ func diffIntMaps(l map[string]int, r any, ignored []string, path ...string) Diff
 			continue
 		}
 		rv := rm[k]
-		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
+		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(ArrayCopy(path), k)...)...)
 	}
 	for k, v := range rm {
 		if lo.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {
-			ret = append(ret, DiffObjectsIgnoring(nil, v, ignored, append(append([]string{}, path...), k)...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, v, ignored, append(ArrayCopy(path), k)...)...)
 		}
 	}
 	return ret

@@ -48,6 +48,13 @@ func StringArrayFromAny(a []any, maxLength int) []string {
 	return ret.Slice
 }
 
+func ArrayCopy[S ~[]T, T any](x S) S {
+	if x == nil {
+		return nil
+	}
+	return append(S{}, x...)
+}
+
 func ArrayRemoveDuplicates[T comparable](x []T) []T {
 	return lo.Uniq(x)
 }
@@ -57,7 +64,7 @@ func ArraySorted[T cmp.Ordered](x []T) []T {
 	return x
 }
 
-func ArrayLimit[T any](x []T, limit int) ([]T, int) {
+func ArrayLimit[S ~[]T, T any](x S, limit int) (S, int) {
 	if limit == 0 || limit > len(x) {
 		limit = len(x)
 	}
@@ -88,7 +95,7 @@ func ArrayTransform[T any, U any](x []T, f func(T) U) []U {
 	})
 }
 
-func ArraySplit[T any](xs []T, fn func(T) bool) ([]T, []T) {
+func ArraySplit[S ~[]T, T any](xs S, fn func(T) bool) (S, S) {
 	var t, f []T
 	lo.ForEach(xs, func(x T, _ int) {
 		if fn(x) {
@@ -156,25 +163,25 @@ func ArrayTest(dest any) bool {
 	return k == reflect.Array || k == reflect.Slice
 }
 
-func ArrayFlatten[T any](arrs ...[]T) []T {
+func ArrayFlatten[S ~[]T, T any](arrs ...S) S {
 	return lo.Flatten(arrs)
 }
 
-func ArrayFirstN[V any](items []V, n int) []V {
+func ArrayFirstN[S ~[]T, T any](items S, n int) S {
 	if n > len(items) {
 		return items
 	}
 	return items[:n]
 }
 
-func ArrayLastN[V any](items []V, n int) []V {
+func ArrayLastN[S ~[]T, T any](items S, n int) S {
 	if n > len(items) {
 		return items
 	}
 	return items[len(items)-n:]
 }
 
-func ArrayReplaceOrAdd[T any](a []T, fn func(el T) bool, x T) []T {
+func ArrayReplaceOrAdd[S ~[]T, T any](a S, fn func(el T) bool, x T) S {
 	ret := make([]T, 0, len(a)+1)
 	var hit bool
 	for _, el := range a {

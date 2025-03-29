@@ -2,11 +2,12 @@ package har
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Selector struct {
@@ -58,7 +59,7 @@ func (e Entries) Find(s *Selector) (Entries, error) {
 		}
 		return k == v
 	}
-	ret := slices.Clone(e)
+	ret := util.ArrayCopy(e)
 	if s.URL != "" && s.URL != "*" {
 		ret = lo.Filter(ret, func(e *Entry, _ int) bool {
 			return matches(s.URL, e.Request.URL)

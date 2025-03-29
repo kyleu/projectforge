@@ -81,7 +81,7 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 			return
 		}
 		for _, c := range cols {
-			if !(c.PK || c.Indexed) {
+			if !c.PK && !c.Indexed {
 				addIndex(database, ret, m.Table(), cols.Names()...)
 				break
 			}

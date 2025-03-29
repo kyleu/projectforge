@@ -2,7 +2,6 @@ package enum
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -183,19 +182,18 @@ func (e *Enum) Clone() *Enum {
 		Description:    e.Description,
 		Icon:           e.Icon,
 		Values:         e.Values.Clone(),
-		Tags:           slices.Clone(e.Tags),
+		Tags:           util.ArrayCopy(e.Tags),
 		TitleOverride:  e.TitleOverride,
 		ProperOverride: e.ProperOverride,
 		RouteOverride:  e.RouteOverride,
 		Config:         e.Config.Clone(),
-		acronyms:       slices.Clone(e.acronyms),
+		acronyms:       util.ArrayCopy(e.acronyms),
 	}
 }
 
 func (e *Enum) AddTag(t string) {
 	if !lo.Contains(e.Tags, t) {
-		e.Tags = append(e.Tags, t)
-		slices.Sort(e.Tags)
+		e.Tags = util.ArraySorted(append(e.Tags, t))
 	}
 }
 

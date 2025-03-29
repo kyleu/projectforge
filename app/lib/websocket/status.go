@@ -27,7 +27,7 @@ func (s *Service) Status() ([]string, []*Connection, []uuid.UUID) {
 	slices.SortFunc(conns, func(l *Connection, r *Connection) int {
 		return cmp.Compare(l.ID.String(), r.ID.String())
 	})
-	taps := slices.Clone(util.MapKeys(s.taps))
+	taps := util.ArrayCopy(util.MapKeys(s.taps))
 	return s.ChannelList(nil), conns, taps
 }
 

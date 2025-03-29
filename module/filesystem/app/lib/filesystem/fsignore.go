@@ -12,7 +12,7 @@ func buildIgnore(ign []string) []string {
 	if len(ign) == 1 && ign[0] == "-" {
 		return nil
 	}
-	ret := util.NewStringSlice(append([]string{}, defaultIgnore...))
+	ret := util.NewStringSlice(util.ArrayCopy(defaultIgnore))
 	ret.Push(ign...)
 	return ret.Slice
 }

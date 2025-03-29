@@ -1,8 +1,6 @@
 package model
 
 import (
-	"slices"
-
 	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/util"
@@ -62,7 +60,7 @@ func (g Groups) Get(keys ...string) *Group {
 }
 
 func (g Groups) Flatten() Groups {
-	ret := slices.Clone(g)
+	ret := util.ArrayCopy(g)
 	for _, x := range g {
 		ret = append(ret, x.Children.Flatten()...)
 	}

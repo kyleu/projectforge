@@ -46,3 +46,5 @@ func (t Tool) Handler() server.ToolHandlerFunc {
 		return mcp.NewToolResultText(ret), nil
 	}
 }
+
+type Tools []*Tool
