@@ -2,6 +2,7 @@ package git
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/pkg/errors"
 
@@ -18,6 +19,17 @@ func (s *Service) CreateRepo(ctx context.Context, logger util.Logger) (*Result, 
 
 func gitCreateRepo(ctx context.Context, path string, logger util.Logger) error {
 	_, err := gitCmd(ctx, "git init", path, logger)
+	if err != nil {
+		if isNotRepo(err) {
+			return nil
+		}
+		return err
+	}
+	return nil
+}
+
+func CloneRepo(ctx context.Context, path string, url string, logger util.Logger) error {
+	_, err := gitCmd(ctx, fmt.Sprintf("clone %q", url), path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return nil

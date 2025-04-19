@@ -128,26 +128,25 @@ func exportViewDetailBody(m *model.Model, rrs model.Relations, audit bool) (*gol
 	ret.W("{%% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
 	ret.W("    <div class=\"right\">")
+	links := m.Links.WithTags(true, "detail")
+	for _, link := range links {
+		paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
+			return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
+		})
+		u := link.URL
+		u = strings.ReplaceAll(u, "{}", strings.Join(paths, "/"))
+		u = strings.ReplaceAll(u, "[]", "{%%s p.Model.WebPath()"+helper.TextTmplEnd)
+		var icon string
+		if link.Icon != "" {
+			icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
+		}
+		ret.WF("      <a href=%q><button type=\"button\">%s%s</button></a>", u, icon, link.Title)
+	}
 	ret.WF(`      <a href="#modal-%s"><button type="button" title="JSON">{%%%%= components.SVGButton("code", ps) %%%%}</button></a>`, m.Camel())
 	ret.W(`      <a href="{%%s p.Model.WebPath(p.Paths...) %%}/edit" title="Edit"><button>{%%= components.SVGButton("edit", ps) %%}</button></a>`)
 	ret.W("    </div>")
 	ret.WF("    %s%s {%%%%s p.Model.TitleString() %%%%}%s", helper.TextH3Start, iconRef(m), helper.TextH3End)
 	ret.WF("    <div><a href=\"{%%%%s %s.Route(p.Paths...) %%%%}\"><em>%s</em></a></div>", m.Package, m.Title())
-	if len(m.Links.WithTags(true, "detail")) > 0 {
-		ret.WF("    <div class=\"mt\">")
-		for _, link := range m.Links {
-			paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
-				return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
-			})
-			u := strings.ReplaceAll(link.URL, "{}", strings.Join(paths, "/"))
-			var icon string
-			if link.Icon != "" {
-				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
-			}
-			ret.WF("      <a href=%q><button type=\"button\">%s %s</button></a>", u, icon, link.Title)
-		}
-		ret.WF("    </div>")
-	}
 	ret.W("    {%%= DetailTable(p, ps) %%}")
 	ret.W("  </div>")
 	ret.W("  {%%- comment %%}$PF_SECTION_START(extra)${%% endcomment -%%}")

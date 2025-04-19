@@ -64,7 +64,7 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 			ret.WF("  unique (%q),", col.SQL())
 		}
 	})
-	ret.WF("  primary key (%s)", strings.Join(m.PKs().NamesQuoted(), ", "))
+	ret.WF("  primary key (%s)", strings.Join(m.PKs().SQLQuoted(), ", "))
 	ret.W(");")
 
 	pks := m.PKs()

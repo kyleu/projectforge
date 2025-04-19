@@ -166,7 +166,7 @@ func (t *Context) TypeUUID() string {
 }
 
 func (t *Context) HasExport() bool {
-	return t.HasModules("export")
+	return t.HasModules("export") && !t.ExportArgs.Empty()
 }
 
 func (t *Context) MySQL() bool {

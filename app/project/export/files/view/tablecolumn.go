@@ -2,8 +2,11 @@ package view
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
@@ -14,33 +17,49 @@ func viewTableColumn(
 	ret *golang.Block, models model.Models, m *model.Model, link bool, col *model.Column, modelKey string, prefix string, indent int, enums enum.Enums,
 ) {
 	rels := m.RelationsFor(col)
-	call, chk, err := getTableColumnString(m, modelKey, rels, models, prefix)
+	call, err := getTableColumnString(m, modelKey, rels, models, prefix)
 	if err != nil {
 		panic(err)
 	}
-	viewColumn("table", ret, m, col, call, link, modelKey, indent, models, enums, chk, "paths")
+	viewColumn("table", ret, m, col, call, link, modelKey, indent, models, enums, col.Nullable, "paths")
 }
 
-func getTableColumnString(m *model.Model, modelKey string, rels model.Relations, models model.Models, prefix string) (string, bool, error) {
+func getTableColumnString(m *model.Model, modelKey string, rels model.Relations, models model.Models, prefix string) (string, error) {
 	if len(rels) == 0 {
-		return "", false, nil
+		return "", nil
 	}
 	if len(rels) > 1 {
-		return "", false, errors.Errorf("expected one relation, found [%d]", len(rels))
+		return "", errors.Errorf("expected one relation, found [%d]", len(rels))
 	}
 	rel := rels[0]
 	relModel := models.Get(rel.Table)
 	if !relModel.CanTraverseRelation() {
-		return "", false, errors.Errorf("can't traverse relation [%s]", rel.Name)
+		return "", errors.Errorf("can't traverse relation [%s]", rel.Name)
 	}
-	srcCol := m.Columns.Get(rel.Src[0])
-	tgtCol := relModel.Columns.Get(rel.Tgt[0])
+
+	srcCols := lo.Filter(m.Columns, func(x *model.Column, _ int) bool {
+		return slices.Contains(rel.Src, x.Name)
+	})
+	tgtCols := lo.Filter(relModel.Columns, func(x *model.Column, _ int) bool {
+		return slices.Contains(rel.Tgt, x.Name)
+	})
+	if len(srcCols) != len(tgtCols) {
+		return "", errors.Errorf("invalid column size for relation [%s]", rel.Name)
+	}
 	k := relModel.CamelPlural()
 	if prefix != "" {
 		k = prefix + relModel.ProperPlural()
 	}
-	if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
-		return fmt.Sprintf("%sBy%s.Get(*%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper()), true, nil
+
+	calls := make([]string, 0, len(srcCols))
+	for i, srcCol := range srcCols {
+		tgtCol := tgtCols[i]
+		if srcCol.Nullable && !srcCol.Type.Scalar() && !tgtCol.Nullable {
+			calls = append(calls, fmt.Sprintf("*%s%s", modelKey, srcCol.Proper()))
+		} else {
+			calls = append(calls, fmt.Sprintf("%s%s", modelKey, srcCol.Proper()))
+		}
 	}
-	return fmt.Sprintf("%sBy%s.Get(%s%s)", k, srcCol.Proper(), modelKey, srcCol.Proper()), false, nil
+
+	return fmt.Sprintf("%sBy%s.Get(%s)", k, strings.Join(srcCols.ProperNames(), ""), strings.Join(calls, ", ")), nil
 }

@@ -23,7 +23,7 @@ func structSimple(e *enum.Enum) []*golang.Block {
 	pl := len(e.Proper())
 	maxColLength := maxCount + pl
 	lo.ForEach(e.Values, func(v *enum.Value, _ int) {
-		cBlock.WF("\t%s %s = %q", util.StringPad(e.Proper()+v.Proper(), maxColLength), e.Proper(), v.Key)
+		cBlock.WF("\t%s %s = %q", util.StringPad(e.Proper()+v.Proper(e.Acronyms...), maxColLength), e.Proper(), v.Key)
 	})
 	cBlock.W(")")
 	return []*golang.Block{tBlock, cBlock}

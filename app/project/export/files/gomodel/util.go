@@ -22,7 +22,7 @@ func modelString(g *golang.File, m *model.Model) *golang.Block {
 		s := "\treturn fmt.Sprintf(\""
 		lo.ForEach(m.PKs(), func(_ *model.Column, idx int) {
 			if idx > 0 {
-				s += "::"
+				s += " • "
 			}
 			s += "%%s"
 		})
@@ -78,12 +78,16 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	lo.ForEach(m.PKs(), func(pk *model.Column, _ int) {
 		g.AddImport(helper.ImpURL)
 		const fn = "url.QueryEscape"
+		goStr := pk.ToGoString(m.FirstLetter() + ".")
 		switch {
 		case types.IsStringList(pk.Type):
 			g.AddImport(helper.ImpStrings)
-			keys = append(keys, fmt.Sprintf(fn+`(strings.Join(%s, ","))`, pk.ToGoString(m.FirstLetter()+".")))
+			keys = append(keys, fmt.Sprintf(fn+`(strings.Join(%s, ","))`, goStr))
+		case types.IsString(pk.Type) && pk.HasTag("path"):
+			g.AddImport(helper.ImpStrings)
+			keys = append(keys, fn+"(strings.ReplaceAll("+goStr+`, "/", "||"))`)
 		default:
-			keys = append(keys, fn+"("+pk.ToGoString(m.FirstLetter()+".")+")")
+			keys = append(keys, fn+"("+goStr+")")
 		}
 	})
 	ret.WF("\treturn path.Join(append(paths, %s)...)", strings.Join(keys, ", "))

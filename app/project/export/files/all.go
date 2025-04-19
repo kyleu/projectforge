@@ -122,7 +122,7 @@ func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Fi
 	if args.HasModule("migration") {
 		migModels := args.Models.WithoutTag("external").WithDatabase().Sorted()
 		migEnums := args.Enums.WithDatabase()
-		f, err := sql.MigrationAll(migModels, migEnums, linebreak)
+		f, err := sql.MigrationAll(migModels, migEnums, args.HasModule("audit"), linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}

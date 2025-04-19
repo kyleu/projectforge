@@ -14,7 +14,7 @@ func adminRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/admin/audit/random", clib.AuditCreateFormRandom)
 	makeRoute(r, http.MethodGet, "/admin/audit/new", clib.AuditCreateForm)
 	makeRoute(r, http.MethodPost, "/admin/audit/new", clib.AuditCreate)
-	makeRoute(r, http.MethodGet, "/admin/audit/record/{id}/view", clib.RecordDetail)
+	makeRoute(r, http.MethodGet, "/admin/audit/record/{id}", clib.RecordDetail)
 	makeRoute(r, http.MethodGet, "/admin/audit/{id}", clib.AuditDetail)
 	makeRoute(r, http.MethodGet, "/admin/audit/{id}/edit", clib.AuditEditForm)
 	makeRoute(r, http.MethodPost, "/admin/audit/{id}/edit", clib.AuditEdit)

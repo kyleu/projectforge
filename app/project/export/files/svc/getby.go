@@ -26,7 +26,7 @@ func writeGetBy(key string, cols model.Columns, doExtra []string, name string, d
 	returnMultiple := lo.ContainsBy(cols, func(x *model.Column) bool {
 		return !x.HasTag("unique")
 	})
-	sb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database)
+	sb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database, g)
 	if err != nil {
 		return err
 	}
@@ -47,15 +47,17 @@ func writeGetBy(key string, cols model.Columns, doExtra []string, name string, d
 	return nil
 }
 
-func serviceGetByPK(m *model.Model, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
-	return serviceGetBy("Get", m, m.PKs(), false, dbRef, enums, database)
+func serviceGetByPK(m *model.Model, dbRef string, enums enum.Enums, database string, g *golang.File) (*golang.Block, error) {
+	return serviceGetBy("Get", m, m.PKs(), false, dbRef, enums, database, g)
 }
 
-func serviceGetBy(key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
+func serviceGetBy(
+	key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string, enums enum.Enums, database string, g *golang.File,
+) (*golang.Block, error) {
 	if returnMultiple {
 		return serviceGetByCols(key, m, cols, dbRef, enums, database)
 	}
-	return serviceGet(key, m, cols, dbRef, enums)
+	return serviceGet(key, g, m, cols, dbRef, enums)
 }
 
 func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {

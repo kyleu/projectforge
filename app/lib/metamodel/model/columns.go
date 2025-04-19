@@ -85,6 +85,12 @@ func (c Columns) Searches() Columns {
 	})
 }
 
+func (c Columns) TitleColumns() Columns {
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.HasTag("title")
+	})
+}
+
 func (c Columns) Names() []string {
 	return lo.Map(c, func(x *Column, _ int) string {
 		return x.Name

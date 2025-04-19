@@ -20,7 +20,7 @@ func blockGet(e *enum.Enum, identityProper string) *golang.Block {
 	gBlock.W("\t}")
 	if def := e.Values.Default(); def != nil {
 		gBlock.W("\tif key == \"\" {")
-		gBlock.WF("\t\treturn %s%s", e.Proper(), def.Proper())
+		gBlock.WF("\t\treturn %s%s", e.Proper(), def.Proper(e.Acronyms...))
 		gBlock.W("\t}")
 	}
 	missingHandler(gBlock, e, "key", "key")
@@ -38,7 +38,7 @@ func blockGetByName(e *enum.Enum) *golang.Block {
 	gnBlock.W("\t}")
 	if def := e.Values.Default(); def != nil {
 		gnBlock.W("\tif name == \"\" {")
-		gnBlock.WF("\t\treturn %s%s", e.Proper(), def.Proper())
+		gnBlock.WF("\t\treturn %s%s", e.Proper(), def.Proper(e.Acronyms...))
 		gnBlock.W("\t}")
 	}
 	missingHandler(gnBlock, e, "name", "name")
@@ -74,7 +74,7 @@ func blockGetByPropUnique(e *enum.Enum, efk string, t string) (*golang.Block, er
 	gxBlock.W("\t}")
 	if def := e.Values.Default(); def != nil {
 		gxBlock.WF("\tif input == %s {", dflt)
-		gxBlock.WF("\t\treturn %s%s", e.Proper(), def.Proper())
+		gxBlock.WF("\t\treturn %s%s", e.Proper(), def.Proper(e.Acronyms...))
 		gxBlock.W("\t}")
 	}
 	missingHandler(gxBlock, e, prop, "input")
@@ -107,7 +107,7 @@ func missingHandler(b *golang.Block, e *enum.Enum, prop string, v string) {
 	b.W("\t\tlogger.Warn(msg)")
 	b.W("\t}")
 	if d := e.Values.Default(); d != nil {
-		b.WF("\treturn %s%s", e.Proper(), d.Proper())
+		b.WF("\treturn %s%s", e.Proper(), d.Proper(e.Acronyms...))
 	} else {
 		b.WF(`	return %s{Key: "_error", Name: "error: " + msg}`, e.Proper())
 	}

@@ -15,7 +15,7 @@ import (
 
 func enumValues(e *enum.Enum) *golang.Block {
 	names := lo.Map(e.Values, func(x *enum.Value, _ int) string {
-		return e.Proper() + x.Proper()
+		return e.Proper() + x.Proper(e.Acronyms...)
 	})
 
 	b := golang.NewBlock(e.Proper(), "vars")
@@ -41,7 +41,7 @@ func enumValues(e *enum.Enum) *golang.Block {
 }
 
 func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
-	msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(e.Proper()+v.Proper(), maxColLength), e.Proper(), v.Key)
+	msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(e.Proper()+v.Proper(e.Acronyms...), maxColLength), e.Proper(), v.Key)
 	if v.Name != "" {
 		msg += fmt.Sprintf(", Name: %q", v.Name)
 	}

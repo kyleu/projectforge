@@ -74,18 +74,16 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	}
 
 	ret.W(`    <div class="right mrs large-buttons">`)
-	if len(links) > 0 {
-		for _, link := range m.Links {
-			var icon string
-			if link.Icon != "" {
-				icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%}", link.Icon)
-			}
-			if link.Dangerous {
-				msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s %s</button></a>"
-				ret.WF(msg, "link-confirm", "Are you sure?", link.URL, icon, link.Title)
-			} else {
-				ret.WF("      <a href=%q><button type=\"button\">%s %s</button></a>", link.URL, icon, link.Title)
-			}
+	for _, link := range links {
+		var icon string
+		if link.Icon != "" {
+			icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
+		}
+		if link.Dangerous {
+			msg := "      <a class=%q data-message=%q href=%q><button type=\"button\">%s %s</button></a>"
+			ret.WF(msg, "link-confirm", "Are you sure?", link.URL, icon, link.Title)
+		} else {
+			ret.WF("      <a href=%q><button type=\"button\">%s%s</button></a>", link.URL, icon, link.Title)
 		}
 	}
 	msg := `<a href="{%%%%s %s.Route(p.Paths...) %%%%}/_random"><button>{%%%%= components.SVGButton("gift", ps) %%%%} Random</button></a>`

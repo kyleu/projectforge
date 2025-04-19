@@ -10,17 +10,20 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func MigrationAll(models model.Models, enums enum.Enums, linebreak string) (*file.File, error) {
+func MigrationAll(models model.Models, enums enum.Enums, audit bool, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, "all.sql")
-	g.AddBlocks(sqlDropAll(models, enums), sqlCreateAll(models, enums))
+	g.AddBlocks(sqlDropAll(models, enums, audit), sqlCreateAll(models, enums, audit))
 	return g.Render(linebreak)
 }
 
-func sqlDropAll(models model.Models, enums enum.Enums) *golang.Block {
+func sqlDropAll(models model.Models, enums enum.Enums, audit bool) *golang.Block {
 	ret := golang.NewBlock("SQLDropAll", "sql")
 	ret.W(sqlFunc("DropAll"))
 	for i := len(models) - 1; i >= 0; i-- {
 		ret.W(sqlCall(models[i].Proper() + helper.TextDrop))
+	}
+	if audit {
+		ret.W(sqlCall("AuditDrop"))
 	}
 	if len(enums) > 1 {
 		ret.W(sqlCall("TypesDrop"))
@@ -29,11 +32,14 @@ func sqlDropAll(models model.Models, enums enum.Enums) *golang.Block {
 	return ret
 }
 
-func sqlCreateAll(models model.Models, enums enum.Enums) *golang.Block {
+func sqlCreateAll(models model.Models, enums enum.Enums, audit bool) *golang.Block {
 	ret := golang.NewBlock("SQLCreateAll", "sql")
 	ret.W(sqlFunc("CreateAll"))
 	if len(enums) > 0 {
 		ret.W(sqlCall("TypesCreate"))
+	}
+	if audit {
+		ret.W(sqlCall("AuditCreate"))
 	}
 	lo.ForEach(models, func(m *model.Model, _ int) {
 		ret.WF(helper.TextSQLComment+"{%%%%= %sCreate() %%%%}", m.Proper())

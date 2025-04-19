@@ -36,8 +36,8 @@ type Value struct {
 	Simple      bool
 }
 
-func (x *Value) Proper() string {
-	return util.StringToProper(x.Key)
+func (x *Value) Proper(acronyms ...string) string {
+	return util.StringToProper(x.Key, acronyms...)
 }
 
 func (x *Value) Title() string {

@@ -42,7 +42,7 @@ func modelPKString(m *model.Model) (*golang.Block, error) {
 		}
 		args = append(args, "p."+c.Proper())
 	}
-	ret.WF("\treturn fmt.Sprintf(%q, %s)", strings.Join(format, "::"), strings.Join(args, ", "))
+	ret.WF("\treturn fmt.Sprintf(%q, %s)", strings.Join(format, " • "), strings.Join(args, ", "))
 	ret.W("}")
 	return ret, nil
 }

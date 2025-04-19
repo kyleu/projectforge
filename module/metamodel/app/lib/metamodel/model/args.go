@@ -89,7 +89,7 @@ func (a *Args) ApplyAcronyms(acronyms ...string) {
 		x.SetAcronyms(acronyms...)
 	}
 	for _, x := range a.Enums {
-		x.SetAcronyms(acronyms...)
+		x.Acronyms = acronyms
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
@@ -35,7 +36,7 @@ func ServiceGet(m *model.Model, args *model.Args, linebreak string) (*file.File,
 	g.AddImport(m.Imports.Supporting("serviceget")...)
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
-		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database)
+		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database, g)
 		if err != nil {
 			return nil, err
 		}
@@ -91,7 +92,7 @@ func ServiceGet(m *model.Model, args *model.Args, linebreak string) (*file.File,
 	return g.Render(linebreak)
 }
 
-func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceGet(key string, g *golang.File, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {
 	if key == "" {
 		key = helper.TextGetBy + cols.Smushed()
 	}
@@ -116,7 +117,14 @@ func serviceGet(key string, m *model.Model, cols model.Columns, dbRef string, en
 	}
 	ret.W("\tret := &row{}")
 	ret.WF("\tq := database.SQLSelectSimple(columnsString, %s, s.db.Type, wc)", tableClause)
-	ret.WF("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
+	colRefs := lo.Map(cols, func(x *model.Column, _ int) string {
+		if types.IsString(x.Type) && x.HasTag("path") {
+			g.AddImport(helper.ImpStrings)
+			return fmt.Sprintf(`strings.ReplaceAll(%s, "||", "/")`, x.Camel())
+		}
+		return x.Camel()
+	})
+	ret.WF("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(colRefs, ", "))
 	ret.W("\tif err != nil {")
 	sj := strings.Join(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))

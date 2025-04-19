@@ -124,7 +124,7 @@ func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Proj
 	tgt := relModel.Columns.Get(rel.Tgt[0])
 
 	var title string
-	if titles := relModel.Columns.Searches(); len(titles) > 0 {
+	if titles := relModel.Columns.TitleColumns(); len(titles) > 0 {
 		var refs []string
 		lo.ForEach(titles, func(title *model.Column, _ int) {
 			if !title.PK {
