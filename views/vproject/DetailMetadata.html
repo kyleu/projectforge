@@ -162,6 +162,20 @@
           </td>
         </tr>
         <tr>
+          <th>Docker Packages</th>
+          <td>
+            {%- if len(info.DockerPackages) == 0 -%}
+            <em>none</em>
+            {%- else -%}
+            <ul>
+              {%- for _, x := range info.DockerPackages -%}
+              <li>{%s x %}</li>
+              {%- endfor -%}
+            </ul>
+            {%- endif -%}
+          </td>
+        </tr>
+        <tr>
           <th>Config Vars</th>
           <td>
             {%- if len(info.ConfigVars) == 0 -%}

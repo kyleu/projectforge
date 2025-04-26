@@ -42,7 +42,7 @@ func gitHistory(ctx context.Context, path string, args *HistoryArgs, logger util
 		cmd += fmt.Sprintf(" -- %s", path)
 	}
 
-	out, err := gitCmd(ctx, cmd, path, logger)
+	out, err := GitCmd(ctx, cmd, path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return nil, nil

@@ -119,6 +119,13 @@ func (t *Context) Private() bool {
 	return t.Build == nil && t.Build.Private
 }
 
+func (t *Context) DockerPackages() string {
+	if t.Info == nil || len(t.Info.DockerPackages) == 0 {
+		return ""
+	}
+	return " " + strings.Join(t.Info.DockerPackages, " ")
+}
+
 func (t *Context) Acronyms() string {
 	if t.Info == nil || len(t.Info.Acronyms) == 0 {
 		return ""

@@ -17,7 +17,7 @@ func isNotRepo(err error) bool {
 	return strings.Contains(err.Error(), "not a git repository")
 }
 
-func gitCmd(ctx context.Context, args string, path string, logger util.Logger) (string, error) {
+func GitCmd(ctx context.Context, args string, path string, logger util.Logger) (string, error) {
 	exit, out, err := telemetry.RunProcessSimple(ctx, "git "+args, path, logger)
 	if err != nil {
 		return "", errors.Wrapf(err, "can't run [git %s] for path [%s]", args, path)

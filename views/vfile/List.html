@@ -16,10 +16,7 @@
       if f.IsDir {
         icon = "folder"
       }
-      x := []string{urlPrefix}
-      x = append(x, path...)
-      x = append(x, f.Name)
-      u := filepath.Join(x...)
+      u := urlPrefix + f.QueryEscapedPath(path...)
     -%}
     <div><a href="{%s u %}">{%= components.SVGInline(icon, 16, ps) %}</a> <a href="{%s u %}">{%s f.Name %}</a></div>
   {%- endfor -%}

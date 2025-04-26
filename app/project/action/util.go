@@ -103,11 +103,6 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		_ = util.FromJSON([]byte(x), &docs)
 	}
 
-	envVars := i.EnvVars
-	if x := cfg.GetStringOpt("envvars"); x != "" {
-		_ = util.FromJSON([]byte(x), &envVars)
-	}
-
 	return &project.Info{
 		Org:             str("org", i.Org),
 		AuthorID:        str("author_id", i.AuthorID),
@@ -134,7 +129,8 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", strings.Join(i.ExtraFiles, ", ")), ","),
 		IgnoredFiles:    util.StringSplitAndTrim(str("ignoredFiles", strings.Join(i.IgnoredFiles, ", ")), ","),
 		Deployments:     util.StringSplitAndTrim(str("deployments", strings.Join(i.Deployments, ", ")), ","),
-		EnvVars:         envVars,
+		EnvVars:         util.StringSplitAndTrim(str("envvars", strings.Join(i.EnvVars, ", ")), ","),
+		DockerPackages:  util.StringSplitAndTrim(str("dockerPackages", strings.Join(i.DockerPackages, ", ")), ","),
 		Docs:            docs,
 		Acronyms:        util.StringSplitAndTrim(str("acronyms", strings.Join(i.Acronyms, ", ")), ","),
 		ModuleDefs:      md,

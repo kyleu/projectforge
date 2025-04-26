@@ -98,8 +98,12 @@ func AsyncRateLimit[T any, R any](key string, items []T, f func(x T) (R, error),
 			go func(item T, idx int) {
 				defer wg.Done()
 				defer func() { <-limit }()
+				str := fmt.Sprint(item)
+				if str == "" {
+					str = "item"
+				}
 				started++
-				log("starting to process item [%d/%d]...", started, size)
+				log("[%d/%d] starting to process [%s]...", started, size, str)
 				r, err := f(item)
 				mu.Lock()
 				defer mu.Unlock()
@@ -109,7 +113,7 @@ func AsyncRateLimit[T any, R any](key string, items []T, f func(x T) (R, error),
 				} else {
 					errs = append(errs, errors.Wrapf(err, "error running async function for item [%v]", item))
 				}
-				log("processed [%d/%d] items", processed, size)
+				log("[%d/%d] processing [%s] complete", processed, size, str)
 			}(item, idx)
 		case <-time.After(timeout):
 			errs = append(errs, errors.Errorf("job timed out after [%v]", timeout))

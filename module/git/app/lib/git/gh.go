@@ -9,7 +9,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func (s *Service) GHCmd(ctx context.Context, args string, path string, logger util.Logger) (string, error) {
+func GHCmd(ctx context.Context, args string, path string, logger util.Logger) (string, error) {
 	exit, out, err := telemetry.RunProcessSimple(ctx, "gh "+args, path, logger)
 	if err != nil {
 		return "", errors.Wrapf(err, "can't run [gh %s] for path [%s]", args, path)

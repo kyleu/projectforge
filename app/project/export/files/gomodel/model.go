@@ -85,7 +85,7 @@ func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, erro
 		return nil, err
 	}
 	if !m.SkipController() {
-		g.AddBlocks(modelWebPath(g, m))
+		g.AddBlocks(modelWebPath(g, m), modelBreadcrumb(m))
 	}
 	g.AddBlocks(modelToData(m, m.Columns.NotDerived(), "", args.Database), fd)
 	return g.Render(linebreak)

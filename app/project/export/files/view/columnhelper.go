@@ -13,10 +13,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var (
+const (
 	ind1       = "  "
 	anchorIcon = "<a title=%q href=%q>%s</a>"
 	anchorMsg  = `%s ` + anchorIcon
+	titleStr   = "{%%s x.TitleString() %%}"
 )
 
 func colRow(ind string, col *model.Column, u string, viewString string, link bool) string {
@@ -35,6 +36,7 @@ func viewColumn(
 	link bool, modelKey string, indent int, models model.Models, enums enum.Enums, chk bool, pathKey string,
 ) {
 	ind := util.StringRepeat(ind1, indent)
+	modelLinkStart := `<a href="{%%s ` + modelKey + `WebPath() %%}">`
 	rels := m.RelationsFor(col)
 	cv := col.ToGoViewString(modelKey, true, false, enums, key)
 	if len(rels) == 0 {
@@ -44,11 +46,17 @@ func viewColumn(
 
 	ret.W(ind + helper.TextTDStart)
 	if chk {
-		ret.W(ind + ind1 + "{%% if " + modelKey + col.Proper() + " != nil %%}{%% if x := " + call + "; x != nil %%}")
+		ret.W(ind + ind1 + "{%% if " + modelKey + col.Proper() + " != " + col.ZeroVal() + " %%}{%% if x := " + call + "; x != nil %%}")
 	} else {
 		ret.W(ind + ind1 + "{%% if x := " + call + "; x != nil %%}")
 	}
-	strs := []string{"{%%s x.TitleString() %%}"}
+	strs := []string{}
+	if col.PK {
+		strs = append(strs, modelLinkStart, titleStr, "</a>")
+	} else {
+		strs = append(strs, titleStr)
+	}
+
 	lo.ForEach(rels, func(rel *model.Relation, _ int) {
 		if lo.Contains(rel.Src, col.Name) {
 			relModel := models.Get(rel.Table)
@@ -62,7 +70,11 @@ func viewColumn(
 	})
 	ret.W(ind + ind1 + strings.Join(strs, ""))
 	ret.W(ind + ind1 + "{%% else %%}")
-	ret.W(ind + ind1 + cv)
+	if col.PK {
+		ret.W(ind + ind1 + modelLinkStart + cv + "</a>")
+	} else {
+		ret.W(ind + ind1 + cv)
+	}
 	if chk {
 		ret.W(ind + ind1 + "{%% endif %%}{%% endif %%}")
 	} else {

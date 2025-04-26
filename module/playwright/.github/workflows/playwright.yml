@@ -19,7 +19,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v5"
         with:
           fetch-depth: 0
 
@@ -37,12 +37,12 @@ jobs:
         run: "npx playwright install --with-deps"
 
       - name: "Golang"
-        uses: "actions/setup-go@v2"
+        uses: "actions/setup-go@v5"
         with:
           go-version: "{{{ .GoVersionSafe }}}"
 
       - name: "Cache"
-        uses: "actions/cache@v2"
+        uses: "actions/cache@v4"
         with:
           path: "~/go/pkg/mod"
           key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"

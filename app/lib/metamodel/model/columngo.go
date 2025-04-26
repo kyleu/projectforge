@@ -198,7 +198,7 @@ func toGoMapParse(t types.Type) (string, error) {
 }
 
 func (c *Column) ZeroVal() string {
-	if c.Nullable {
+	if c.Nullable && !c.Type.Scalar() {
 		return types.KeyNil
 	}
 	switch c.Type.Key() {

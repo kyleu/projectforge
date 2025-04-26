@@ -3,7 +3,9 @@ package filesystem
 import (
 	"cmp"
 	"io/fs"
+	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/samber/lo"
 )
@@ -26,8 +28,14 @@ type FileInfo struct {
 	IsDir bool
 }
 
-func (i FileInfo) Equal(x *FileInfo) bool {
-	return i.Name == x.Name && i.Size == x.Size && i.Mode == x.Mode && i.IsDir == x.IsDir
+func (f FileInfo) Equal(x *FileInfo) bool {
+	return f.Name == x.Name && f.Size == x.Size && f.Mode == x.Mode && f.IsDir == x.IsDir
+}
+
+func (f *FileInfo) QueryEscapedPath(pth ...string) string {
+	return "/" + strings.Join(lo.Map(append(pth, f.Name), func(x string, _ int) string {
+		return url.QueryEscape(x)
+	}), "/")
 }
 
 func FileInfoFromFS(s fs.FileInfo) *FileInfo {

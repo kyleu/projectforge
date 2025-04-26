@@ -17,11 +17,11 @@ jobs:{{{ if .Build.TestsFail }}}
         env:
           SLACK_WEBHOOK_URL: "{{{ .Info.Slack }}}"{{{ end }}}
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v5"
         with:
           fetch-depth: 0
       - name: "Golang"
-        uses: "actions/setup-go@v2"
+        uses: "actions/setup-go@v5"
         with:
           go-version: "{{{ .GoVersionSafe }}}"
       - name: "Login"
@@ -31,7 +31,7 @@ jobs:{{{ if .Build.TestsFail }}}
           username: "${{ github.repository_owner }}"
           password: "${{ secrets.CR_PAT }}"
       - name: "Cache"
-        uses: "actions/cache@v2"
+        uses: "actions/cache@v4"
         with:
           path: "~/go/pkg/mod"
           key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"

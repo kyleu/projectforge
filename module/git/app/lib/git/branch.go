@@ -8,7 +8,7 @@ import (
 )
 
 func gitBranch(ctx context.Context, path string, logger util.Logger) string {
-	out, err := gitCmd(ctx, "branch --show-current", path, logger)
+	out, err := GitCmd(ctx, "branch --show-current", path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "norepo"

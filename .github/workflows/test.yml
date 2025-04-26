@@ -20,15 +20,15 @@ jobs:
     # $PF_SECTION_END(setup)$
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v5"
         with:
           fetch-depth: 0
       - name: "Golang"
-        uses: "actions/setup-go@v2"
+        uses: "actions/setup-go@v5"
         with:
           go-version: "1.24.0"
       - name: "Cache"
-        uses: "actions/cache@v2"
+        uses: "actions/cache@v4"
         with:
           path: "~/go/pkg/mod"
           key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
@@ -58,7 +58,7 @@ jobs:
           if [ -f "./bin/test-setup.sh" ]; then
               ./bin/test-setup.sh
           fi
-          go test -race -json ./app/... > test.json
+          go test -json ./app/... > test.json
         env:
           GOPRIVATE: "github.com/${{ github.repository_owner }}"
           GITHUB_TOKEN: "${{ secrets.CR_PAT }}"

@@ -34,7 +34,7 @@ func gitFetch(ctx context.Context, path string, dryRun bool, logger util.Logger)
 	if dryRun {
 		cmd += " --dry-run"
 	}
-	out, err := gitCmd(ctx, cmd, path, logger)
+	out, err := GitCmd(ctx, cmd, path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "", nil

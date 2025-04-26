@@ -65,60 +65,57 @@ func StreamList(qw422016 *qt422016.Writer, path []string, files filesystem.FileI
 		if f.IsDir {
 			icon = "folder"
 		}
-		x := []string{urlPrefix}
-		x = append(x, path...)
-		x = append(x, f.Name)
-		u := filepath.Join(x...)
+		u := urlPrefix + f.QueryEscapedPath(path...)
 
-//line views/vfile/List.html:23
+//line views/vfile/List.html:20
 		qw422016.N().S(`    <div><a href="`)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.E().S(u)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.N().S(`">`)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		components.StreamSVGInline(qw422016, icon, 16, ps)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.N().S(`</a> <a href="`)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.E().S(u)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.N().S(`">`)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.E().S(f.Name)
-//line views/vfile/List.html:24
+//line views/vfile/List.html:21
 		qw422016.N().S(`</a></div>
 `)
-//line views/vfile/List.html:25
+//line views/vfile/List.html:22
 	}
-//line views/vfile/List.html:25
+//line views/vfile/List.html:22
 	qw422016.N().S(`  </div>
 `)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 }
 
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 func WriteList(qq422016 qtio422016.Writer, path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	StreamList(qw422016, path, files, fl, urlPrefix, as, ps)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 }
 
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 func List(path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) string {
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	WriteList(qb422016, path, files, fl, urlPrefix, as, ps)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	qs422016 := string(qb422016.B)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 	return qs422016
-//line views/vfile/List.html:27
+//line views/vfile/List.html:24
 }

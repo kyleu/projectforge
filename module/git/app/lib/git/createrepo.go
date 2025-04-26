@@ -18,7 +18,7 @@ func (s *Service) CreateRepo(ctx context.Context, logger util.Logger) (*Result, 
 }
 
 func gitCreateRepo(ctx context.Context, path string, logger util.Logger) error {
-	_, err := gitCmd(ctx, "git init", path, logger)
+	_, err := GitCmd(ctx, "git init", path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return nil
@@ -29,7 +29,18 @@ func gitCreateRepo(ctx context.Context, path string, logger util.Logger) error {
 }
 
 func CloneRepo(ctx context.Context, path string, url string, logger util.Logger) error {
-	_, err := gitCmd(ctx, fmt.Sprintf("clone %q", url), path, logger)
+	_, err := GitCmd(ctx, fmt.Sprintf("clone %q", url), path, logger)
+	if err != nil {
+		if isNotRepo(err) {
+			return nil
+		}
+		return err
+	}
+	return nil
+}
+
+func CloneRepoGH(ctx context.Context, path string, url string, logger util.Logger) error {
+	_, err := GHCmd(ctx, fmt.Sprintf("repo clone %q", url), path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return nil

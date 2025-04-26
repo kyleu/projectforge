@@ -53,6 +53,7 @@ type Info struct {
 	IgnoredFiles    []string          `json:"ignoredFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`
 	EnvVars         []string          `json:"envVars,omitempty"`
+	DockerPackages  []string          `json:"dockerPackages,omitempty"`
 	Docs            Docs              `json:"docs,omitempty"`
 	Acronyms        []string          `json:"acronyms,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`

@@ -94,3 +94,27 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 	ret.W("}")
 	return ret
 }
+
+func modelBreadcrumb(m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Breadcrumb", "func")
+	ret.WF("func (%s *%s) Breadcrumb(extra ...string) string {", m.FirstLetter(), m.Proper())
+	l := fmt.Sprintf("\t"+`return %s.TitleString() + "||" + %s.WebPath(extra...)`, m.FirstLetter(), m.FirstLetter())
+	if m.Icon != "" {
+		l += fmt.Sprintf(` + "**%s"`, m.Icon)
+	}
+	ret.W(l)
+	ret.W("}")
+	return ret
+}
+
+func modelStrings(g *golang.File, m *model.Model) *golang.Block {
+	ret := golang.NewBlock("Strings", "func")
+	ret.WF("func (%s *%s) Strings() []string {", m.FirstLetter(), m.Proper())
+	x := m.Columns.NotDerived().ToGoStrings(m.FirstLetter()+".", true, 160)
+	if strings.Contains(x, "fmt.") {
+		g.AddImport(helper.ImpFmt)
+	}
+	ret.WF("\treturn []string{%s}", x)
+	ret.W("}")
+	return ret
+}

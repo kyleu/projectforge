@@ -18,7 +18,7 @@ func (s *Service) UndoCommit(ctx context.Context, logger util.Logger) (*Result, 
 
 func gitResetSoft(ctx context.Context, path string, logger util.Logger) (string, error) {
 	currBranch := gitBranch(ctx, path, logger)
-	_, err := gitCmd(ctx, fmt.Sprintf("reset --soft %s~1", currBranch), path, logger)
+	_, err := GitCmd(ctx, fmt.Sprintf("reset --soft %s~1", currBranch), path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "", nil

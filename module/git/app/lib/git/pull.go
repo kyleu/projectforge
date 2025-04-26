@@ -21,7 +21,7 @@ func (s *Service) Pull(ctx context.Context, logger util.Logger) (*Result, error)
 		return nil, errors.Wrap(err, "unable to pull")
 	}
 	count := lo.CountBy(util.StringSplitLines(x), func(line string) bool {
-		return strings.HasPrefix(line, "   ")
+		return strings.HasPrefix(line, " ")
 	})
 	status := util.OK
 	fetched := noUpdates
@@ -34,7 +34,21 @@ func (s *Service) Pull(ctx context.Context, logger util.Logger) (*Result, error)
 }
 
 func gitPull(ctx context.Context, path string, logger util.Logger) (string, error) {
-	out, err := gitCmd(ctx, "pull -q", path, logger)
+	out, err := GitCmd(ctx, "pull", path, logger)
+	if err != nil {
+		if isNotRepo(err) {
+			return "", nil
+		}
+		if strings.Contains(out, "divergent branches") {
+			return "", errors.Errorf("there are conflicting changes to resolve before you can pull from [%s]", path)
+		}
+		return "", err
+	}
+	return out, nil
+}
+
+func GHSync(ctx context.Context, path string, logger util.Logger) (string, error) {
+	out, err := GHCmd(ctx, "repo sync", path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "", nil

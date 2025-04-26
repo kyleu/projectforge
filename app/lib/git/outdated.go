@@ -34,7 +34,7 @@ func (s *Service) Outdated(ctx context.Context, logger util.Logger) (*Result, er
 }
 
 func gitOutdated(ctx context.Context, path string, logger util.Logger) (string, int, error) {
-	out, err := gitCmd(ctx, "rev-parse HEAD", path, logger)
+	out, err := GitCmd(ctx, "rev-parse HEAD", path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "", 0, nil
@@ -43,12 +43,12 @@ func gitOutdated(ctx context.Context, path string, logger util.Logger) (string, 
 	}
 	currentCommitHash := strings.TrimSpace(out)
 
-	out, err = gitCmd(ctx, "describe --abbrev=0 --tags "+currentCommitHash, path, logger)
+	out, err = GitCmd(ctx, "describe --abbrev=0 --tags "+currentCommitHash, path, logger)
 	if err != nil {
 		return "", 0, nil //nolint:nilerr
 	}
 	latestTag := strings.TrimSpace(out)
-	out, err = gitCmd(ctx, "rev-list --count "+fmt.Sprintf("%s..HEAD", latestTag), path, logger)
+	out, err = GitCmd(ctx, "rev-list --count "+fmt.Sprintf("%s..HEAD", latestTag), path, logger)
 	if err != nil {
 		return "", 0, err
 	}

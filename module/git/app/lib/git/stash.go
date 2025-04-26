@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Service) gitStash(ctx context.Context, path string, logger util.Logger) (string, error) {
-	out, err := gitCmd(ctx, "stash", path, logger)
+	out, err := GitCmd(ctx, "stash", path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "", nil
@@ -20,7 +20,7 @@ func (s *Service) gitStash(ctx context.Context, path string, logger util.Logger)
 }
 
 func (s *Service) gitStashPop(ctx context.Context, path string, logger util.Logger) (string, error) {
-	out, err := gitCmd(ctx, "stash pop", path, logger)
+	out, err := GitCmd(ctx, "stash pop", path, logger)
 	if err != nil {
 		if isNotRepo(err) {
 			return "", nil

@@ -50,6 +50,7 @@ var Helpers = func() map[string][]string {
 	add("ignoredFiles", "Files that are ignored by code generation")
 	add("deployments", "Files that track deployment of this app")
 	add("envvars", "Additional environment variables used by this project")
+	add("dockerPackages", "Additional packages to install for the Docker image")
 	add("docs", "Documentation resources for this project")
 	add("acronyms", "Custom acronyms, intended to be displayed capitalized")
 
