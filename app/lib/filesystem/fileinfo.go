@@ -28,7 +28,7 @@ type FileInfo struct {
 	IsDir bool
 }
 
-func (f FileInfo) Equal(x *FileInfo) bool {
+func (f *FileInfo) Equal(x *FileInfo) bool {
 	return f.Name == x.Name && f.Size == x.Size && f.Mode == x.Mode && f.IsDir == x.IsDir
 }
 

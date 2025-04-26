@@ -3,6 +3,7 @@ package git
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -53,5 +54,5 @@ func gitCommitCount(ctx context.Context, path string, all bool, logger util.Logg
 		}
 		return 0, err
 	}
-	return util.ParseIntSimple(out), nil
+	return util.ParseIntSimple(strings.TrimSpace(out)), nil
 }
