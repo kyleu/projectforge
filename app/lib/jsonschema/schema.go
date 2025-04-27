@@ -1,16 +1,18 @@
 package jsonschema
 
+import "projectforge.dev/projectforge/app/util"
+
 type Schema struct {
 	// Core Vocabulary & Metadata
-	Schema        string             `json:"$schema,omitempty"`        // URI identifying the schema dialect (e.g., "https://json-schema.org/draft/2020-12/schema")
-	ID            string             `json:"$id,omitempty"`            // Base URI for the schema
-	Anchor        string             `json:"$anchor,omitempty"`        // An identifier for this subschema
-	Ref           string             `json:"$ref,omitempty"`           // Reference to another schema (URI or JSON Pointer)
-	DynamicRef    string             `json:"$dynamicRef,omitempty"`    // Reference that resolves dynamically (requires $dynamicAnchor)
-	DynamicAnchor string             `json:"$dynamicAnchor,omitempty"` // Anchor for dynamic resolution
-	Vocabulary    map[string]bool    `json:"$vocabulary,omitempty"`    // Declares vocabularies used (keys are URIs, values must be true)
-	Comment       string             `json:"$comment,omitempty"`       // A comment string, ignored by validators
-	Defs          map[string]*Schema `json:"$defs,omitempty"`          // Definitions for reusable subschemas
+	Schema        string                    `json:"$schema,omitempty"`        // URI identifying the schema dialect (e.g., "https://json-schema.org/draft/2020-12/schema")
+	ID            string                    `json:"$id,omitempty"`            // Base URI for the schema
+	Anchor        string                    `json:"$anchor,omitempty"`        // An identifier for this subschema
+	Ref           string                    `json:"$ref,omitempty"`           // Reference to another schema (URI or JSON Pointer)
+	DynamicRef    string                    `json:"$dynamicRef,omitempty"`    // Reference that resolves dynamically (requires $dynamicAnchor)
+	DynamicAnchor string                    `json:"$dynamicAnchor,omitempty"` // Anchor for dynamic resolution
+	Vocabulary    *util.OrderedMap[bool]    `json:"$vocabulary,omitempty"`    // Declares vocabularies used (keys are URIs, values must be true)
+	Comment       string                    `json:"$comment,omitempty"`       // A comment string, ignored by validators
+	Defs          *util.OrderedMap[*Schema] `json:"$defs,omitempty"`          // Definitions for reusable subschemas
 
 	// Annotations (Metadata Keywords)
 	Title       string        `json:"title,omitempty"`       // A short description of the schema
@@ -44,7 +46,7 @@ type Schema struct {
 
 	// Validation Keywords for Arrays
 	Items            interface{} `json:"items,omitempty"`            // Schema for array items (schema or boolean false). Applied *after* prefixItems. Use `UnevaluatedItems` for more control.
-	PrefixItems      []*Schema   `json:"prefixItems,omitempty"`      // Array of schemas for tuple validation (items at specific indices)
+	PrefixItems      Schemas     `json:"prefixItems,omitempty"`      // Array of schemas for tuple validation (items at specific indices)
 	UnevaluatedItems interface{} `json:"unevaluatedItems,omitempty"` // Validation for items not covered by `items` or `prefixItems` (schema or boolean)
 	MaxItems         *uint64     `json:"maxItems,omitempty"`         // Maximum number of items (non-negative integer)
 	MinItems         *uint64     `json:"minItems,omitempty"`         // Minimum number of items (non-negative integer, default 0)
@@ -54,16 +56,16 @@ type Schema struct {
 	MinContains      *uint64     `json:"minContains,omitempty"`      // Minimum number of items matching `contains` (non-negative integer, default 1, requires `contains`)
 
 	// Validation Keywords for Objects
-	Properties            map[string]*Schema  `json:"properties,omitempty"`            // Schemas for named properties
-	PatternProperties     map[string]*Schema  `json:"patternProperties,omitempty"`     // Schemas for properties matching regex patterns
-	AdditionalProperties  interface{}         `json:"additionalProperties,omitempty"`  // Controls handling of properties not explicitly listed or matched by patterns (schema or boolean). Use `UnevaluatedProperties` for more control.
-	UnevaluatedProperties interface{}         `json:"unevaluatedProperties,omitempty"` // Validation for properties not covered by `properties`, `patternProperties`, or `additionalProperties` (schema or boolean)
-	Required              []string            `json:"required,omitempty"`              // Array of required property names
-	PropertyNames         *Schema             `json:"propertyNames,omitempty"`         // Schema for property names
-	MaxProperties         *uint64             `json:"maxProperties,omitempty"`         // Maximum number of properties (non-negative integer)
-	MinProperties         *uint64             `json:"minProperties,omitempty"`         // Minimum number of properties (non-negative integer, default 0)
-	DependentRequired     map[string][]string `json:"dependentRequired,omitempty"`     // Properties required based on the presence of other properties
-	DependentSchemas      map[string]*Schema  `json:"dependentSchemas,omitempty"`      // Schemas applied based on the presence of other properties
+	Properties            *util.OrderedMap[*Schema]  `json:"properties,omitempty"`            // Schemas for named properties
+	PatternProperties     *util.OrderedMap[*Schema]  `json:"patternProperties,omitempty"`     // Schemas for properties matching regex patterns
+	AdditionalProperties  interface{}                `json:"additionalProperties,omitempty"`  // Controls handling of properties not explicitly listed or matched by patterns (schema or boolean). Use `UnevaluatedProperties` for more control.
+	UnevaluatedProperties interface{}                `json:"unevaluatedProperties,omitempty"` // Validation for properties not covered by `properties`, `patternProperties`, or `additionalProperties` (schema or boolean)
+	Required              []string                   `json:"required,omitempty"`              // Array of required property names
+	PropertyNames         *Schema                    `json:"propertyNames,omitempty"`         // Schema for property names
+	MaxProperties         *uint64                    `json:"maxProperties,omitempty"`         // Maximum number of properties (non-negative integer)
+	MinProperties         *uint64                    `json:"minProperties,omitempty"`         // Minimum number of properties (non-negative integer, default 0)
+	DependentRequired     *util.OrderedMap[[]string] `json:"dependentRequired,omitempty"`     // Properties required based on the presence of other properties
+	DependentSchemas      *util.OrderedMap[*Schema]  `json:"dependentSchemas,omitempty"`      // Schemas applied based on the presence of other properties
 
 	// Conditional Applicators
 	If   *Schema `json:"if,omitempty"`   // If this schema validates, `then` must also validate
@@ -71,8 +73,8 @@ type Schema struct {
 	Else *Schema `json:"else,omitempty"` // Schema applied if `if` does not validate
 
 	// Boolean Logic Applicators
-	AllOf []*Schema `json:"allOf,omitempty"` // Instance must validate against all of these schemas
-	AnyOf []*Schema `json:"anyOf,omitempty"` // Instance must validate against at least one of these schemas
-	OneOf []*Schema `json:"oneOf,omitempty"` // Instance must validate against exactly one of these schemas
-	Not   *Schema   `json:"not,omitempty"`   // Instance must not validate against this schema
+	AllOf Schemas `json:"allOf,omitempty"` // Instance must validate against all of these schemas
+	AnyOf Schemas `json:"anyOf,omitempty"` // Instance must validate against at least one of these schemas
+	OneOf Schemas `json:"oneOf,omitempty"` // Instance must validate against exactly one of these schemas
+	Not   *Schema `json:"not,omitempty"`   // Instance must not validate against this schema
 }

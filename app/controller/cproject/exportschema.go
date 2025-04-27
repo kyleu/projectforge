@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"net/http"
 	"path"
 	"projectforge.dev/projectforge/app"
@@ -59,11 +60,20 @@ func schemasFor(ctx context.Context, prj *project.Project, logger util.Logger, e
 
 func schemaForEnum(prj *project.Project, sch *jsonschema.Collection, x *enum.Enum) (*jsonschema.Schema, error) {
 	ret := sch.NewSchema(x.Name)
+	ret.Description = x.Description
+	ret.Enum = lo.Map(x.Values, func(x *enum.Value, _ int) any {
+		return x.Key
+	})
 	return ret, nil
 }
 
 func schemaForModel(prj *project.Project, sch *jsonschema.Collection, x *model.Model) (*jsonschema.Schema, error) {
 	ret := sch.NewSchema(x.Name)
+	ret.Description = x.Description
+	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
+	for _, col := range x.Columns {
+		ret.Properties.Set(col.Name, &jsonschema.Schema{Type: col.Type.String()})
+	}
 	return ret, nil
 }
 

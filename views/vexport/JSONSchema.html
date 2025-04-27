@@ -80,11 +80,10 @@
     <h3>{%= components.SVGIcon(`cog`, ps) %} {%s util.StringPlural(len(ex), "Extra") %}</h3>
     <div class="mt">
       <ul class="accordion">
-        {%- for _, k := range ex -%}
-        {%- code v := p.Collection.GetSchema(k) -%}
+        {%- for _, v := range ex -%}
         <li>
-          <input id="accordion-model-{%s k %}" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-{%s k %}">{%= components.ExpandCollapse(3, ps) %} {%s k %}</label>
+          <input id="accordion-model-{%s v.ID %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-model-{%s v.ID %}">{%= components.ExpandCollapse(3, ps) %} {%s v.ID %}</label>
           <div class="bd"><div><div>
             <pre>{%s util.ToJSON(v) %}</pre>
           </div></div></div>

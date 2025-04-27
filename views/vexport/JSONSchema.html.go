@@ -203,73 +203,70 @@ func (p *JSONSchema) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
       <ul class="accordion">
 `)
 //line views/vexport/JSONSchema.html:83
-		for _, k := range ex {
-//line views/vexport/JSONSchema.html:84
-			v := p.Collection.GetSchema(k)
-
-//line views/vexport/JSONSchema.html:84
+		for _, v := range ex {
+//line views/vexport/JSONSchema.html:83
 			qw422016.N().S(`        <li>
           <input id="accordion-model-`)
-//line views/vexport/JSONSchema.html:86
-			qw422016.E().S(k)
-//line views/vexport/JSONSchema.html:86
+//line views/vexport/JSONSchema.html:85
+			qw422016.E().S(v.ID)
+//line views/vexport/JSONSchema.html:85
 			qw422016.N().S(`" type="checkbox" hidden="hidden" />
           <label for="accordion-model-`)
-//line views/vexport/JSONSchema.html:87
-			qw422016.E().S(k)
-//line views/vexport/JSONSchema.html:87
+//line views/vexport/JSONSchema.html:86
+			qw422016.E().S(v.ID)
+//line views/vexport/JSONSchema.html:86
 			qw422016.N().S(`">`)
-//line views/vexport/JSONSchema.html:87
+//line views/vexport/JSONSchema.html:86
 			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchema.html:87
+//line views/vexport/JSONSchema.html:86
 			qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:87
-			qw422016.E().S(k)
-//line views/vexport/JSONSchema.html:87
+//line views/vexport/JSONSchema.html:86
+			qw422016.E().S(v.ID)
+//line views/vexport/JSONSchema.html:86
 			qw422016.N().S(`</label>
           <div class="bd"><div><div>
             <pre>`)
-//line views/vexport/JSONSchema.html:89
+//line views/vexport/JSONSchema.html:88
 			qw422016.E().S(util.ToJSON(v))
-//line views/vexport/JSONSchema.html:89
+//line views/vexport/JSONSchema.html:88
 			qw422016.N().S(`</pre>
           </div></div></div>
         </li>
 `)
-//line views/vexport/JSONSchema.html:92
+//line views/vexport/JSONSchema.html:91
 		}
-//line views/vexport/JSONSchema.html:92
+//line views/vexport/JSONSchema.html:91
 		qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:95
 	}
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 }
 
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 func (p *JSONSchema) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 }
 
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 func (p *JSONSchema) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 	return qs422016
-//line views/vexport/JSONSchema.html:97
+//line views/vexport/JSONSchema.html:96
 }
