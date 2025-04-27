@@ -17,7 +17,6 @@ func ProjectExportConfigForm(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		ps.Data = prj.ExportArgs
 		bc := []string{"projects", prj.Key, "Export"}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Export", prj.Key), prj.ExportArgs.Config)
 		return controller.Render(r, as, &vexport.ConfigForm{Cfg: prj.ExportArgs.Config}, ps, bc...)

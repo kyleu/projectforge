@@ -17,6 +17,8 @@ func exportRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/p/{key}/export/groups", cproject.ProjectExportGroupsEdit)
 	makeRoute(r, http.MethodPost, "/p/{key}/export/groups", cproject.ProjectExportGroupsSave)
 
+	makeRoute(r, http.MethodGet, "/p/{key}/export/jsonschema", cproject.ProjectExportJSONSchema)
+
 	makeRoute(r, http.MethodGet, "/p/{key}/export/models/create/new", cproject.ProjectExportModelNew)
 	makeRoute(r, http.MethodPost, "/p/{key}/export/models/create/new", cproject.ProjectExportModelCreate)
 	makeRoute(r, http.MethodGet, "/p/{key}/export/models/create/derive", cproject.ProjectExportDeriveForm)
