@@ -22,7 +22,7 @@ jobs:
         with:
           go-version: "{{{ .GoVersionSafe }}}"
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
       - name: "Dependencies"
         run: "bin/bootstrap.sh"
       - name: "Config"

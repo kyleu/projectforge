@@ -2,10 +2,12 @@ package jsonschema
 
 import (
 	"fmt"
-	"github.com/samber/lo"
 	"path"
-	"projectforge.dev/projectforge/app/util"
 	"strings"
+
+	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Collection struct {

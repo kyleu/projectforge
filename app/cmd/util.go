@@ -66,7 +66,11 @@ func initIfNeeded() error {
 		}
 	}
 	if _flags.ConfigDir == "" {
-		_flags.ConfigDir = configdir.LocalConfig(util.AppName)
+		if x := util.GetEnv(util.AppKey + "_working_directory"); x != "" {
+			_flags.ConfigDir = x
+		} else {
+			_flags.ConfigDir = configdir.LocalConfig(util.AppName)
+		}
 	}
 	err := util.InitAcronyms()
 	if err != nil {

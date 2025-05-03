@@ -15,7 +15,7 @@
     {
       "key": "db_port",
       "type": "int",
-      "description": "port for the default PostgreSQL connection, defaults to `3306`"
+      "description": "port for the default PostgreSQL connection, defaults to `5432`"
     },
     {
       "key": "db_user",

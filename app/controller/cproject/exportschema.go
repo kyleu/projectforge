@@ -3,10 +3,12 @@ package cproject
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/samber/lo"
 	"net/http"
 	"path"
+
+	"github.com/pkg/errors"
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
