@@ -27,7 +27,7 @@ func ChangeDir(w http.ResponseWriter, r *http.Request) {
 		argRes := util.FieldDescsCollect(r, changeDirArgs)
 		dir, err := argRes.Values.GetString("dir", false)
 		if err != nil || dir == "" || argRes.HasMissing() {
-			ps.Data = argRes
+			ps.SetTitleAndData("Directory Change", argRes)
 			d, _ := filepath.Abs(".")
 			argRes.Values["dir"] = d
 			msg := "Choose the working directory to use for loading the main project"
@@ -50,7 +50,7 @@ func ChangeDir(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		ps.Data = dir
+		ps.SetTitleAndData("Directory Change", dir)
 		return "/welcome", nil
 	})
 }

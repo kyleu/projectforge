@@ -11,8 +11,8 @@ func (e *Enum) SkipGolang() bool {
 }
 
 func (e Enums) WithDatabase() Enums {
-	return lo.Filter(e, func(x *Enum, _ int) bool {
-		return !x.SkipDatabase()
+	return lo.Reject(e, func(x *Enum, _ int) bool {
+		return x.SkipDatabase()
 	})
 }
 

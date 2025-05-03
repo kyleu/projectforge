@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
@@ -13,7 +14,8 @@ import (
 	"projectforge.dev/projectforge/app/project/export/files/view"
 )
 
-func ModelAll(m *model.Model, p *project.Project, args *model.Args, linebreak string) (file.Files, error) {
+func ModelAll(m *model.Model, p *project.Project, linebreak string) (file.Files, error) {
+	args := p.ExportArgs
 	var calls file.Files
 	var f *file.File
 
@@ -51,7 +53,7 @@ func ModelAll(m *model.Model, p *project.Project, args *model.Args, linebreak st
 	return calls, nil
 }
 
-func basics(m *model.Model, args *model.Args, goVersion string, linebreak string) (file.Files, error) {
+func basics(m *model.Model, args *metamodel.Args, goVersion string, linebreak string) (file.Files, error) {
 	var calls file.Files
 	f, err := gomodel.Model(m, args, linebreak)
 	if err != nil {

@@ -7,12 +7,13 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func Routes(args *model.Args, linebreak string) (*file.File, error) {
+func Routes(args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("routes", []string{"app", "controller", "routes"}, "generated")
 	g.AddImport(helper.ImpRouter)
 	g.AddBlocks(routeConsts(), routes(g, args))
@@ -33,7 +34,7 @@ func routeConsts() *golang.Block {
 	return ret
 }
 
-func routes(g *golang.File, args *model.Args) *golang.Block {
+func routes(g *golang.File, args *metamodel.Args) *golang.Block {
 	ret := golang.NewBlock("generatedRoutes", "func")
 	ret.W("func generatedRoutes(r *mux.Router) {")
 	rct := routeContent(args)
@@ -45,7 +46,7 @@ func routes(g *golang.File, args *model.Args) *golang.Block {
 	return ret
 }
 
-func routeContent(args *model.Args) []string {
+func routeContent(args *metamodel.Args) []string {
 	out := make([]string, 0, 100)
 	lo.ForEach(args.Models.WithRoutes().SortedRoutes(), func(m *model.Model, _ int) {
 		out = append(out, routeModelLink(m)...)

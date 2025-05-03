@@ -84,14 +84,14 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	return nil
 }
 
-func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *model.Model, *model.Args, error) {
+func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *model.Model, error) {
 	prj, err := getProjectWithArgs(r, as, logger)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 	modelKey, err := cutil.PathString(r, "model", false)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 	var mdl *model.Model
 	if modelKey == keyNew {
@@ -100,10 +100,10 @@ func exportLoadModel(r *http.Request, as *app.State, logger util.Logger) (*proje
 		mdl = prj.ExportArgs.Models.Get(modelKey)
 	}
 	if mdl == nil {
-		return nil, nil, nil, errors.Errorf("no model found with key [%s]", modelKey)
+		return nil, nil, errors.Errorf("no model found with key [%s]", modelKey)
 	}
 
-	return prj, mdl, prj.ExportArgs, nil
+	return prj, mdl, nil
 }
 
 func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
@@ -134,14 +134,14 @@ func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 	return nil
 }
 
-func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *enum.Enum, *model.Args, error) {
+func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*project.Project, *enum.Enum, error) {
 	prj, err := getProjectWithArgs(r, as, logger)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 	enumKey, err := cutil.PathString(r, "enum", false)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 	var en *enum.Enum
 	if enumKey == keyNew {
@@ -150,8 +150,8 @@ func exportLoadEnum(r *http.Request, as *app.State, logger util.Logger) (*projec
 		en = prj.ExportArgs.Enums.Get(enumKey)
 	}
 	if en == nil {
-		return nil, nil, nil, errors.Errorf("no model found with key [%s]", enumKey)
+		return nil, nil, errors.Errorf("no model found with key [%s]", enumKey)
 	}
 
-	return prj, en, prj.ExportArgs, nil
+	return prj, en, nil
 }

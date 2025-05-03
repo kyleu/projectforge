@@ -146,17 +146,10 @@ Create a new file in `app/controller` or a child directory, then add your method
 The usual form is:
 
 ```go
-// All controller actions require an http request/response
 func CurrentTime(w http.ResponseWriter, r *http.Request) {
-	// The Act method wires up the page state for your logic
 	Act("current.time", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		// The PageState::Title is used as the HTML title
-		ps.Title = "The current server time for " + util.AppName
-		// For example purposes
-		t := util.TimeCurrent()
-		// PageState::Data will be rendered as JSON or XML if the Content-Type of the request matches
-		ps.Data = t
-		// The Render method will send the template contents if HTML is requested. The final argument refers to the active menu key
+    t := util.TimeCurrent()
+    ps.SetTitleAndData("The current server time for " + util.AppName, t)
 		return Render(r, as, &views.CurrentTime{Time: t}, ps, "time")
 	})
 }

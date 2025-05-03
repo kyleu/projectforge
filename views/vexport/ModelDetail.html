@@ -21,6 +21,7 @@
   {%- code m := p.Model -%}
   <div class="card">
     <div class="right">
+      <a href="{%s p.BaseURL %}/{%s p.Model.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
       <a href="{%s p.BaseURL %}/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>

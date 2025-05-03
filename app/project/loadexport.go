@@ -12,14 +12,15 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/data"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, logger util.Logger) (*model.Args, error) {
-	args := &model.Args{Config: util.ValueMap{}}
+func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, logger util.Logger) (*metamodel.Args, error) {
+	args := &metamodel.Args{Config: util.ValueMap{}}
 	exportPath := filepath.Join(ConfigDir, "export")
 	if !fs.IsDir(exportPath) {
 		return args, nil

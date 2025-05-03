@@ -21,7 +21,10 @@
 
 {% func (p *Overview) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/p/{%s p.Project.Key %}/export/config"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a></div>
+    <div class="right">
+      <a href="/p/{%s p.Project.Key %}/export/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
+      <a href="/p/{%s p.Project.Key %}/export/config"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+    </div>
     <h3>{%= components.SVGIcon(`print`, ps) %} Export Configuration</h3>
     {%= view.Map(true, p.Args.Config, ps) %}
   </div>
@@ -49,7 +52,6 @@
   </div>
   <div class="card">
     <div class="right">
-      <a href="/p/{%s p.Project.Key %}/export/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
       <a href="/p/{%s p.Project.Key %}/export/models/create/derive"><button>{%= components.SVGButton("dna", ps) %} Derive</button></a>
       <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>

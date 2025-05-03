@@ -95,7 +95,7 @@ func (v Values) Names() []string {
 }
 
 func (v Values) AllSimple() bool {
-	return !lo.ContainsBy(v, func(x *Value) bool {
+	return lo.NoneBy(v, func(x *Value) bool {
 		return (!x.Simple) || x.Name != "" || x.Description != "" || x.Icon != "" || (x.Extra != nil && len(x.Extra.Map) > 0)
 	})
 }

@@ -51,6 +51,9 @@ func handleError(key string, as *app.State, ps *cutil.PageState, r *http.Request
 
 	e := util.GetErrorDetail(err, ps.Admin)
 	ps.Data = e
+	if ps.Title == "" {
+		ps.Title = "Error Encountered"
+	}
 	redir, renderErr := Render(r, as, &verror.Error{Err: e}, ps)
 	if renderErr != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", renderErr)

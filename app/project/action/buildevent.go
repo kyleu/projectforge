@@ -139,8 +139,8 @@ func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onDeployments(_ context.Context, pm *PrjAndMods, r *Result) *Result {
-	deploys := lo.Filter(pm.Prj.Info.Deployments, func(x string, _ int) bool {
-		return !strings.HasPrefix(x, "ts:")
+	deploys := lo.Reject(pm.Prj.Info.Deployments, func(x string, _ int) bool {
+		return strings.HasPrefix(x, "ts:")
 	})
 	if pm.Prj.Info == nil || len(deploys) == 0 {
 		return r

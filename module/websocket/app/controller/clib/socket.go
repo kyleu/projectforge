@@ -42,8 +42,11 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 			return "", errors.New("no channel in path")
 		}
 		ch := as.Services.Socket.GetChannel(path[1])
-		members := as.Services.Socket.GetAllMembers(path[1])
-		ps.Data = ch
+		if ch == nil {
+			return "", errors.Errorf("can't find channel [%s]", path[1])
+		}
+		members := as.Services.Socket.GetAllMembers(ch.Key)
+		ps.SetTitleAndData("Channel ["+ch.Key+"]", ch)
 		ps.DefaultNavIcon = socketIcon
 		return controller.Render(r, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
 	case "conn":
@@ -59,7 +62,7 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 			if c == nil {
 				return "", errors.Errorf("no connection with ID [%s]", id.String())
 			}
-			ps.Data = c
+			ps.SetTitleAndData("Connection ["+c.ID.String()+"]", c)
 			ps.DefaultNavIcon = socketIcon
 			return controller.Render(r, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
 		}

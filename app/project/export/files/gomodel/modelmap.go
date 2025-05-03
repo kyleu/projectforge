@@ -7,13 +7,14 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func ModelMap(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func ModelMap(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
 	g.AddImport(helper.ImpAppUtil)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)

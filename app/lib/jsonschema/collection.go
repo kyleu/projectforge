@@ -53,7 +53,7 @@ func (c *Collection) AddSchema(sch *Schema) {
 }
 
 func (c *Collection) Extra() Schemas {
-	return lo.Filter(c.Schemas, func(x *Schema, _ int) bool {
-		return !strings.Contains(x.Comment, util.AppName)
+	return lo.Reject(c.Schemas, func(x *Schema, _ int) bool {
+		return strings.Contains(x.Comment, util.AppName)
 	})
 }

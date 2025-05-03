@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -16,7 +17,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func table(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func table(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Table.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpFilter)
 	if lo.ContainsBy(m.Columns, func(x *model.Column) bool {

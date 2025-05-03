@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -15,7 +16,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Model(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func Model(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel()))
 	lo.ForEach(helper.ImportsForTypes("go", "", m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)

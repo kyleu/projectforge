@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -18,7 +19,7 @@ import (
 
 const tableClause = "tableQuoted"
 
-func ServiceGet(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func ServiceGet(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	dbRef := args.DBRef()
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "serviceget")
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {

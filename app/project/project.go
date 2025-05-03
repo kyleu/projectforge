@@ -6,7 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -31,11 +31,11 @@ type Project struct {
 	Build *Build       `json:"build,omitempty"`
 	Files []string     `json:"files,omitempty"`
 
-	ExportArgs *model.Args   `json:"-"`
-	Config     util.ValueMap `json:"-"`
-	Path       string        `json:"-"`
-	Parent     string        `json:"-"`
-	Error      string        `json:"error,omitempty"`
+	ExportArgs *metamodel.Args `json:"-"`
+	Config     util.ValueMap   `json:"-"`
+	Path       string          `json:"-"`
+	Parent     string          `json:"-"`
+	Error      string          `json:"error,omitempty"`
 }
 
 func NewProject(key string, path string) *Project {

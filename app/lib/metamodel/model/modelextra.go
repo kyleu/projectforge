@@ -25,26 +25,26 @@ func (m *Model) SkipGolang() bool {
 }
 
 func (m Models) WithRoutes() Models {
-	return lo.Filter(m, func(x *Model, _ int) bool {
-		return !x.SkipRoutes()
+	return lo.Reject(m, func(x *Model, _ int) bool {
+		return x.SkipRoutes()
 	})
 }
 
 func (m Models) WithController() Models {
-	return lo.Filter(m, func(x *Model, _ int) bool {
-		return !x.SkipController()
+	return lo.Reject(m, func(x *Model, _ int) bool {
+		return x.SkipController()
 	})
 }
 
 func (m Models) WithService() Models {
-	return lo.Filter(m, func(x *Model, _ int) bool {
-		return !x.SkipService()
+	return lo.Reject(m, func(x *Model, _ int) bool {
+		return x.SkipService()
 	})
 }
 
 func (m Models) WithDatabase() Models {
-	return lo.Filter(m, func(x *Model, _ int) bool {
-		return !x.SkipDatabase()
+	return lo.Reject(m, func(x *Model, _ int) bool {
+		return x.SkipDatabase()
 	})
 }
 

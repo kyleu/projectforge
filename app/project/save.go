@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/theme"
@@ -52,7 +53,7 @@ func (s *Service) Save(prj *Project, logger util.Logger) error {
 	return nil
 }
 
-func (s *Service) SaveExportArgs(fs filesystem.FileLoader, args *model.Args) error {
+func (s *Service) SaveExportArgs(fs filesystem.FileLoader, args *metamodel.Args) error {
 	if len(args.Config) > 0 {
 		if err := s.SaveExportConfig(fs, args.Config); err != nil {
 			return err

@@ -70,6 +70,7 @@ func featureFiles(path []string, as *app.State, ps *cutil.PageState) ([]string, 
 		u += "/" + x
 		bc = append(bc, x+"||"+u)
 	})
+	ps.SetTitleAndData("Module ["+mod.Title()+"]", mod)
 	ps.Data = mod
 	return bc, &vsite.FeatureFiles{Module: mod, Path: path[3:]}, nil
 }

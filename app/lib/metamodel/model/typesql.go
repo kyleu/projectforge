@@ -7,7 +7,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const keyText, keyNVarcharMax = "text", "nvarchar(max)"
+const (
+	keyText        = "text"
+	keyNVarcharMax = "nvarchar(max)"
+)
 
 func ToSQLType(t types.Type, database string) (string, error) {
 	switch t.Key() {

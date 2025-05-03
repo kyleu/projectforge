@@ -66,8 +66,8 @@ func (i Items) Get(key string) *Item {
 }
 
 func (i Items) Visible() Items {
-	return lo.Filter(i, func(item *Item, _ int) bool {
-		return !item.Hidden
+	return lo.Reject(i, func(item *Item, _ int) bool {
+		return item.Hidden
 	})
 }
 

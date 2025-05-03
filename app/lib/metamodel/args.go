@@ -1,4 +1,4 @@
-package model
+package metamodel
 
 import (
 	"encoding/json"
@@ -7,12 +7,8 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
-)
-
-const (
-	dbSQLite    = "sqlite"
-	dbSQLServer = "sqlserver"
 )
 
 type Args struct {
@@ -20,12 +16,12 @@ type Args struct {
 	ConfigFile     json.RawMessage            `json:"-"`
 	Enums          enum.Enums                 `json:"enums,omitempty"`
 	EnumFiles      map[string]json.RawMessage `json:"-"`
-	Models         Models                     `json:"models,omitempty"`
+	Models         model.Models               `json:"models,omitempty"`
 	ModelFiles     map[string]json.RawMessage `json:"-"`
-	Groups         Groups                     `json:"groups,omitempty"`
+	Groups         model.Groups               `json:"groups,omitempty"`
 	GroupsFile     json.RawMessage            `json:"-"`
 	Acronyms       []string                   `json:"acronyms,omitempty"`
-	ExtraTypes     Models                     `json:"extraTypes,omitempty"`
+	ExtraTypes     model.Models               `json:"extraTypes,omitempty"`
 	ExtraTypesFile json.RawMessage            `json:"-"`
 	Modules        []string                   `json:"-"`
 	Database       string                     `json:"-"`
@@ -44,9 +40,9 @@ func (a *Args) DBRef() string {
 
 func (a *Args) DatabaseNow() string {
 	switch a.Database {
-	case dbSQLite:
+	case util.DatabaseSQLite:
 		return "current_timestamp"
-	case dbSQLServer:
+	case util.DatabaseSQLServer:
 		return "getdate()"
 	default:
 		return "now()"
@@ -79,7 +75,7 @@ func (a *Args) Validate() error {
 	return nil
 }
 
-func (a *Args) Audit(m *Model) bool {
+func (a *Args) Audit(m *model.Model) bool {
 	return m.HasTag("audit") && lo.Contains(a.Modules, "audit")
 }
 

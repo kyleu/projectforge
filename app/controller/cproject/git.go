@@ -56,7 +56,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 		case git.ActionCommit.Key:
 			argRes := util.FieldDescsCollect(r, gitCommitArgs)
 			if argRes.HasMissing() {
-				ps.Data = argRes
+				ps.SetTitleAndData("Git Commit", argRes)
 				url := fmt.Sprintf("/git/%s/commit", prj.Key)
 				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes}, ps, bc...)
 			}
@@ -74,7 +74,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 		case git.ActionHistory.Key:
 			argRes := util.FieldDescsCollect(r, gitHistoryArgs)
 			if argRes.HasMissing() {
-				ps.Data = argRes
+				ps.SetTitleAndData("Git History", argRes)
 				url := fmt.Sprintf("/git/%s/history", prj.Key)
 				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Choose your options", Results: argRes}, ps, bc...)
 			}
@@ -89,7 +89,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			argRes := util.FieldDescsCollect(r, gitBranchArgs)
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/branch", prj.Key)
-				ps.Data = argRes
+				ps.SetTitleAndData("Git Branch", argRes)
 				return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Enter your branch name", Results: argRes}, ps, bc...)
 			}
 			result, err = gs.Commit(ps.Context, argRes.Values.GetStringOpt("message"), ps.Logger)
@@ -97,7 +97,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			argRes := util.FieldDescsCollect(r, gitMagicArgs)
 			if argRes.HasMissing() {
 				url := fmt.Sprintf("/git/%s/magic", prj.Key)
-				ps.Data = argRes
+				ps.SetTitleAndData("Git Magic!", argRes)
 				warning := "Are you sure you'd like to commit and push?"
 				page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Warning: warning}
 				return controller.Render(r, as, page, ps, bc...)

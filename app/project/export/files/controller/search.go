@@ -6,13 +6,14 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Search(args *model.Args, linebreak string) (*file.File, error) {
+func Search(args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("search", []string{"app", "lib", "search"}, "generated")
 	if args.Models.WithController().HasSearch() {
 		g.AddImport(helper.ImpContext, helper.ImpApp, helper.ImpAppUtil, helper.ImpCutil, helper.ImpSearchResult)
@@ -21,7 +22,7 @@ func Search(args *model.Args, linebreak string) (*file.File, error) {
 	return g.Render(linebreak)
 }
 
-func searchBlock(args *model.Args) *golang.Block {
+func searchBlock(args *metamodel.Args) *golang.Block {
 	ret := golang.NewBlock("menu", "func")
 	keys := make([]string, 0, len(args.Models))
 	ret.W("func generatedSearch() []Provider {")

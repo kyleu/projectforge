@@ -12,13 +12,14 @@ var orderArgs = util.FieldDescs{
 
 func PlaceOrder(w http.ResponseWriter, r *http.Request) {
 	controller.Act("place.order", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		argRes := util.FieldDescCollect(r, orderArgs)
+		argRes := util.FieldDescsCollect(r, orderArgs)
 		if argRes.HasMissing() {
-			ps.Data = argRes
+			ps.SetTitleAndData("Order Options", argRes)
 			msg := "Choose some options"
 			return controller.Render(r, as, &vpage.Args{URL: r.URL.String(), Directions: msg, ArgRes: argRes}, ps, "breadcrumb")
 		}
-		return "/welcome", nil
+		ord := actuallyPlaceOrder(argRes.Values)
+		return "/order/" + ord.ID.String(), nil
 	})
 }
 ```

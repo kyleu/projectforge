@@ -1,0 +1,49 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/jsonschema"
+  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type JSONSchemaModel struct {
+  layout.Basic
+  Project *project.Project
+  Model *model.Model
+  Collection *jsonschema.Collection
+} %}
+
+{% func (p *JSONSchemaModel) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code x := p.Model -%}
+  <style>
+    .flex-item {
+      flex: 1;
+      margin: var(--padding);
+      padding: var(--padding);
+      border: var(--border);
+    }
+  </style>
+  <div class="card">
+    <div class="right">
+      <a href="{%s p.Project.WebPath() %}/export/model/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
+    </div>
+    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}:{%s x.Title() %}] JSON Schema</h3>
+    <div class="clear"></div>
+    {%- code sch := p.Collection.GetSchema(x.Name) -%}
+    {%= renderJSONSchemaModel(as, x, sch, ps) %}
+  </div>
+{% endfunc %}
+
+{% func renderJSONSchemaModel(as *app.State, x *model.Model, sch *jsonschema.Schema, ps *cutil.PageState) %}
+  <div class="flex" style="">
+    <div class="flex-item">
+      <pre>{%s util.ToJSON(x) %}</pre>
+    </div>
+    <div class="flex-item">
+      <pre>{%s util.ToJSON(sch) %}</pre>
+    </div>
+  </div>
+{% endfunc %}

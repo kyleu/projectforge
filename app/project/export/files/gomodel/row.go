@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -18,7 +19,7 @@ import (
 
 const rDot = "r."
 
-func Row(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func Row(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "row")
 	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)

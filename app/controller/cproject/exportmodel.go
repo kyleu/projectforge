@@ -17,11 +17,11 @@ import (
 
 func ProjectExportModelDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.model.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, args, err := exportLoadModel(r, as, ps.Logger)
+		prj, mdl, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		fls, err := files.ModelAll(mdl, prj, args, util.StringDefaultLinebreak)
+		fls, err := files.ModelAll(mdl, prj, util.StringDefaultLinebreak)
 		if err != nil {
 			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
 		}
@@ -33,7 +33,7 @@ func ProjectExportModelDetail(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportModelSeedData(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.seed.data", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
+		prj, mdl, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -93,7 +93,7 @@ func ProjectExportModelCreate(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportModelForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.model.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
+		prj, mdl, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -111,7 +111,7 @@ func ProjectExportModelForm(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportModelSave(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.model.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
+		prj, mdl, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -143,7 +143,7 @@ func ProjectExportModelSave(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportModelDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.model.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadModel(r, as, ps.Logger)
+		prj, mdl, err := exportLoadModel(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

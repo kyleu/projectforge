@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -23,7 +24,7 @@ func iconRef(m *model.Model) string {
 	return "{%%= components.SVGIcon(`" + m.Icon + "`, ps) %%}"
 }
 
-func detail(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func detail(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Detail.html")
 	g.AddImport(helper.ImpApp, helper.ImpComponents, helper.ImpCutil, helper.ImpLayout)
 	if lo.ContainsBy(m.Columns, func(x *model.Column) bool {

@@ -143,9 +143,9 @@ func (m *Model) AllSearches(db string) []string {
 			x := fmt.Sprintf("%q", c.SQL())
 			if !types.IsString(c.Type) {
 				switch db {
-				case dbSQLServer:
+				case util.DatabaseSQLServer:
 					x = fmt.Sprintf("cast(%q as nvarchar(2048))", c.SQL())
-				case dbSQLite:
+				case util.DatabaseSQLite:
 					x = c.SQL()
 				default:
 					x = fmt.Sprintf("%q::text", c.SQL())

@@ -49,7 +49,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		}
 		if isBuild {
 			if phase == "" {
-				ps.Data = action.AllBuilds
+				ps.SetTitleAndData("Build Result", action.AllBuilds)
 				page := &vbuild.BuildResult{Project: prj, Cfg: cfg}
 				return controller.Render(r, as, page, ps, bc...)
 			}
@@ -73,7 +73,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 		if redir, e := util.Cast[string](result.Data); e == nil {
 			return redir, nil
 		}
-		ps.Data = result
+		ps.SetTitleAndData("Action ["+actT.String()+"]", result)
 		if isBuild {
 			if phase == depsKey {
 				return runDeps(prj, result, r, as, ps)

@@ -30,6 +30,9 @@ func Render(r *http.Request, as *app.State, page layout.Page, ps *cutil.PageStat
 			}
 			if t := fmt.Sprintf("%T", page); t != "*verror.Error" {
 				ps.Data = ed
+				if ps.Title == "" {
+					ps.Title = "Error Encountered"
+				}
 				_, err := Render(r, as, &verror.Error{Err: ed}, ps, breadcrumbs...)
 				if err != nil {
 					verror.WriteDetail(ps.W, ed, as, ps)

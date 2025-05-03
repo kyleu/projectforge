@@ -214,7 +214,7 @@ func (e Enums) WithTag(tag string) Enums {
 }
 
 func (e Enums) WithoutTag(tag string) Enums {
-	return lo.Filter(e, func(x *Enum, _ int) bool {
-		return !x.HasTag(tag)
+	return lo.Reject(e, func(x *Enum, _ int) bool {
+		return x.HasTag(tag)
 	})
 }

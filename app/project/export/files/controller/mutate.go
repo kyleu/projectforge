@@ -65,7 +65,6 @@ func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, mod
 		bc = grp.BC()
 		ret.WF("\t\tps.SetTitleAndData(fmt.Sprintf(\"Create ["+m.Proper()+"] for %s [%%%%s]\", %sArg), ret)", grp.TitleLower(), grp.Camel())
 	}
-	ret.W("\t\tps.Data = ret")
 	ret.WF("\t\treturn %sRender(r, as, &v%s.Edit{Model: ret, IsNew: true}, ps, %s%s, \"Create\")", prefix, m.Package, m.Breadcrumbs(), bc)
 	ret.W("\t})")
 	ret.W("}")

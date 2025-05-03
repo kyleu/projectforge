@@ -20,6 +20,7 @@
   {%- code e := p.Enum -%}
   <div class="card">
     <div class="right">
+      <a href="{%s p.BaseURL %}/{%s e.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
       <a href="{%s p.BaseURL %}/{%s e.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(e.IconSafe(), ps) %} {%s e.Name %}</h3>

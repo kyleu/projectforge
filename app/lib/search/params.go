@@ -23,8 +23,8 @@ func (p *Params) Parts() []string {
 }
 
 func (p *Params) General() []string {
-	return lo.Filter(p.Parts(), func(x string, _ int) bool {
-		return !strings.Contains(x, ":")
+	return lo.Reject(p.Parts(), func(x string, _ int) bool {
+		return strings.Contains(x, ":")
 	})
 }
 

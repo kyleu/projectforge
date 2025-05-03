@@ -2,95 +2,9 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/jsonschema"
-  "projectforge.dev/projectforge/app/lib/metamodel/model"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
-  "projectforge.dev/projectforge/views/components"
-  "projectforge.dev/projectforge/views/layout"
 ) %}
 
-{% code type JSONSchema struct {
-  layout.Basic
-  Project *project.Project
-  Args *model.Args
-  Collection *jsonschema.Collection
-} %}
-
-{% func (p *JSONSchema) Body(as *app.State, ps *cutil.PageState) %}
-  <style>
-    .flex-item {
-      flex: 1;
-      margin: var(--padding);
-      padding: var(--padding);
-      border: var(--border);
-    }
-  </style>
-  <div class="card">
-    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}] JSON Schema</h3>
-  </div>
-  <div class="card">
-    <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
-    <div class="mt">
-      <ul class="accordion">
-        {%- for _, x := range p.Args.Enums -%}
-        <li>
-          <input id="accordion-enum-{%s x.Name %}" type="checkbox" hidden="hidden" />
-          <label for="accordion-enum-{%s x.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s x.Name %}</label>
-          <div class="bd"><div><div>
-            <div class="flex" style="">
-              <div class="flex-item">
-                <pre>{%s util.ToJSON(x) %}</pre>
-              </div>
-              <div class="flex-item">
-                <pre>{%s util.ToJSON(p.Collection.GetSchema(x.Name)) %}</pre>
-              </div>
-            </div>
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-      </ul>
-    </div>
-  </div>
-  <div class="card">
-    <h3>{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
-    <div class="mt">
-      <ul class="accordion">
-        {%- for _, x := range p.Args.Models -%}
-        <li>
-          <input id="accordion-model-{%s x.Name %}" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-{%s x.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s x.Name %}</label>
-          <div class="bd"><div><div>
-            <div class="flex" style="">
-              <div class="flex-item">
-                <pre>{%s util.ToJSON(x) %}</pre>
-              </div>
-              <div class="flex-item">
-                <pre>{%s util.ToJSON(p.Collection.GetSchema(x.Name)) %}</pre>
-              </div>
-            </div>
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-      </ul>
-    </div>
-  </div>
-  {%- code ex := p.Collection.Extra() -%}
-  {%- if len(ex) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGIcon(`cog`, ps) %} {%s util.StringPlural(len(ex), "Extra") %}</h3>
-    <div class="mt">
-      <ul class="accordion">
-        {%- for _, v := range ex -%}
-        <li>
-          <input id="accordion-model-{%s v.ID %}" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-{%s v.ID %}">{%= components.ExpandCollapse(3, ps) %} {%s v.ID %}</label>
-          <div class="bd"><div><div>
-            <pre>{%s util.ToJSON(v) %}</pre>
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-      </ul>
-    </div>
-  </div>
-  {%- endif -%}
+{% func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) %}
+  <pre>{%s util.ToJSON(sch) %}</pre>
 {% endfunc %}

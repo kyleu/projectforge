@@ -79,6 +79,18 @@ func (c Columns) NonPKs() Columns {
 	})
 }
 
+func (c Columns) Required() Columns {
+	return lo.Reject(c, func(col *Column, _ int) bool {
+		return col.Nullable
+	})
+}
+
+func (c Columns) Optional() Columns {
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.Nullable
+	})
+}
+
 func (c Columns) Searches() Columns {
 	return lo.Filter(c, func(col *Column, _ int) bool {
 		return col.Search
@@ -201,7 +213,7 @@ func (c Columns) HasFormat(f string) bool {
 }
 
 func (c Columns) NotDerived() Columns {
-	return lo.Filter(c, func(x *Column, _ int) bool {
-		return !x.Derived()
+	return lo.Reject(c, func(x *Column, _ int) bool {
+		return x.Derived()
 	})
 }

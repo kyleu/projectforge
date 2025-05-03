@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -19,7 +20,7 @@ const (
 	chunkedArgs            = "ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*%s) error {"
 )
 
-func ServiceMutate(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func ServiceMutate(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "servicemutate")
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)

@@ -7,13 +7,14 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func edit(m *model.Model, p *project.Project, args *model.Args, linebreak string) (*file.File, error) {
+func edit(m *model.Model, p *project.Project, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"views", m.PackageWithGroup("v")}, "Edit.html")
 	lo.ForEach(helper.ImportsForTypes("webedit", "", m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
@@ -46,7 +47,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 	return ret
 }
 
-func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*golang.Block, error) {
+func exportViewEditBody(m *model.Model, p *project.Project, args *metamodel.Args) (*golang.Block, error) {
 	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.TitleLower())
 	ret := golang.NewBlock("EditBody", "func")
 	ret.W("{%% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %%}")
@@ -112,7 +113,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *model.Args) (*
 	return ret, nil
 }
 
-func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Project, args *model.Args) (string, error) {
+func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Project, args *metamodel.Args) (string, error) {
 	relModel := args.Models.Get(rel.Table)
 	if !relModel.HasTag("search") {
 		return "", nil

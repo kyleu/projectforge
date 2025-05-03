@@ -9,13 +9,14 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Menu(args *model.Args, linebreak string) (*file.File, error) {
+func Menu(args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("cmenu", []string{"app", "controller", "cmenu"}, "generated")
 	g.AddImport(helper.ImpAppMenu)
 	models := args.Models.WithRoutes()
@@ -27,7 +28,7 @@ func Menu(args *model.Args, linebreak string) (*file.File, error) {
 	return g.Render(linebreak)
 }
 
-func sortModels(models model.Models, args *model.Args) (map[string][]string, []string, []string) {
+func sortModels(models model.Models, args *metamodel.Args) (map[string][]string, []string, []string) {
 	groups := map[string][]string{}
 	names := make([]string, 0, len(models)+len(args.Groups))
 	orphans := make([]string, 0)
@@ -45,7 +46,7 @@ func sortModels(models model.Models, args *model.Args) (map[string][]string, []s
 	return groups, names, orphans
 }
 
-func menuBlockV(models model.Models, args *model.Args, groups map[string][]string, names []string) *golang.Block {
+func menuBlockV(models model.Models, args *metamodel.Args, groups map[string][]string, names []string) *golang.Block {
 	nameLength := util.StringArrayMaxLength(names)
 	lines := lo.Map(models, func(m *model.Model, _ int) string {
 		n := util.StringPad(m.ProperWithGroup(), nameLength)
@@ -97,7 +98,7 @@ func menuBlockV(models model.Models, args *model.Args, groups map[string][]strin
 	return v
 }
 
-func menuBlockGM(args *model.Args, orphans []string) *golang.Block {
+func menuBlockGM(args *metamodel.Args, orphans []string) *golang.Block {
 	gm := golang.NewBlock("generatedMenu", "func")
 	// gm.Lints = append(gm.Lints, "unused")
 	gm.W("func generatedMenu() menu.Items {")

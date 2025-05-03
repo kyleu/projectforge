@@ -17,7 +17,7 @@ import (
 
 func ProjectExportEnumDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.enum.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, _, err := exportLoadEnum(r, as, ps.Logger)
+		prj, e, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -81,7 +81,7 @@ func ProjectExportEnumCreate(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportEnumForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.enum.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, _, err := exportLoadEnum(r, as, ps.Logger)
+		prj, e, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -100,7 +100,7 @@ func ProjectExportEnumForm(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportEnumSave(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.enum.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, e, _, err := exportLoadEnum(r, as, ps.Logger)
+		prj, e, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -131,7 +131,7 @@ func ProjectExportEnumSave(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportEnumDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.enum.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, mdl, _, err := exportLoadEnum(r, as, ps.Logger)
+		prj, mdl, err := exportLoadEnum(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

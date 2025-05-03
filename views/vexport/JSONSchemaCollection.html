@@ -1,0 +1,94 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/jsonschema"
+  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type JSONSchemaCollection struct {
+  layout.Basic
+  Project *project.Project
+  Args *model.Args
+  Collection *jsonschema.Collection
+} %}
+
+{% func (p *JSONSchemaCollection) Body(as *app.State, ps *cutil.PageState) %}
+  <style>
+    .flex-item {
+      flex: 1;
+      margin: var(--padding);
+      padding: var(--padding);
+      border: var(--border);
+    }
+  </style>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}] JSON Schema</h3>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, x := range p.Args.Enums -%}
+        {%- code sch := p.Collection.GetSchema(x.Name) -%}
+        <li>
+          <input id="accordion-enum-{%s x.Name %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-enum-{%s x.Name %}">
+            <div class="right">
+              <a href="{%s p.Project.WebPath() %}/export/enums/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
+            </div>
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
+          </label>
+          <div class="bd"><div><div>
+            {%= renderJSONSchemaEnum(as, x, sch, ps) %}
+          </div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, x := range p.Args.Models -%}
+        {%- code sch := p.Collection.GetSchema(x.Name) -%}
+        <li>
+          <input id="accordion-model-{%s x.Name %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-model-{%s x.Name %}">
+            <div class="right">
+              <a href="{%s p.Project.WebPath() %}/export/models/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
+            </div>
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
+          </label>
+          <div class="bd"><div><div>
+            {%= renderJSONSchemaModel(as, x, sch, ps) %}
+          </div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  {%- code ex := p.Collection.Extra() -%}
+  {%- if len(ex) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`cog`, ps) %} {%s util.StringPlural(len(ex), "Extra") %}</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, sch := range ex -%}
+        <li>
+          <input id="accordion-model-{%s sch.ID %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-model-{%s sch.ID %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID %}</label>
+          <div class="bd"><div><div>
+            {%= renderJSONSchemaExtra(as, sch, ps) %}
+          </div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  {%- endif -%}
+{% endfunc %}

@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -16,7 +17,7 @@ import (
 
 const tSet = "Set"
 
-func Models(m *model.Model, args *model.Args, goVersion string, linebreak string) (*file.File, error) {
+func Models(m *model.Model, args *metamodel.Args, goVersion string, linebreak string) (*file.File, error) {
 	name := strings.ToLower(m.CamelPlural())
 	if name == strings.ToLower(m.Camel()) {
 		name += "_array"

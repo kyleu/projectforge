@@ -169,6 +169,10 @@ func (t *Context) HasExport() bool {
 	return t.HasModules("export") && !t.ExportArgs.Empty()
 }
 
+func (t *Context) HasDatabase() bool {
+	return t.DatabaseEngine != ""
+}
+
 func (t *Context) MySQL() bool {
 	return t.DatabaseEngine == util.DatabaseMySQL || t.HasModule(util.DatabaseMySQL)
 }

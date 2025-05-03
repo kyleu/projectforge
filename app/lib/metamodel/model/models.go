@@ -113,7 +113,7 @@ func (m Models) WithTag(tag string) Models {
 }
 
 func (m Models) WithoutTag(tag string) Models {
-	return lo.Filter(m, func(x *Model, _ int) bool {
-		return !x.HasTag(tag)
+	return lo.Reject(m, func(x *Model, _ int) bool {
+		return x.HasTag(tag)
 	})
 }

@@ -7,10 +7,10 @@ package vproject
 //line views/vproject/DetailExport.html:1
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/components/view"
@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vproject/DetailExport.html:13
-func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, as *app.State, ps *cutil.PageState) {
+func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
 //line views/vproject/DetailExport.html:13
 	qw422016.N().S(`
   <a href="/p/`)
@@ -132,7 +132,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *model.Args, a
 }
 
 //line views/vproject/DetailExport.html:39
-func WriteDetailExport(qq422016 qtio422016.Writer, key string, ea *model.Args, as *app.State, ps *cutil.PageState) {
+func WriteDetailExport(qq422016 qtio422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
 //line views/vproject/DetailExport.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailExport.html:39
@@ -143,7 +143,7 @@ func WriteDetailExport(qq422016 qtio422016.Writer, key string, ea *model.Args, a
 }
 
 //line views/vproject/DetailExport.html:39
-func DetailExport(key string, ea *model.Args, as *app.State, ps *cutil.PageState) string {
+func DetailExport(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) string {
 //line views/vproject/DetailExport.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailExport.html:39

@@ -133,8 +133,8 @@ func (s *Service) ModulesSorted() Modules {
 }
 
 func (s *Service) ModulesVisible() Modules {
-	return lo.Filter(s.ModulesSorted(), func(m *Module, _ int) bool {
-		return !m.Hidden
+	return lo.Reject(s.ModulesSorted(), func(m *Module, _ int) bool {
+		return m.Hidden
 	})
 }
 

@@ -7,13 +7,14 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Services(args *model.Args, linebreak string) (*file.File, error) {
+func Services(args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile("app", []string{"app"}, "generated")
 	g.AddImport(helper.ImpContext, helper.ImpAppUtil)
 	if args.HasModule("audit") {

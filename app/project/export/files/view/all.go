@@ -4,11 +4,12 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
 )
 
-func All(m *model.Model, p *project.Project, args *model.Args, linebreak string) (file.Files, error) {
+func All(m *model.Model, p *project.Project, args *metamodel.Args, linebreak string) (file.Files, error) {
 	var calls file.Files
 	var f *file.File
 	var err error

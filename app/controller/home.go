@@ -14,7 +14,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		prjs := as.Services.Projects.Projects()
 		execs := as.Services.Exec.Execs
 		mods := as.Services.Modules.ModulesVisible()
-		ps.Data = util.ValueMap{"projects": prjs, "modules": mods}
+		ps.SetTitleAndData(util.AppName, util.ValueMap{"projects": prjs, "modules": mods})
 		return Render(r, as, &views.Home{Projects: prjs, Execs: execs, Modules: mods}, ps)
 	})
 }

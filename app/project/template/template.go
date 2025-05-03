@@ -6,7 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -28,13 +28,13 @@ type Context struct {
 	Modules    []string `json:"modules,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 
-	ExportArgs     *model.Args    `json:"exportArgs,omitempty"`
-	Config         util.ValueMap  `json:"config,omitempty"`
-	Info           *project.Info  `json:"info,omitempty"`
-	Build          *project.Build `json:"build,omitempty"`
-	Theme          *theme.Theme   `json:"theme,omitempty"`
-	DatabaseEngine string         `json:"databaseEngine,omitempty"`
-	Linebreak      string         `json:"-"`
+	ExportArgs     *metamodel.Args `json:"exportArgs,omitempty"`
+	Config         util.ValueMap   `json:"config,omitempty"`
+	Info           *project.Info   `json:"info,omitempty"`
+	Build          *project.Build  `json:"build,omitempty"`
+	Theme          *theme.Theme    `json:"theme,omitempty"`
+	DatabaseEngine string          `json:"databaseEngine,omitempty"`
+	Linebreak      string          `json:"-"`
 }
 
 func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOffsets map[string]int, linebreak string) *Context {

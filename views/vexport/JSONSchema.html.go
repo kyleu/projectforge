@@ -9,264 +9,57 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
-	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/components"
-	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/JSONSchema.html:12
+//line views/vexport/JSONSchema.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/JSONSchema.html:12
+//line views/vexport/JSONSchema.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/JSONSchema.html:12
-type JSONSchema struct {
-	layout.Basic
-	Project    *project.Project
-	Args       *model.Args
-	Collection *jsonschema.Collection
-}
-
-//line views/vexport/JSONSchema.html:19
-func (p *JSONSchema) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchema.html:19
+//line views/vexport/JSONSchema.html:8
+func streamrenderJSONSchemaExtra(qw422016 *qt422016.Writer, as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) {
+//line views/vexport/JSONSchema.html:8
 	qw422016.N().S(`
-  <style>
-    .flex-item {
-      flex: 1;
-      margin: var(--padding);
-      padding: var(--padding);
-      border: var(--border);
-    }
-  </style>
-  <div class="card">
-    <h3>`)
-//line views/vexport/JSONSchema.html:29
-	components.StreamSVGIcon(qw422016, `table`, ps)
-//line views/vexport/JSONSchema.html:29
-	qw422016.N().S(` [`)
-//line views/vexport/JSONSchema.html:29
-	qw422016.E().S(p.Project.Title())
-//line views/vexport/JSONSchema.html:29
-	qw422016.N().S(`] JSON Schema</h3>
-  </div>
-  <div class="card">
-    <h3>`)
-//line views/vexport/JSONSchema.html:32
-	components.StreamSVGIcon(qw422016, `hammer`, ps)
-//line views/vexport/JSONSchema.html:32
-	qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:32
-	qw422016.E().S(util.StringPlural(len(p.Args.Enums), "Enum"))
-//line views/vexport/JSONSchema.html:32
-	qw422016.N().S(`</h3>
-    <div class="mt">
-      <ul class="accordion">
+  <pre>`)
+//line views/vexport/JSONSchema.html:9
+	qw422016.E().S(util.ToJSON(sch))
+//line views/vexport/JSONSchema.html:9
+	qw422016.N().S(`</pre>
 `)
-//line views/vexport/JSONSchema.html:35
-	for _, x := range p.Args.Enums {
-//line views/vexport/JSONSchema.html:35
-		qw422016.N().S(`        <li>
-          <input id="accordion-enum-`)
-//line views/vexport/JSONSchema.html:37
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchema.html:37
-		qw422016.N().S(`" type="checkbox" hidden="hidden" />
-          <label for="accordion-enum-`)
-//line views/vexport/JSONSchema.html:38
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchema.html:38
-		qw422016.N().S(`">`)
-//line views/vexport/JSONSchema.html:38
-		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchema.html:38
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:38
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchema.html:38
-		qw422016.N().S(`</label>
-          <div class="bd"><div><div>
-            <div class="flex" style="">
-              <div class="flex-item">
-                <pre>`)
-//line views/vexport/JSONSchema.html:42
-		qw422016.E().S(util.ToJSON(x))
-//line views/vexport/JSONSchema.html:42
-		qw422016.N().S(`</pre>
-              </div>
-              <div class="flex-item">
-                <pre>`)
-//line views/vexport/JSONSchema.html:45
-		qw422016.E().S(util.ToJSON(p.Collection.GetSchema(x.Name)))
-//line views/vexport/JSONSchema.html:45
-		qw422016.N().S(`</pre>
-              </div>
-            </div>
-          </div></div></div>
-        </li>
-`)
-//line views/vexport/JSONSchema.html:50
-	}
-//line views/vexport/JSONSchema.html:50
-	qw422016.N().S(`      </ul>
-    </div>
-  </div>
-  <div class="card">
-    <h3>`)
-//line views/vexport/JSONSchema.html:55
-	components.StreamSVGIcon(qw422016, `list`, ps)
-//line views/vexport/JSONSchema.html:55
-	qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:55
-	qw422016.E().S(util.StringPlural(len(p.Args.Models), "Model"))
-//line views/vexport/JSONSchema.html:55
-	qw422016.N().S(`</h3>
-    <div class="mt">
-      <ul class="accordion">
-`)
-//line views/vexport/JSONSchema.html:58
-	for _, x := range p.Args.Models {
-//line views/vexport/JSONSchema.html:58
-		qw422016.N().S(`        <li>
-          <input id="accordion-model-`)
-//line views/vexport/JSONSchema.html:60
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchema.html:60
-		qw422016.N().S(`" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-`)
-//line views/vexport/JSONSchema.html:61
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchema.html:61
-		qw422016.N().S(`">`)
-//line views/vexport/JSONSchema.html:61
-		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchema.html:61
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:61
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchema.html:61
-		qw422016.N().S(`</label>
-          <div class="bd"><div><div>
-            <div class="flex" style="">
-              <div class="flex-item">
-                <pre>`)
-//line views/vexport/JSONSchema.html:65
-		qw422016.E().S(util.ToJSON(x))
-//line views/vexport/JSONSchema.html:65
-		qw422016.N().S(`</pre>
-              </div>
-              <div class="flex-item">
-                <pre>`)
-//line views/vexport/JSONSchema.html:68
-		qw422016.E().S(util.ToJSON(p.Collection.GetSchema(x.Name)))
-//line views/vexport/JSONSchema.html:68
-		qw422016.N().S(`</pre>
-              </div>
-            </div>
-          </div></div></div>
-        </li>
-`)
-//line views/vexport/JSONSchema.html:73
-	}
-//line views/vexport/JSONSchema.html:73
-	qw422016.N().S(`      </ul>
-    </div>
-  </div>
-`)
-//line views/vexport/JSONSchema.html:77
-	ex := p.Collection.Extra()
-
-//line views/vexport/JSONSchema.html:78
-	if len(ex) > 0 {
-//line views/vexport/JSONSchema.html:78
-		qw422016.N().S(`  <div class="card">
-    <h3>`)
-//line views/vexport/JSONSchema.html:80
-		components.StreamSVGIcon(qw422016, `cog`, ps)
-//line views/vexport/JSONSchema.html:80
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:80
-		qw422016.E().S(util.StringPlural(len(ex), "Extra"))
-//line views/vexport/JSONSchema.html:80
-		qw422016.N().S(`</h3>
-    <div class="mt">
-      <ul class="accordion">
-`)
-//line views/vexport/JSONSchema.html:83
-		for _, v := range ex {
-//line views/vexport/JSONSchema.html:83
-			qw422016.N().S(`        <li>
-          <input id="accordion-model-`)
-//line views/vexport/JSONSchema.html:85
-			qw422016.E().S(v.ID)
-//line views/vexport/JSONSchema.html:85
-			qw422016.N().S(`" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-`)
-//line views/vexport/JSONSchema.html:86
-			qw422016.E().S(v.ID)
-//line views/vexport/JSONSchema.html:86
-			qw422016.N().S(`">`)
-//line views/vexport/JSONSchema.html:86
-			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchema.html:86
-			qw422016.N().S(` `)
-//line views/vexport/JSONSchema.html:86
-			qw422016.E().S(v.ID)
-//line views/vexport/JSONSchema.html:86
-			qw422016.N().S(`</label>
-          <div class="bd"><div><div>
-            <pre>`)
-//line views/vexport/JSONSchema.html:88
-			qw422016.E().S(util.ToJSON(v))
-//line views/vexport/JSONSchema.html:88
-			qw422016.N().S(`</pre>
-          </div></div></div>
-        </li>
-`)
-//line views/vexport/JSONSchema.html:91
-		}
-//line views/vexport/JSONSchema.html:91
-		qw422016.N().S(`      </ul>
-    </div>
-  </div>
-`)
-//line views/vexport/JSONSchema.html:95
-	}
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
 }
 
-//line views/vexport/JSONSchema.html:96
-func (p *JSONSchema) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
+func writerenderJSONSchemaExtra(qq422016 qtio422016.Writer, as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) {
+//line views/vexport/JSONSchema.html:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchema.html:96
-	p.StreamBody(qw422016, as, ps)
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
+	streamrenderJSONSchemaExtra(qw422016, as, sch, ps)
+//line views/vexport/JSONSchema.html:10
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
 }
 
-//line views/vexport/JSONSchema.html:96
-func (p *JSONSchema) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
+func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) string {
+//line views/vexport/JSONSchema.html:10
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchema.html:96
-	p.WriteBody(qb422016, as, ps)
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
+	writerenderJSONSchemaExtra(qb422016, as, sch, ps)
+//line views/vexport/JSONSchema.html:10
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
 	return qs422016
-//line views/vexport/JSONSchema.html:96
+//line views/vexport/JSONSchema.html:10
 }

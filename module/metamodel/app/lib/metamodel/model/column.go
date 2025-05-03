@@ -158,7 +158,7 @@ func (c *Column) SQL() string {
 var needsErr = []string{types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned, types.KeyReference}
 
 func (c *Column) NeedsErr(_ string, db string) bool {
-	if db == dbSQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
+	if db == util.DatabaseSQLServer && c.Type.Key() == types.KeyUUID && c.Nullable {
 		return true
 	}
 	if c.Type.Scalar() {

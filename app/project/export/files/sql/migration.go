@@ -8,13 +8,14 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Migration(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func Migration(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewGoTemplate([]string{"queries", "ddl"}, m.Name+util.ExtSQL)
 	drop, err := sqlDrop(m, args.Database)
 	if err != nil {

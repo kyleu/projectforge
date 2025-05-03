@@ -48,7 +48,7 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 			res := action.Apply(ps.Context, actionParams("testproject", action.TypeTest, cfg, as, ps.Logger))
 
 			bc = append(bc, "Bootstrap")
-			ps.Data = res
+			ps.SetTitleAndData("Bootstrap", res)
 
 			_, err = as.Services.Projects.Refresh(ps.Logger)
 			if err != nil {

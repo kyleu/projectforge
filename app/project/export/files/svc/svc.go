@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filter"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -17,7 +18,7 @@ import (
 
 const incDel = ", includeDeleted bool"
 
-func ServiceAll(m *model.Model, args *model.Args, linebreak string) (file.Files, error) {
+func ServiceAll(m *model.Model, args *metamodel.Args, linebreak string) (file.Files, error) {
 	x, err := Service(m, args, linebreak)
 	if err != nil {
 		return nil, err
@@ -37,7 +38,7 @@ func ServiceAll(m *model.Model, args *model.Args, linebreak string) (file.Files,
 	return file.Files{x, g, l, mt}, nil
 }
 
-func Service(m *model.Model, args *model.Args, linebreak string) (*file.File, error) {
+func Service(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
 	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, "service")
 	g.AddImport(helper.ImpFilter, helper.ImpAppDatabase, helper.ImpAppSvc)
 	g.AddImport(m.Imports.Supporting("service")...)

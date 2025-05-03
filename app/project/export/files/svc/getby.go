@@ -7,6 +7,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -16,15 +17,15 @@ import (
 
 const declSubscript = " [%%v]"
 
-func writeGetBy(key string, cols model.Columns, doExtra []string, name string, dbRef string, m *model.Model, args *model.Args, g *golang.File) error {
+func writeGetBy(key string, cols model.Columns, doExtra []string, name string, dbRef string, m *model.Model, args *metamodel.Args, g *golang.File) error {
 	if name == "" {
 		name = helper.TextGetBy + strings.Join(cols.ProperNames(), "")
 	}
 	lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	returnMultiple := lo.ContainsBy(cols, func(x *model.Column) bool {
-		return !x.HasTag("unique")
+	returnMultiple := lo.NoneBy(cols, func(x *model.Column) bool {
+		return x.HasTag("unique")
 	})
 	sb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database, g)
 	if err != nil {

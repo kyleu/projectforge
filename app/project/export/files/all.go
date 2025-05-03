@@ -4,8 +4,8 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
@@ -33,7 +33,7 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	ret = append(ret, enumRet...)
 
 	for _, m := range args.Models {
-		calls, e := ModelAll(m, p, args, linebreak)
+		calls, e := ModelAll(m, p, linebreak)
 		if e != nil {
 			return nil, errors.Wrapf(e, "error processing model [%s]", m.Name)
 		}
@@ -87,7 +87,7 @@ func allEnum(p *project.Project, linebreak string, enums enum.Enums, database st
 	return ret, nil
 }
 
-func extraFiles(p *project.Project, linebreak string, args *model.Args) (file.Files, error) {
+func extraFiles(p *project.Project, linebreak string, args *metamodel.Args) (file.Files, error) {
 	var ret file.Files
 
 	if args.HasModule("search") {
