@@ -81,6 +81,9 @@ type Schema struct {
 	AnyOf Schemas `json:"anyOf,omitempty"` // Instance must validate against at least one of these schemas
 	OneOf Schemas `json:"oneOf,omitempty"` // Instance must validate against exactly one of these schemas
 	Not   *Schema `json:"not,omitempty"`   // Instance must not validate against this schema
+
+	// Extensions
+	Metadata util.ValueMap `json:"metadata,omitempty"` // Additional information about the schema
 }
 
 func (s *Schema) String() string {
@@ -89,4 +92,11 @@ func (s *Schema) String() string {
 		ret += "; format=" + s.Format
 	}
 	return ret
+}
+
+func (s *Schema) AddMetadata(k string, v any) {
+	if s.Metadata == nil {
+		s.Metadata = util.ValueMap{}
+	}
+	s.Metadata[k] = v
 }

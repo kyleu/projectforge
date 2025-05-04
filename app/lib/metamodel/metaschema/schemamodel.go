@@ -21,5 +21,38 @@ func ModelSchema(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args
 		}
 		ret.Properties.Set(col.Name, colSch)
 	}
+	if len(x.Config) > 0 {
+		ret.AddMetadata("config", x.Config)
+	}
+	if x.Icon != "" {
+		ret.AddMetadata("icon", x.Icon)
+	}
+	if len(x.Ordering) > 0 {
+		ret.AddMetadata("ordering", x.Ordering)
+	}
+	if x.PluralOverride != "" {
+		ret.AddMetadata("plural", x.PluralOverride)
+	}
+	if x.RouteOverride != "" {
+		ret.AddMetadata("route", x.RouteOverride)
+	}
+	if len(x.Search) > 0 {
+		ret.AddMetadata("search", x.Search)
+	}
+	if x.SortIndex != 0 {
+		ret.AddMetadata("sortIndex", x.SortIndex)
+	}
+	if x.TableOverride != "" {
+		ret.AddMetadata("table", x.TableOverride)
+	}
+	if len(x.Tags) > 0 {
+		ret.AddMetadata("tags", x.Tags)
+	}
+	if x.TitleOverride != "" {
+		ret.AddMetadata("title", x.TitleOverride)
+	}
+	if x.View != "" {
+		ret.AddMetadata("view", x.View)
+	}
 	return ret, nil
 }
