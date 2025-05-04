@@ -2,6 +2,7 @@
   "strings"
 
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
 ) %}
 
@@ -19,7 +20,7 @@
       if ok {
         curr += ","
       }
-      curr += strings.Join(v, ",")
+      curr += util.StringJoin(v, ",")
       m[k] = curr
   }
   %}

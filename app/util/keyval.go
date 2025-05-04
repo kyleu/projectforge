@@ -27,7 +27,7 @@ func (k KeyVals[T]) ToMap() map[string]T {
 }
 
 func (k KeyVals[T]) String() string {
-	return strings.Join(lo.Map(k, func(x *KeyVal[T], _ int) string {
+	return StringJoin(lo.Map(k, func(x *KeyVal[T], _ int) string {
 		return x.String()
 	}), ", ")
 }

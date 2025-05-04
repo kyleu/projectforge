@@ -1,13 +1,12 @@
 package controller
 
 import (
-	"strings"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -47,7 +46,7 @@ func controllerModelFromPath(m *model.Model) *golang.Block {
 		suffix = ", includeDeleted"
 		ret.W("\tincludeDeleted := " + incDel)
 	}
-	ret.WF("\treturn as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", m.Proper(), strings.Join(args, ", "), suffix)
+	ret.WF("\treturn as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", m.Proper(), util.StringJoin(args, ", "), suffix)
 	ret.W("}")
 
 	return ret

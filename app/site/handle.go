@@ -2,7 +2,6 @@ package site
 
 import (
 	"fmt"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -70,7 +69,7 @@ func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.P
 	default:
 		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+util.ExtMarkdown, "", ps)
 		if err != nil {
-			page = &verror.NotFound{Path: "/" + strings.Join(path, "/")}
+			page = &verror.NotFound{Path: "/" + util.StringJoin(path, "/")}
 			err = nil
 		}
 	}

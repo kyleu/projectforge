@@ -2,12 +2,12 @@ package script
 
 import (
 	"fmt"
-	"strings"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func NotebookScript(p *project.Project, models model.Models, linebreak string) (*file.File, error) {
@@ -68,6 +68,6 @@ func NotebookScript(p *project.Project, models model.Models, linebreak string) (
 		Path:    []string{"notebook", "docs", "components"},
 		Name:    p.Key + ".js",
 		Mode:    filesystem.DefaultMode,
-		Content: strings.Join(content, linebreak),
+		Content: util.StringJoin(content, linebreak),
 	}, nil
 }

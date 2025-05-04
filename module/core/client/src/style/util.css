@@ -326,6 +326,13 @@ svg.link.padded {
   display: flex;
 }
 
+.flex-item {
+  flex: 1;
+  margin: var(--padding);
+  padding: var(--padding);
+  border: var(--border);
+}
+
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;

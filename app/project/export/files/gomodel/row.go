@@ -2,7 +2,6 @@ package gomodel
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -24,7 +23,7 @@ func Row(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, er
 	lo.ForEach(helper.ImportsForTypes("row", args.Database, m.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpStrings, helper.ImpAppUtil, helper.ImpFmt)
+	g.AddImport(helper.ImpAppUtil, helper.ImpFmt)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
 		return nil, err
@@ -74,13 +73,13 @@ func modelTableCols(m *model.Model) (*golang.Block, error) {
 	} else {
 		ret.WF("\ttableQuoted   = fmt.Sprintf(\"%%%%q.%%%%q\", %q, table)", m.Schema)
 	}
-	cols := fmt.Sprintf("\tcolumns       = []string{%s}", strings.Join(m.Columns.NotDerived().SQLQuoted(), ", "))
+	cols := fmt.Sprintf("\tcolumns       = []string{%s}", util.StringJoin(m.Columns.NotDerived().SQLQuoted(), ", "))
 	if len(cols) > 160 {
 		cols += " //nolint:lll"
 	}
 	ret.W(cols)
 	ret.W("\tcolumnsQuoted = util.StringArrayQuoted(columns)")
-	ret.W("\tcolumnsString = strings.Join(columnsQuoted, \", \")")
+	ret.W("\tcolumnsString = util.StringJoin(columnsQuoted, \", \")")
 	ret.W(")")
 	return ret, nil
 }
@@ -268,7 +267,7 @@ func defaultWC(m *model.Model, database string) *golang.Block {
 		}
 		idxs = append(idxs, fmt.Sprintf("idx+%d", idx+1))
 	})
-	ret.WF("\treturn fmt.Sprintf(%q, %s)", strings.Join(wc, " and "), strings.Join(idxs, ", "))
+	ret.WF("\treturn fmt.Sprintf(%q, %s)", util.StringJoin(wc, " and "), util.StringJoin(idxs, ", "))
 	ret.W("}")
 	return ret
 }

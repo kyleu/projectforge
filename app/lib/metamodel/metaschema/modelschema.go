@@ -10,6 +10,7 @@ import (
 
 func ModelSchema(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {
 	ret := sch.NewSchema(x.Name)
+	ret.Type = "object"
 	ret.Description = x.Description
 	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
 	ret.Required = x.Columns.Required().CamelNames()

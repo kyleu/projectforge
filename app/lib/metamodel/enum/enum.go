@@ -2,6 +2,7 @@ package enum
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	"github.com/samber/lo"
@@ -122,6 +123,10 @@ func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
 	return ret, len(lo.Uniq(ret)) == len(ret)
 }
 
+func (e *Enum) ID() string {
+	return path.Join(e.PackageWithGroup(""), e.Name)
+}
+
 func (e *Enum) PackageWithGroup(prefix string) string {
 	if x := e.Config.GetStringOpt("pkg-" + prefix); x != "" {
 		return x
@@ -138,7 +143,7 @@ func (e *Enum) PackageWithGroup(prefix string) string {
 	}
 	x = append(x, e.Group...)
 	x = append(x, e.Package)
-	return strings.Join(x, "/")
+	return util.StringJoin(x, "/")
 }
 
 func (e *Enum) HasTag(t string) bool {
@@ -156,7 +161,7 @@ func (e *Enum) Breadcrumbs() string {
 		return fmt.Sprintf("%q", g)
 	})
 	ret = append(ret, fmt.Sprintf("%q", e.Package))
-	return strings.Join(ret, ", ")
+	return util.StringJoin(ret, ", ")
 }
 
 func (e *Enum) ValuesCamel() []string {

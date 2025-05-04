@@ -25,7 +25,7 @@ const (
 )
 
 func ArrayToString(a []string) string {
-	return "{" + strings.Join(a, ",") + "}"
+	return "{" + util.StringJoin(a, ",") + "}"
 }
 
 func StringToArray(s string) []string {

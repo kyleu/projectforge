@@ -7,11 +7,10 @@ package vexport
 //line views/vexport/Overview.html:1
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project"
@@ -322,7 +321,7 @@ func StreamEnumList(qw422016 *qt422016.Writer, enums enum.Enums, urlPrefix strin
 		u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
 		var prefix string
 		if len(e.Group) > 0 {
-			prefix += strings.Join(e.Group, "/") + ", "
+			prefix += util.StringJoin(e.Group, "/") + ", "
 		}
 
 //line views/vexport/Overview.html:98
@@ -401,7 +400,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 		u := fmt.Sprintf("%s/%s", urlPrefix, m.Name)
 		var prefix string
 		if len(m.Group) > 0 {
-			prefix += strings.Join(m.Group, "/") + ", "
+			prefix += util.StringJoin(m.Group, "/") + ", "
 		}
 		if len(m.SeedData) > 0 {
 			prefix += fmt.Sprintf("%s of seed data", util.StringPlural(len(m.SeedData), "row"))

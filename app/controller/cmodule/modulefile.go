@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -55,7 +54,7 @@ func ModuleFile(w http.ResponseWriter, r *http.Request) {
 			b := x + bcAppend
 			bc = append(bc, b)
 		})
-		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", mod.Key, strings.Join(path, "/")), pathS)
+		ps.SetTitleAndData(fmt.Sprintf("[%s] /%s", mod.Key, util.StringJoin(path, "/")), pathS)
 		return controller.Render(r, as, &vmodule.Files{Module: mod, Path: path, FS: fsys}, ps, bc...)
 	})
 }

@@ -6,8 +6,6 @@ package vexport
 
 //line views/vexport/GroupForm.html:1
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
@@ -19,20 +17,20 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexport/GroupForm.html:15
+//line views/vexport/GroupForm.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexport/GroupForm.html:15
+//line views/vexport/GroupForm.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexport/GroupForm.html:15
+//line views/vexport/GroupForm.html:13
 type GroupForm struct {
 	layout.Basic
 	Project *project.Project
@@ -40,27 +38,27 @@ type GroupForm struct {
 	Example model.Groups
 }
 
-//line views/vexport/GroupForm.html:22
+//line views/vexport/GroupForm.html:20
 func (p *GroupForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/GroupForm.html:22
+//line views/vexport/GroupForm.html:20
 	qw422016.N().S(`
   <form action="" method="post" class="mt expanded">
     <div class="card">
       <div class="right"><a href="#modal-groups"><button type="button">Example</button></a></div>
       <h3 title="`)
-//line views/vexport/GroupForm.html:26
-	qw422016.E().S(strings.Join(export.Helpers[`model.columns`], `; `))
-//line views/vexport/GroupForm.html:26
+//line views/vexport/GroupForm.html:24
+	qw422016.E().S(util.StringJoin(export.Helpers[`model.columns`], `; `))
+//line views/vexport/GroupForm.html:24
 	qw422016.N().S(`">`)
-//line views/vexport/GroupForm.html:26
+//line views/vexport/GroupForm.html:24
 	components.StreamSVGIcon(qw422016, `users`, ps)
-//line views/vexport/GroupForm.html:26
+//line views/vexport/GroupForm.html:24
 	qw422016.N().S(` Groups</h3>
       <div class="mt expanded">
         `)
-//line views/vexport/GroupForm.html:28
+//line views/vexport/GroupForm.html:26
 	edit.StreamTextarea(qw422016, "groups", "input-groups", 24, util.ToJSON(p.Groups), export.Helpers["model.groups"]...)
-//line views/vexport/GroupForm.html:28
+//line views/vexport/GroupForm.html:26
 	qw422016.N().S(`
       </div>
       <div class="mt">
@@ -70,36 +68,36 @@ func (p *GroupForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
     </div>
   </form>
   `)
-//line views/vexport/GroupForm.html:36
+//line views/vexport/GroupForm.html:34
 	components.StreamJSONModal(qw422016, "groups", "Groups Example", p.Example, 1)
-//line views/vexport/GroupForm.html:36
+//line views/vexport/GroupForm.html:34
 	qw422016.N().S(`
 `)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 }
 
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 func (p *GroupForm) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 }
 
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 func (p *GroupForm) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	qs422016 := string(qb422016.B)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 	return qs422016
-//line views/vexport/GroupForm.html:37
+//line views/vexport/GroupForm.html:35
 }

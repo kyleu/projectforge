@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -35,7 +34,7 @@ func Testbed(w http.ResponseWriter, r *http.Request) {
 		case "":
 			// noop
 		case "modules":
-			ret = strings.Join(echoModules(as.Services.Modules.ModulesVisible()), "\n")
+			ret = util.StringJoin(echoModules(as.Services.Modules.ModulesVisible()), "\n")
 		case "openapi":
 			ret = openAPI(as, ps)
 		default:

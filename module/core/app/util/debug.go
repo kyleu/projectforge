@@ -6,7 +6,6 @@ import (
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
-	"strings"
 	"time"
 )
 
@@ -50,7 +49,7 @@ func DebugGetInfo(version string, started time.Time) *DebugInfo {
 		args = args[1:]
 	}
 	runtimeTags.Set("Running Since", TimeRelative(&started))
-	runtimeTags.Set("Arguments", strings.Join(args, " "))
+	runtimeTags.Set("Arguments", StringJoin(args, " "))
 	runtimeTags.Set("Max Processes", fmt.Sprint(runtime.GOMAXPROCS(-1)))
 	runtimeTags.Set("Go Routines", fmt.Sprint(runtime.NumGoroutine()))
 	runtimeTags.Set("Cgo Calls", fmt.Sprint(runtime.NumCgoCall()))

@@ -1,0 +1,67 @@
+package metaschema
+
+import (
+	"context"
+	"path"
+	"slices"
+
+	"github.com/pkg/errors"
+
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/jsonschema"
+	"projectforge.dev/projectforge/app/lib/metamodel"
+	"projectforge.dev/projectforge/app/util"
+)
+
+func LoadSchemas(ctx context.Context, key string, args *metamodel.Args, extraPaths []string, logger util.Logger, filter ...string) (*jsonschema.Collection, error) {
+	ret := jsonschema.NewCollection(key)
+	for _, x := range args.Enums {
+		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
+			continue
+		}
+		_, err := EnumSchema(x, ret, args)
+		if err != nil {
+			return nil, err
+		}
+	}
+	for _, x := range args.Models {
+		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
+			continue
+		}
+		_, err := ModelSchema(x, ret, args)
+		if err != nil {
+			return nil, err
+		}
+	}
+	for _, x := range extraPaths {
+		err := parseExtraPath(ctx, x, ret, logger)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to parse [%s]", x)
+		}
+
+	}
+	return ret, nil
+}
+
+func parseExtraPath(ctx context.Context, pth string, coll *jsonschema.Collection, logger util.Logger) error {
+	fs, _ := filesystem.NewFileSystem(".", true, "")
+	if fs.IsDir(pth) {
+		files := fs.ListJSON(pth, nil, false, logger)
+		for _, fn := range files {
+			if err := parseExtraPath(ctx, path.Join(pth, fn), coll, logger); err != nil {
+				return err
+			}
+		}
+	} else {
+		b, err := fs.ReadFile(pth)
+		if err != nil {
+			return err
+		}
+		sch, err := jsonschema.FromJSON(b)
+		if err != nil {
+			return err
+		}
+		coll.AddSchema(sch)
+	}
+	return nil
+}

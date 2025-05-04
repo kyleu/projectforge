@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const commonLine, ind5 = "  %sBy%s %s.%s", "          "
@@ -103,7 +104,7 @@ func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Mod
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
-		relNames := strings.Join(relCols.ProperNames(), "")
+		relNames := util.StringJoin(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 		ret.WF(commonLine, relModel.Proper(), relNames, "*"+relModel.Package, relModel.Proper())
 	})
@@ -114,7 +115,7 @@ func exportViewDetailClass(m *model.Model, rrs model.Relations, models model.Mod
 	lo.ForEach(rrs, func(rel *model.Relation, _ int) {
 		rm := models.Get(rel.Table)
 		rCols := rel.TgtColumns(rm)
-		ret.WF(commonLine, "Rel"+rm.ProperPlural(), strings.Join(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
+		ret.WF(commonLine, "Rel"+rm.ProperPlural(), util.StringJoin(rCols.ProperNames(), ""), rm.Package, rm.ProperPlural())
 	})
 	if audit {
 		ret.W("  AuditRecords audit.Records")
@@ -135,7 +136,7 @@ func exportViewDetailBody(m *model.Model, rrs model.Relations, audit bool) (*gol
 			return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
 		})
 		u := link.URL
-		u = strings.ReplaceAll(u, "{}", strings.Join(paths, "/"))
+		u = strings.ReplaceAll(u, "{}", util.StringJoin(paths, "/"))
 		u = strings.ReplaceAll(u, "[]", "{%%s p.Model.WebPath()"+helper.TextTmplEnd)
 		var icon string
 		if link.Icon != "" {

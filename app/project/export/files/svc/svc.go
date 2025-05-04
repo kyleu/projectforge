@@ -2,7 +2,6 @@ package svc
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -152,7 +151,7 @@ func serviceDefaultFilters(m *model.Model) *golang.Block {
 	if len(ords) == 0 {
 		ret.WF("\treturn orig.Sanitize(%q)", m.Package)
 	} else {
-		ret.WF("\treturn orig.Sanitize(%q, %s)", m.Package, strings.Join(ords, ", "))
+		ret.WF("\treturn orig.Sanitize(%q, %s)", m.Package, util.StringJoin(ords, ", "))
 	}
 	ret.W("}")
 	return ret

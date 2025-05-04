@@ -14,36 +14,35 @@
   Project *project.Project
   Enum *enum.Enum
   Collection *jsonschema.Collection
+  Result *enum.Enum
 } %}
 
 {% func (p *JSONSchemaEnum) Body(as *app.State, ps *cutil.PageState) %}
   {%- code x := p.Enum -%}
-  <style>
-    .flex-item {
-      flex: 1;
-      margin: var(--padding);
-      padding: var(--padding);
-      border: var(--border);
-    }
-  </style>
   <div class="card">
     <div class="right">
       <a href="{%s p.Project.WebPath() %}/export/enums/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
     </div>
-    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}:{%s x.Title() %}] JSON Schema</h3>
+    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Key %} / {%s x.Name %}] JSON Schema</h3>
     <div class="clear"></div>
-    {%- code sch := p.Collection.GetSchema(x.Name) -%}
-    {%= renderJSONSchemaEnum(as, x, sch, ps) %}
+    {%- code sch := p.Collection.GetSchema(x.ID()) -%}
+    {%= renderJSONSchemaEnum(as, x, sch, p.Result, ps) %}
   </div>
 {% endfunc %}
 
-{% func renderJSONSchemaEnum(as *app.State, x *enum.Enum, sch *jsonschema.Schema, ps *cutil.PageState) %}
+{% func renderJSONSchemaEnum(as *app.State, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, ps *cutil.PageState) %}
   <div class="flex" style="">
     <div class="flex-item">
-      <pre>{%s util.ToJSON(x) %}</pre>
+      <strong>Original</strong>
+      <pre class="mt">{%s util.ToJSON(x) %}</pre>
     </div>
     <div class="flex-item">
-      <pre>{%s util.ToJSON(sch) %}</pre>
+      <strong>Schema</strong>
+      <pre class="mt">{%s util.ToJSON(sch) %}</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Result</strong>
+      <pre class="mt">{%s util.ToJSON(result) %}</pre>
     </div>
   </div>
 {% endfunc %}

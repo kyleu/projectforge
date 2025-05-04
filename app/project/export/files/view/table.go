@@ -3,7 +3,6 @@ package view
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -53,7 +52,7 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)
-			relNames := strings.Join(relCols.ProperNames(), "")
+			relNames := util.StringJoin(relCols.ProperNames(), "")
 			g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 			suffix += fmt.Sprintf(", %sBy%s %s.%s", relModel.CamelPlural(), relNames, relModel.Package, relModel.ProperPlural())
 		}

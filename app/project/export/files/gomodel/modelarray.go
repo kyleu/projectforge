@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const tSet = "Set"
@@ -88,7 +89,7 @@ func modelArrayGet(g *golang.File, m *model.Model, cols model.Columns, enums enu
 	})
 
 	ret.WF("\treturn lo.FindOrElse(%s, nil, func(x *%s) bool {", m.FirstLetter(), m.Proper())
-	ret.WF("\t\treturn %s", strings.Join(comps, " && "))
+	ret.WF("\t\treturn %s", util.StringJoin(comps, " && "))
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil

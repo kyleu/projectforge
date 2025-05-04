@@ -51,7 +51,7 @@ func menuBlockV(models model.Models, args *metamodel.Args, groups map[string][]s
 	lines := lo.Map(models, func(m *model.Model, _ int) string {
 		n := util.StringPad(m.ProperWithGroup(), nameLength)
 		i := menuSerialize(menuItemForModel(m, models, args.Acronyms), "", true)
-		return fmt.Sprintf("\t%s%s = %s", helper.TextMenuItem, n, strings.Join(i, "\n"))
+		return fmt.Sprintf("\t%s%s = %s", helper.TextMenuItem, n, util.StringJoin(i, "\n"))
 	})
 	slices.Sort(lines)
 
@@ -75,7 +75,7 @@ func menuBlockV(models model.Models, args *metamodel.Args, groups map[string][]s
 		}
 		if len(grp.Children) > 0 || len(g) > 0 {
 			items := append(slices.Clone(g), grp.Children.Strings("menuGroup")...)
-			msg += fmt.Sprintf(", Children: menu.Items{%s}", strings.Join(items, ", "))
+			msg += fmt.Sprintf(", Children: menu.Items{%s}", util.StringJoin(items, ", "))
 		}
 		msg += "}"
 		lines = append(lines, msg)
@@ -157,7 +157,7 @@ func menuSerialize(m *menu.Item, prefix string, top bool) []string {
 		kids := lo.Map(m.Children, func(kid *menu.Item, _ int) string {
 			return helper.TextMenuItem + kid.Warning
 		})
-		out = append(out, ws+prefix+"&menu.Item{"+args+", Children: menu.Items{"+strings.Join(kids, ", ")+"}}")
+		out = append(out, ws+prefix+"&menu.Item{"+args+", Children: menu.Items{"+util.StringJoin(kids, ", ")+"}}")
 	}
 	return out
 }

@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func modelString(g *golang.File, m *model.Model) *golang.Block {
@@ -62,7 +63,7 @@ func modelTitle(g *golang.File, m *model.Model) *golang.Block {
 			}
 			return x
 		})
-		ret.WF("\treturn %s", strings.Join(toStrings, " + \" / \" + "))
+		ret.WF("\treturn %s", util.StringJoin(toStrings, " + \" / \" + "))
 	}
 	ret.W("}")
 	return ret
@@ -81,8 +82,7 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 		goStr := pk.ToGoString(m.FirstLetter() + ".")
 		switch {
 		case types.IsStringList(pk.Type):
-			g.AddImport(helper.ImpStrings)
-			keys = append(keys, fmt.Sprintf(fn+`(strings.Join(%s, ","))`, goStr))
+			keys = append(keys, fmt.Sprintf(fn+`(util.StringJoin(%s, ","))`, goStr))
 		case types.IsString(pk.Type) && pk.HasTag("path"):
 			g.AddImport(helper.ImpStrings)
 			keys = append(keys, fn+"(strings.ReplaceAll("+goStr+`, "/", "||"))`)
@@ -90,7 +90,7 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 			keys = append(keys, fn+"("+goStr+")")
 		}
 	})
-	ret.WF("\treturn path.Join(append(paths, %s)...)", strings.Join(keys, ", "))
+	ret.WF("\treturn path.Join(append(paths, %s)...)", util.StringJoin(keys, ", "))
 	ret.W("}")
 	return ret
 }

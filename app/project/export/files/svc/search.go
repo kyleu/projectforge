@@ -48,7 +48,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	ret := golang.NewBlock("search", "func")
 	var grpTxt string
 	if grp == nil {
-		wc := "(" + strings.Join(clauses, " or ") + ")"
+		wc := "(" + util.StringJoin(clauses, " or ") + ")"
 		ret.WF("const searchClause = `%s`", wc)
 		ret.WB()
 	} else {
@@ -72,7 +72,7 @@ func serviceSearch(m *model.Model, grp *model.Column, dbRef string, enums enum.E
 	ret.WF("\t\twc, vals, err = database.QueryFieldDescs(%sFieldDescs, query, 0)", m.Proper())
 	ret.W("\t} else {")
 	ret.WF("\t\twc = %s", defSC)
-	ret.WF("\t\tvals = []any{%s}", strings.Join(params, ", "))
+	ret.WF("\t\tvals = []any{%s}", util.StringJoin(params, ", "))
 	ret.W("\t}")
 	ret.WE(1, "nil")
 

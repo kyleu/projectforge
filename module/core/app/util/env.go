@@ -45,7 +45,7 @@ func GetEnv(name string, defaultValue ...string) string {
 			return v
 		}
 	}
-	return strings.Join(defaultValue, "")
+	return StringJoin(defaultValue, "")
 }
 
 func GetEnvBool(name string, defaultValue bool) bool {

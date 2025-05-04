@@ -327,7 +327,7 @@ func ParseString(r any, path string, allowEmpty bool) (string, error) {
 		if (!allowEmpty) && (len(t) == 0 || t[0] == "") {
 			return "", errors.New("empty string")
 		}
-		return strings.Join(t, "||"), nil
+		return StringJoin(t, "||"), nil
 	case nil:
 		if !allowEmpty {
 			return "", errors.Errorf("could not find string for path [%s]", path)

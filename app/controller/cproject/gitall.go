@@ -61,7 +61,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				url := "/git/all/history"
 				ps.SetTitleAndData("Git History", argRes)
-				hidden := map[string]string{"tags": strings.Join(tags, ",")}
+				hidden := map[string]string{"tags": util.StringJoin(tags, ",")}
 				page := &vpage.Args{URL: url, Directions: "Choose your options", Results: argRes, Hidden: hidden}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")
 			}
@@ -71,7 +71,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			if argRes.HasMissing() {
 				url := "/git/all/magic"
 				ps.SetTitleAndData("Git Magic!", argRes)
-				hidden := map[string]string{"tags": strings.Join(tags, ",")}
+				hidden := map[string]string{"tags": util.StringJoin(tags, ",")}
 				warning := "Are you sure you'd like to commit and push for all projects?"
 				page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Hidden: hidden, Warning: warning}
 				return controller.Render(r, as, page, ps, "projects", "Git**git")

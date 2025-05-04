@@ -6,222 +6,221 @@ package edit
 
 //line views/components/edit/Tags.html:1
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/components/edit/Tags.html:8
+//line views/components/edit/Tags.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/edit/Tags.html:8
+//line views/components/edit/Tags.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/edit/Tags.html:8
+//line views/components/edit/Tags.html:7
 func StreamTags(qw422016 *qt422016.Writer, key string, id string, values []string, ps *cutil.PageState, placeholder ...string) {
-//line views/components/edit/Tags.html:10
+//line views/components/edit/Tags.html:9
 	ps.AddIcon("times")
 	ps.AddIcon("plus")
 
-//line views/components/edit/Tags.html:12
+//line views/components/edit/Tags.html:11
 	qw422016.N().S(`<div class="tag-editor">`)
-//line views/components/edit/Tags.html:14
+//line views/components/edit/Tags.html:13
 	if id == "" {
-//line views/components/edit/Tags.html:14
+//line views/components/edit/Tags.html:13
 		qw422016.N().S(`<input class="result" name="`)
-//line views/components/edit/Tags.html:15
+//line views/components/edit/Tags.html:14
 		qw422016.E().S(key)
-//line views/components/edit/Tags.html:15
+//line views/components/edit/Tags.html:14
 		qw422016.N().S(`" value="`)
-//line views/components/edit/Tags.html:15
-		qw422016.E().S(strings.Join(values, `, `))
-//line views/components/edit/Tags.html:15
+//line views/components/edit/Tags.html:14
+		qw422016.E().S(util.StringJoin(values, `, `))
+//line views/components/edit/Tags.html:14
 		qw422016.N().S(`"`)
-//line views/components/edit/Tags.html:15
+//line views/components/edit/Tags.html:14
 		components.StreamPlaceholderFor(qw422016, placeholder)
-//line views/components/edit/Tags.html:15
+//line views/components/edit/Tags.html:14
 		qw422016.N().S(`/>`)
-//line views/components/edit/Tags.html:16
+//line views/components/edit/Tags.html:15
 	} else {
-//line views/components/edit/Tags.html:16
+//line views/components/edit/Tags.html:15
 		qw422016.N().S(`<input class="result" id="`)
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
 		qw422016.E().S(id)
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
 		qw422016.N().S(`" name="`)
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
 		qw422016.E().S(key)
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
 		qw422016.N().S(`" value="`)
-//line views/components/edit/Tags.html:17
-		qw422016.E().S(strings.Join(values, `, `))
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
+		qw422016.E().S(util.StringJoin(values, `, `))
+//line views/components/edit/Tags.html:16
 		qw422016.N().S(`"`)
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
 		components.StreamPlaceholderFor(qw422016, placeholder)
-//line views/components/edit/Tags.html:17
+//line views/components/edit/Tags.html:16
 		qw422016.N().S(`/>`)
-//line views/components/edit/Tags.html:18
+//line views/components/edit/Tags.html:17
 	}
-//line views/components/edit/Tags.html:18
+//line views/components/edit/Tags.html:17
 	qw422016.N().S(`<div class="tags"></div><div class="clear"></div></div>`)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 }
 
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 func WriteTags(qq422016 qtio422016.Writer, key string, id string, values []string, ps *cutil.PageState, placeholder ...string) {
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	StreamTags(qw422016, key, id, values, ps, placeholder...)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 }
 
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 func Tags(key string, id string, values []string, ps *cutil.PageState, placeholder ...string) string {
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	WriteTags(qb422016, key, id, values, ps, placeholder...)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	qs422016 := string(qb422016.B)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 	return qs422016
-//line views/components/edit/Tags.html:22
+//line views/components/edit/Tags.html:21
 }
+
+//line views/components/edit/Tags.html:23
+func StreamTagsVertical(qw422016 *qt422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/edit/Tags.html:24
+	id = cutil.CleanID(key, id)
 
 //line views/components/edit/Tags.html:24
-func StreamTagsVertical(qw422016 *qt422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/edit/Tags.html:25
-	id = cutil.CleanID(key, id)
-
-//line views/components/edit/Tags.html:25
 	qw422016.N().S(`<div class="mb expanded">`)
-//line views/components/edit/Tags.html:27
+//line views/components/edit/Tags.html:26
 	components.StreamIndent(qw422016, true, indent+1)
-//line views/components/edit/Tags.html:27
+//line views/components/edit/Tags.html:26
 	qw422016.N().S(`<label for="`)
-//line views/components/edit/Tags.html:28
+//line views/components/edit/Tags.html:27
 	qw422016.E().S(id)
-//line views/components/edit/Tags.html:28
+//line views/components/edit/Tags.html:27
 	qw422016.N().S(`"><em class="title">`)
-//line views/components/edit/Tags.html:28
+//line views/components/edit/Tags.html:27
 	qw422016.E().S(title)
-//line views/components/edit/Tags.html:28
+//line views/components/edit/Tags.html:27
 	qw422016.N().S(`</em></label>`)
-//line views/components/edit/Tags.html:29
+//line views/components/edit/Tags.html:28
 	components.StreamIndent(qw422016, true, indent+1)
-//line views/components/edit/Tags.html:29
+//line views/components/edit/Tags.html:28
 	qw422016.N().S(`<div class="mt">`)
-//line views/components/edit/Tags.html:30
+//line views/components/edit/Tags.html:29
 	StreamTags(qw422016, key, id, values, ps, help...)
+//line views/components/edit/Tags.html:29
+	qw422016.N().S(`</div>`)
+//line views/components/edit/Tags.html:30
+	components.StreamIndent(qw422016, true, indent)
 //line views/components/edit/Tags.html:30
 	qw422016.N().S(`</div>`)
-//line views/components/edit/Tags.html:31
-	components.StreamIndent(qw422016, true, indent)
-//line views/components/edit/Tags.html:31
-	qw422016.N().S(`</div>`)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 }
 
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 func WriteTagsVertical(qq422016 qtio422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	StreamTagsVertical(qw422016, key, id, title, values, ps, indent, help...)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 }
 
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 func TagsVertical(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) string {
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	WriteTagsVertical(qb422016, key, id, title, values, ps, indent, help...)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	qs422016 := string(qb422016.B)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 	return qs422016
-//line views/components/edit/Tags.html:33
+//line views/components/edit/Tags.html:32
 }
+
+//line views/components/edit/Tags.html:34
+func StreamTagsTable(qw422016 *qt422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
+//line views/components/edit/Tags.html:35
+	id = cutil.CleanID(key, id)
 
 //line views/components/edit/Tags.html:35
-func StreamTagsTable(qw422016 *qt422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/edit/Tags.html:36
-	id = cutil.CleanID(key, id)
-
-//line views/components/edit/Tags.html:36
 	qw422016.N().S(`<tr>`)
-//line views/components/edit/Tags.html:38
+//line views/components/edit/Tags.html:37
 	components.StreamIndent(qw422016, true, indent+1)
-//line views/components/edit/Tags.html:38
+//line views/components/edit/Tags.html:37
 	qw422016.N().S(`<th class="shrink"><label for="`)
-//line views/components/edit/Tags.html:39
+//line views/components/edit/Tags.html:38
 	qw422016.E().S(id)
-//line views/components/edit/Tags.html:39
+//line views/components/edit/Tags.html:38
 	qw422016.N().S(`"`)
-//line views/components/edit/Tags.html:39
+//line views/components/edit/Tags.html:38
 	components.StreamTitleFor(qw422016, help)
-//line views/components/edit/Tags.html:39
+//line views/components/edit/Tags.html:38
 	qw422016.N().S(`>`)
-//line views/components/edit/Tags.html:39
+//line views/components/edit/Tags.html:38
 	qw422016.E().S(title)
-//line views/components/edit/Tags.html:39
+//line views/components/edit/Tags.html:38
 	qw422016.N().S(`</label></th>`)
-//line views/components/edit/Tags.html:40
+//line views/components/edit/Tags.html:39
 	components.StreamIndent(qw422016, true, indent+1)
-//line views/components/edit/Tags.html:40
+//line views/components/edit/Tags.html:39
 	qw422016.N().S(`<td>`)
-//line views/components/edit/Tags.html:41
+//line views/components/edit/Tags.html:40
 	StreamTags(qw422016, key, id, values, ps, help...)
-//line views/components/edit/Tags.html:41
+//line views/components/edit/Tags.html:40
 	qw422016.N().S(`</td>`)
-//line views/components/edit/Tags.html:42
+//line views/components/edit/Tags.html:41
 	components.StreamIndent(qw422016, true, indent)
-//line views/components/edit/Tags.html:42
+//line views/components/edit/Tags.html:41
 	qw422016.N().S(`</tr>`)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 }
 
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 func WriteTagsTable(qq422016 qtio422016.Writer, key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) {
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	StreamTagsTable(qw422016, key, id, title, values, ps, indent, help...)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 }
 
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 func TagsTable(key string, id string, title string, values []string, ps *cutil.PageState, indent int, help ...string) string {
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	WriteTagsTable(qb422016, key, id, title, values, ps, indent, help...)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	qs422016 := string(qb422016.B)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 	return qs422016
-//line views/components/edit/Tags.html:44
+//line views/components/edit/Tags.html:43
 }

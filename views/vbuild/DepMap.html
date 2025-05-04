@@ -1,6 +1,5 @@
 {% import (
   "slices"
-  "strings"
 
   "github.com/samber/lo"
   "golang.org/x/mod/semver"
@@ -24,7 +23,7 @@
   {%- code
     var suffix string
     if len(p.Tags) > 0 {
-      suffix = "&tags=" + strings.Join(p.Tags, ",")
+      suffix = "&tags=" + util.StringJoin(p.Tags, ",")
     }
   -%}
   <div class="card">

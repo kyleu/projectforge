@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -12,6 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func edit(m *model.Model, p *project.Project, args *metamodel.Args, linebreak string) (*file.File, error) {
@@ -132,7 +132,7 @@ func exportViewEditRelation(m *model.Model, rel *model.Relation, p *project.Proj
 				refs = append(refs, fmt.Sprintf("(o[%q] || %q)", title.Camel(), "[no "+title.TitleLower()+"]"))
 			}
 		})
-		title = fmt.Sprintf(`(o) => %s + " (" + o[%q] + ")"`, strings.Join(refs, " + \" / \" + "), tgt.Camel())
+		title = fmt.Sprintf(`(o) => %s + " (" + o[%q] + ")"`, util.StringJoin(refs, " + \" / \" + "), tgt.Camel())
 	} else {
 		title = fmt.Sprintf("(o) => o[%q]", tgt.Camel())
 	}

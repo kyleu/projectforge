@@ -137,7 +137,7 @@ func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, erro
 		})
 		if hasAllMods {
 			if tgtFile != nil {
-				tgtFile.Content = strings.Join(slices.Delete(lines, lineIdx, lineIdx), util.StringDetectLinebreak(s.Content))
+				tgtFile.Content = util.StringJoin(slices.Delete(lines, lineIdx, lineIdx), util.StringDetectLinebreak(s.Content))
 			}
 		} else {
 			return false, nil

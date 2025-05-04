@@ -38,7 +38,7 @@ func getPath(i any, allowMissing bool, path ...string) (any, error) {
 			if allowMissing {
 				return nil, nil
 			}
-			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(t.Keys(), ", "))
+			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, StringJoin(t.Keys(), ", "))
 		}
 		return getPath(ret, allowMissing, path[1:]...)
 	case map[string]any:
@@ -47,7 +47,7 @@ func getPath(i any, allowMissing bool, path ...string) (any, error) {
 			if allowMissing {
 				return nil, nil
 			}
-			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, strings.Join(MapKeys(t), ", "))
+			return nil, errors.Errorf("map does not have key [%s] among candidates [%s]", k, StringJoin(MapKeys(t), ", "))
 		}
 		return getPath(ret, allowMissing, path[1:]...)
 	case []any:
@@ -64,7 +64,7 @@ func getPath(i any, allowMissing bool, path ...string) (any, error) {
 		if allowMissing {
 			return nil, nil
 		}
-		return nil, errors.Errorf("unhandled type [%T] for path [%s]", k, strings.Join(path, "."))
+		return nil, errors.Errorf("unhandled type [%T] for path [%s]", k, StringJoin(path, "."))
 	}
 }
 

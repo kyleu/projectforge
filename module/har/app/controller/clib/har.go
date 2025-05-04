@@ -98,7 +98,7 @@ func HarUpload(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		mpfrm := r.MultipartForm
-		name := strings.Join(mpfrm.Value["n"], "")
+		name := util.StringJoin(mpfrm.Value["n"], "")
 		fileHeaders, ok := mpfrm.File["f"]
 		if !ok {
 			return "", errors.New("no file uploaded")

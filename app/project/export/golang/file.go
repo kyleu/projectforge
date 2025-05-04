@@ -54,5 +54,5 @@ func (f *File) Render(linebreak string) (*file.File, error) {
 	if !strings.HasSuffix(f.Name, util.ExtGo) {
 		n += util.ExtGo
 	}
-	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, linebreak)}, nil
+	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: util.StringJoin(content, linebreak)}, nil
 }

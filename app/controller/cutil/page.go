@@ -183,5 +183,5 @@ func (p *PageState) MainClasses() string {
 	if p.HideMenu {
 		ret = append(ret, "nomenu")
 	}
-	return strings.Join(ret, " ")
+	return util.StringJoin(ret, " ")
 }

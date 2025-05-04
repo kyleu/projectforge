@@ -2,7 +2,6 @@ package checks
 
 import (
 	"context"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -15,7 +14,7 @@ import (
 
 func simpleOut(path string, cmd string, args []string, outChecks ...func(ctx context.Context, r *doctor.Result, out string) *doctor.Result) doctor.CheckFn {
 	return func(ctx context.Context, r *doctor.Result, logger util.Logger) *doctor.Result {
-		fullCmd := strings.Join(append([]string{cmd}, args...), " ")
+		fullCmd := util.StringJoin(append([]string{cmd}, args...), " ")
 		exitCode, out, err := telemetry.RunProcessSimple(ctx, fullCmd, path, logger)
 		if err != nil {
 			return r.WithError(doctor.NewError("missing", "[%s] is not present on your computer", cmd))

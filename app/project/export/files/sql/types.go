@@ -47,7 +47,7 @@ func typesCreate(enums enum.Enums, database string) *golang.Block {
 			ret.WF(helper.TextSQLComment+"skipping definition of enum [%s], since SQL Server does not support custom types", e.Name)
 		default:
 			ret.W("do $$ begin")
-			ret.WF("  create type %q as enum (%s);", e.Name, strings.Join(q, ", "))
+			ret.WF("  create type %q as enum (%s);", e.Name, util.StringJoin(q, ", "))
 			ret.W("exception")
 			ret.W("  when duplicate_object then null;")
 			ret.W("end $$;")

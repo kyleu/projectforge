@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "github.com/samber/lo"
 
   "projectforge.dev/projectforge/app"
@@ -32,14 +30,14 @@
           <tbody>
             {%= edit.StringTable("name", "", "Name", m.Name, 5, export.Helpers["model.name"]...) %}
             {%= edit.StringTable("package", "", "Package", m.Package, 5, export.Helpers["model.package"]...) %}
-            {%= edit.StringTable("group", "", "Group", strings.Join(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
+            {%= edit.StringTable("group", "", "Group", util.StringJoin(m.Group, "/"), 5, export.Helpers["model.group"]...) %}
             {%= edit.StringTable("schema", "", "Schema", m.Schema, 5, export.Helpers["model.schema"]...) %}
             {%= edit.StringTable("description", "", "Description", m.Description, 5, export.Helpers["model.description"]...) %}
             {%= edit.StringTable("icon", "", "Icon", m.Icon, 5, export.Helpers["model.icon"]...) %}
             {%= edit.TextareaTable("ordering", "", "Ordering", 3, util.ToJSON(m.Ordering), 5, export.Helpers["model.ordering"]...) %}
             {%= edit.SelectTable("view", "", "View", m.View, []string{"", "rich"}, []string{"Default", "Rich"}, 5, export.Helpers["model.view"]...) %}
-            {%= edit.StringTable("search", "", "Search", strings.Join(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
-            {%= edit.StringTable("tags", "", "Tags", strings.Join(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
+            {%= edit.StringTable("search", "", "Search", util.StringJoin(m.Search, `, `), 5, export.Helpers["model.search"]...) %}
+            {%= edit.StringTable("tags", "", "Tags", util.StringJoin(m.Tags, `, `), 5, export.Helpers["model.tags"]...) %}
             {%= edit.StringTable("titleOverride", "", "Title Override", m.TitleOverride, 5, export.Helpers["model.titleOverride"]...) %}
             {%= edit.StringTable("pluralOverride", "", "Plural Override", m.PluralOverride, 5, export.Helpers["model.pluralOverride"]...) %}
             {%= edit.StringTable("properOverride", "", "Proper Override", m.ProperOverride, 5, export.Helpers["model.properOverride"]...) %}

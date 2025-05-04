@@ -2,9 +2,10 @@ package types
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 type Argument struct {
@@ -48,7 +49,7 @@ func (x *Method) String() string {
 	argStrings := lo.Map(x.Args, func(arg Argument, _ int) string {
 		return arg.String()
 	})
-	return fmt.Sprintf("fn(%s) %s", strings.Join(argStrings, ", "), x.Ret.String())
+	return fmt.Sprintf("fn(%s) %s", util.StringJoin(argStrings, ", "), x.Ret.String())
 }
 
 func (x *Method) From(v any) any {

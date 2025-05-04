@@ -1,12 +1,11 @@
 package svc
 
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -23,7 +22,7 @@ func serviceDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	}
 	ret.WF("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
 	ret.W("\tq := database.SQLDelete(tableQuoted, defaultWC(0), s.db.Type)")
-	ret.WF("\t_, err := s.db.Delete(ctx, q, tx, 1, logger, %s)", strings.Join(pks.CamelNames(), ", "))
+	ret.WF("\t_, err := s.db.Delete(ctx, q, tx, 1, logger, %s)", util.StringJoin(pks.CamelNames(), ", "))
 	if m.HasTag("events") {
 		ret.W("\tif s.Events != nil {")
 		ret.W("\t\tif e := s.Events.Delete(ctx, tx, logger, id); e != nil {")
@@ -40,15 +39,15 @@ func serviceSoftDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) 
 	pks := m.PKs()
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
-	ret.WF(delMsg, strings.Join(delCols.Names(), ", "))
+	ret.WF(delMsg, util.StringJoin(delCols.Names(), ", "))
 	args, err := pks.Args(m.Package, enums)
 	if err != nil {
 		return nil, err
 	}
 	ret.WF("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
-	ret.WF("\tcols := []string{%s}", strings.Join(delCols.SQLQuoted(), ", "))
+	ret.WF("\tcols := []string{%s}", util.StringJoin(delCols.SQLQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, defaultWC(len(cols)), s.db.Type)")
-	ret.WF("\t_, err := s.db.Update(ctx, q, tx, 1, logger, util.TimeCurrent(), %s)", strings.Join(pks.CamelNames(), ", "))
+	ret.WF("\t_, err := s.db.Update(ctx, q, tx, 1, logger, util.TimeCurrent(), %s)", util.StringJoin(pks.CamelNames(), ", "))
 	if m.HasTag("events") {
 		ret.W("\tif s.Events != nil {")
 		ret.W("\t\tif e := s.Events.Delete(ctx, tx, logger, id); e != nil {")
@@ -74,9 +73,9 @@ func serviceDeleteWhere(_ *model.Model) *golang.Block {
 func serviceSoftDeleteWhere(m *model.Model) *golang.Block {
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
-	ret.WF(delMsg, strings.Join(delCols.Names(), ", "))
+	ret.WF(delMsg, util.StringJoin(delCols.Names(), ", "))
 	ret.WF("func (s *Service) DeleteWhere(%s) error {", argString)
-	ret.WF("\tcols := []string{%s}", strings.Join(delCols.SQLQuoted(), ", "))
+	ret.WF("\tcols := []string{%s}", util.StringJoin(delCols.SQLQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, wc, s.db.Type)")
 	ret.W("\t_, err := s.db.Update(ctx, q, tx, expected, logger, append([]any{util.TimeCurrent()}, values...)...)")
 	ret.W("\treturn err")

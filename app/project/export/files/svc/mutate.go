@@ -1,8 +1,6 @@
 package svc
 
 import (
-	"strings"
-
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
@@ -163,7 +161,7 @@ func serviceUpdate(g *golang.File, m *model.Model, audit bool, database string) 
 	}
 	ret.WF("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Type)", pks.WhereClause(len(cols.NotDerived()), placeholder))
 	ret.W("\tdata := model.ToData()")
-	ret.WF("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
+	ret.WF("\tdata = append(data, %s)", util.StringJoin(pkVals, ", "))
 	token := "="
 	if len(cols.WithTag("created")) == 0 && (!audit) {
 		token = serviceAssignmentToken
@@ -226,7 +224,7 @@ func serviceUpdateIfNeeded(g *golang.File, m *model.Model, database string) (*go
 	}
 	ret.WF("\tq := database.SQLUpdate(tableQuoted, columnsQuoted, %q, s.db.Type)", pks.WhereClause(len(m.Columns), placeholder))
 	ret.W("\tdata := model.ToData()")
-	ret.WF("\tdata = append(data, %s)", strings.Join(pkVals, ", "))
+	ret.WF("\tdata = append(data, %s)", util.StringJoin(pkVals, ", "))
 	token := "="
 	if len(m.Columns.WithTag("created")) == 0 {
 		token = serviceAssignmentToken
@@ -248,7 +246,7 @@ func serviceSave(g *golang.File, m *model.Model, audit bool) (*golang.Block, err
 	if err := serviceAddCreatedUpdated(g, m, ret, false); err != nil {
 		return nil, err
 	}
-	q := strings.Join(m.PKs().SQLQuoted(), ", ")
+	q := util.StringJoin(m.PKs().SQLQuoted(), ", ")
 	var pkOpt string
 	ret.WF("\tq := database.SQLUpsert(tableQuoted%s, columnsQuoted, len(models), []string{%s}, columnsQuoted, s.db.Type)", pkOpt, q)
 	ret.WF("\tdata := lo.FlatMap(models, func(model *%s, _ int) []any {", m.Proper())

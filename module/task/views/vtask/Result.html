@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/task"
@@ -22,7 +20,7 @@
   {%- if len(res.Logs) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon("file", ps) %} {%s res.Task.TitleSafe() %} Logs</h3>
-    <div class="mt">{%= components.Terminal("console-list", strings.Join(res.Logs, "\n")) %}</div>
+    <div class="mt">{%= components.Terminal("console-list", util.StringJoin(res.Logs, "\n")) %}</div>
   </div>
   {%- endif -%}
 

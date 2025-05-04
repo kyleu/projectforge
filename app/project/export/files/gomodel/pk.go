@@ -1,8 +1,6 @@
 package gomodel
 
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -42,7 +40,7 @@ func modelPKString(m *model.Model) (*golang.Block, error) {
 		}
 		args = append(args, "p."+c.Proper())
 	}
-	ret.WF("\treturn fmt.Sprintf(%q, %s)", strings.Join(format, " • "), strings.Join(args, ", "))
+	ret.WF("\treturn fmt.Sprintf(%q, %s)", util.StringJoin(format, " • "), util.StringJoin(args, ", "))
 	ret.W("}")
 	return ret, nil
 }

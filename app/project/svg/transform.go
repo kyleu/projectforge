@@ -89,7 +89,7 @@ func transformNodes(nodes []xmlNode) (string, error) {
 		}
 
 		if len(classes) > 0 {
-			cls := strings.Join(classes, " ")
+			cls := util.StringJoin(classes, " ")
 			if class == nil {
 				base := []xml.Attr{{Name: xml.Name{Local: "class"}, Value: cls}}
 				node.Attrs = append(util.ArrayCopy(base), node.Attrs...)

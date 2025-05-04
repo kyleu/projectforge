@@ -48,7 +48,7 @@ func (t *Context) DangerousOK() bool {
 }
 
 func (t *Context) ModuleMarkdown() string {
-	return strings.Join(util.ArraySorted(lo.Map(t.Modules, func(m string, _ int) string {
+	return util.StringJoin(util.ArraySorted(lo.Map(t.Modules, func(m string, _ int) string {
 		return fmt.Sprintf("- [%s](./doc/module/%s.md)", m, m)
 	})), t.Linebreak)
 }

@@ -2,7 +2,6 @@ package svc
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -35,7 +34,7 @@ func Services(args *metamodel.Args, linebreak string) (*file.File, error) {
 	if args.HasModule("audit") {
 		initParamsArr = append(initParamsArr, "audSvc *audit.Service")
 	}
-	initParams := strings.Join(initParamsArr, ", ")
+	initParams := util.StringJoin(initParamsArr, ", ")
 
 	svcs := make([]string, 0, len(args.Models))
 	refs := make([]string, 0, len(args.Models))
@@ -49,7 +48,7 @@ func Services(args *metamodel.Args, linebreak string) (*file.File, error) {
 		if args.HasModule("audit") && m.HasTag("audit") {
 			refParamsArr = append(refParamsArr, "audSvc")
 		}
-		refParams := strings.Join(refParamsArr, ", ")
+		refParams := util.StringJoin(refParamsArr, ", ")
 
 		refs = append(refs, fmt.Sprintf("%s %s.NewService(%s),", util.StringPad(m.Proper()+":", svcSize+1), m.Package, refParams))
 	})

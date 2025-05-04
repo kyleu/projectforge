@@ -48,7 +48,7 @@ func Size(ctx context.Context, fs filesystem.FileLoader, path string, logger uti
 		if len(split) < 4 {
 			return nil, []string{line}, errors.Errorf("found [%d] parts in line [%s]", len(split), line)
 		}
-		szStr, typ, n := split[1], split[2], strings.Join(split[3:], " ")
+		szStr, typ, n := split[1], split[2], util.StringJoin(split[3:], " ")
 		sz, err := util.ParseInt(szStr, "", true)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to process size [%s] line [%s]", szStr, line)

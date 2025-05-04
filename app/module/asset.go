@@ -29,7 +29,7 @@ func (s *Service) AssetURL(ctx context.Context, key string, logger util.Logger) 
 	ret, ok := assetMap[key]
 	if !ok {
 		msg := "no URL available for module [%s] among candidates [%s]"
-		return "", errors.Errorf(msg, key, strings.Join(util.ArraySorted(lo.Keys(assetMap)), ", "))
+		return "", errors.Errorf(msg, key, util.StringJoin(util.ArraySorted(lo.Keys(assetMap)), ", "))
 	}
 	return ret, nil
 }

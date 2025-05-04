@@ -30,7 +30,7 @@ func (d Diff) StringVerbose() string {
 type Diffs []*Diff
 
 func (d Diffs) String() string {
-	return strings.Join(lo.Map(d, func(x *Diff, _ int) string {
+	return StringJoin(lo.Map(d, func(x *Diff, _ int) string {
 		return x.String()
 	}), "; ")
 }
@@ -44,7 +44,7 @@ func (d Diffs) Sorted() Diffs {
 }
 
 func (d Diffs) StringVerbose() string {
-	return strings.Join(lo.Map(d, func(x *Diff, _ int) string {
+	return StringJoin(lo.Map(d, func(x *Diff, _ int) string {
 		return x.StringVerbose()
 	}), "; ")
 }
@@ -64,13 +64,13 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 		return nil
 	}
 	if l == nil {
-		return Diffs{NewDiff(strings.Join(path, "."), "", fmt.Sprint(r))}
+		return Diffs{NewDiff(StringJoin(path, "."), "", fmt.Sprint(r))}
 	}
 	if r == nil {
-		return Diffs{NewDiff(strings.Join(path, "."), fmt.Sprint(l), "")}
+		return Diffs{NewDiff(StringJoin(path, "."), fmt.Sprint(l), "")}
 	}
 	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
-		return Diffs{NewDiff(strings.Join(path, "."), ToJSONCompact(l), ToJSONCompact(r))}
+		return Diffs{NewDiff(StringJoin(path, "."), ToJSONCompact(l), ToJSONCompact(r))}
 	}
 	return diffType(l, r, ignored, false, path...)
 }
@@ -95,22 +95,22 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 	case int64:
 		i := CastOK[int64](r)
 		if t != i {
-			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+			ret = append(ret, NewDiff(StringJoin(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
 		}
 	case int:
 		i := CastOK[int](r)
 		if t != i {
-			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+			ret = append(ret, NewDiff(StringJoin(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
 		}
 	case float64:
 		f := CastOK[float64](r)
 		if t != f {
-			ret = append(ret, NewDiff(strings.Join(path, "."), fmt.Sprint(t), fmt.Sprint(f)))
+			ret = append(ret, NewDiff(StringJoin(path, "."), fmt.Sprint(t), fmt.Sprint(f)))
 		}
 	case string:
 		s := CastOK[string](r)
 		if t != s {
-			ret = append(ret, NewDiff(strings.Join(path, "."), t, s))
+			ret = append(ret, NewDiff(StringJoin(path, "."), t, s))
 		}
 	default:
 		lj, rj := ToJSONCompact(l), ToJSONCompact(r)
@@ -119,7 +119,7 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 			rx, _ := FromJSONAny([]byte(rj))
 			ret = append(ret, diffType(lx, rx, ignored, true, path...)...)
 		} else if lj != rj {
-			ret = append(ret, NewDiff(strings.Join(path, "."), lj, rj))
+			ret = append(ret, NewDiff(StringJoin(path, "."), lj, rj))
 		}
 	}
 	return ret

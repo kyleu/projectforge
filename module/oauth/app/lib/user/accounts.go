@@ -13,13 +13,13 @@ import (
 type Accounts []*Account
 
 func (a Accounts) String() string {
-	return strings.Join(lo.Map(a, func(x *Account, _ int) string {
+	return util.StringJoin(lo.Map(a, func(x *Account, _ int) string {
 		return x.String()
 	}), ",")
 }
 
 func (a Accounts) TitleString() string {
-	return strings.Join(lo.Map(a, func(x *Account, _ int) string {
+	return util.StringJoin(lo.Map(a, func(x *Account, _ int) string {
 		return x.TitleString()
 	}), ",")
 }

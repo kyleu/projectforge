@@ -3,7 +3,6 @@ package clib
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -84,6 +83,6 @@ func socketRoute(w http.ResponseWriter, r *http.Request, as *app.State, ps *cuti
 		}
 		return controller.FlashAndRedir(true, "sent message", fmt.Sprintf("/admin/sockets/conn/%s", id.String()), ps)
 	default:
-		return "", errors.Errorf("invalid path [%s]", strings.Join(path, "/"))
+		return "", errors.Errorf("invalid path [%s]", util.StringJoin(path, "/"))
 	}
 }

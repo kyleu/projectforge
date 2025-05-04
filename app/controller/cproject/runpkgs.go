@@ -3,7 +3,6 @@ package cproject
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -20,7 +19,7 @@ import (
 
 func runPkgs(prj *project.Project, res *action.Result, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
-		return "", errors.New(strings.Join(res.Errors, ", "))
+		return "", errors.New(util.StringJoin(res.Errors, ", "))
 	}
 	pkgs, err := util.Cast[build.Pkgs](res.Data)
 	if err != nil {

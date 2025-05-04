@@ -1,10 +1,10 @@
 package model
 
 import (
-	"strings"
-
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 var goKeywords = []string{
@@ -27,19 +27,19 @@ func (m *Model) Validate(mods []string, models Models, groups Groups) error {
 	if (!m.HasTag("menu-hidden")) && len(m.Group) > 0 && groups.Get(m.Group...) == nil {
 		msg := "model [%s] references undefined group [%s], and no model matches"
 		if len(m.Group) == 1 && models.Get(m.Group[0]) == nil {
-			return errors.Errorf(msg, m.Name, strings.Join(m.Group, "/"))
+			return errors.Errorf(msg, m.Name, util.StringJoin(m.Group, "/"))
 		}
 		if len(m.Group) > 1 {
 			var cool bool
-			mg := strings.Join(m.Group, "/")
+			mg := util.StringJoin(m.Group, "/")
 			for _, x := range models {
-				xg := strings.Join(x.Group, "/") + "/" + x.Package
+				xg := util.StringJoin(x.Group, "/") + "/" + x.Package
 				if mg == xg {
 					cool = true
 				}
 			}
 			if !cool {
-				return errors.Errorf(msg, m.Name, strings.Join(m.Group, "/"))
+				return errors.Errorf(msg, m.Name, util.StringJoin(m.Group, "/"))
 			}
 		}
 	}
@@ -59,7 +59,7 @@ func validateBasic(m *Model) error {
 		}
 	}
 	if dupes := lo.FindDuplicates(m.Columns.Names()); len(dupes) > 0 {
-		return errors.Errorf("model [%s] has duplicates columns [%s]", m.Name, strings.Join(dupes, ", "))
+		return errors.Errorf("model [%s] has duplicates columns [%s]", m.Name, util.StringJoin(dupes, ", "))
 	}
 	for _, col := range m.Columns {
 		if lo.Contains(goKeywords, col.Name) {

@@ -1,14 +1,13 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
 ) %}
 
 {% func String(value string, classes ...string) %}{% stripspace %}
   {% if len(classes) == 0 %}
     {%s value %}
   {% else %}
-    <span class="{%s strings.Join(classes, ` `) %}">{%s value %}</span>
+    <span class="{%s util.StringJoin(classes, ` `) %}">{%s value %}</span>
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
@@ -20,7 +19,7 @@
   {% if len(classes) == 0 %}
     <pre>{%s value %}</pre>
   {% else %}
-    <pre class="{%s strings.Join(classes, ` `) %}">{%s value %}</pre>
+    <pre class="{%s util.StringJoin(classes, ` `) %}">{%s value %}</pre>
   {% endif %}
   {% else %}
     {%= String(value, classes...) %}
@@ -40,7 +39,7 @@
       display = display[:maxCount]
     }
   %}
-  {% if extra > 0 %}<span title="{%s strings.Join(value, `, `) %}">{% endif %}
+  {% if extra > 0 %}<span title="{%s util.StringJoin(value, `, `) %}">{% endif %}
   {%- for idx, v := range display -%}
   {% if idx > 0 %},{% space %}{% endif %}
   {%s v %}

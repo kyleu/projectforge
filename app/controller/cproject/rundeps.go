@@ -3,7 +3,6 @@ package cproject
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -26,7 +25,7 @@ func actionParams(tgt string, t action.Type, cfg util.ValueMap, as *app.State, l
 
 func runDeps(prj *project.Project, res *action.Result, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
-		return "", errors.New(strings.Join(res.Errors, ", "))
+		return "", errors.New(util.StringJoin(res.Errors, ", "))
 	}
 	deps, err := util.Cast[build.Dependencies](res.Data)
 	if err != nil {

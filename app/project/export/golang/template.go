@@ -2,13 +2,13 @@ package golang
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type Template struct {
@@ -56,5 +56,5 @@ func (f *Template) Render(linebreak string) (*file.File, error) {
 	}
 
 	n := f.Name
-	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: strings.Join(content, linebreak)}, nil
+	return &file.File{Path: f.Path, Name: n, Mode: filesystem.DefaultMode, Content: util.StringJoin(content, linebreak)}, nil
 }

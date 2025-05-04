@@ -8,7 +8,7 @@ import (
 
 func JoinLines(ss []string, delim string, maxLen int) []string {
 	if maxLen == 0 {
-		return []string{strings.Join(ss, delim)}
+		return []string{StringJoin(ss, delim)}
 	}
 	ret := &StringSlice{}
 	var curr string

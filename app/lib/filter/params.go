@@ -3,7 +3,6 @@ package filter
 import (
 	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -139,7 +138,7 @@ func (p *Params) OrderByString() string {
 		}
 		return fmt.Sprintf("%q%s", col, dir)
 	})
-	return strings.Join(ret, ", ")
+	return util.StringJoin(ret, ", ")
 }
 
 func (p *Params) Filtered(key string, available []string, logger util.Logger) *Params {
@@ -191,7 +190,7 @@ func (p *Params) String() string {
 	ord := lo.Map(p.Orderings, func(o *Ordering, _ int) string {
 		return o.String()
 	})
-	return fmt.Sprintf("%s(%s): %s", p.Key, ol, strings.Join(ord, " / "))
+	return fmt.Sprintf("%s(%s): %s", p.Key, ol, util.StringJoin(ord, " / "))
 }
 
 func (p *Params) ToQueryString(u *url.URL) string {

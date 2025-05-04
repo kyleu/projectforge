@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/schedule"
@@ -33,7 +31,7 @@
           </tr>
           <tr>
             <th class="shrink">Tags</th>
-            <td>{%s strings.Join(p.Job.Tags, ", ") %}</td>
+            <td>{%s util.StringJoin(p.Job.Tags, ", ") %}</td>
           </tr>
           <tr>
             <th class="shrink">Last Run</th>

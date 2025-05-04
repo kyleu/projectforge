@@ -3,7 +3,6 @@ package cproject
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -24,7 +23,7 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	}
 	m.Name = get("name", m.Name)
 	m.Package = get("package", m.Package)
-	m.Group = util.StringSplitAndTrim(get("group", strings.Join(m.Group, "/")), "/")
+	m.Group = util.StringSplitAndTrim(get("group", util.StringJoin(m.Group, "/")), "/")
 	m.Schema = get("schema", m.Schema)
 	m.Description = get("description", m.Description)
 	m.Icon = get("icon", m.Icon)
@@ -38,8 +37,8 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	sIdx, _ := strconv.ParseInt(get("sortIndex", "0"), 10, 64)
 	m.SortIndex = int(sIdx)
 	m.View = get("view", m.View)
-	m.Search = util.StringSplitAndTrim(get("search", strings.Join(m.Search, ",")), ",")
-	m.Tags = util.StringSplitAndTrim(get("tags", strings.Join(m.Tags, ",")), ",")
+	m.Search = util.StringSplitAndTrim(get("search", util.StringJoin(m.Search, ",")), ",")
+	m.Tags = util.StringSplitAndTrim(get("tags", util.StringJoin(m.Tags, ",")), ",")
 	m.TitleOverride = get("titleOverride", m.TitleOverride)
 	m.PluralOverride = get("pluralOverride", m.PluralOverride)
 	m.ProperOverride = get("properOverride", m.ProperOverride)
@@ -112,11 +111,11 @@ func exportEnumFromForm(frm util.ValueMap, e *enum.Enum) error {
 	}
 	e.Name = get("name", e.Name)
 	e.Package = get("package", e.Package)
-	e.Group = util.StringSplitAndTrim(get("group", strings.Join(e.Group, "/")), "/")
+	e.Group = util.StringSplitAndTrim(get("group", util.StringJoin(e.Group, "/")), "/")
 	e.Description = get("description", e.Description)
 	e.Icon = get("icon", e.Icon)
 
-	e.Tags = util.StringSplitAndTrim(get("tags", strings.Join(e.Tags, ",")), ",")
+	e.Tags = util.StringSplitAndTrim(get("tags", util.StringJoin(e.Tags, ",")), ",")
 	e.TitleOverride = get("titleOverride", e.TitleOverride)
 	e.ProperOverride = get("properOverride", e.ProperOverride)
 

@@ -54,7 +54,7 @@ func (t *Context) ExtraFilesDocker() string {
 	ret := lo.Map(t.Info.ExtraFiles, func(ef string, _ int) string {
 		return fmt.Sprintf("\nCOPY %s /%s", ef, ef)
 	})
-	return strings.Join(ret, "")
+	return util.StringJoin(ret, "")
 }
 
 func (t *Context) GoBinaryContent() string {
@@ -68,7 +68,7 @@ func (t *Context) IgnoredSetting() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
-	return "\n" + strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
+	return "\n" + util.StringJoin(lo.Map(t.Ignore, func(i string, _ int) string {
 		return "      - /" + strings.TrimPrefix(i, "^")
 	}), "\n")
 }
@@ -77,13 +77,13 @@ func (t *Context) IgnoredQuoted() string {
 	if len(t.Ignore) == 0 {
 		return ""
 	}
-	return strings.Join(lo.Map(t.Ignore, func(i string, _ int) string {
+	return util.StringJoin(lo.Map(t.Ignore, func(i string, _ int) string {
 		return fmt.Sprintf(", %q", strings.TrimPrefix(i, "^"))
 	}), "")
 }
 
 func (t *Context) TypeScriptProjectContent() string {
-	ret := strings.Join(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
+	ret := util.StringJoin(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
 		return strings.HasPrefix(x, "ts:")
 	}), func(x string, _ int) string {
 		x = strings.TrimPrefix(x, "ts:")
@@ -123,14 +123,14 @@ func (t *Context) DockerPackages() string {
 	if t.Info == nil || len(t.Info.DockerPackages) == 0 {
 		return ""
 	}
-	return " " + strings.Join(t.Info.DockerPackages, " ")
+	return " " + util.StringJoin(t.Info.DockerPackages, " ")
 }
 
 func (t *Context) Acronyms() string {
 	if t.Info == nil || len(t.Info.Acronyms) == 0 {
 		return ""
 	}
-	return strings.Join(util.StringArrayQuoted(t.Info.Acronyms), ", ")
+	return util.StringJoin(util.StringArrayQuoted(t.Info.Acronyms), ", ")
 }
 
 func (t *Context) CoreStruct() string {

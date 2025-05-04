@@ -32,7 +32,7 @@ func exportRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/new", cproject.ProjectExportEnumNew)
 	makeRoute(r, http.MethodPost, "/p/{key}/export/enums/new", cproject.ProjectExportEnumCreate)
 	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}", cproject.ProjectExportEnumDetail)
-	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}/jsonschema", cproject.ProjectExportEnumJSONSchema)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}/jsonschema", cproject.ProjectExportEnumJSONSchema)
 	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumForm)
 	makeRoute(r, http.MethodPost, "/p/{key}/export/enums/{enum}/edit", cproject.ProjectExportEnumSave)
 	makeRoute(r, http.MethodGet, "/p/{key}/export/enums/{enum}/delete", cproject.ProjectExportEnumDelete)

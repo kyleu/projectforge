@@ -6,73 +6,72 @@ package vexec
 
 //line views/vexec/Form.html:1
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/exec"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexec/Form.html:12
+//line views/vexec/Form.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexec/Form.html:12
+//line views/vexec/Form.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexec/Form.html:12
+//line views/vexec/Form.html:11
 type Form struct {
 	layout.Basic
 	Exec *exec.Exec
 }
 
-//line views/vexec/Form.html:17
+//line views/vexec/Form.html:16
 func (p *Form) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Form.html:17
+//line views/vexec/Form.html:16
 	qw422016.N().S(`
 `)
-//line views/vexec/Form.html:18
+//line views/vexec/Form.html:17
 	x := p.Exec
 
-//line views/vexec/Form.html:18
+//line views/vexec/Form.html:17
 	qw422016.N().S(`  <form action="" method="post" class="mt expanded">
     <div class="card">
       <h3>`)
-//line views/vexec/Form.html:21
+//line views/vexec/Form.html:20
 	components.StreamSVGIcon(qw422016, "desktop", ps)
-//line views/vexec/Form.html:21
+//line views/vexec/Form.html:20
 	qw422016.N().S(` New Process</h3>
       <div class="overflow full-width">
         <table class="mt min-200 expanded">
           <tbody>
             `)
-//line views/vexec/Form.html:25
+//line views/vexec/Form.html:24
 	edit.StreamStringTable(qw422016, "key", "", "Key", x.Key, 5, "optional, defaults to command")
+//line views/vexec/Form.html:24
+	qw422016.N().S(`
+            `)
+//line views/vexec/Form.html:25
+	edit.StreamStringTable(qw422016, "cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments")
 //line views/vexec/Form.html:25
 	qw422016.N().S(`
             `)
 //line views/vexec/Form.html:26
-	edit.StreamStringTable(qw422016, "cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments")
+	edit.StreamStringTable(qw422016, "path", "", "Path", x.Path, 5)
 //line views/vexec/Form.html:26
 	qw422016.N().S(`
             `)
 //line views/vexec/Form.html:27
-	edit.StreamStringTable(qw422016, "path", "", "Path", x.Path, 5)
+	edit.StreamTextareaTable(qw422016, "env", "", "Env Vars", len(x.Env), util.StringJoin(x.Env, "\n"), 5)
 //line views/vexec/Form.html:27
-	qw422016.N().S(`
-            `)
-//line views/vexec/Form.html:28
-	edit.StreamTextareaTable(qw422016, "env", "", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5)
-//line views/vexec/Form.html:28
 	qw422016.N().S(`
             <tr>
               <td colspan="2"><button class="mt" type="submit">Create</button></td>
@@ -83,31 +82,31 @@ func (p *Form) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
   </form>
 `)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 }
 
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 func (p *Form) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	p.StreamBody(qw422016, as, ps)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 }
 
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 func (p *Form) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	p.WriteBody(qb422016, as, ps)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	qs422016 := string(qb422016.B)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 	return qs422016
-//line views/vexec/Form.html:37
+//line views/vexec/Form.html:36
 }

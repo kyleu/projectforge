@@ -109,5 +109,5 @@ func (s *Service) process(
 
 func valueStrings(values []any) string {
 	ret := util.StringArrayFromAny(values, 256)
-	return strings.Join(ret, ", ")
+	return util.StringJoin(ret, ", ")
 }

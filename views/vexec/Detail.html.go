@@ -6,8 +6,6 @@ package vexec
 
 //line views/vexec/Detail.html:1
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/exec"
@@ -16,109 +14,109 @@ import (
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vexec/Detail.html:12
+//line views/vexec/Detail.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vexec/Detail.html:12
+//line views/vexec/Detail.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vexec/Detail.html:12
+//line views/vexec/Detail.html:10
 type Detail struct {
 	layout.Basic
 	Exec *exec.Exec
 }
 
-//line views/vexec/Detail.html:17
+//line views/vexec/Detail.html:15
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Detail.html:17
+//line views/vexec/Detail.html:15
 	qw422016.N().S(`
   `)
-//line views/vexec/Detail.html:18
+//line views/vexec/Detail.html:16
 	StreamExecDetail(qw422016, p.Exec, ps)
-//line views/vexec/Detail.html:18
+//line views/vexec/Detail.html:16
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vexec/Detail.html:20
+//line views/vexec/Detail.html:18
 	components.StreamSVGIcon(qw422016, "file", ps)
-//line views/vexec/Detail.html:20
+//line views/vexec/Detail.html:18
 	qw422016.N().S(` Output</h3>
     <div class="mt">`)
-//line views/vexec/Detail.html:21
+//line views/vexec/Detail.html:19
 	components.StreamTerminal(qw422016, "console-list", p.Exec.Buffer.String())
-//line views/vexec/Detail.html:21
+//line views/vexec/Detail.html:19
 	qw422016.N().S(`</div>
   </div>
   `)
-//line views/vexec/Detail.html:23
+//line views/vexec/Detail.html:21
 	StreamExecScript(qw422016, as.Debug, "console-list", p.Exec.WebPath()+"/connect", true, ps)
-//line views/vexec/Detail.html:23
+//line views/vexec/Detail.html:21
 	qw422016.N().S(`
 `)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 }
 
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	p.StreamBody(qw422016, as, ps)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 }
 
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	p.WriteBody(qb422016, as, ps)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	qs422016 := string(qb422016.B)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 	return qs422016
-//line views/vexec/Detail.html:24
+//line views/vexec/Detail.html:22
 }
 
-//line views/vexec/Detail.html:26
+//line views/vexec/Detail.html:24
 func StreamExecDetail(qw422016 *qt422016.Writer, ex *exec.Exec, ps *cutil.PageState) {
-//line views/vexec/Detail.html:26
+//line views/vexec/Detail.html:24
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vexec/Detail.html:28
+//line views/vexec/Detail.html:26
 	if ex.Completed == nil {
-//line views/vexec/Detail.html:28
+//line views/vexec/Detail.html:26
 		qw422016.N().S(`    <div class="right">
       <a href="`)
-//line views/vexec/Detail.html:30
+//line views/vexec/Detail.html:28
 		qw422016.E().S(ex.WebPath())
-//line views/vexec/Detail.html:30
+//line views/vexec/Detail.html:28
 		qw422016.N().S(`/kill"><button>Kill</button></a>
     </div>
 `)
-//line views/vexec/Detail.html:32
+//line views/vexec/Detail.html:30
 	}
-//line views/vexec/Detail.html:32
+//line views/vexec/Detail.html:30
 	qw422016.N().S(`    <h3>`)
-//line views/vexec/Detail.html:33
+//line views/vexec/Detail.html:31
 	components.StreamSVGIcon(qw422016, "desktop", ps)
-//line views/vexec/Detail.html:33
+//line views/vexec/Detail.html:31
 	qw422016.N().S(` Process [`)
-//line views/vexec/Detail.html:33
+//line views/vexec/Detail.html:31
 	qw422016.E().S(ex.String())
-//line views/vexec/Detail.html:33
+//line views/vexec/Detail.html:31
 	qw422016.N().S(`]</h3>
     <div class="overflow full-width">
       <table>
@@ -126,57 +124,57 @@ func StreamExecDetail(qw422016 *qt422016.Writer, ex *exec.Exec, ps *cutil.PageSt
           <tr>
             <th class="shrink">Key</th>
             <td>`)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 	if len(ex.Link) > 0 {
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 		qw422016.N().S(`<a href="`)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 		qw422016.E().S(ex.Link)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 		qw422016.N().S(`">`)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 		qw422016.E().S(ex.Key)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 		qw422016.N().S(`</a>`)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 	} else {
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 		qw422016.E().S(ex.Key)
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 	}
-//line views/vexec/Detail.html:39
+//line views/vexec/Detail.html:37
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Index</th>
             <td>`)
-//line views/vexec/Detail.html:43
+//line views/vexec/Detail.html:41
 	qw422016.N().D(ex.Idx)
-//line views/vexec/Detail.html:43
+//line views/vexec/Detail.html:41
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>PID</th>
             <td>`)
-//line views/vexec/Detail.html:47
+//line views/vexec/Detail.html:45
 	qw422016.N().D(ex.PID)
-//line views/vexec/Detail.html:47
+//line views/vexec/Detail.html:45
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Command</th>
             <td>`)
-//line views/vexec/Detail.html:51
+//line views/vexec/Detail.html:49
 	qw422016.E().S(ex.Cmd)
-//line views/vexec/Detail.html:51
+//line views/vexec/Detail.html:49
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Path</th>
             <td>`)
-//line views/vexec/Detail.html:55
+//line views/vexec/Detail.html:53
 	qw422016.E().S(ex.Path)
-//line views/vexec/Detail.html:55
+//line views/vexec/Detail.html:53
 	qw422016.N().S(`</td>
           </tr>
           <tr>
@@ -184,150 +182,150 @@ func StreamExecDetail(qw422016 *qt422016.Writer, ex *exec.Exec, ps *cutil.PageSt
             <td>
               <ul>
 `)
-//line views/vexec/Detail.html:61
+//line views/vexec/Detail.html:59
 	for _, x := range ex.Env {
-//line views/vexec/Detail.html:61
+//line views/vexec/Detail.html:59
 		qw422016.N().S(`                <li>`)
-//line views/vexec/Detail.html:62
+//line views/vexec/Detail.html:60
 		qw422016.E().S(x)
-//line views/vexec/Detail.html:62
+//line views/vexec/Detail.html:60
 		qw422016.N().S(`</li>
 `)
-//line views/vexec/Detail.html:63
+//line views/vexec/Detail.html:61
 	}
-//line views/vexec/Detail.html:63
+//line views/vexec/Detail.html:61
 	qw422016.N().S(`              </ul>
             </td>
           </tr>
           <tr>
             <th>Started</th>
             <td title="`)
-//line views/vexec/Detail.html:69
+//line views/vexec/Detail.html:67
 	qw422016.E().S(util.TimeToFull(ex.Started))
-//line views/vexec/Detail.html:69
+//line views/vexec/Detail.html:67
 	qw422016.N().S(`">`)
-//line views/vexec/Detail.html:69
+//line views/vexec/Detail.html:67
 	qw422016.E().S(util.TimeRelative(ex.Started))
-//line views/vexec/Detail.html:69
+//line views/vexec/Detail.html:67
 	qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vexec/Detail.html:71
+//line views/vexec/Detail.html:69
 	if ex.Completed != nil {
-//line views/vexec/Detail.html:71
+//line views/vexec/Detail.html:69
 		qw422016.N().S(`          <tr>
             <th>Completed</th>
             <td title="`)
-//line views/vexec/Detail.html:74
+//line views/vexec/Detail.html:72
 		qw422016.E().S(util.TimeToFull(ex.Completed))
-//line views/vexec/Detail.html:74
+//line views/vexec/Detail.html:72
 		qw422016.N().S(`">`)
-//line views/vexec/Detail.html:74
+//line views/vexec/Detail.html:72
 		qw422016.E().S(util.TimeRelative(ex.Completed))
-//line views/vexec/Detail.html:74
+//line views/vexec/Detail.html:72
 		qw422016.N().S(`</td>
           </tr>
           <tr>
             <th>Exit Code</th>
             <td>`)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:76
 		qw422016.N().D(ex.ExitCode)
-//line views/vexec/Detail.html:78
+//line views/vexec/Detail.html:76
 		qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vexec/Detail.html:80
+//line views/vexec/Detail.html:78
 	}
-//line views/vexec/Detail.html:80
+//line views/vexec/Detail.html:78
 	qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
 `)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 }
 
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 func WriteExecDetail(qq422016 qtio422016.Writer, ex *exec.Exec, ps *cutil.PageState) {
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	StreamExecDetail(qw422016, ex, ps)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 }
 
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 func ExecDetail(ex *exec.Exec, ps *cutil.PageState) string {
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	WriteExecDetail(qb422016, ex, ps)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	qs422016 := string(qb422016.B)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 	return qs422016
-//line views/vexec/Detail.html:85
+//line views/vexec/Detail.html:83
 }
 
-//line views/vexec/Detail.html:87
+//line views/vexec/Detail.html:85
 func StreamExecScript(qw422016 *qt422016.Writer, debug bool, id string, connectURL string, terminal bool, ps *cutil.PageState, extraHandlers ...string) {
-//line views/vexec/Detail.html:87
+//line views/vexec/Detail.html:85
 	qw422016.N().S(`
   <script>
     window.addEventListener('load', () => {
       projectforge.socketLog(`)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.E().V(debug)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.N().S(`, document.getElementById("`)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.E().S(id)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.N().S(`"), `)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.E().V(terminal)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.N().S(`, "`)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.N().S(connectURL)
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
 	qw422016.N().S(`", [`)
-//line views/vexec/Detail.html:90
-	qw422016.N().S(strings.Join(extraHandlers, `, `))
-//line views/vexec/Detail.html:90
+//line views/vexec/Detail.html:88
+	qw422016.N().S(util.StringJoin(extraHandlers, `, `))
+//line views/vexec/Detail.html:88
 	qw422016.N().S(`]);
     })
   </script>
 `)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 }
 
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 func WriteExecScript(qq422016 qtio422016.Writer, debug bool, id string, connectURL string, terminal bool, ps *cutil.PageState, extraHandlers ...string) {
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	StreamExecScript(qw422016, debug, id, connectURL, terminal, ps, extraHandlers...)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 }
 
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 func ExecScript(debug bool, id string, connectURL string, terminal bool, ps *cutil.PageState, extraHandlers ...string) string {
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	WriteExecScript(qb422016, debug, id, connectURL, terminal, ps, extraHandlers...)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	qs422016 := string(qb422016.B)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 	return qs422016
-//line views/vexec/Detail.html:93
+//line views/vexec/Detail.html:91
 }

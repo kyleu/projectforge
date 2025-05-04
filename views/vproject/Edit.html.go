@@ -106,7 +106,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:47
-	edit.StreamStringTable(qw422016, "ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...)
+	edit.StreamStringTable(qw422016, "ignore", "", "Ignore", util.StringJoin(prj.Ignore, ", "), 5, project.Helpers["ignore"]...)
 //line views/vproject/Edit.html:47
 	qw422016.N().S(`
             `)
@@ -330,7 +330,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:115
-	edit.StreamStringTable(qw422016, "channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...)
+	edit.StreamStringTable(qw422016, "channels", "", "Channels", util.StringJoin(info.Channels, ", "), 5, project.Helpers["channels"]...)
 //line views/vproject/Edit.html:115
 	qw422016.N().S(`
 `)
@@ -367,17 +367,17 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:123
-	edit.StreamStringTable(qw422016, "extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
+	edit.StreamStringTable(qw422016, "extraFiles", "", "Extra Files", util.StringJoin(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
 //line views/vproject/Edit.html:123
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:124
-	edit.StreamStringTable(qw422016, "ignoredFiles", "", "Ignored Files", strings.Join(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...)
+	edit.StreamStringTable(qw422016, "ignoredFiles", "", "Ignored Files", util.StringJoin(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...)
 //line views/vproject/Edit.html:124
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:125
-	edit.StreamStringTable(qw422016, "deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
+	edit.StreamStringTable(qw422016, "deployments", "", "Deployments", util.StringJoin(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
 //line views/vproject/Edit.html:125
 	qw422016.N().S(`
             `)

@@ -39,7 +39,7 @@ func (s Selector) String() string {
 	if len(ret) == 0 {
 		ret = append(ret, "*")
 	}
-	return strings.Join(ret, ", ")
+	return util.StringJoin(ret, ", ")
 }
 
 type Selectors []*Selector

@@ -28,7 +28,7 @@ func Apply(b []byte, d *Diff) ([]byte, error) {
 		return nil, errors.Wrap(err, "unable to apply commands")
 	}
 
-	return []byte(strings.Join(newLines, util.StringDetectLinebreak(string(b)))), nil
+	return []byte(util.StringJoin(newLines, util.StringDetectLinebreak(string(b)))), nil
 }
 
 func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
@@ -41,7 +41,7 @@ func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
 		return nil, errors.Wrap(err, "unable to apply commands")
 	}
 
-	return []byte(strings.Join(newLines, util.StringDetectLinebreak(string(b)))), nil
+	return []byte(util.StringJoin(newLines, util.StringDetectLinebreak(string(b)))), nil
 }
 
 func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {

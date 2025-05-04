@@ -61,6 +61,6 @@ func read(fn string, depth int) (string, error) {
 
 		return child
 	})
-	ret := strings.Join(converted, "\n")
+	ret := util.StringJoin(converted, "\n")
 	return ret, nil
 }

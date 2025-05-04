@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -11,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func Routes(args *metamodel.Args, linebreak string) (*file.File, error) {
@@ -65,7 +65,7 @@ func routeModelContent(m *model.Model) *golang.Block {
 	lo.ForEach(m.PKs(), func(col *model.Column, _ int) {
 		pkNames = append(pkNames, fmt.Sprintf("{%s}", col.Camel()))
 	})
-	pkn := strings.Join(pkNames, "/")
+	pkn := util.StringJoin(pkNames, "/")
 
 	pkg := "controller"
 	if len(m.Group) > 0 {

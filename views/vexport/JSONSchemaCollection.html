@@ -2,7 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/jsonschema"
-  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/lib/metamodel"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
@@ -12,19 +12,12 @@
 {% code type JSONSchemaCollection struct {
   layout.Basic
   Project *project.Project
-  Args *model.Args
+  Args *metamodel.Args
   Collection *jsonschema.Collection
+  Results *metamodel.Args
 } %}
 
 {% func (p *JSONSchemaCollection) Body(as *app.State, ps *cutil.PageState) %}
-  <style>
-    .flex-item {
-      flex: 1;
-      margin: var(--padding);
-      padding: var(--padding);
-      border: var(--border);
-    }
-  </style>
   <div class="card">
     <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}] JSON Schema</h3>
   </div>
@@ -33,7 +26,7 @@
     <div class="mt">
       <ul class="accordion">
         {%- for _, x := range p.Args.Enums -%}
-        {%- code sch := p.Collection.GetSchema(x.Name) -%}
+        {%- code sch := p.Collection.GetSchema(x.ID()) -%}
         <li>
           <input id="accordion-enum-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-enum-{%s x.Name %}">
@@ -43,7 +36,8 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%= renderJSONSchemaEnum(as, x, sch, ps) %}
+            {%- code res := p.Results.Enums.Get(x.ID()) -%}
+            {%= renderJSONSchemaEnum(as, x, sch, res, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -55,7 +49,7 @@
     <div class="mt">
       <ul class="accordion">
         {%- for _, x := range p.Args.Models -%}
-        {%- code sch := p.Collection.GetSchema(x.Name) -%}
+        {%- code sch := p.Collection.GetSchema(x.ID()) -%}
         <li>
           <input id="accordion-model-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-model-{%s x.Name %}">
@@ -65,7 +59,8 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%= renderJSONSchemaModel(as, x, sch, ps) %}
+            {%- code res := p.Results.Models.Get(x.ID()) -%}
+            {%= renderJSONSchemaModel(as, x, sch, res, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -91,4 +86,8 @@
     </div>
   </div>
   {%- endif -%}
+{% endfunc %}
+
+{% func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) %}
+  <pre>{%s util.ToJSON(sch) %}</pre>
 {% endfunc %}

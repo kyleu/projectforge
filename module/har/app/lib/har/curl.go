@@ -19,14 +19,14 @@ func (e *Entry) Curl() string {
 		for _, cookie := range e.Request.Cookies {
 			cookies = append(cookies, url.QueryEscape(cookie.Name)+"="+url.QueryEscape(cookie.Value))
 		}
-		command += " \\\n  -b \"" + strings.Join(cookies, "&") + "\""
+		command += " \\\n  -b \"" + util.StringJoin(cookies, "&") + "\""
 	}
 	for _, h := range e.Request.Headers {
 		if h.Name == "Accept-Encoding" && strings.Contains(h.Value, encBrotli) {
 			encs := lo.Filter(util.StringSplitAndTrim(h.Value, ","), func(x string, _ int) bool {
 				return x == encDeflate || x == encGzip
 			})
-			h = &NVP{Name: h.Name, Value: strings.Join(encs, ", "), Comment: h.Comment}
+			h = &NVP{Name: h.Name, Value: util.StringJoin(encs, ", "), Comment: h.Comment}
 		}
 		command += " \\\n  -H \"" + h.Name + ": " + h.Value + "\""
 	}

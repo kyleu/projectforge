@@ -42,7 +42,7 @@ func sqlSeedData(m *model.Model, database string) (*golang.Block, error) {
 //nolint:gocognit
 func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, cols model.Columns, database string) error {
 	block.WF("insert into %q (", tableName)
-	block.W(ind1 + strings.Join(cols.SQLQuoted(), ", "))
+	block.W(ind1 + util.StringJoin(cols.SQLQuoted(), ", "))
 	block.W(") values (")
 	for idx, row := range m.SeedData {
 		if len(row) != len(m.Columns) {
@@ -116,7 +116,7 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 				vs = append(vs, cellStr)
 			}
 		}
-		block.W(ind1 + strings.Join(vs, ", "))
+		block.W(ind1 + util.StringJoin(vs, ", "))
 		if idx < len(m.SeedData)-1 {
 			block.W("), (")
 		}

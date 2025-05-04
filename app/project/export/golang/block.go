@@ -45,7 +45,7 @@ func (b *Block) WB() {
 
 func (b *Block) WE(indent int, prefix ...string) {
 	ind := util.StringRepeat("\t", indent)
-	p := strings.Join(prefix, ", ")
+	p := util.StringJoin(prefix, ", ")
 	if p != "" {
 		p += ", "
 	}
@@ -64,13 +64,13 @@ func (b *Block) Render(linebreak string) (string, error) {
 
 	if d == "" {
 		if len(b.Lints) == 0 {
-			return strings.Join(b.Lines, linebreak), nil
+			return util.StringJoin(b.Lines, linebreak), nil
 		}
-		line := "//nolint:" + strings.Join(b.Lints, ", ")
-		return strings.Join(append([]string{line}, b.Lines...), linebreak), nil
+		line := "//nolint:" + util.StringJoin(b.Lints, ", ")
+		return util.StringJoin(append([]string{line}, b.Lines...), linebreak), nil
 	}
-	line := strings.Join(append([]string{d}, b.Lints...), ", ")
-	return strings.Join(append([]string{line}, b.Lines...), linebreak), nil
+	line := util.StringJoin(append([]string{d}, b.Lints...), ", ")
+	return util.StringJoin(append([]string{line}, b.Lines...), linebreak), nil
 }
 
 func (b *Block) LineCount() int {
@@ -100,7 +100,7 @@ func (b *Block) NoLineDecl(linebreak string) (string, error) {
 	}
 
 	fset := token.NewFileSet()
-	if f, _ := parser.ParseFile(fset, "temp.go", strings.Join(append([]string{"package x"}, b.Lines...), linebreak), 0); f != nil {
+	if f, _ := parser.ParseFile(fset, "temp.go", util.StringJoin(append([]string{"package x"}, b.Lines...), linebreak), 0); f != nil {
 		for _, complexity := range gocognit.ComplexityStats(f, fset, nil) {
 			if complexity.Complexity > 30 && !slices.Contains(ret.Slice, "gocognit") {
 				ret.Push("gocognit")

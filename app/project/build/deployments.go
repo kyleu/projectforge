@@ -36,9 +36,9 @@ func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, d
 		})
 		if len(hit) > 0 {
 			ret = append(ret, df)
-			hits := strings.Join(hit.Keys(), ", ")
+			hits := util.StringJoin(hit.Keys(), ", ")
 			if fix && (path == "" || path == dep) {
-				logs = append(logs, fmt.Sprintf("updated version [%s] to [%s]", hits, curr), strings.Join(final, "\n"))
+				logs = append(logs, fmt.Sprintf("updated version [%s] to [%s]", hits, curr), util.StringJoin(final, "\n"))
 			} else {
 				df.Status = diff.StatusDifferent
 				df.Patch = hits + textArrow + curr

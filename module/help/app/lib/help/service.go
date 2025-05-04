@@ -84,6 +84,6 @@ func entryFor(key string, hd string, ft string, indent int) (*Entry, error) {
 		md += dblLB + ft
 	}
 	html := strings.TrimSpace(string(markdown.ToHTML([]byte(md), nil, nil)))
-	html = strings.Join(util.StringSplitLinesIndented(html, indent, false, false), "\n")
+	html = util.StringJoin(util.StringSplitLinesIndented(html, indent, false, false), "\n")
 	return &Entry{Key: key, Title: title, Markdown: md, HTML: html}, nil
 }

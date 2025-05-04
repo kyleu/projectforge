@@ -6,8 +6,6 @@ package vtask
 
 //line views/vtask/Result.html:1
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/task"
@@ -16,307 +14,307 @@ import (
 	"projectforge.dev/projectforge/views/components/view"
 )
 
-//line views/vtask/Result.html:12
+//line views/vtask/Result.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtask/Result.html:12
+//line views/vtask/Result.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtask/Result.html:12
+//line views/vtask/Result.html:10
 func StreamResult(qw422016 *qt422016.Writer, as *app.State, res *task.Result, ps *cutil.PageState) {
-//line views/vtask/Result.html:12
+//line views/vtask/Result.html:10
 	qw422016.N().S(`
 `)
-//line views/vtask/Result.html:13
+//line views/vtask/Result.html:11
 	if res.Error != "" {
-//line views/vtask/Result.html:13
+//line views/vtask/Result.html:11
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vtask/Result.html:15
+//line views/vtask/Result.html:13
 		components.StreamSVGIcon(qw422016, "error", ps)
-//line views/vtask/Result.html:15
+//line views/vtask/Result.html:13
 		qw422016.N().S(` Error</h3>
     <div class="mt">
       <pre class="error">Error: `)
-//line views/vtask/Result.html:17
+//line views/vtask/Result.html:15
 		qw422016.E().S(res.Error)
-//line views/vtask/Result.html:17
+//line views/vtask/Result.html:15
 		qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vtask/Result.html:20
+//line views/vtask/Result.html:18
 	}
-//line views/vtask/Result.html:20
+//line views/vtask/Result.html:18
 	qw422016.N().S(`
 `)
-//line views/vtask/Result.html:22
+//line views/vtask/Result.html:20
 	if len(res.Logs) > 0 {
-//line views/vtask/Result.html:22
+//line views/vtask/Result.html:20
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vtask/Result.html:24
+//line views/vtask/Result.html:22
 		components.StreamSVGIcon(qw422016, "file", ps)
-//line views/vtask/Result.html:24
+//line views/vtask/Result.html:22
 		qw422016.N().S(` `)
-//line views/vtask/Result.html:24
+//line views/vtask/Result.html:22
 		qw422016.E().S(res.Task.TitleSafe())
-//line views/vtask/Result.html:24
+//line views/vtask/Result.html:22
 		qw422016.N().S(` Logs</h3>
     <div class="mt">`)
-//line views/vtask/Result.html:25
-		components.StreamTerminal(qw422016, "console-list", strings.Join(res.Logs, "\n"))
-//line views/vtask/Result.html:25
+//line views/vtask/Result.html:23
+		components.StreamTerminal(qw422016, "console-list", util.StringJoin(res.Logs, "\n"))
+//line views/vtask/Result.html:23
 		qw422016.N().S(`</div>
   </div>
 `)
-//line views/vtask/Result.html:27
+//line views/vtask/Result.html:25
 	}
-//line views/vtask/Result.html:27
+//line views/vtask/Result.html:25
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       `)
-//line views/vtask/Result.html:31
+//line views/vtask/Result.html:29
 	qw422016.E().S(util.MicrosToMillis(res.Elapsed))
-//line views/vtask/Result.html:31
+//line views/vtask/Result.html:29
 	qw422016.N().S(`
       <a href="#modal-result-`)
-//line views/vtask/Result.html:32
+//line views/vtask/Result.html:30
 	qw422016.E().S(res.ID.String())
-//line views/vtask/Result.html:32
+//line views/vtask/Result.html:30
 	qw422016.N().S(`" title="JSON"><button>`)
-//line views/vtask/Result.html:32
+//line views/vtask/Result.html:30
 	components.StreamSVGButton(qw422016, `code`, ps)
-//line views/vtask/Result.html:32
+//line views/vtask/Result.html:30
 	qw422016.N().S(`</button></a>
     </div>
     <h3>`)
-//line views/vtask/Result.html:34
+//line views/vtask/Result.html:32
 	components.StreamSVGIcon(qw422016, "cog", ps)
-//line views/vtask/Result.html:34
+//line views/vtask/Result.html:32
 	qw422016.N().S(` `)
-//line views/vtask/Result.html:34
+//line views/vtask/Result.html:32
 	qw422016.E().S(res.Task.TitleSafe())
-//line views/vtask/Result.html:34
+//line views/vtask/Result.html:32
 	qw422016.N().S(` Result</h3>
 `)
-//line views/vtask/Result.html:35
+//line views/vtask/Result.html:33
 	if len(res.Tags) > 0 {
-//line views/vtask/Result.html:35
+//line views/vtask/Result.html:33
 		qw422016.N().S(`    <div class="clear"></div>
     <div class="right mts">`)
-//line views/vtask/Result.html:37
+//line views/vtask/Result.html:35
 		view.StreamTags(qw422016, res.Tags, nil)
-//line views/vtask/Result.html:37
+//line views/vtask/Result.html:35
 		qw422016.N().S(`</div>
 `)
-//line views/vtask/Result.html:38
+//line views/vtask/Result.html:36
 	}
-//line views/vtask/Result.html:38
+//line views/vtask/Result.html:36
 	qw422016.N().S(`    <div><em>`)
-//line views/vtask/Result.html:39
+//line views/vtask/Result.html:37
 	view.StreamTimestampRelative(qw422016, &res.Started, false)
-//line views/vtask/Result.html:39
+//line views/vtask/Result.html:37
 	qw422016.N().S(`</em></div>
     <div class="mt">
       `)
-//line views/vtask/Result.html:41
+//line views/vtask/Result.html:39
 	streamrenderResult(qw422016, res, as, ps)
-//line views/vtask/Result.html:41
+//line views/vtask/Result.html:39
 	qw422016.N().S(`
     </div>
   </div>
   `)
-//line views/vtask/Result.html:44
+//line views/vtask/Result.html:42
 	components.StreamJSONModal(qw422016, "result-"+res.ID.String(), "Result ["+res.String()+"] JSON", res, 1)
-//line views/vtask/Result.html:44
+//line views/vtask/Result.html:42
 	qw422016.N().S(`
 `)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 }
 
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 func WriteResult(qq422016 qtio422016.Writer, as *app.State, res *task.Result, ps *cutil.PageState) {
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	StreamResult(qw422016, as, res, ps)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 }
 
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 func Result(as *app.State, res *task.Result, ps *cutil.PageState) string {
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	WriteResult(qb422016, as, res, ps)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	qs422016 := string(qb422016.B)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 	return qs422016
-//line views/vtask/Result.html:45
+//line views/vtask/Result.html:43
 }
 
-//line views/vtask/Result.html:47
+//line views/vtask/Result.html:45
 func StreamResultSummary(qw422016 *qt422016.Writer, as *app.State, res *task.Result, ps *cutil.PageState) {
-//line views/vtask/Result.html:47
+//line views/vtask/Result.html:45
 	qw422016.N().S(`
 `)
-//line views/vtask/Result.html:48
+//line views/vtask/Result.html:46
 	if res.Error != "" {
-//line views/vtask/Result.html:48
+//line views/vtask/Result.html:46
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vtask/Result.html:50
+//line views/vtask/Result.html:48
 		components.StreamSVGIcon(qw422016, "error", ps)
-//line views/vtask/Result.html:50
+//line views/vtask/Result.html:48
 		qw422016.N().S(` Error</h3>
     <div class="mt">
       <pre class="error">Error: `)
-//line views/vtask/Result.html:52
+//line views/vtask/Result.html:50
 		qw422016.E().S(res.Error)
-//line views/vtask/Result.html:52
+//line views/vtask/Result.html:50
 		qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vtask/Result.html:55
+//line views/vtask/Result.html:53
 	}
-//line views/vtask/Result.html:55
+//line views/vtask/Result.html:53
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       `)
-//line views/vtask/Result.html:59
+//line views/vtask/Result.html:57
 	qw422016.E().S(util.MicrosToMillis(res.Elapsed))
-//line views/vtask/Result.html:59
+//line views/vtask/Result.html:57
 	qw422016.N().S(`
       <a href="#modal-result" title="JSON"><button>`)
-//line views/vtask/Result.html:60
+//line views/vtask/Result.html:58
 	components.StreamSVGButton(qw422016, `code`, ps)
-//line views/vtask/Result.html:60
+//line views/vtask/Result.html:58
 	qw422016.N().S(`</button></a>
     </div>
     <h3>`)
-//line views/vtask/Result.html:62
+//line views/vtask/Result.html:60
 	components.StreamSVGIcon(qw422016, "cog", ps)
-//line views/vtask/Result.html:62
+//line views/vtask/Result.html:60
 	qw422016.N().S(` `)
-//line views/vtask/Result.html:62
+//line views/vtask/Result.html:60
 	qw422016.E().S(res.Task.TitleSafe())
-//line views/vtask/Result.html:62
+//line views/vtask/Result.html:60
 	qw422016.N().S(` Result</h3>
 `)
-//line views/vtask/Result.html:63
+//line views/vtask/Result.html:61
 	if len(res.Tags) > 0 {
-//line views/vtask/Result.html:63
+//line views/vtask/Result.html:61
 		qw422016.N().S(`    <div class="clear"></div>
     <div class="right mts">`)
-//line views/vtask/Result.html:65
+//line views/vtask/Result.html:63
 		view.StreamTags(qw422016, res.Tags, nil)
-//line views/vtask/Result.html:65
+//line views/vtask/Result.html:63
 		qw422016.N().S(`</div>
 `)
-//line views/vtask/Result.html:66
+//line views/vtask/Result.html:64
 	}
-//line views/vtask/Result.html:66
+//line views/vtask/Result.html:64
 	qw422016.N().S(`    <div><em>`)
-//line views/vtask/Result.html:67
+//line views/vtask/Result.html:65
 	view.StreamTimestampRelative(qw422016, &res.Started, false)
-//line views/vtask/Result.html:67
+//line views/vtask/Result.html:65
 	qw422016.N().S(`</em></div>
     <div class="mt">
       `)
-//line views/vtask/Result.html:69
+//line views/vtask/Result.html:67
 	streamrenderResult(qw422016, res, as, ps)
-//line views/vtask/Result.html:69
+//line views/vtask/Result.html:67
 	qw422016.N().S(`
     </div>
   </div>
   `)
-//line views/vtask/Result.html:72
+//line views/vtask/Result.html:70
 	components.StreamJSONModal(qw422016, "result", "Result ["+res.String()+"] JSON", res, 1)
-//line views/vtask/Result.html:72
+//line views/vtask/Result.html:70
 	qw422016.N().S(`
 `)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 }
 
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 func WriteResultSummary(qq422016 qtio422016.Writer, as *app.State, res *task.Result, ps *cutil.PageState) {
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	StreamResultSummary(qw422016, as, res, ps)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 }
 
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 func ResultSummary(as *app.State, res *task.Result, ps *cutil.PageState) string {
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	WriteResultSummary(qb422016, as, res, ps)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	qs422016 := string(qb422016.B)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 	return qs422016
-//line views/vtask/Result.html:73
+//line views/vtask/Result.html:71
 }
 
-//line views/vtask/Result.html:75
+//line views/vtask/Result.html:73
 func streamrenderResult(qw422016 *qt422016.Writer, res *task.Result, as *app.State, ps *cutil.PageState) {
-//line views/vtask/Result.html:76
+//line views/vtask/Result.html:74
 	if res.Data == nil {
-//line views/vtask/Result.html:76
+//line views/vtask/Result.html:74
 		qw422016.N().S(`<em>no data</em>`)
-//line views/vtask/Result.html:78
+//line views/vtask/Result.html:76
 	} else {
-//line views/vtask/Result.html:79
+//line views/vtask/Result.html:77
 		components.StreamJSON(qw422016, res.Data)
-//line views/vtask/Result.html:80
+//line views/vtask/Result.html:78
 	}
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 }
 
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 func writerenderResult(qq422016 qtio422016.Writer, res *task.Result, as *app.State, ps *cutil.PageState) {
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	streamrenderResult(qw422016, res, as, ps)
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 }
 
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 func renderResult(res *task.Result, as *app.State, ps *cutil.PageState) string {
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	writerenderResult(qb422016, res, as, ps)
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	qs422016 := string(qb422016.B)
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 	return qs422016
-//line views/vtask/Result.html:81
+//line views/vtask/Result.html:79
 }

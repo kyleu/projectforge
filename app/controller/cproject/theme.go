@@ -3,7 +3,6 @@ package cproject
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/muesli/gamut"
 	"github.com/samber/lo"
@@ -42,7 +41,7 @@ func ProjectThemePalette(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), pal)
 		if r.URL.Query().Get("t") == "go" {
-			ps.Data = strings.Join(lo.Map(x, func(t *theme.Theme, _ int) string {
+			ps.Data = util.StringJoin(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
 			return controller.Render(r, as, &views.Debug{}, ps, "admin", "Themes")

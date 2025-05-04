@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"strings"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
@@ -35,7 +33,7 @@ func searchBlock(args *metamodel.Args) *golang.Block {
 			})
 		}
 	})
-	ret.W("\treturn []Provider{" + strings.Join(keys, ", ") + "}")
+	ret.W("\treturn []Provider{" + util.StringJoin(keys, ", ") + "}")
 	ret.W("}")
 	return ret
 }

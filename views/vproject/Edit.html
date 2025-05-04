@@ -44,7 +44,7 @@
             {%= edit.StringTable("package", "", "Package", prj.Package, 5, project.Helpers["package"]...) %}
             {%= edit.StringTable("args", "", "Args", prj.Args, 5, project.Helpers["args"]...) %}
             {%= edit.IntTable("port", "", "Port", prj.Port, 5, project.Helpers["port"]...) %}
-            {%= edit.StringTable("ignore", "", "Ignore", strings.Join(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
+            {%= edit.StringTable("ignore", "", "Ignore", util.StringJoin(prj.Ignore, ", "), 5, project.Helpers["ignore"]...) %}
             {%= edit.TagsTable("tags", "", "Tags", prj.Tags, ps, 5) %}
             {%= edit.StringTable("path", "", "Path", prj.Path, 5, project.Helpers["path"]...) %}
           </tbody>
@@ -112,7 +112,7 @@
             <input type="hidden" name="databaseEngine" value="{%s info.DatabaseEngine %}" />
             {%- endif -%}
             {%= edit.StringTable("slack", "", "Slack Webhook", info.Slack, 5, project.Helpers["slack"]...) %}
-            {%= edit.StringTable("channels", "", "Channels", strings.Join(info.Channels, ", "), 5, project.Helpers["channels"]...) %}
+            {%= edit.StringTable("channels", "", "Channels", util.StringJoin(info.Channels, ", "), 5, project.Helpers["channels"]...) %}
             {%- if prj.HasModule("android") -%}
             {%= edit.StringTable("javaPackage", "", "Java Package", info.JavaPackage, 5, project.Helpers["javaPackage"]...) %}
             {%- else -%}
@@ -120,9 +120,9 @@
             {%- endif -%}
             {%= edit.StringTable("goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
             {%= edit.StringTable("goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
-            {%= edit.StringTable("extraFiles", "", "Extra Files", strings.Join(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
-            {%= edit.StringTable("ignoredFiles", "", "Ignored Files", strings.Join(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...) %}
-            {%= edit.StringTable("deployments", "", "Deployments", strings.Join(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
+            {%= edit.StringTable("extraFiles", "", "Extra Files", util.StringJoin(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
+            {%= edit.StringTable("ignoredFiles", "", "Ignored Files", util.StringJoin(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...) %}
+            {%= edit.StringTable("deployments", "", "Deployments", util.StringJoin(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
             {%= edit.TextareaTable("envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...) %}
             {%= edit.TextareaTable("dockerPackages", "", "Docker Packages", 8, util.ToJSON(info.DockerPackages), 5, project.Helpers["dockerPackages"]...) %}
             {%= edit.TextareaTable("docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...) %}

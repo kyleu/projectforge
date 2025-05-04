@@ -2,13 +2,13 @@ package svc
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func serviceGetMultipleSingleCol(m *model.Model, name string, col *model.Column, dbRef string, enums enum.Enums) (*golang.Block, error) {
@@ -60,7 +60,7 @@ func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns,
 	ret.W("\t\tif idx > 0 {")
 	ret.W("\t\t\twc += \" or \"")
 	ret.W("\t\t}")
-	ret.WF("\t\twc += fmt.Sprintf(\"(%s)\", %s)", strings.Join(tags, " and "), strings.Join(idxs, ", "))
+	ret.WF("\t\twc += fmt.Sprintf(\"(%s)\", %s)", util.StringJoin(tags, " and "), util.StringJoin(idxs, ", "))
 	ret.W("\t})")
 	ret.W("\twc += \")\"")
 	if m.IsSoftDelete() {
@@ -71,7 +71,7 @@ func serviceGetMultipleManyCols(m *model.Model, name string, cols model.Columns,
 	ret.WF("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 
 	ret.W("\tvals := lo.FlatMap(pks, func(x *PK, _ int) []any {")
-	ret.WF("\t\treturn []any{%s}", strings.Join(refs, ", "))
+	ret.WF("\t\treturn []any{%s}", util.StringJoin(refs, ", "))
 	ret.W("\t})")
 
 	ret.WF("\terr := s.%s.Select(ctx, &ret, q, tx, logger, vals...)", dbRef)

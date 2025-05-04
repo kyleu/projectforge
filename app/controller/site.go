@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -15,7 +14,7 @@ func Site(w http.ResponseWriter, r *http.Request) {
 	path := util.StringSplitAndTrim(r.URL.Path, "/")
 	action := "site"
 	if len(path) > 0 {
-		action += "." + strings.Join(path, ".")
+		action += "." + util.StringJoin(path, ".")
 	}
 	ActSite(action, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		redir, page, bc, err := site.Handle(path, as, ps)

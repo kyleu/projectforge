@@ -62,7 +62,7 @@ func blockString(e *enum.Enum) *golang.Block {
 func blockHelp(e *enum.Enum) *golang.Block {
 	fnHelpBlock := golang.NewBlock(e.Proper()+".Help", "method")
 	fnHelpBlock.WF("func (%s %s) Help() string {", e.FirstLetter(), e.ProperPlural())
-	fnHelpBlock.WF("\treturn \"Available %s options: [\" + strings.Join(%s.Strings(), \", \") + \"]\"", e.TitleLower(), e.FirstLetter())
+	fnHelpBlock.WF("\treturn \"Available %s options: [\" + util.StringJoin(%s.Strings(), \", \") + \"]\"", e.TitleLower(), e.FirstLetter())
 	fnHelpBlock.W("}")
 	return fnHelpBlock
 }

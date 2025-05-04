@@ -1,8 +1,6 @@
 package filter
 
 import (
-	"strings"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
@@ -32,7 +30,7 @@ func (s ParamSet) Specifies(key string) bool {
 }
 
 func (s ParamSet) String() string {
-	return strings.Join(lo.Map(lo.Values(s), func(p *Params, _ int) string {
+	return util.StringJoin(lo.Map(lo.Values(s), func(p *Params, _ int) string {
 		return p.String()
 	}), ", ")
 }

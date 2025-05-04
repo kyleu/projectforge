@@ -1,7 +1,6 @@
 {% import (
   "path/filepath"
   "slices"
-  "strings"
 
   "github.com/samber/lo"
 
@@ -26,7 +25,7 @@
   {%- code
     prj := p.Project
   -%}
-  {%= Summary(prj, "/" + strings.Join(p.Path, "/"), nil, nil, nil, ps) %}
+  {%= Summary(prj, "/" + util.StringJoin(p.Path, "/"), nil, nil, nil, ps) %}
   <div class="card">
     <div class="right"><a href="#modal-stats"><button type="button">JSON</button></a></div>
     <h3>File Statistics</h3>
@@ -79,7 +78,7 @@
   <table class="min-200">
     {%- for _, extKey := range util.ArraySorted(lo.Keys(exts)) -%}
     <tr>
-      <td class="shrink"><a href="?ext={%s extKey %}{% if len(pth) > 0 %}&pth={%u strings.Join(pth, `/`) %}{% endif %}">{%s extKey %}</a></td>
+      <td class="shrink"><a href="?ext={%s extKey %}{% if len(pth) > 0 %}&pth={%u util.StringJoin(pth, `/`) %}{% endif %}">{%s extKey %}</a></td>
       <td>{%d exts[extKey] %}</td>
     </tr>
     {%- endfor -%}

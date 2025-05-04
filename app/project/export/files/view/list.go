@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -11,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func list(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
@@ -36,7 +36,7 @@ func exportViewListClass(m *model.Model, models model.Models, g *golang.Template
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		relModel := models.Get(rel.Table)
 		relCols := rel.SrcColumns(m)
-		relNames := strings.Join(relCols.ProperNames(), "")
+		relNames := util.StringJoin(relCols.ProperNames(), "")
 		g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 		ret.WF(commonLine, relModel.ProperPlural(), relNames, relModel.Package, relModel.ProperPlural())
 	})
@@ -58,7 +58,7 @@ func exportViewListBody(m *model.Model, models model.Models) *golang.Block {
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
 			relCols := rel.SrcColumns(m)
-			relNames := strings.Join(relCols.ProperNames(), "")
+			relNames := util.StringJoin(relCols.ProperNames(), "")
 			suffix += fmt.Sprintf(", p.%sBy%s", relModel.ProperPlural(), relNames)
 		}
 	})

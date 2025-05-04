@@ -1,9 +1,8 @@
 {% import (
-  "strings"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/exec"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"
@@ -25,7 +24,7 @@
             {%= edit.StringTable("key", "", "Key", x.Key, 5, "optional, defaults to command") %}
             {%= edit.StringTable("cmd", "", "Command", x.Cmd, 5, "command to execute, with arguments") %}
             {%= edit.StringTable("path", "", "Path", x.Path, 5) %}
-            {%= edit.TextareaTable("env", "", "Env Vars", len(x.Env), strings.Join(x.Env, "\n"), 5) %}
+            {%= edit.TextareaTable("env", "", "Env Vars", len(x.Env), util.StringJoin(x.Env, "\n"), 5) %}
             <tr>
               <td colspan="2"><button class="mt" type="submit">Create</button></td>
             </tr>

@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -28,7 +27,7 @@ func (r *Relation) SrcColumns(m *Model) Columns {
 }
 
 func (r *Relation) SrcQuoted() string {
-	return strings.Join(util.StringArrayQuoted(r.Src), ", ")
+	return util.StringJoin(util.StringArrayQuoted(r.Src), ", ")
 }
 
 func (r *Relation) TgtColumns(m *Model) Columns {
@@ -36,7 +35,7 @@ func (r *Relation) TgtColumns(m *Model) Columns {
 }
 
 func (r *Relation) TgtQuoted() string {
-	return strings.Join(util.StringArrayQuoted(r.Tgt), ", ")
+	return util.StringJoin(util.StringArrayQuoted(r.Tgt), ", ")
 }
 
 func (r *Relation) Reverse(name string) *Relation {
@@ -48,7 +47,7 @@ func (r *Relation) ContainsSource(colName string) bool {
 }
 
 func (r *Relation) Uniq() string {
-	return fmt.Sprintf("%s -> %s", strings.Join(util.ArraySorted(r.Src), ","), strings.Join(util.ArraySorted(r.Tgt), ","))
+	return fmt.Sprintf("%s -> %s", util.StringJoin(util.ArraySorted(r.Src), ","), util.StringJoin(util.ArraySorted(r.Tgt), ","))
 }
 
 type Relations []*Relation

@@ -72,7 +72,7 @@ func initProjects(ctx context.Context, as *app.State, logger util.Logger) error 
 		}
 		if len(keys) > 0 {
 			if len(keys) != 1 && keys[0] != "*" {
-				logger.Debugf("Loaded modules for [%s]: %s", prj.Key, strings.Join(keys, ", "))
+				logger.Debugf("Loaded modules for [%s]: %s", prj.Key, util.StringJoin(keys, ", "))
 			}
 		}
 	}

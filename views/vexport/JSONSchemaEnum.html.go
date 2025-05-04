@@ -35,142 +35,145 @@ type JSONSchemaEnum struct {
 	Project    *project.Project
 	Enum       *enum.Enum
 	Collection *jsonschema.Collection
+	Result     *enum.Enum
 }
 
-//line views/vexport/JSONSchemaEnum.html:19
+//line views/vexport/JSONSchemaEnum.html:20
 func (p *JSONSchemaEnum) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaEnum.html:19
+//line views/vexport/JSONSchemaEnum.html:20
 	qw422016.N().S(`
 `)
-//line views/vexport/JSONSchemaEnum.html:20
+//line views/vexport/JSONSchemaEnum.html:21
 	x := p.Enum
 
-//line views/vexport/JSONSchemaEnum.html:20
-	qw422016.N().S(`  <style>
-    .flex-item {
-      flex: 1;
-      margin: var(--padding);
-      padding: var(--padding);
-      border: var(--border);
-    }
-  </style>
-  <div class="card">
+//line views/vexport/JSONSchemaEnum.html:21
+	qw422016.N().S(`  <div class="card">
     <div class="right">
       <a href="`)
-//line views/vexport/JSONSchemaEnum.html:31
+//line views/vexport/JSONSchemaEnum.html:24
 	qw422016.E().S(p.Project.WebPath())
-//line views/vexport/JSONSchemaEnum.html:31
+//line views/vexport/JSONSchemaEnum.html:24
 	qw422016.N().S(`/export/enums/`)
-//line views/vexport/JSONSchemaEnum.html:31
+//line views/vexport/JSONSchemaEnum.html:24
 	qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaEnum.html:31
+//line views/vexport/JSONSchemaEnum.html:24
 	qw422016.N().S(`"><button>`)
-//line views/vexport/JSONSchemaEnum.html:31
+//line views/vexport/JSONSchemaEnum.html:24
 	components.StreamSVGButton(qw422016, x.IconSafe(), ps)
-//line views/vexport/JSONSchemaEnum.html:31
+//line views/vexport/JSONSchemaEnum.html:24
 	qw422016.N().S(` View</button></a>
     </div>
     <h3>`)
-//line views/vexport/JSONSchemaEnum.html:33
+//line views/vexport/JSONSchemaEnum.html:26
 	components.StreamSVGIcon(qw422016, `table`, ps)
-//line views/vexport/JSONSchemaEnum.html:33
+//line views/vexport/JSONSchemaEnum.html:26
 	qw422016.N().S(` [`)
-//line views/vexport/JSONSchemaEnum.html:33
-	qw422016.E().S(p.Project.Title())
-//line views/vexport/JSONSchemaEnum.html:33
-	qw422016.N().S(`:`)
-//line views/vexport/JSONSchemaEnum.html:33
-	qw422016.E().S(x.Title())
-//line views/vexport/JSONSchemaEnum.html:33
+//line views/vexport/JSONSchemaEnum.html:26
+	qw422016.E().S(p.Project.Key)
+//line views/vexport/JSONSchemaEnum.html:26
+	qw422016.N().S(` / `)
+//line views/vexport/JSONSchemaEnum.html:26
+	qw422016.E().S(x.Name)
+//line views/vexport/JSONSchemaEnum.html:26
 	qw422016.N().S(`] JSON Schema</h3>
     <div class="clear"></div>
 `)
-//line views/vexport/JSONSchemaEnum.html:35
-	sch := p.Collection.GetSchema(x.Name)
+//line views/vexport/JSONSchemaEnum.html:28
+	sch := p.Collection.GetSchema(x.ID())
 
-//line views/vexport/JSONSchemaEnum.html:35
+//line views/vexport/JSONSchemaEnum.html:28
 	qw422016.N().S(`    `)
-//line views/vexport/JSONSchemaEnum.html:36
-	streamrenderJSONSchemaEnum(qw422016, as, x, sch, ps)
-//line views/vexport/JSONSchemaEnum.html:36
+//line views/vexport/JSONSchemaEnum.html:29
+	streamrenderJSONSchemaEnum(qw422016, as, x, sch, p.Result, ps)
+//line views/vexport/JSONSchemaEnum.html:29
 	qw422016.N().S(`
   </div>
 `)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 }
 
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 func (p *JSONSchemaEnum) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 }
 
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 func (p *JSONSchemaEnum) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 	return qs422016
-//line views/vexport/JSONSchemaEnum.html:38
+//line views/vexport/JSONSchemaEnum.html:31
 }
 
-//line views/vexport/JSONSchemaEnum.html:40
-func streamrenderJSONSchemaEnum(qw422016 *qt422016.Writer, as *app.State, x *enum.Enum, sch *jsonschema.Schema, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaEnum.html:40
+//line views/vexport/JSONSchemaEnum.html:33
+func streamrenderJSONSchemaEnum(qw422016 *qt422016.Writer, as *app.State, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, ps *cutil.PageState) {
+//line views/vexport/JSONSchemaEnum.html:33
 	qw422016.N().S(`
   <div class="flex" style="">
     <div class="flex-item">
-      <pre>`)
-//line views/vexport/JSONSchemaEnum.html:43
+      <strong>Original</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaEnum.html:37
 	qw422016.E().S(util.ToJSON(x))
-//line views/vexport/JSONSchemaEnum.html:43
+//line views/vexport/JSONSchemaEnum.html:37
 	qw422016.N().S(`</pre>
     </div>
     <div class="flex-item">
-      <pre>`)
-//line views/vexport/JSONSchemaEnum.html:46
+      <strong>Schema</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaEnum.html:41
 	qw422016.E().S(util.ToJSON(sch))
-//line views/vexport/JSONSchemaEnum.html:46
+//line views/vexport/JSONSchemaEnum.html:41
+	qw422016.N().S(`</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Result</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaEnum.html:45
+	qw422016.E().S(util.ToJSON(result))
+//line views/vexport/JSONSchemaEnum.html:45
 	qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
 }
 
-//line views/vexport/JSONSchemaEnum.html:49
-func writerenderJSONSchemaEnum(qq422016 qtio422016.Writer, as *app.State, x *enum.Enum, sch *jsonschema.Schema, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
+func writerenderJSONSchemaEnum(qq422016 qtio422016.Writer, as *app.State, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, ps *cutil.PageState) {
+//line views/vexport/JSONSchemaEnum.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaEnum.html:49
-	streamrenderJSONSchemaEnum(qw422016, as, x, sch, ps)
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
+	streamrenderJSONSchemaEnum(qw422016, as, x, sch, result, ps)
+//line views/vexport/JSONSchemaEnum.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
 }
 
-//line views/vexport/JSONSchemaEnum.html:49
-func renderJSONSchemaEnum(as *app.State, x *enum.Enum, sch *jsonschema.Schema, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
+func renderJSONSchemaEnum(as *app.State, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, ps *cutil.PageState) string {
+//line views/vexport/JSONSchemaEnum.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaEnum.html:49
-	writerenderJSONSchemaEnum(qb422016, as, x, sch, ps)
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
+	writerenderJSONSchemaEnum(qb422016, as, x, sch, result, ps)
+//line views/vexport/JSONSchemaEnum.html:48
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
 	return qs422016
-//line views/vexport/JSONSchemaEnum.html:49
+//line views/vexport/JSONSchemaEnum.html:48
 }

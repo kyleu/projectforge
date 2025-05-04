@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	"github.com/samber/lo"
@@ -90,7 +91,11 @@ func (m *Model) PackageWithGroup(prefix string) string {
 		return strings.ToLower(prefix + g)
 	})
 	x = append(x, prefix+m.Package)
-	return strings.Join(x, "/")
+	return util.StringJoin(x, "/")
+}
+
+func (m *Model) ID() string {
+	return path.Join(m.PackageWithGroup(""), m.Name)
 }
 
 func (m *Model) GroupString(prefix string, dflt string) string {
@@ -100,7 +105,7 @@ func (m *Model) GroupString(prefix string, dflt string) string {
 	x := lo.Map(m.Group, func(g string, _ int) string {
 		return strings.ToLower(prefix + g)
 	})
-	return strings.Join(x, "/")
+	return util.StringJoin(x, "/")
 }
 
 func (m *Model) Breadcrumbs() string {

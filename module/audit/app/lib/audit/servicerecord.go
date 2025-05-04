@@ -3,7 +3,6 @@ package audit
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -28,7 +27,7 @@ func (s *Service) RecordsForAudits(ctx context.Context, tx *sqlx.Tx, params *fil
 	})
 	err := s.db.Select(ctx, &ret, q, tx, logger, vals...)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get records for audits [%s]", strings.Join(strs, ", "))
+		return nil, errors.Wrapf(err, "unable to get records for audits [%s]", util.StringJoin(strs, ", "))
 	}
 	return ret.ToRecords(), nil
 }

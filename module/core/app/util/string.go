@@ -181,6 +181,10 @@ func StringNullable(s fmt.Stringer) string {
 	return s.String()
 }
 
+func StringJoin(elems []string, delim string) string {
+	return strings.Join(elems, delim)
+}
+
 func CountryFlag(code string) string {
 	if len(code) != 2 {
 		return fmt.Sprintf("INVALID: %q", code)

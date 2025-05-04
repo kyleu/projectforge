@@ -64,18 +64,15 @@ func ProjectExportModelCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
 		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
-
 		mdl := &model.Model{}
 		err = exportModelFromForm(frm, mdl)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse model from form")
 		}
-
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
 			return "", err
@@ -84,7 +81,6 @@ func ProjectExportModelCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
 		msg := "model created successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
 		return controller.FlashAndRedir(true, msg, u, ps)
@@ -115,17 +111,14 @@ func ProjectExportModelSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
 		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
-
 		err = exportModelFromForm(frm, mdl)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse model from form")
 		}
-
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
 			return "", err
@@ -134,7 +127,6 @@ func ProjectExportModelSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
 		msg := "model saved successfully"
 		u := fmt.Sprintf("/p/%s/export/models/%s", prj.Key, mdl.Name)
 		return controller.FlashAndRedir(true, msg, u, ps)
@@ -147,7 +139,6 @@ func ProjectExportModelDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
 			return "", err
@@ -156,7 +147,6 @@ func ProjectExportModelDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-
 		msg := "model deleted successfully"
 		return controller.FlashAndRedir(true, msg, fmt.Sprintf("/p/%s/export", prj.Key), ps)
 	})

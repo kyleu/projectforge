@@ -5,6 +5,7 @@
   "{{{ .Package }}}/app/controller/cmenu"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/menu"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
 ) %}
 
@@ -36,7 +37,7 @@
     {%= components.Indent(true, indent + 1) %}
     <li class="separator"></li>
   {% elseif len(i.Children.Visible()) > 0 %}
-    {% code itemID := strings.Join(path, "--")%}
+    {% code itemID := util.StringJoin(path, "--")%}
     {%= components.Indent(true, indent + 1) %}
     {% if active %}<li class="active" data-menu-key="{%s i.Key %}">{% else %}<li data-menu-key="{%s i.Key %}">{% endif %}
       {%= components.Indent(true, indent + 2) %}

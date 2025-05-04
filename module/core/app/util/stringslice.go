@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"sort"
-	"strings"
 )
 
 type StringSlice struct {
@@ -27,7 +26,7 @@ func (s *StringSlice) Pushf(msg string, args ...any) {
 }
 
 func (s *StringSlice) Join(x string) string {
-	return strings.Join(s.Slice, x)
+	return StringJoin(s.Slice, x)
 }
 
 func (s *StringSlice) String() string {

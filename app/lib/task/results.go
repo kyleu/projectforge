@@ -2,7 +2,6 @@ package task
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
@@ -74,7 +73,7 @@ func (r Results) AllTags() []string {
 }
 
 func (r Results) String() string {
-	return fmt.Sprintf("[%s]", strings.Join(lo.Map(r, func(x *Result, _ int) string {
+	return fmt.Sprintf("[%s]", util.StringJoin(lo.Map(r, func(x *Result, _ int) string {
 		return x.String()
 	}), ", "))
 }

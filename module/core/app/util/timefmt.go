@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"math"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -143,5 +142,5 @@ func FormatSecondsFull(x float64) string {
 	if fractionalPart > 0 {
 		result = append(result, fmt.Sprintf("%d milliseconds", int(math.Round(fractionalPart*1000))))
 	}
-	return strings.Join(result, ", ")
+	return StringJoin(result, ", ")
 }

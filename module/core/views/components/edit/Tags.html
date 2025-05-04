@@ -1,7 +1,6 @@
 {% import (
-  "strings"
-
   "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
 ) %}
 
@@ -12,9 +11,9 @@
   -%}
   <div class="tag-editor">
     {% if id == "" %}
-      <input class="result" name="{%s key %}" value="{%s strings.Join(values, `, `) %}"{%= components.PlaceholderFor(placeholder) %} />
+      <input class="result" name="{%s key %}" value="{%s util.StringJoin(values, `, `) %}"{%= components.PlaceholderFor(placeholder) %} />
     {% else %}
-      <input class="result" id="{%s id %}" name="{%s key %}" value="{%s strings.Join(values, `, `) %}"{%= components.PlaceholderFor(placeholder) %} />
+      <input class="result" id="{%s id %}" name="{%s key %}" value="{%s util.StringJoin(values, `, `) %}"{%= components.PlaceholderFor(placeholder) %} />
     {% endif %}
     <div class="tags"></div>
     <div class="clear"></div>

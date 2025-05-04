@@ -3,7 +3,6 @@ package audit
 import (
 	{{{ if .SQLServerOnly }}}{{{ else }}}{{{ if .PostgreSQL }}}"encoding/json"
 	{{{ end }}}{{{ end }}}"fmt"
-	"strings"
 	"time"
 
 	{{{ if .SQLServerOnly }}}mssql "github.com/denisenkom/go-mssqldb"{{{ else }}}"github.com/google/uuid"{{{ end }}}
@@ -17,7 +16,7 @@ var (
 	tableQuoted   = fmt.Sprintf("%q", table)
 	columns       = []string{"id", "app", "act", "client", "server", "user", "metadata", "message", "started", "completed"}
 	columnsQuoted = util.StringArrayQuoted(columns)
-	columnsString = strings.Join(columnsQuoted, ", ")
+	columnsString = util.StringJoin(columnsQuoted, ", ")
 	defaultWC     = "\"id\" = {{{ .Placeholder 1 }}}"
 )
 

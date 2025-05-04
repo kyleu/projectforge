@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -158,7 +157,7 @@ func (c Columns) ToRefs(prefix string, relCols ...*Column) string {
 		}
 		return r
 	})
-	return strings.Join(ret, ", ")
+	return util.StringJoin(ret, ", ")
 }
 
 func (c Columns) Types() types.Types {
@@ -171,14 +170,14 @@ func (c Columns) Smushed() string {
 	ret := lo.Map(c, func(x *Column, _ int) string {
 		return x.Proper()
 	})
-	return strings.Join(ret, "")
+	return util.StringJoin(ret, "")
 }
 
 func (c Columns) Refs() string {
 	refs := lo.Map(c, func(col *Column, _ int) string {
 		return fmt.Sprintf("%s: %s", col.Proper(), col.Camel())
 	})
-	return strings.Join(refs, ", ")
+	return util.StringJoin(refs, ", ")
 }
 
 func (c Columns) WhereClause(offset int, placeholder string) string {
@@ -193,7 +192,7 @@ func (c Columns) WhereClause(offset int, placeholder string) string {
 			wc = append(wc, fmt.Sprintf("%q = @p%d", col.Name, idx+offset+1))
 		}
 	})
-	return strings.Join(wc, " and ")
+	return util.StringJoin(wc, " and ")
 }
 
 func (c Columns) MaxCamelLength() int {

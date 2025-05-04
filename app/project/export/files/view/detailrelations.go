@@ -2,13 +2,13 @@ package view
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func exportViewDetailRelations(g *golang.Template, m *model.Model, rels model.Relations, models model.Models) (*golang.Block, error) {
@@ -36,7 +36,7 @@ func exportViewDetailReverseRelation(ret *golang.Block, m *model.Model, rel *mod
 	g.AddImport(helper.ImpAppUtil)
 	tgt := models.Get(rel.Table)
 	tgtCols := rel.TgtColumns(tgt)
-	tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), strings.Join(tgtCols.ProperNames(), ""))
+	tgtName := fmt.Sprintf("%sBy%s", tgt.ProperPlural(), util.StringJoin(tgtCols.ProperNames(), ""))
 	ret.W("      <li>")
 	extra := fmt.Sprintf("{%%%% if p.Params.Specifies(`%s`) %%%%} checked=\"checked\""+helper.TextEndIfExtra, tgt.Package)
 	ret.WF("        <input id=\"accordion-%s\" type=\"checkbox\" hidden=\"hidden\"%s />", tgtName, extra)
@@ -44,7 +44,7 @@ func exportViewDetailReverseRelation(ret *golang.Block, m *model.Model, rel *mod
 	ret.W("          {%%= components.ExpandCollapse(3, ps) %%}")
 	ret.WF("          {%%%%= components.SVGInline(`%s`, 16, ps) %%%%}", tgt.Icon)
 	msg := "          {%%%%s util.StringPlural(len(p.Rel%s), \"%s\") %%%%} by [%s]"
-	ret.WF(msg, tgtName, tgt.Title(), strings.Join(tgtCols.Titles(), ", "))
+	ret.WF(msg, tgtName, tgt.Title(), util.StringJoin(tgtCols.Titles(), ", "))
 	ret.W("        </label>")
 	ret.W("        <div class=\"bd\"><div><div>")
 	ret.WF("          {%%%%- if len(p.Rel%s) == 0 -%%%%}", tgtName)

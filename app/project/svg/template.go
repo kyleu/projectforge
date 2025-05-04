@@ -41,7 +41,7 @@ func template(svgs SVGs, linebreak string) string {
 	w("}")
 	w("")
 	w("//nolint:lll")
-	w("var SVGIconKeys = []string{" + strings.Join(keys, ", ") + "}")
+	w("var SVGIconKeys = []string{" + util.StringJoin(keys, ", ") + "}")
 
 	w("")
 	w("func RandomIcon() string {")

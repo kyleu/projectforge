@@ -3,7 +3,6 @@ package audit
 import (
 	{{{ if .PostgreSQL }}}"encoding/json"
 	{{{ end }}}"fmt"
-	"strings"
 	"time"
 
 	{{{ if .SQLServerOnly }}}mssql "github.com/denisenkom/go-mssqldb"{{{ else }}}"github.com/google/uuid"{{{ end }}}
@@ -17,7 +16,7 @@ var (
 	recordTableQuoted   = fmt.Sprintf("%q", recordTable)
 	recordColumns       = []string{"id", "audit_id", "t", "pk", "changes", "metadata", "occurred"}
 	recordColumnsQuoted = util.StringArrayQuoted(recordColumns)
-	recordColumnsString = strings.Join(recordColumnsQuoted, ", ")
+	recordColumnsString = util.StringJoin(recordColumnsQuoted, ", ")
 )
 
 {{{ if .PostgreSQL }}}type recordRow struct {

@@ -86,7 +86,7 @@ func bumpGoMod(ctx context.Context, prj *project.Project, fs filesystem.FileLoad
 		}
 	}
 
-	final := strings.Join(lines, util.StringDetectLinebreak(str))
+	final := util.StringJoin(lines, util.StringDetectLinebreak(str))
 	err = fs.WriteFile(gomod, []byte(final), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write [go.mod]")

@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -15,9 +14,9 @@ func (c Columns) ToGoStrings(prefix string, alwaysString bool, maxLength int) st
 		return ToGoString(x.Type, x.Nullable, prefix+x.Proper(), alwaysString)
 	})
 	if maxLength == 0 {
-		return strings.Join(ret, ", ")
+		return util.StringJoin(ret, ", ")
 	}
-	return strings.Join(ret, ", ")
+	return util.StringJoin(ret, ", ")
 }
 
 func (c Columns) ZeroVals() []string {
@@ -35,7 +34,7 @@ func (c Columns) Args(pkg string, enums enum.Enums) (string, error) {
 		}
 		args = append(args, fmt.Sprintf("%s %s", col.Camel(), gt))
 	}
-	return strings.Join(args, ", "), nil
+	return util.StringJoin(args, ", "), nil
 }
 
 func (c Columns) GoTypeKeys(pkg string, enums enum.Enums) ([]string, error) {

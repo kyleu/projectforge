@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -133,7 +132,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 				return fmt.Sprintf(`{%%%%= edit.Table(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil
 			}
 			sel := `{%%%%= edit.SelectTable(%q, "", %q, %s, %s, nil, 5, %s) %%%%}`
-			opts := "[]string{" + strings.Join(util.StringArrayQuoted(c.Values), ", ") + "}"
+			opts := "[]string{" + util.StringJoin(util.StringArrayQuoted(c.Values), ", ") + "}"
 			return fmt.Sprintf(sel, key, c.Title(), prop, opts, h), nil
 		default:
 			return fmt.Sprintf(`{%%%%= edit.StringTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), prop, h), nil

@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
@@ -58,7 +56,7 @@
   {%- code
     var tags string
     if len(currTags) > 0 {
-      tags = "&tags=" + strings.Join(currTags, ",")
+      tags = "&tags=" + util.StringJoin(currTags, ",")
     }
   -%}
   <div class="overflow full-width">

@@ -2,7 +2,6 @@ package action
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -92,7 +91,7 @@ func (r *Result) HasErrors() bool {
 
 func (r *Result) AsError() error {
 	if r.HasErrors() {
-		return errors.New(strings.Join(r.Errors, "; "))
+		return errors.New(util.StringJoin(r.Errors, "; "))
 	}
 	return nil
 }

@@ -48,6 +48,6 @@ func QueryFieldDescs(fields util.FieldDescs, query string, argOffset int) (strin
 		wcs = append(wcs, wc)
 		vals = append(vals, v)
 	}
-	wc := "(" + strings.Join(wcs, " and ") + ")"
+	wc := "(" + util.StringJoin(wcs, " and ") + ")"
 	return wc, vals, nil
 }

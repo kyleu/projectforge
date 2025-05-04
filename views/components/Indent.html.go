@@ -5,7 +5,7 @@
 package components
 
 //line views/components/Indent.html:1
-import "strings"
+import "projectforge.dev/projectforge/app/util"
 
 //line views/components/Indent.html:3
 import (
@@ -75,7 +75,7 @@ func StreamPlaceholderFor(qw422016 *qt422016.Writer, phs []string) {
 //line views/components/Indent.html:11
 		qw422016.N().S(`placeholder="`)
 //line views/components/Indent.html:11
-		qw422016.E().S(strings.Join(phs, "; "))
+		qw422016.E().S(util.StringJoin(phs, "; "))
 //line views/components/Indent.html:11
 		qw422016.N().S(`"`)
 //line views/components/Indent.html:11
@@ -118,7 +118,7 @@ func StreamTitleFor(qw422016 *qt422016.Writer, help []string) {
 //line views/components/Indent.html:15
 		qw422016.N().S(`title="`)
 //line views/components/Indent.html:15
-		qw422016.E().S(strings.Join(help, "; "))
+		qw422016.E().S(util.StringJoin(help, "; "))
 //line views/components/Indent.html:15
 		qw422016.N().S(`"`)
 //line views/components/Indent.html:15

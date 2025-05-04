@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -37,7 +36,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 			fields := lo.Map(pks, func(pk *model.Column, _ int) string {
 				return fmt.Sprintf("%s: ret.%s", pk.Proper(), pk.Proper())
 			})
-			ret.WF("\t\tpk := &%s.PK{%s}", m.Package, strings.Join(fields, ", "))
+			ret.WF("\t\tpk := &%s.PK{%s}", m.Package, util.StringJoin(fields, ", "))
 			msg := "\t\trelatedAuditRecords, err := as.Services.Audit.RecordsForModel(ps.Context, nil, %q, pk.String(), nil, ps.Logger)"
 			ret.WF(msg, m.Proper())
 		} else {
@@ -56,7 +55,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		args := lo.Map(argKeys, func(k string, idx int) string {
 			return fmt.Sprintf("%s: %s", k, argVals[idx])
 		})
-		argStr := strings.Join(args, ", ")
+		argStr := util.StringJoin(args, ", ")
 		if audit {
 			msg := "\t\treturn %sRender(r, as, &v%s.Detail{%s, AuditRecords: relatedAuditRecords}, ps, %s%s, %s)"
 			ret.WF(msg, prefix, m.Package, argStr, m.Breadcrumbs(), grpHistory, bcFor(m))
@@ -116,7 +115,7 @@ func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Re
 		rm := models.Get(rel.Table)
 		lCols := rel.SrcColumns(m)
 
-		lNames := strings.Join(lCols.ProperNames(), "")
+		lNames := util.StringJoin(lCols.ProperNames(), "")
 		argAdd(fmt.Sprintf("%sBy%s", rm.Proper(), lNames), fmt.Sprintf("%sBy%s", rm.Camel(), lNames))
 
 		var conditions []string
@@ -131,12 +130,12 @@ func getArgs(g *golang.File, models model.Models, m *model.Model, rrels model.Re
 		})
 		suffix := rm.SoftDeleteSuffix()
 		if len(conditions) == 0 {
-			ret.WF("\t\t%sBy%s, _ := as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
+			ret.WF("\t\t%sBy%s, _ := as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), util.StringJoin(args, ", "), suffix)
 		} else {
 			g.AddImport(helper.AppImport(rm.PackageWithGroup("")))
 			ret.WF("\t\tvar %sBy%s *%s.%s", rm.Camel(), lNames, rm.Package, rm.Proper())
-			ret.WF("\t\tif %s {", strings.Join(conditions, " && "))
-			ret.WF("\t\t\t%sBy%s, _ = as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), strings.Join(args, ", "), suffix)
+			ret.WF("\t\tif %s {", util.StringJoin(conditions, " && "))
+			ret.WF("\t\t\t%sBy%s, _ = as.Services.%s.Get(ps.Context, nil, %s%s, ps.Logger)", rm.Camel(), lNames, rm.Proper(), util.StringJoin(args, ", "), suffix)
 			ret.W("\t\t}")
 		}
 	})
@@ -160,7 +159,7 @@ func getReverseArgs(models model.Models, m *model.Model, rrels model.Relations, 
 		}
 		lCols := rrel.SrcColumns(m)
 		rCols := rrel.TgtColumns(rm)
-		rNames := strings.Join(rCols.ProperNames(), "")
+		rNames := util.StringJoin(rCols.ProperNames(), "")
 		argKeys = append(argKeys, fmt.Sprintf("Rel%sBy%s", rm.ProperPlural(), rNames))
 		argVals = append(argVals, fmt.Sprintf("rel%sBy%s", rm.ProperPlural(), rNames))
 		ret.WF("\t\trel%sBy%sPrms := ps.Params.Sanitized(%q, ps.Logger)", rm.ProperPlural(), rNames, rm.Package)

@@ -1,6 +1,5 @@
 {% import (
   "fmt"
-  "strings"
 
   "github.com/samber/lo"
 
@@ -33,10 +32,10 @@
           <tbody>
             {%= edit.StringTable("name", "", "Name", e.Name, 5, export.Helpers["enum.name"]...) %}
             {%= edit.StringTable("package", "", "Package", e.Package, 5, export.Helpers["enum.package"]...) %}
-            {%= edit.StringTable("group", "", "Group", strings.Join(e.Group, "/"), 5, export.Helpers["enum.group"]...) %}
+            {%= edit.StringTable("group", "", "Group", util.StringJoin(e.Group, "/"), 5, export.Helpers["enum.group"]...) %}
             {%= edit.StringTable("description", "", "Description", e.Description, 5, export.Helpers["enum.description"]...) %}
             {%= edit.StringTable("icon", "", "Icon", e.Icon, 5, export.Helpers["enum.icon"]...) %}
-            {%= edit.StringTable("tags", "", "Tags", strings.Join(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
+            {%= edit.StringTable("tags", "", "Tags", util.StringJoin(e.Tags, `, `), 5, export.Helpers["enum.tags"]...) %}
             {%= edit.StringTable("titleOverride", "", "Title Override", e.TitleOverride, 5, export.Helpers["enum.titleOverride"]...) %}
             {%= edit.StringTable("properOverride", "", "Proper Override", e.ProperOverride, 5, export.Helpers["enum.properOverride"]...) %}
             {%= edit.TextareaTable("config", "", "Config", 3, util.ToJSON(e.Config), 5, export.Helpers["enum.config"]...) %}

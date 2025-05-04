@@ -1,6 +1,10 @@
 package jsonschema
 
-import "projectforge.dev/projectforge/app/util"
+import (
+	"fmt"
+
+	"projectforge.dev/projectforge/app/util"
+)
 
 type Schema struct {
 	// Core Vocabulary & Metadata
@@ -77,4 +81,12 @@ type Schema struct {
 	AnyOf Schemas `json:"anyOf,omitempty"` // Instance must validate against at least one of these schemas
 	OneOf Schemas `json:"oneOf,omitempty"` // Instance must validate against exactly one of these schemas
 	Not   *Schema `json:"not,omitempty"`   // Instance must not validate against this schema
+}
+
+func (s *Schema) String() string {
+	ret := fmt.Sprint(s.Type)
+	if s.Format != "" {
+		ret += "; format=" + s.Format
+	}
+	return ret
 }

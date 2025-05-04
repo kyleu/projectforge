@@ -5,9 +5,10 @@ import (
 	"io/fs"
 	"net/url"
 	"slices"
-	"strings"
 
 	"github.com/samber/lo"
+
+	"{{{ .Package }}}/app/util"
 )
 
 var (
@@ -33,7 +34,7 @@ func (f *FileInfo) Equal(x *FileInfo) bool {
 }
 
 func (f *FileInfo) QueryEscapedPath(pth ...string) string {
-	return "/" + strings.Join(lo.Map(append(pth, f.Name), func(x string, _ int) string {
+	return "/" + util.StringJoin(lo.Map(append(pth, f.Name), func(x string, _ int) string {
 		return url.QueryEscape(x)
 	}), "/")
 }

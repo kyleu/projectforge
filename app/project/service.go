@@ -75,7 +75,7 @@ func (s *Service) Get(key string) (*Project, error) {
 	if ok {
 		return ret, nil
 	}
-	return nil, errors.Errorf("no project with key [%s] found among %d candidates [%s]", key, len(s.cache), strings.Join(s.Keys(), ", "))
+	return nil, errors.Errorf("no project with key [%s] found among %d candidates [%s]", key, len(s.cache), util.StringJoin(s.Keys(), ", "))
 }
 
 func (s *Service) GetFile(key string) json.RawMessage {

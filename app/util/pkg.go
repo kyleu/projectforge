@@ -9,13 +9,13 @@ import (
 type Pkg []string
 
 func (p Pkg) Quoted(quote string) string {
-	return strings.Join(lo.Map(p, func(x string, _ int) string {
+	return StringJoin(lo.Map(p, func(x string, _ int) string {
 		return quote + x + quote
 	}), ".")
 }
 
 func (p Pkg) StringWith(extra ...string) string {
-	return strings.Join(append(p, extra...), "::")
+	return StringJoin(append(p, extra...), "::")
 }
 
 func (p Pkg) String() string {
@@ -23,7 +23,7 @@ func (p Pkg) String() string {
 }
 
 func (p Pkg) ToPath(extra ...string) string {
-	return strings.Join(append(p, extra...), "/")
+	return StringJoin(append(p, extra...), "/")
 }
 
 func (p Pkg) Equals(other Pkg) bool {

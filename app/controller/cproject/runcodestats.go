@@ -3,7 +3,6 @@ package cproject
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -18,7 +17,7 @@ import (
 
 func runCodeStats(prj *project.Project, res *action.Result, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
 	if res.HasErrors() {
-		return "", errors.New(strings.Join(res.Errors, ", "))
+		return "", errors.New(util.StringJoin(res.Errors, ", "))
 	}
 	stats, err := util.Cast[*action.CodeStats](res.Data)
 	if err != nil {
@@ -36,7 +35,7 @@ func runAllCodeStats(cfg util.ValueMap, prjs project.Projects, r *http.Request, 
 	for _, prj := range prjs {
 		res := action.Apply(ps.Context, actionParams(prj.Key, action.TypeBuild, cfg, as, ps.Logger))
 		if res.HasErrors() {
-			return "", errors.New(strings.Join(res.Errors, ", "))
+			return "", errors.New(util.StringJoin(res.Errors, ", "))
 		}
 		stats, err := util.Cast[*action.CodeStats](res.Data)
 		if err != nil {

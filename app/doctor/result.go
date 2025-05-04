@@ -75,7 +75,7 @@ func (p *Result) ErrorString() string {
 	msg = append(msg, lo.Map(p.Solutions, func(s string, _ int) string {
 		return "   Solution: " + s
 	})...)
-	return strings.Join(msg, util.StringDefaultLinebreak)
+	return util.StringJoin(msg, util.StringDefaultLinebreak)
 }
 
 type Results []*Result
@@ -87,7 +87,7 @@ func (r Results) Errors() Results {
 }
 
 func (r Results) ErrorSummary() string {
-	return strings.Join(lo.Map(r.Errors(), func(x *Result, _ int) string {
+	return util.StringJoin(lo.Map(r.Errors(), func(x *Result, _ int) string {
 		return x.Summary
 	}), ", ")
 }

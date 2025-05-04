@@ -30,7 +30,7 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 		msgs := lo.Map(errResults, func(r *doctor.Result, _ int) string {
 			return r.ErrorString()
 		})
-		return errors.New(strings.Join(msgs, util.StringDefaultLinebreak))
+		return errors.New(util.StringJoin(msgs, util.StringDefaultLinebreak))
 	}
 	clilog("All good, project will be created in the current directory\n\n")
 	if p.Key == "" {
@@ -77,8 +77,8 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 	p.Port = int(prt)
 
 	const msg = "Enter the modules your project will use as a comma-separated list (or \"all\") from choices"
-	modPromptString := fmt.Sprintf("%s:\n  %s", msg, strings.Join(modKeys, ", "))
-	mods := promptString(modPromptString, strings.Join(p.Modules, ", "))
+	modPromptString := fmt.Sprintf("%s:\n  %s", msg, util.StringJoin(modKeys, ", "))
+	mods := promptString(modPromptString, util.StringJoin(p.Modules, ", "))
 	p.Modules = util.StringSplitAndTrim(mods, ",")
 	if len(p.Modules) == 1 && p.Modules[0] == "all" {
 		p.Modules = modKeys

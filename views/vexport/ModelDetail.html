@@ -1,10 +1,9 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/file"
   "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
@@ -58,7 +57,7 @@
         <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
         <tr><th>Package</th><td>{%s model.Package %}</td></tr>
         {%- if len(model.Group) > 0 -%}
-        <tr><th>Group</th><td>{%s strings.Join(model.Group, "/") %}</td></tr>
+        <tr><th>Group</th><td>{%s util.StringJoin(model.Group, "/") %}</td></tr>
         {%- endif -%}
         {%- if model.Schema != "" -%}
         <tr><th>Schema</th><td>{%s model.Schema %}</td></tr>
@@ -91,13 +90,13 @@
         <tr><th>Route Override</th><td>{%s model.RouteOverride %}</td></tr>
         {%- endif -%}
         {%- if len(model.Tags) > 0 -%}
-        <tr><th>Tags</th><td>{%s strings.Join(model.Tags, ", ") %}</td></tr>
+        <tr><th>Tags</th><td>{%s util.StringJoin(model.Tags, ", ") %}</td></tr>
         {%- endif -%}
         {%- if model.View != "" -%}
         <tr><th>View</th><td>{%s model.View %}</td></tr>
         {%- endif -%}
         {%- if len(model.Search) > 0 -%}
-        <tr><th>Search</th><td>{%s strings.Join(model.Search, ", ") %}</td></tr>
+        <tr><th>Search</th><td>{%s util.StringJoin(model.Search, ", ") %}</td></tr>
         {%- endif -%}
         {%- if len(model.SeedData) > 0 -%}
         <tr><th>Seed Data</th><td><a href="{%s baseURL %}/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
@@ -147,7 +146,7 @@
           <td>{%s col.Validation %}</td>
           <td>{%= view.BoolIcon(col.Indexed || model.Relations.ContainsSource(col.Name), 15, "icon", ps) %}</td>
           <td>{%= view.BoolIcon(col.HasTag("unique"), 15, "icon", ps) %}</td>
-          <td>{%s strings.Join(col.Tags, ", ") %}</td>
+          <td>{%s util.StringJoin(col.Tags, ", ") %}</td>
           <td>{%= view.Map(false, col.Metadata, ps) %}</td>
         </tr>
         {%- endfor -%}
@@ -172,9 +171,9 @@
         {%- for _, rel := range model.Relations -%}
         <tr>
           <td>{%s rel.Name %}</td>
-          <td>{%s strings.Join(rel.Src, ", ") %}</td>
+          <td>{%s util.StringJoin(rel.Src, ", ") %}</td>
           <td><a href="{%s baseURL %}/{%s rel.Table %}">{%s rel.Table %}</a></td>
-          <td>{%s strings.Join(rel.Tgt, ", ") %}</td>
+          <td>{%s util.StringJoin(rel.Tgt, ", ") %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

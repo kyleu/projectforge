@@ -1,7 +1,6 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
@@ -11,7 +10,7 @@
   } -%}
   <form action="{%s act %}" method="get">
     {%- if len(currTags) > 0 -%}
-    <input type="hidden" name="tags" value="{%s strings.Join(currTags, `,`) %}" />
+    <input type="hidden" name="tags" value="{%s util.StringJoin(currTags, `,`) %}" />
     {%- endif -%}
     <div class="right">
       <button class="right" type="submit">{%= components.SVGRef("search", 20, 20, `icon search-icon`, ps) %}</button>

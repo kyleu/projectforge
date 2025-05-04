@@ -12,6 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ModelMap(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
@@ -41,7 +42,7 @@ func ModelMap(m *model.Model, args *metamodel.Args, linebreak string) (*file.Fil
 func modelToMap(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Package+"ToMap", "func")
 	ret.WF("func (%s *%s) ToMap() util.ValueMap {", m.FirstLetter(), m.Proper())
-	content := strings.Join(lo.Map(m.Columns, func(col *model.Column, _ int) string {
+	content := util.StringJoin(lo.Map(m.Columns, func(col *model.Column, _ int) string {
 		return fmt.Sprintf(`%q: %s.%s`, col.Camel(), m.FirstLetter(), col.Proper())
 	}), ", ")
 	ret.W("\treturn util.ValueMap{" + content + "}")
@@ -93,7 +94,7 @@ func modelFromMap(g *golang.File, m *model.Model, models model.Models, enums enu
 func modelToOrderedMap(m *model.Model) *golang.Block {
 	ret := golang.NewBlock(m.Package+"ToOrderedMap", "func")
 	ret.WF("func (%s *%s) ToOrderedMap() *util.OrderedMap[any] {", m.FirstLetter(), m.Proper())
-	content := strings.Join(lo.Map(m.Columns, func(col *model.Column, _ int) string {
+	content := util.StringJoin(lo.Map(m.Columns, func(col *model.Column, _ int) string {
 		return fmt.Sprintf(`{K: %q, V: %s.%s}`, col.Camel(), m.FirstLetter(), col.Proper())
 	}), ", ")
 	ret.W("\tpairs := util.OrderedPairs[any]{" + content + "}")

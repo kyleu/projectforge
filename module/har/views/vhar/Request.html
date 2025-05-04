@@ -1,6 +1,5 @@
 {% import (
   "fmt"
-  "strings"
 
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/har"
@@ -112,7 +111,7 @@
           <td>{%s c.Path %}</td>
           <td>{%s c.Domain %}</td>
           <td title="{%s util.TimeToFull(c.Exp()) %}">{%s c.ExpRelative() %}</td>
-          <td>{%s strings.Join(c.Tags(), ", ") %}</td>
+          <td>{%s util.StringJoin(c.Tags(), ", ") %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

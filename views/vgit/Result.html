@@ -1,6 +1,5 @@
 {% import (
   "fmt"
-  "strings"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -143,7 +142,7 @@
   {%- if len(res.Args.Authors) > 0 -%}
   <tr>
     <th>Authors</th>
-    <td>{%s strings.Join(res.Args.Authors, ", ") %}</td>
+    <td>{%s util.StringJoin(res.Args.Authors, ", ") %}</td>
   </tr>
   {%- endif -%}
   {%- if res.Args.Limit > 0 -%}
@@ -245,7 +244,7 @@
       u += "&since=" + util.TimeToYMD(args.Since)
     }
     if len(args.Authors) > 0 {
-      u += "&authors=" + strings.Join(args.Authors, ",")
+      u += "&authors=" + util.StringJoin(args.Authors, ",")
     }
     if args.Limit > 0 {
       u += "&limit=" + fmt.Sprint(args.Limit)

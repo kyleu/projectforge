@@ -3,7 +3,6 @@ package svc
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -19,7 +18,7 @@ const declSubscript = " [%%v]"
 
 func writeGetBy(key string, cols model.Columns, doExtra []string, name string, dbRef string, m *model.Model, args *metamodel.Args, g *golang.File) error {
 	if name == "" {
-		name = helper.TextGetBy + strings.Join(cols.ProperNames(), "")
+		name = helper.TextGetBy + util.StringJoin(cols.ProperNames(), "")
 	}
 	lo.ForEach(helper.ImportsForTypes("go", "", cols.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
@@ -84,14 +83,14 @@ func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef stri
 	}
 	ret.WF("\tq := database.SQLSelect(columnsString, %s, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)", tableClause)
 	ret.W("\tret := rows{}")
-	ret.WF("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, strings.Join(cols.CamelNames(), ", "))
+	ret.WF("\terr := s.%s.Select(ctx, &ret, q, tx, logger, %s)", dbRef, util.StringJoin(cols.CamelNames(), ", "))
 	ret.W("\tif err != nil {")
-	sj := strings.Join(cols.CamelNames(), ", ")
+	sj := util.StringJoin(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+declSubscript)
 	})
-	ret.WF("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.TitlePlural(), strings.Join(decls, ", "), sj)
+	ret.WF("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.TitlePlural(), util.StringJoin(decls, ", "), sj)
 	ret.W("\t}")
 	ret.WF("\treturn ret.To%s(), nil", m.ProperPlural())
 	ret.W("}")

@@ -129,7 +129,7 @@ func (p *Project) ToCSV() ([]string, [][]string) {
 
 func (p *Project) Strings() []string {
 	return []string{
-		p.Key, p.Name, p.Icon, p.Exec, p.Version, p.Package, p.Args, fmt.Sprint(p.Port), strings.Join(p.Modules, ","),
-		strings.Join(p.Ignore, ","), strings.Join(p.Tags, ","), p.Theme.Key, p.Path, p.Parent, p.Error,
+		p.Key, p.Name, p.Icon, p.Exec, p.Version, p.Package, p.Args, fmt.Sprint(p.Port), util.StringJoin(p.Modules, ","),
+		util.StringJoin(p.Ignore, ","), util.StringJoin(p.Tags, ","), p.Theme.Key, p.Path, p.Parent, p.Error,
 	}
 }

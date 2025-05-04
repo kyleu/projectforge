@@ -27,7 +27,7 @@ func FlashAndRedir(success bool, msg string, redir string, ps *cutil.PageState) 
 	} else {
 		curr := util.StringSplitAndTrim(currStr, ";")
 		curr = append(curr, msgFmt)
-		currStr = strings.Join(curr, ";")
+		currStr = util.StringJoin(curr, ";")
 	}
 	ps.Session[csession.WebFlashKey] = currStr
 	if err := csession.SaveSession(ps.W, ps.Session, ps.Logger); err != nil {

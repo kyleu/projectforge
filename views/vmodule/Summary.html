@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
   "projectforge.dev/projectforge/app/util"
@@ -28,7 +26,7 @@
       {%- code var ctx []string -%}
       {%- for _, pth := range path -%}
       {%- code ctx = append(ctx, pth) -%}
-      <a href="/m/{%s mod.Key %}/fs/{%s strings.Join(ctx, `/`) %}"><button>{%s pth %}}</button></a>
+      <a href="/m/{%s mod.Key %}/fs/{%s util.StringJoin(ctx, `/`) %}"><button>{%s pth %}}</button></a>
       {%- endfor -%}
       {%- endif -%}
       <a href="#modal-module"><button type="button">JSON</button></a>

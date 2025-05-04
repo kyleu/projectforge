@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -68,7 +67,7 @@ func viewColumn(
 			strs = append(strs, fmt.Sprintf(anchorMsg, "", relModel.Title(), wp, icon))
 		}
 	})
-	ret.W(ind + ind1 + strings.Join(strs, ""))
+	ret.W(ind + ind1 + util.StringJoin(strs, ""))
 	ret.W(ind + ind1 + "{%% else %%}")
 	if col.PK {
 		ret.W(ind + ind1 + modelLinkStart + cv + "</a>")

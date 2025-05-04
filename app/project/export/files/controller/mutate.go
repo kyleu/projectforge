@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const msgEqSPrint = "\t\tmsg := fmt.Sprintf(\""
@@ -32,7 +33,7 @@ func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, mod
 	if grp != nil {
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
 	}
-	ret.WF("\t\tret := &%s{%s}", m.ClassRef(), strings.Join(decls, ", "))
+	ret.WF("\t\tret := &%s{%s}", m.ClassRef(), util.StringJoin(decls, ", "))
 	ret.W("\t\tif r.URL.Query().Get(\"prototype\") == util.KeyRandom {")
 	ret.WF("\t\t\tret = %s.Random%s()", m.Package, m.Proper())
 	var encounteredRelTables []string
@@ -159,7 +160,7 @@ func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.
 	pkCamels := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
 		return "ret." + pk.Proper()
 	})
-	ret.WF("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s, ps.Logger)", m.Proper(), strings.Join(pkCamels, ", "))
+	ret.WF("\t\terr = as.Services.%s.Delete(ps.Context, nil, %s, ps.Logger)", m.Proper(), util.StringJoin(pkCamels, ", "))
 	ret.W("\t\tif err != nil {")
 	ret.WF("\t\t\treturn \"\", errors.Wrapf(err, \"unable to delete %s [%%%%s]\", ret.String())", m.TitleLower())
 	ret.W("\t\t}")

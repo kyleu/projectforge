@@ -33,7 +33,7 @@ func (r *Request) ToCommand() string {
 	for _, ign := range r.Ignore {
 		args = append(args, "glob=!"+ign)
 	}
-	argString := strings.Join(lo.Map(util.ArraySorted(args), func(x string, _ int) string {
+	argString := util.StringJoin(lo.Map(util.ArraySorted(args), func(x string, _ int) string {
 		return "--" + x
 	}), " ")
 	return fmt.Sprintf("rg %s %q, %q", argString, r.Query, r.Path)

@@ -3,7 +3,6 @@ package sql
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -65,7 +64,7 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 			ret.WF("  unique (%q),", col.SQL())
 		}
 	})
-	ret.WF("  primary key (%s)", strings.Join(m.PKs().SQLQuoted(), ", "))
+	ret.WF("  primary key (%s)", util.StringJoin(m.PKs().SQLQuoted(), ", "))
 	ret.W(");")
 
 	pks := m.PKs()
@@ -96,15 +95,15 @@ func sqlCreate(m *model.Model, models model.Models, database string) (*golang.Bl
 }
 
 func addIndex(database string, ret *golang.Block, tbl string, names ...string) {
-	name := fmt.Sprintf("%s__%s_idx", tbl, strings.Join(names, "_"))
+	name := fmt.Sprintf("%s__%s_idx", tbl, util.StringJoin(names, "_"))
 	quoted := lo.Map(names, func(n string, _ int) string {
 		return fmt.Sprintf("%q", n)
 	})
 	ret.WB()
 	if database == util.DatabaseSQLServer {
 		ret.WF("if not exists (select * from sys.indexes where name='%s' and object_id=object_id('%s'))", tbl, name)
-		ret.WF("create index %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+		ret.WF("create index %q on %q (%s);", name, tbl, util.StringJoin(quoted, ", "))
 	} else {
-		ret.WF("create index if not exists %q on %q (%s);", name, tbl, strings.Join(quoted, ", "))
+		ret.WF("create index if not exists %q on %q (%s);", name, tbl, util.StringJoin(quoted, ", "))
 	}
 }

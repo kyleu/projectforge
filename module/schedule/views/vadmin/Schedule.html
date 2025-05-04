@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "github.com/google/uuid"
 
   "{{{ .Package }}}/app"
@@ -41,7 +39,7 @@
           <tr>
             <td class="shrink"><a href="/admin/schedule/{%s j.ID.String() %}">{%s j.ID.String() %}</a></td>
             <td>{%s j.Name %}</td>
-            <td>{%s strings.Join(j.Tags, ", ") %}</td>
+            <td>{%s util.StringJoin(j.Tags, ", ") %}</td>
             <td>{%s util.TimeToFullMS(j.Last) %}</td>
             <td>{%s util.TimeToFullMS(j.Next) %}</td>
             <td>{%d ecs[j.ID] %}</td>

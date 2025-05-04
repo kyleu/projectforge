@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -41,13 +40,13 @@ func List(w http.ResponseWriter, r *http.Request) {
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %d", p.Key, p.Port)
 			})
-			_, _ = ps.W.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
+			_, _ = ps.W.Write([]byte(util.StringJoin(msgs, util.StringDefaultLinebreak)))
 			return "", nil
 		case "versions":
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %s", p.Key, p.Version)
 			})
-			_, _ = ps.W.Write([]byte(strings.Join(msgs, util.StringDefaultLinebreak)))
+			_, _ = ps.W.Write([]byte(util.StringJoin(msgs, util.StringDefaultLinebreak)))
 			return "", nil
 		default:
 			page := &vproject.List{Projects: prjs, Execs: execs, Tags: tags, Icon: "code"}

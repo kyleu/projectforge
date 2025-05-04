@@ -2,12 +2,12 @@
   "fmt"
   "path"
   "path/filepath"
-  "strings"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/filesystem"
   "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vfile"
 ) %}
@@ -25,7 +25,7 @@
     u := prj.WebPath() + "/fs"
     pth := filepath.Join(p.Path...)
   -%}
-  {%= Summary(prj, "/" + strings.Join(p.Path, "/"), nil, nil, nil, ps) %}
+  {%= Summary(prj, "/" + util.StringJoin(p.Path, "/"), nil, nil, nil, ps) %}
   {%- if p.FS.IsDir(pth) -%}
   {%- code files := p.FS.ListFiles(pth, nil, ps.Logger) -%}
   <div class="card">

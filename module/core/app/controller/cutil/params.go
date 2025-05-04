@@ -6,13 +6,14 @@ import (
 	"strings"
 
 	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/util"
 )
 
 func ParamSetFromRequest(r *http.Request) filter.ParamSet {
 	ret := filter.ParamSet{}
 	for k, v := range r.URL.Query() {
 		if strings.Contains(k, ".") {
-			ret = apply(ret, k, strings.Join(v, ","))
+			ret = apply(ret, k, util.StringJoin(v, ","))
 		}
 	}
 	return ret

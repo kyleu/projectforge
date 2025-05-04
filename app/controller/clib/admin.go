@@ -23,7 +23,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 	path := util.StringSplitAndTrim(strings.TrimPrefix(r.URL.Path, "/admin"), "/")
 	key := keyAdmin
 	if len(path) > 0 {
-		key += "." + strings.Join(path, ".")
+		key += "." + util.StringJoin(path, ".")
 	}
 	controller.Act(key, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if len(path) == 0 {

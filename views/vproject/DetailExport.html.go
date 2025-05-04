@@ -7,10 +7,10 @@ package vproject
 //line views/vproject/DetailExport.html:1
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/lib/metamodel"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/components/view"

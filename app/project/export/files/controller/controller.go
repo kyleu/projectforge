@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"strings"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file"
@@ -51,7 +49,7 @@ func Controller(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 }
 
 func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int) {
-	ind := strings.Join(lo.Times(indent, func(_ int) string {
+	ind := util.StringJoin(lo.Times(indent, func(_ int) string {
 		return "\t"
 	}), "")
 	add := func(s string, args ...any) {
@@ -124,14 +122,14 @@ func blockFor(m *model.Model, prefix string, grp *model.Column, keys ...string) 
 	properKeys := lo.Map(keys, func(k string, _ int) string {
 		return util.StringToTitle(k)
 	})
-	name := m.Proper() + withGroupName(strings.Join(properKeys, ""), grp)
+	name := m.Proper() + withGroupName(util.StringJoin(properKeys, ""), grp)
 	ret := golang.NewBlock(name, "func")
 	ret.WF("func %s(w http.ResponseWriter, r *http.Request) {", name)
 	var grpStr string
 	if grp != nil {
 		grpStr = grp.Name + "."
 	}
-	ret.WF("\t%sAct(\"%s.%s%s\", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, strings.Join(keys, "."))
+	ret.WF("\t%sAct(\"%s.%s%s\", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {", prefix, m.Package, grpStr, util.StringJoin(keys, "."))
 	return ret
 }
 

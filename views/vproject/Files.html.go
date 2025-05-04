@@ -9,12 +9,12 @@ import (
 	"fmt"
 	"path"
 	"path/filepath"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vfile"
 )
@@ -53,7 +53,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vproject/Files.html:27
 	qw422016.N().S(`  `)
 //line views/vproject/Files.html:28
-	StreamSummary(qw422016, prj, "/"+strings.Join(p.Path, "/"), nil, nil, nil, ps)
+	StreamSummary(qw422016, prj, "/"+util.StringJoin(p.Path, "/"), nil, nil, nil, ps)
 //line views/vproject/Files.html:28
 	qw422016.N().S(`
 `)

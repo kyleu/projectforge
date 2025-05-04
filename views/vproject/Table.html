@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/exec"
@@ -18,10 +16,10 @@
         {%- if full -%}
         <thead>
           <tr>
-            <th><a href="/p{% if len(tags) > 0 %}?tags={%s strings.Join(tags, `,`) %}{% endif %}">Title</a></th>
-            <th><a href="/p?sort=package{% if len(tags) > 0 %}&tags={%s strings.Join(tags, `,`) %}{% endif %}">Package</a></th>
+            <th><a href="/p{% if len(tags) > 0 %}?tags={%s util.StringJoin(tags, `,`) %}{% endif %}">Title</a></th>
+            <th><a href="/p?sort=package{% if len(tags) > 0 %}&tags={%s util.StringJoin(tags, `,`) %}{% endif %}">Package</a></th>
             {%- if full -%}
-            <th class="shrink"><a href="/p?sort=port{% if len(tags) > 0 %}&tags={%s strings.Join(tags, `,`) %}{% endif %}">Port</a></th>
+            <th class="shrink"><a href="/p?sort=port{% if len(tags) > 0 %}&tags={%s util.StringJoin(tags, `,`) %}{% endif %}">Port</a></th>
             {%- endif -%}
             {%- if len(ex) > 0 -%}
             <th class="shrink">Processes</th>

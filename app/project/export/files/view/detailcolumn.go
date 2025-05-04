@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -37,7 +36,7 @@ func viewDetailColumnString(rels model.Relations, models model.Models, m *model.
 	rel := rels[0]
 	relModel := models.Get(rel.Table)
 	lCols := rel.SrcColumns(m)
-	lNames := strings.Join(lCols.ProperNames(), "")
+	lNames := util.StringJoin(lCols.ProperNames(), "")
 
 	return fmt.Sprintf("p.%sBy%s", relModel.Proper(), lNames), nil
 }

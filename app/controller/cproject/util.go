@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
@@ -32,12 +31,12 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}
-	prj.Modules = util.StringSplitAndTrim(get("modules", strings.Join(prj.Modules, dblpipe)), dblpipe)
+	prj.Modules = util.StringSplitAndTrim(get("modules", util.StringJoin(prj.Modules, dblpipe)), dblpipe)
 	if len(prj.Modules) == 0 {
 		prj.Modules = []string{"core"}
 	}
-	prj.Ignore = util.StringSplitAndTrim(get("ignore", strings.Join(prj.Ignore, ",")), ",")
-	prj.Tags = util.StringSplitAndTrim(get("tags", strings.Join(prj.Tags, ",")), ",")
+	prj.Ignore = util.StringSplitAndTrim(get("ignore", util.StringJoin(prj.Ignore, ",")), ",")
+	prj.Tags = util.StringSplitAndTrim(get("tags", util.StringJoin(prj.Tags, ",")), ",")
 	prj.Path = get("path", prj.Path)
 
 	if prj.Info == nil {
@@ -67,14 +66,14 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.NotarizeEmail = get("notarizeEmail", prj.Info.NotarizeEmail)
 	prj.Info.DatabaseEngine = get("databaseEngine", prj.Info.DatabaseEngine)
 	prj.Info.Slack = get("slack", prj.Info.Slack)
-	prj.Info.Channels = util.StringSplitAndTrim(get("channels", strings.Join(prj.Info.Channels, ", ")), ",")
+	prj.Info.Channels = util.StringSplitAndTrim(get("channels", util.StringJoin(prj.Info.Channels, ", ")), ",")
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
 	prj.Info.GoVersion = get("goVersion", prj.Info.GoBinary)
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
-	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", strings.Join(prj.Info.ExtraFiles, ", ")), ",")
-	prj.Info.IgnoredFiles = util.StringSplitAndTrim(get("ignoredFiles", strings.Join(prj.Info.IgnoredFiles, ", ")), ",")
-	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", strings.Join(prj.Info.Deployments, ", ")), ",")
-	prj.Info.Acronyms = util.StringSplitAndTrim(get("acronyms", strings.Join(prj.Info.Acronyms, ", ")), ",")
+	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", util.StringJoin(prj.Info.ExtraFiles, ", ")), ",")
+	prj.Info.IgnoredFiles = util.StringSplitAndTrim(get("ignoredFiles", util.StringJoin(prj.Info.IgnoredFiles, ", ")), ",")
+	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", util.StringJoin(prj.Info.Deployments, ", ")), ",")
+	prj.Info.Acronyms = util.StringSplitAndTrim(get("acronyms", util.StringJoin(prj.Info.Acronyms, ", ")), ",")
 
 	if prj.Package == "" {
 		prj.Package = "github.com/" + prj.Info.Org + "/" + prj.Key

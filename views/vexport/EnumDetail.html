@@ -1,10 +1,9 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/file"
   "projectforge.dev/projectforge/app/lib/metamodel/enum"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
@@ -44,7 +43,7 @@
         <tr><th class="shrink">Name</th><td>{%s enum.Name %}</td></tr>
         <tr><th>Package</th><td>{%s enum.Package %}</td></tr>
         {%- if len(enum.Group) > 0 -%}
-        <tr><th>Group</th><td>{%s strings.Join(enum.Group, "/") %}</td></tr>
+        <tr><th>Group</th><td>{%s util.StringJoin(enum.Group, "/") %}</td></tr>
         {%- endif -%}
         <tr><th>Description</th><td>{%s enum.Description %}</td></tr>
         <tr><th>Icon</th><td>{%s enum.IconSafe() %}</td></tr>
@@ -58,7 +57,7 @@
         <tr><th>Route Override</th><td>{%s enum.RouteOverride %}</td></tr>
         {%- endif -%}
         {%- if len(enum.Tags) > 0 -%}
-        <tr><th>Tags</th><td>{%s strings.Join(enum.Tags, ", ") %}</td></tr>
+        <tr><th>Tags</th><td>{%s util.StringJoin(enum.Tags, ", ") %}</td></tr>
         {%- endif -%}
       </tbody>
     </table>

@@ -3,7 +3,6 @@ package view
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -11,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/golang"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func viewTableColumn(
@@ -61,5 +61,5 @@ func getTableColumnString(m *model.Model, modelKey string, rels model.Relations,
 		}
 	}
 
-	return fmt.Sprintf("%sBy%s.Get(%s)", k, strings.Join(srcCols.ProperNames(), ""), strings.Join(calls, ", ")), nil
+	return fmt.Sprintf("%sBy%s.Get(%s)", k, util.StringJoin(srcCols.ProperNames(), ""), util.StringJoin(calls, ", ")), nil
 }

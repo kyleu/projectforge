@@ -1,4 +1,4 @@
-{% import "strings" %}
+{% import "{{{ .Package }}}/app/util" %}
 
 {% func Indent(br bool, level int) %}{% stripspace %}
   {% if br %}{% newline %}{% endif %}
@@ -8,9 +8,9 @@
 {% endstripspace %}{% endfunc %}
 
 {% func PlaceholderFor(phs []string) %}{% stripspace %}
-  {% if len(phs) > 0 %}{% space %}placeholder="{%s strings.Join(phs, "; ") %}"{% endif %}
+  {% if len(phs) > 0 %}{% space %}placeholder="{%s util.StringJoin(phs, "; ") %}"{% endif %}
 {% endstripspace %}{% endfunc %}
 
 {% func TitleFor(help []string) %}{% stripspace %}
-  {% if len(help) > 0 %}{% space %}title="{%s strings.Join(help, "; ") %}"{% endif %}
+  {% if len(help) > 0 %}{% space %}title="{%s util.StringJoin(help, "; ") %}"{% endif %}
 {% endstripspace %}{% endfunc %}

@@ -68,7 +68,7 @@ func ServiceGet(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 	}
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
 		cols := rel.SrcColumns(m)
-		colStr := strings.Join(cols.Names(), ",")
+		colStr := util.StringJoin(cols.Names(), ",")
 		getBys[colStr] = cols
 	})
 	lo.ForEach(m.IndexedColumns(false), func(col *model.Column, _ int) {
@@ -111,7 +111,7 @@ func serviceGet(key string, g *golang.File, m *model.Model, cols model.Columns, 
 		lo.ForEach(cols, func(col *model.Column, idx int) {
 			wc = append(wc, fmt.Sprintf("%q = $%d", col.SQL(), idx+1))
 		})
-		ret.WF("\twc := %q", strings.Join(wc, " and "))
+		ret.WF("\twc := %q", util.StringJoin(wc, " and "))
 	}
 	if m.IsSoftDelete() {
 		ret.W("\twc = addDeletedClause(wc, includeDeleted)")
@@ -125,14 +125,14 @@ func serviceGet(key string, g *golang.File, m *model.Model, cols model.Columns, 
 		}
 		return x.Camel()
 	})
-	ret.WF("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, strings.Join(colRefs, ", "))
+	ret.WF("\terr := s.%s.Get(ctx, ret, q, tx, logger, %s)", dbRef, util.StringJoin(colRefs, ", "))
 	ret.W("\tif err != nil {")
-	sj := strings.Join(cols.CamelNames(), ", ")
+	sj := util.StringJoin(cols.CamelNames(), ", ")
 	decls := make([]string, 0, len(cols))
 	lo.ForEach(cols, func(c *model.Column, _ int) {
 		decls = append(decls, c.Camel()+declSubscript)
 	})
-	ret.WF("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), strings.Join(decls, ", "), sj)
+	ret.WF("\t\treturn nil, errors.Wrapf(err, \"unable to get %s by %s\", %s)", m.Camel(), util.StringJoin(decls, ", "), sj)
 	ret.W("\t}")
 	ret.WF("\treturn ret.To%s(), nil", m.Proper())
 	ret.W("}")

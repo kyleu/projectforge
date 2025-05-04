@@ -1,6 +1,4 @@
 {% import (
-  "strings"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project/action"
@@ -74,7 +72,7 @@
   {%- for _, mr := range res.Modules -%}
     <div class="card">
       <div class="right">{%s util.MicrosToMillis(mr.Duration) %}</div>
-      <h3 title="{%s strings.Join(mr.Keys, `, `) %}">{%= components.SVGIcon(`archive`, ps) %} {%s util.StringPlural(len(mr.Keys), "Module") %}</h3>
+      <h3 title="{%s util.StringJoin(mr.Keys, `, `) %}">{%= components.SVGIcon(`archive`, ps) %} {%s util.StringPlural(len(mr.Keys), "Module") %}</h3>
       <div class="right">{%s= res.StatusLog() %}</div>
       <div class="mts">
         <em>{%s mr.Status %}</em>

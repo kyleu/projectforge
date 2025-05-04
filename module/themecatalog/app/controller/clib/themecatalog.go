@@ -67,7 +67,7 @@ func ThemePalette(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), thms)
 		if r.URL.Query().Get("t") == "go" {
-			ps.Data = strings.Join(lo.Map(thms, func(t *theme.Theme, _ int) string {
+			ps.Data = util.StringJoin(lo.Map(thms, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)
 			return controller.Render(r, as, &views.Debug{}, ps, "Themes")
