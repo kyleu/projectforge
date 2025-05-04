@@ -2,7 +2,9 @@ package metaschema
 
 import (
 	"fmt"
+	"projectforge.dev/projectforge/app/util"
 	"slices"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -39,6 +41,17 @@ func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 	return ret, nil
 }
 
+func ExportAny(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (any, error) {
+	switch sch.Type {
+	case "object":
+		return ExportModel(sch, coll, args)
+	case "enum":
+		return ExportEnum(sch, coll, args)
+	default:
+		return nil, errors.Errorf("invalid type [%v] for schema [%s]", sch.Type, sch.String())
+	}
+}
+
 func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*model.Model, error) {
 	if sch == nil {
 		return nil, errors.New("nil schema provided for model")
@@ -47,26 +60,41 @@ func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	if err != nil {
 		return nil, err
 	}
-	ret := &model.Model{Name: "TODO"}
+	n, pkg, grp := parseID(sch.ID)
+	ret := &model.Model{Name: n, Package: pkg, Group: grp}
 	return ret, nil
 }
 
-func ExportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*enum.Enum, error) {
-	if sch == nil {
-		return nil, errors.New("nil schema provided for enum")
+func parseID(id string) (string, string, []string) {
+	parts := util.StringSplitAndTrim(id, "/")
+	pid, pkg := "", ""
+	var grp []string
+	switch len(parts) {
+	case 1:
+		pid = id
+	case 2:
+		pid = parts[1]
+		pkg = parts[0]
+	default:
+		pid = parts[len(parts)-1]
+		pkg = parts[len(parts)-2]
+		grp = parts[len(parts)-3:]
 	}
+	pid = strings.TrimSuffix(strings.TrimSuffix(pid, ".json"), ".schema")
+	return pid, pkg, grp
+}
+
+func ExportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*enum.Enum, error) {
 	_, err := exportGetType(sch, "enum")
 	if err != nil {
 		return nil, err
 	}
-	ret := &enum.Enum{Name: "TODO"}
+	n, pkg, grp := parseID(sch.ID)
+	ret := &enum.Enum{Name: n, Package: pkg, Group: grp}
 	return ret, nil
 }
 
 func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (types.Type, error) {
-	if sch == nil {
-		return nil, errors.New("nil schema provided for type")
-	}
 	t, err := exportGetType(sch)
 	if err != nil {
 		return nil, err
@@ -89,6 +117,9 @@ func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 }
 
 func exportGetType(sch *jsonschema.Schema, expected ...string) (string, error) {
+	if sch == nil {
+		return "", errors.New("nil schema provided")
+	}
 	t, ok := sch.Type.(string)
 	if !ok {
 		return "", errors.Errorf("invalid schema type [%s], of type [%T]", fmt.Sprint(sch.Type), sch.Type)

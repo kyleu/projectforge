@@ -14,7 +14,7 @@ import (
 )
 
 func LoadSchemas(ctx context.Context, key string, args *metamodel.Args, extraPaths []string, logger util.Logger, filter ...string) (*jsonschema.Collection, error) {
-	ret := jsonschema.NewCollection(key)
+	ret := jsonschema.NewCollection()
 	for _, x := range args.Enums {
 		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
 			continue

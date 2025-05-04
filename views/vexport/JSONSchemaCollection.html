@@ -36,7 +36,7 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%- code res := p.Results.Enums.Get(x.ID()) -%}
+            {%- code res := p.Results.Enums.Get(x.Name) -%}
             {%= renderJSONSchemaEnum(as, x, sch, res, ps) %}
           </div></div></div>
         </li>
@@ -59,7 +59,7 @@
             {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%- code res := p.Results.Models.Get(x.ID()) -%}
+            {%- code res := p.Results.Models.Get(x.Name) -%}
             {%= renderJSONSchemaModel(as, x, sch, res, ps) %}
           </div></div></div>
         </li>
@@ -78,7 +78,8 @@
           <input id="accordion-model-{%s sch.ID %}" type="checkbox" hidden="hidden" />
           <label for="accordion-model-{%s sch.ID %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID %}</label>
           <div class="bd"><div><div>
-            {%= renderJSONSchemaExtra(as, sch, ps) %}
+            {%- code res := p.Results.Models.Get(sch.ID) -%}
+            {%= renderJSONSchemaExtra(as, sch, res, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -88,6 +89,19 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) %}
-  <pre>{%s util.ToJSON(sch) %}</pre>
+{% func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) %}
+  <div class="flex" style="">
+    <div class="flex-item">
+      <strong>Original</strong>
+      <pre class="mt">null</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Schema</strong>
+      <pre class="mt">{%s util.ToJSON(sch) %}</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Result</strong>
+      <pre class="mt">{%s util.ToJSON(result) %}</pre>
+    </div>
+  </div>
 {% endfunc %}

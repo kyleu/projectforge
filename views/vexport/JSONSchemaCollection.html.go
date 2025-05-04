@@ -115,7 +115,7 @@ func (p *JSONSchemaCollection) StreamBody(qw422016 *qt422016.Writer, as *app.Sta
           <div class="bd"><div><div>
 `)
 //line views/vexport/JSONSchemaCollection.html:39
-		res := p.Results.Enums.Get(x.ID())
+		res := p.Results.Enums.Get(x.Name)
 
 //line views/vexport/JSONSchemaCollection.html:39
 		qw422016.N().S(`            `)
@@ -194,7 +194,7 @@ func (p *JSONSchemaCollection) StreamBody(qw422016 *qt422016.Writer, as *app.Sta
           <div class="bd"><div><div>
 `)
 //line views/vexport/JSONSchemaCollection.html:62
-		res := p.Results.Models.Get(x.ID())
+		res := p.Results.Models.Get(x.Name)
 
 //line views/vexport/JSONSchemaCollection.html:62
 		qw422016.N().S(`            `)
@@ -254,87 +254,109 @@ func (p *JSONSchemaCollection) StreamBody(qw422016 *qt422016.Writer, as *app.Sta
 //line views/vexport/JSONSchemaCollection.html:79
 			qw422016.N().S(`</label>
           <div class="bd"><div><div>
-            `)
+`)
 //line views/vexport/JSONSchemaCollection.html:81
-			streamrenderJSONSchemaExtra(qw422016, as, sch, ps)
+			res := p.Results.Models.Get(sch.ID)
+
 //line views/vexport/JSONSchemaCollection.html:81
+			qw422016.N().S(`            `)
+//line views/vexport/JSONSchemaCollection.html:82
+			streamrenderJSONSchemaExtra(qw422016, as, sch, res, ps)
+//line views/vexport/JSONSchemaCollection.html:82
 			qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vexport/JSONSchemaCollection.html:84
+//line views/vexport/JSONSchemaCollection.html:85
 		}
-//line views/vexport/JSONSchemaCollection.html:84
+//line views/vexport/JSONSchemaCollection.html:85
 		qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaCollection.html:88
+//line views/vexport/JSONSchemaCollection.html:89
 	}
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 }
 
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 func (p *JSONSchemaCollection) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 }
 
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 func (p *JSONSchemaCollection) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 	return qs422016
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:90
 }
 
-//line views/vexport/JSONSchemaCollection.html:91
-func streamrenderJSONSchemaExtra(qw422016 *qt422016.Writer, as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaCollection.html:91
+//line views/vexport/JSONSchemaCollection.html:92
+func streamrenderJSONSchemaExtra(qw422016 *qt422016.Writer, as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) {
+//line views/vexport/JSONSchemaCollection.html:92
 	qw422016.N().S(`
-  <pre>`)
-//line views/vexport/JSONSchemaCollection.html:92
+  <div class="flex" style="">
+    <div class="flex-item">
+      <strong>Original</strong>
+      <pre class="mt">null</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Schema</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaCollection.html:100
 	qw422016.E().S(util.ToJSON(sch))
-//line views/vexport/JSONSchemaCollection.html:92
+//line views/vexport/JSONSchemaCollection.html:100
 	qw422016.N().S(`</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Result</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaCollection.html:104
+	qw422016.E().S(util.ToJSON(result))
+//line views/vexport/JSONSchemaCollection.html:104
+	qw422016.N().S(`</pre>
+    </div>
+  </div>
 `)
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
 }
 
-//line views/vexport/JSONSchemaCollection.html:93
-func writerenderJSONSchemaExtra(qq422016 qtio422016.Writer, as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
+func writerenderJSONSchemaExtra(qq422016 qtio422016.Writer, as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) {
+//line views/vexport/JSONSchemaCollection.html:107
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaCollection.html:93
-	streamrenderJSONSchemaExtra(qw422016, as, sch, ps)
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
+	streamrenderJSONSchemaExtra(qw422016, as, sch, result, ps)
+//line views/vexport/JSONSchemaCollection.html:107
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
 }
 
-//line views/vexport/JSONSchemaCollection.html:93
-func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
+func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) string {
+//line views/vexport/JSONSchemaCollection.html:107
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaCollection.html:93
-	writerenderJSONSchemaExtra(qb422016, as, sch, ps)
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
+	writerenderJSONSchemaExtra(qb422016, as, sch, result, ps)
+//line views/vexport/JSONSchemaCollection.html:107
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
 	return qs422016
-//line views/vexport/JSONSchemaCollection.html:93
+//line views/vexport/JSONSchemaCollection.html:107
 }

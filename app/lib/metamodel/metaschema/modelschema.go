@@ -2,6 +2,7 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
+	"path"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
@@ -9,7 +10,7 @@ import (
 )
 
 func ModelSchema(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {
-	ret := sch.NewSchema(x.Name)
+	ret := sch.NewSchema(path.Join(x.PackageWithGroup(""), x.Name))
 	ret.Type = "object"
 	ret.Description = x.Description
 	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
