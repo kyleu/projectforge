@@ -15,18 +15,18 @@ type Schema struct {
 	Defs          *util.OrderedMap[*Schema] `json:"$defs,omitempty"`          // Definitions for reusable subschemas
 
 	// Annotations (Metadata Keywords)
-	Title       string        `json:"title,omitempty"`       // A short description of the schema
-	Description string        `json:"description,omitempty"` // A more detailed explanation
-	Default     interface{}   `json:"default,omitempty"`     // Default value for the instance
-	Deprecated  bool          `json:"deprecated,omitempty"`  // Indicates the instance is deprecated (default: false)
-	ReadOnly    bool          `json:"readOnly,omitempty"`    // Indicates the instance should not be modified (default: false)
-	WriteOnly   bool          `json:"writeOnly,omitempty"`   // Indicates the instance may be set but should not be returned (default: false)
-	Examples    []interface{} `json:"examples,omitempty"`    // Array of example values that validate against the schema
+	Title       string `json:"title,omitempty"`       // A short description of the schema
+	Description string `json:"description,omitempty"` // A more detailed explanation
+	Default     any    `json:"default,omitempty"`     // Default value for the instance
+	Deprecated  bool   `json:"deprecated,omitempty"`  // Indicates the instance is deprecated (default: false)
+	ReadOnly    bool   `json:"readOnly,omitempty"`    // Indicates the instance should not be modified (default: false)
+	WriteOnly   bool   `json:"writeOnly,omitempty"`   // Indicates the instance may be set but should not be returned (default: false)
+	Examples    []any  `json:"examples,omitempty"`    // Array of example values that validate against the schema
 
 	// Generic Validation Keywords
-	Type  interface{}   `json:"type,omitempty"`  // Expected data type(s) (string or array of strings: "string", "number", "integer", "object", "array", "boolean", "null")
-	Enum  []interface{} `json:"enum,omitempty"`  // Array of allowed values
-	Const interface{}   `json:"const,omitempty"` // Exact required value
+	Type  any   `json:"type,omitempty"`  // Expected data type(s) (string or array of strings: "string", "number", "integer", "object", "array", "boolean", "null")
+	Enum  []any `json:"enum,omitempty"`  // Array of allowed values
+	Const any   `json:"const,omitempty"` // Exact required value
 
 	// Validation Keywords for Numbers (number and integer)
 	MultipleOf       *float64 `json:"multipleOf,omitempty"`       // Instance must be divisible by this number (strictly positive)
@@ -45,21 +45,21 @@ type Schema struct {
 	ContentSchema    *Schema `json:"contentSchema,omitempty"`    // Schema for the decoded content if contentEncoding/MediaType are present
 
 	// Validation Keywords for Arrays
-	Items            interface{} `json:"items,omitempty"`            // Schema for array items (schema or boolean false). Applied *after* prefixItems. Use `UnevaluatedItems` for more control.
-	PrefixItems      Schemas     `json:"prefixItems,omitempty"`      // Array of schemas for tuple validation (items at specific indices)
-	UnevaluatedItems interface{} `json:"unevaluatedItems,omitempty"` // Validation for items not covered by `items` or `prefixItems` (schema or boolean)
-	MaxItems         *uint64     `json:"maxItems,omitempty"`         // Maximum number of items (non-negative integer)
-	MinItems         *uint64     `json:"minItems,omitempty"`         // Minimum number of items (non-negative integer, default 0)
-	UniqueItems      *bool       `json:"uniqueItems,omitempty"`      // Whether all items must be unique (default: false)
-	Contains         *Schema     `json:"contains,omitempty"`         // Schema that at least one item must match
-	MaxContains      *uint64     `json:"maxContains,omitempty"`      // Maximum number of items matching `contains` (non-negative integer, requires `contains`)
-	MinContains      *uint64     `json:"minContains,omitempty"`      // Minimum number of items matching `contains` (non-negative integer, default 1, requires `contains`)
+	Items            any     `json:"items,omitempty"`            // Schema for array items (schema or boolean false). Applied *after* prefixItems. Use `UnevaluatedItems` for more control.
+	PrefixItems      Schemas `json:"prefixItems,omitempty"`      // Array of schemas for tuple validation (items at specific indices)
+	UnevaluatedItems any     `json:"unevaluatedItems,omitempty"` // Validation for items not covered by `items` or `prefixItems` (schema or boolean)
+	MaxItems         *uint64 `json:"maxItems,omitempty"`         // Maximum number of items (non-negative integer)
+	MinItems         *uint64 `json:"minItems,omitempty"`         // Minimum number of items (non-negative integer, default 0)
+	UniqueItems      *bool   `json:"uniqueItems,omitempty"`      // Whether all items must be unique (default: false)
+	Contains         *Schema `json:"contains,omitempty"`         // Schema that at least one item must match
+	MaxContains      *uint64 `json:"maxContains,omitempty"`      // Maximum number of items matching `contains` (non-negative integer, requires `contains`)
+	MinContains      *uint64 `json:"minContains,omitempty"`      // Minimum number of items matching `contains` (non-negative integer, default 1, requires `contains`)
 
 	// Validation Keywords for Objects
 	Properties            *util.OrderedMap[*Schema]  `json:"properties,omitempty"`            // Schemas for named properties
 	PatternProperties     *util.OrderedMap[*Schema]  `json:"patternProperties,omitempty"`     // Schemas for properties matching regex patterns
-	AdditionalProperties  interface{}                `json:"additionalProperties,omitempty"`  // Controls handling of properties not explicitly listed or matched by patterns (schema or boolean). Use `UnevaluatedProperties` for more control.
-	UnevaluatedProperties interface{}                `json:"unevaluatedProperties,omitempty"` // Validation for properties not covered by `properties`, `patternProperties`, or `additionalProperties` (schema or boolean)
+	AdditionalProperties  any                        `json:"additionalProperties,omitempty"`  // Controls handling of properties not explicitly listed or matched by patterns (schema or boolean). Use `UnevaluatedProperties` for more control.
+	UnevaluatedProperties any                        `json:"unevaluatedProperties,omitempty"` // Validation for properties not covered by `properties`, `patternProperties`, or `additionalProperties` (schema or boolean)
 	Required              []string                   `json:"required,omitempty"`              // Array of required property names
 	PropertyNames         *Schema                    `json:"propertyNames,omitempty"`         // Schema for property names
 	MaxProperties         *uint64                    `json:"maxProperties,omitempty"`         // Maximum number of properties (non-negative integer)

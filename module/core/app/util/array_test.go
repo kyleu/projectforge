@@ -38,12 +38,12 @@ func TestArrayToStringArray(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name     string
-		input    []interface{}
+		input    []any
 		expected []string
 	}{
-		{name: "empty array", input: []interface{}{}, expected: []string{}},
-		{name: "integers", input: []interface{}{1, 2, 3}, expected: []string{"1", "2", "3"}},
-		{name: "mixed types", input: []interface{}{1, "hello", true, 3.14}, expected: []string{"1", "hello", "true", "3.14"}},
+		{name: "empty array", input: []any{}, expected: []string{}},
+		{name: "integers", input: []any{1, 2, 3}, expected: []string{"1", "2", "3"}},
+		{name: "mixed types", input: []any{1, "hello", true, 3.14}, expected: []string{"1", "hello", "true", "3.14"}},
 	}
 
 	for _, tt := range tests {
@@ -443,7 +443,7 @@ func TestLengthAny(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected int
 	}{
 		{name: "empty slice", input: []int{}, expected: 0},
@@ -468,7 +468,7 @@ func TestArrayFromAny(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected []int
 	}{
 		{name: "empty slice", input: []int{}, expected: []int{}},
@@ -493,7 +493,7 @@ func TestArrayTest(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected bool
 	}{
 		{name: "empty slice", input: []int{}, expected: true},
