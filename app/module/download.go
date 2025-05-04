@@ -6,7 +6,6 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"path/filepath"
 
 	"github.com/pkg/errors"
 
@@ -41,7 +40,7 @@ func (s *Service) Download(_ context.Context, key string, url string, logger uti
 
 	_ = s.config.RemoveRecursive(key, logger)
 	for _, f := range r.File {
-		fn := filepath.Join(key, f.Name)
+		fn := util.StringFilePath(key, f.Name)
 		if f.FileInfo().IsDir() {
 			err = s.config.CreateDirectory(fn)
 			if err != nil {

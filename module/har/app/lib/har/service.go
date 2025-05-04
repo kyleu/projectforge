@@ -2,7 +2,6 @@ package har
 
 import (
 	"context"
-	"path"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -32,7 +31,7 @@ func (s *Service) Load(fn string) (*Log, error) {
 		fn += Ext
 	}
 	if !strings.Contains(fn, "har/") {
-		fn = path.Join("har", fn)
+		fn = util.StringPath("har", fn)
 	}
 	if !s.FS.Exists(fn) {
 		return nil, errors.Errorf("missing file [%s]", fn)
@@ -57,7 +56,7 @@ func (s *Service) Delete(key string, logger util.Logger) error {
 		fn += Ext
 	}
 	if !strings.Contains(fn, "har/") {
-		fn = path.Join("har", fn)
+		fn = util.StringPath("har", fn)
 	}
 	if !s.FS.Exists(fn) {
 		return errors.Errorf("missing file [%s]", fn)
@@ -75,7 +74,7 @@ func (s *Service) Save(log *Log) error {
 		fn += Ext
 	}
 	if !strings.Contains(fn, "har/") {
-		fn = path.Join("har", fn)
+		fn = util.StringPath("har", fn)
 	}
 	return s.FS.WriteJSONFile(fn, &Wrapper{Log: log}, filesystem.DefaultMode, true)
 }

@@ -1,12 +1,11 @@
 {% import (
   "fmt"
-  "path"
-  "path/filepath"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/filesystem"
   "projectforge.dev/projectforge/app/module"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vfile"
 ) %}
@@ -26,14 +25,14 @@
 
   {%= Summary(mod, nil, ps) %}
 
-  {%- if p.FS.IsDir(filepath.Join(p.Path...)) -%}
-  {%- code files := p.FS.ListFiles(filepath.Join(p.Path...), nil, ps.Logger) -%}
+  {%- if p.FS.IsDir(util.StringFilePath(p.Path...)) -%}
+  {%- code files := p.FS.ListFiles(util.StringFilePath(p.Path...), nil, ps.Logger) -%}
   <div class="card">
     {%= vfile.List(p.Path, files, p.FS, u, as, ps) %}
   </div>
   {%- else -%}
   {%- code
-    b, err := p.FS.ReadFile(filepath.Join(p.Path...))
+    b, err := p.FS.ReadFile(util.StringFilePath(p.Path...))
     if err != nil {
       panic(err)
     }
@@ -41,7 +40,7 @@
   <div class="card">
     {%- code
       links := map[string]string{"Download": "?download=true"}
-      lineNumLink := fmt.Sprintf("%s/%s#L{}", p.Module.Sourcecode, path.Join(p.Path...))
+      lineNumLink := fmt.Sprintf("%s/%s#L{}", p.Module.Sourcecode, util.StringPath(p.Path...))
     -%}
     {%= vfile.Detail(p.Path, b, u, links, as, ps, lineNumLink, "View line {} on GitHub") %}
   </div>

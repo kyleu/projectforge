@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 type FileStat struct {
@@ -18,7 +20,7 @@ type FileStat struct {
 }
 
 func newFileStat(pth []string, name string, isDir bool) *FileStat {
-	fp := filepath.Join(append(slices.Clone(pth), name)...)
+	fp := util.StringFilePath(append(slices.Clone(pth), name)...)
 	ext := strings.TrimPrefix(filepath.Ext(name), ".")
 	return &FileStat{Name: name, IsDir: isDir, fullPath: fp, extension: ext}
 }

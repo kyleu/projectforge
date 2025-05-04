@@ -2,7 +2,6 @@ package scripting
 
 import (
 	"context"
-	"path/filepath"
 	"strings"
 
 	"github.com/samber/lo"
@@ -38,7 +37,7 @@ func (s *Service) ListScriptSizes(logger util.Logger) ([]string, map[string]int)
 
 func (s *Service) LoadScript(pth string, logger util.Logger) (string, string, error) {
 	logger.Infof("loading script [%s]", pth)
-	filePath := filepath.Join(s.Path, pth)
+	filePath := util.StringFilePath(s.Path, pth)
 	b, err := s.FS.ReadFile(filePath)
 	if err != nil {
 		pth += ".js"
@@ -53,17 +52,17 @@ func (s *Service) LoadScript(pth string, logger util.Logger) (string, string, er
 
 func (s *Service) SaveScript(pth string, content string, logger util.Logger) error {
 	logger.Infof("saving script [%s]", pth)
-	filePath := filepath.Join(s.Path, pth)
+	filePath := util.StringFilePath(s.Path, pth)
 	return s.FS.WriteFile(filePath, []byte(content), filesystem.DefaultMode, true)
 }
 
 func (s *Service) DeleteScript(pth string, logger util.Logger) error {
-	filePath := filepath.Join(s.Path, pth)
+	filePath := util.StringFilePath(s.Path, pth)
 	return s.FS.Remove(filePath, logger)
 }
 
 func (s *Service) Size(scr string) int {
-	filePath := filepath.Join(s.Path, scr)
+	filePath := util.StringFilePath(s.Path, scr)
 	st, err := s.FS.Stat(filePath)
 	if err != nil {
 		return 0

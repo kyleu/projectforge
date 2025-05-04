@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"path"
 	"strings"
 
 	"{{{ .Package }}}/app/util"
@@ -30,7 +29,7 @@ func OpenDefaultSQLite(ctx context.Context, logger util.Logger) (*Service, error
 
 func SQLiteParamsFromEnv(key string, prefix string) *SQLiteParams {
 	if key == "" {
-		key = path.Join(util.ConfigDir, util.AppKey)
+		key = util.StringPath(util.ConfigDir, util.AppKey)
 	}
 	if !strings.HasSuffix(key, ".sqlite") {
 		key += ".sqlite"

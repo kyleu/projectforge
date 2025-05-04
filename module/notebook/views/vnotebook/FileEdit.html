@@ -1,8 +1,7 @@
 {% import (
-  "path/filepath"
-
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
+	"{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
 ) %}
@@ -15,7 +14,7 @@
 
 {% func (p *FileEdit) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    pth := filepath.Join(p.Path...)
+    pth := util.StringFilePath(p.Path...)
   -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`notebook`, ps) %} Edit Notebook File [{%s pth %}]</h3>

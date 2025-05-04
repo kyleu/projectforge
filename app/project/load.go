@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,7 +16,7 @@ import (
 const rootKey = "root"
 
 func (s *Service) load(path string) (json.RawMessage, *Project, error) {
-	cfgPath := filepath.Join(path, ConfigDir, "project.json")
+	cfgPath := util.StringFilePath(path, ConfigDir, "project.json")
 
 	rootfs, _ := filesystem.NewFileSystem(".", false, "")
 	if curr, _ := rootfs.Stat(cfgPath); curr == nil {
@@ -71,12 +70,12 @@ func (s *Service) load(path string) (json.RawMessage, *Project, error) {
 }
 
 func (s *Service) loadModuleConfig(fs filesystem.FileLoader) (util.ValueMap, error) {
-	dbuiPath := filepath.Join(ConfigDir, "databaseui")
+	dbuiPath := util.StringFilePath(ConfigDir, "databaseui")
 	if !fs.IsDir(dbuiPath) {
 		return nil, nil
 	}
 	var ret util.ValueMap
-	if exportCfgPath := filepath.Join(dbuiPath, "config.json"); fs.Exists(exportCfgPath) {
+	if exportCfgPath := util.StringFilePath(dbuiPath, "config.json"); fs.Exists(exportCfgPath) {
 		if cfg, err := fs.ReadFile(exportCfgPath); err == nil {
 			cfgMap, err := util.FromJSONMap(cfg)
 			if err != nil {

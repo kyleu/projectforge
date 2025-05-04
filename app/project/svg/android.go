@@ -17,7 +17,7 @@ func androidAssets(ctx context.Context, prj *project.Project, orig string, fs fi
 		return nil
 	}
 	androidResize := func(size int, fn string, p string) {
-		if x := filepath.Dir(filepath.Join(p, fn)); !fs.Exists(x) {
+		if x := filepath.Dir(util.StringFilePath(p, fn)); !fs.Exists(x) {
 			_ = fs.CreateDirectory(x)
 		}
 		err := proc(ctx, fmt.Sprintf(noBG, size, size, fn), p, logger)
@@ -27,7 +27,7 @@ func androidAssets(ctx context.Context, prj *project.Project, orig string, fs fi
 	}
 
 	const androidLogoPath = "tools/android/app/src/main/res/logo.svg"
-	androidPath := filepath.Join(fs.Root(), "tools", "android", "app", "src", "main", "res")
+	androidPath := util.StringFilePath(fs.Root(), "tools", "android", "app", "src", "main", "res")
 	err := fs.WriteFile(androidLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write temporary Android [logo.svg]")

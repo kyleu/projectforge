@@ -2,7 +2,6 @@ package project
 
 import (
 	"context"
-	"path/filepath"
 
 	"github.com/samber/lo"
 
@@ -30,7 +29,7 @@ func (s *Service) MigrationList(ctx context.Context, prj *Project, logger util.L
 	}
 	files := fs.ListExtension(pth, "sql", nil, false, logger)
 	return lo.Map(files, func(fn string, idx int) *Migration {
-		content, _ := fs.ReadFile(filepath.Join(pth, fn))
+		content, _ := fs.ReadFile(util.StringFilePath(pth, fn))
 		return &Migration{Filename: fn, Content: string(content)}
 	}), nil
 }

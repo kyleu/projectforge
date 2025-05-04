@@ -50,7 +50,7 @@ func overwrite(content []byte) error {
 
 	dir := filepath.Dir(cmdFN)
 	fn := filepath.Base(cmdFN)
-	newFN := filepath.Join(dir, fmt.Sprintf("%s.new", fn))
+	newFN := util.StringFilePath(dir, fmt.Sprintf("%s.new", fn))
 	newFile, err := os.OpenFile(newFN, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, stat.Mode())
 	if err != nil {
 		return errors.Wrapf(err, "unable to create file [%s]", newFN)
@@ -62,7 +62,7 @@ func overwrite(content []byte) error {
 	}
 	_ = newFile.Close()
 
-	oldFN := filepath.Join(dir, fmt.Sprintf("%s.old", fn))
+	oldFN := util.StringFilePath(dir, fmt.Sprintf("%s.old", fn))
 	_ = os.Remove(oldFN)
 
 	err = os.Rename(cmdFN, oldFN)

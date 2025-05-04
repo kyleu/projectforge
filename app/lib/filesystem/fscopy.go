@@ -1,8 +1,6 @@
 package filesystem
 
 import (
-	"path/filepath"
-
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/util"
@@ -34,7 +32,7 @@ func (f *FileSystem) CopyRecursive(src string, tgt string, ignore []string, logg
 	}
 
 	for _, path := range srcFiles {
-		err := f.CopyFile(filepath.Join(src, path), filepath.Join(tgt, path))
+		err := f.CopyFile(util.StringFilePath(src, path), util.StringFilePath(tgt, path))
 		if err != nil {
 			return errors.Wrapf(err, "error copying [%s]", path)
 		}

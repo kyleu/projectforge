@@ -1,8 +1,6 @@
 package file
 
 import (
-	"path/filepath"
-
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -21,7 +19,7 @@ func NewFile(path string, mode filesystem.FileMode, b []byte) *File {
 }
 
 func (f *File) FullPath() string {
-	return filepath.Join(filepath.Join(f.Path...), f.Name)
+	return util.StringFilePath(util.StringFilePath(f.Path...), f.Name)
 }
 
 func (f *File) Ext() string {

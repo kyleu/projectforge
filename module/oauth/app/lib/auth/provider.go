@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"path"
 	"strings"
 
 	"github.com/markbates/goth"
@@ -50,7 +49,7 @@ func GothURL(key string, proto string, host string, redirPathOverride ...string)
 		if strings.HasPrefix(redirPathOverride[0], proto) {
 			return redirPathOverride[0]
 		}
-		u = fmt.Sprintf("%s%s", u, path.Join(redirPathOverride...))
+		u = fmt.Sprintf("%s%s", u, util.StringPath(redirPathOverride...))
 	}
 	return u
 }

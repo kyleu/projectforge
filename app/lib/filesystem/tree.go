@@ -2,7 +2,6 @@ package filesystem
 
 import (
 	"cmp"
-	"path"
 	"slices"
 
 	"github.com/samber/lo"
@@ -26,7 +25,7 @@ func (n *Node) Get(pth ...string) *Node {
 }
 
 func (n *Node) Flatten(curr string) []string {
-	x := path.Join(curr, n.Name)
+	x := util.StringPath(curr, n.Name)
 	ret := n.Children.Flatten(x)
 	if !n.Dir {
 		ret = append(ret, x)

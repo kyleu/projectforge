@@ -3,7 +3,6 @@ package module
 import (
 	"cmp"
 	"context"
-	"path/filepath"
 	"slices"
 	"strings"
 	"sync"
@@ -37,7 +36,7 @@ func NewService(ctx context.Context, root string, logger util.Logger) (*Service,
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to load config filesystem")
 	}
-	config, err := filesystem.NewFileSystem(filepath.Join(root, "module"), false, "")
+	config, err := filesystem.NewFileSystem(util.StringFilePath(root, "module"), false, "")
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to load config filesystem")
 	}
@@ -152,7 +151,7 @@ func (s *Service) Dangerous() []string {
 
 func (s *Service) Register(ctx context.Context, root string, key string, path string, u string, logger util.Logger) ([]string, error) {
 	ret := &util.StringSlice{}
-	_, added, err := s.AddIfNeeded(ctx, key, filepath.Join(root, path), u, logger)
+	_, added, err := s.AddIfNeeded(ctx, key, util.StringFilePath(root, path), u, logger)
 	if err != nil {
 		return nil, err
 	}

@@ -1,8 +1,6 @@
 package filesystem
 
 import (
-	"path/filepath"
-
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/util"
@@ -43,7 +41,7 @@ func (f *FileSystem) RemoveRecursive(path string, logger util.Logger) error {
 			return nil
 		}
 		for _, file := range files {
-			err = f.RemoveRecursive(filepath.Join(path, file.Name()), logger)
+			err = f.RemoveRecursive(util.StringFilePath(path, file.Name()), logger)
 			if err != nil {
 				return err
 			}

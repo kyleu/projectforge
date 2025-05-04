@@ -53,7 +53,7 @@ func read(fn string, depth int) (string, error) {
 			return l
 		}
 		tgt, _ := path.Split(fn)
-		tgt = path.Join(tgt, l[s+len(includePrefix):e])
+		tgt = util.StringPath(tgt, l[s+len(includePrefix):e])
 		child, err := read(tgt, depth+1)
 		if err != nil {
 			return fmt.Sprintf("ERROR: %+v", err)

@@ -1,8 +1,6 @@
 package theme
 
 import (
-	"path/filepath"
-
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
@@ -50,7 +48,7 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 			return err
 		}
 	}
-	err := s.files.WriteJSONFile(filepath.Join(s.root, t.Key+util.ExtJSON), t, filesystem.DefaultMode, true)
+	err := s.files.WriteJSONFile(util.StringFilePath(s.root, t.Key+util.ExtJSON), t, filesystem.DefaultMode, true)
 	if err != nil {
 		logger.Warnf("can't save theme [%s]: %+v", t.Key, err)
 	}
@@ -63,7 +61,7 @@ func (s *Service) loadIfNeeded(logger util.Logger) {
 		s.cache = Themes{Default}
 		if s.files.IsDir(s.root) {
 			lo.ForEach(s.files.ListJSON(s.root, nil, true, logger), func(key string, _ int) {
-				b, err := s.files.ReadFile(filepath.Join(s.root, key+util.ExtJSON))
+				b, err := s.files.ReadFile(util.StringFilePath(s.root, key+util.ExtJSON))
 				if err != nil {
 					logger.Warnf("can't load theme [%s]: %+v", key, err)
 				}
@@ -87,11 +85,11 @@ func (s *Service) Remove(key string, logger util.Logger) error {
 	if !s.FileExists(key) {
 		return nil
 	}
-	return s.files.Remove(filepath.Join(s.root, key+util.ExtJSON), logger)
+	return s.files.Remove(util.StringFilePath(s.root, key+util.ExtJSON), logger)
 }
 
 func (s *Service) FileExists(key string) bool {
-	return s.files.Exists(filepath.Join(s.root, key+util.ExtJSON))
+	return s.files.Exists(util.StringFilePath(s.root, key+util.ExtJSON))
 }
 
 func ApplyMap(frm util.ValueMap) *Theme {

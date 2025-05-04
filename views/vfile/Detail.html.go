@@ -7,7 +7,6 @@ package vfile
 //line views/vfile/Detail.html:1
 import (
 	"encoding/base64"
-	"path/filepath"
 	"unicode/utf8"
 
 	"projectforge.dev/projectforge/app"
@@ -16,134 +15,134 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-//line views/vfile/Detail.html:12
+//line views/vfile/Detail.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vfile/Detail.html:12
+//line views/vfile/Detail.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vfile/Detail.html:12
+//line views/vfile/Detail.html:11
 func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
-//line views/vfile/Detail.html:12
+//line views/vfile/Detail.html:11
 	qw422016.N().S(`
 `)
-//line views/vfile/Detail.html:13
+//line views/vfile/Detail.html:12
 	if additionalLinks != nil && len(additionalLinks) > 0 {
-//line views/vfile/Detail.html:13
+//line views/vfile/Detail.html:12
 		qw422016.N().S(`  <div class="right">
 `)
-//line views/vfile/Detail.html:15
+//line views/vfile/Detail.html:14
 		for k, v := range additionalLinks {
-//line views/vfile/Detail.html:15
+//line views/vfile/Detail.html:14
 			qw422016.N().S(`    <a href="`)
-//line views/vfile/Detail.html:16
+//line views/vfile/Detail.html:15
 			qw422016.E().S(v)
-//line views/vfile/Detail.html:16
+//line views/vfile/Detail.html:15
 			qw422016.N().S(`"><button>`)
-//line views/vfile/Detail.html:16
+//line views/vfile/Detail.html:15
 			qw422016.E().S(k)
-//line views/vfile/Detail.html:16
+//line views/vfile/Detail.html:15
 			qw422016.N().S(`</button></a>
 `)
-//line views/vfile/Detail.html:17
+//line views/vfile/Detail.html:16
 		}
-//line views/vfile/Detail.html:17
+//line views/vfile/Detail.html:16
 		qw422016.N().S(`  </div>
 `)
-//line views/vfile/Detail.html:19
+//line views/vfile/Detail.html:18
 	}
-//line views/vfile/Detail.html:19
+//line views/vfile/Detail.html:18
 	qw422016.N().S(`  <h3>
 `)
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 	for idx, p := range path {
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 		qw422016.N().S(`/<a href="`)
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 		qw422016.E().S(urlPrefix)
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 		qw422016.N().S(`/`)
-//line views/vfile/Detail.html:21
-		qw422016.E().S(filepath.Join(path[:idx+1]...))
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
+		qw422016.E().S(util.StringFilePath(path[:idx+1]...))
+//line views/vfile/Detail.html:20
 		qw422016.N().S(`">`)
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 		qw422016.E().S(p)
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 		qw422016.N().S(`</a>`)
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 	}
-//line views/vfile/Detail.html:21
+//line views/vfile/Detail.html:20
 	qw422016.N().S(`    <em>(`)
-//line views/vfile/Detail.html:22
+//line views/vfile/Detail.html:21
 	qw422016.E().S(util.ByteSizeSI(int64(len(b))))
-//line views/vfile/Detail.html:22
+//line views/vfile/Detail.html:21
 	qw422016.N().S(`)</em>
   </h3>
   <div class="mt">
 `)
-//line views/vfile/Detail.html:25
+//line views/vfile/Detail.html:24
 	if len(b) > (1024 * 128) {
-//line views/vfile/Detail.html:25
+//line views/vfile/Detail.html:24
 		qw422016.N().S(`    <em>File is `)
-//line views/vfile/Detail.html:26
+//line views/vfile/Detail.html:25
 		qw422016.N().D(len(b))
-//line views/vfile/Detail.html:26
+//line views/vfile/Detail.html:25
 		qw422016.N().S(` bytes, which is too large for the file viewer</em>
 `)
-//line views/vfile/Detail.html:27
+//line views/vfile/Detail.html:26
 	} else if utf8.Valid(b) {
-//line views/vfile/Detail.html:28
+//line views/vfile/Detail.html:27
 		out, _ := cutil.FormatFilename(string(b), path[len(path)-1], lineNumLinkAndTitle...)
 
-//line views/vfile/Detail.html:28
+//line views/vfile/Detail.html:27
 		qw422016.N().S(`    `)
-//line views/vfile/Detail.html:29
+//line views/vfile/Detail.html:28
 		qw422016.N().S(out)
+//line views/vfile/Detail.html:28
+		qw422016.N().S(`
+`)
+//line views/vfile/Detail.html:29
+	} else {
 //line views/vfile/Detail.html:29
 		qw422016.N().S(`
 `)
-//line views/vfile/Detail.html:30
-	} else {
-//line views/vfile/Detail.html:30
-		qw422016.N().S(`
-`)
-//line views/vfile/Detail.html:32
+//line views/vfile/Detail.html:31
 		if imgType := filesystem.ImageType(path...); imgType != "" {
-//line views/vfile/Detail.html:32
+//line views/vfile/Detail.html:31
 			qw422016.N().S(`    <img alt="Image of type [`)
-//line views/vfile/Detail.html:33
+//line views/vfile/Detail.html:32
 			qw422016.E().S(imgType)
-//line views/vfile/Detail.html:33
+//line views/vfile/Detail.html:32
 			qw422016.N().S(`]" src="data:image/`)
-//line views/vfile/Detail.html:33
+//line views/vfile/Detail.html:32
 			qw422016.E().S(imgType)
-//line views/vfile/Detail.html:33
+//line views/vfile/Detail.html:32
 			qw422016.N().S(`;base64,`)
-//line views/vfile/Detail.html:33
+//line views/vfile/Detail.html:32
 			qw422016.E().S(base64.StdEncoding.EncodeToString(b))
-//line views/vfile/Detail.html:33
+//line views/vfile/Detail.html:32
 			qw422016.N().S(`" />
     <hr />
 `)
-//line views/vfile/Detail.html:35
+//line views/vfile/Detail.html:34
 		}
-//line views/vfile/Detail.html:35
+//line views/vfile/Detail.html:34
 		qw422016.N().S(`
 `)
-//line views/vfile/Detail.html:37
+//line views/vfile/Detail.html:36
 		exif, err := filesystem.ExifExtract(b)
 
-//line views/vfile/Detail.html:38
+//line views/vfile/Detail.html:37
 		if err == nil {
-//line views/vfile/Detail.html:38
+//line views/vfile/Detail.html:37
 			qw422016.N().S(`    <div class="overflow full-width">
       <table>
         <thead>
@@ -154,66 +153,66 @@ func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix 
         </thead>
         <tbody>
 `)
-//line views/vfile/Detail.html:48
+//line views/vfile/Detail.html:47
 			for k, v := range exif {
-//line views/vfile/Detail.html:48
+//line views/vfile/Detail.html:47
 				qw422016.N().S(`          <tr>
             <td>`)
-//line views/vfile/Detail.html:50
+//line views/vfile/Detail.html:49
 				qw422016.E().S(k)
-//line views/vfile/Detail.html:50
+//line views/vfile/Detail.html:49
 				qw422016.N().S(`</td>
             <td>`)
-//line views/vfile/Detail.html:51
+//line views/vfile/Detail.html:50
 				qw422016.E().V(v)
-//line views/vfile/Detail.html:51
+//line views/vfile/Detail.html:50
 				qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vfile/Detail.html:53
+//line views/vfile/Detail.html:52
 			}
-//line views/vfile/Detail.html:53
+//line views/vfile/Detail.html:52
 			qw422016.N().S(`        </tbody>
       </table>
     </div>
 `)
-//line views/vfile/Detail.html:57
+//line views/vfile/Detail.html:56
 		} else {
-//line views/vfile/Detail.html:57
+//line views/vfile/Detail.html:56
 			qw422016.N().S(`    <em>File is binary and contains no exif header</em>
 `)
-//line views/vfile/Detail.html:59
+//line views/vfile/Detail.html:58
 		}
-//line views/vfile/Detail.html:60
+//line views/vfile/Detail.html:59
 	}
-//line views/vfile/Detail.html:60
+//line views/vfile/Detail.html:59
 	qw422016.N().S(`  </div>
 `)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 }
 
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 func WriteDetail(qq422016 qtio422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	StreamDetail(qw422016, path, b, urlPrefix, additionalLinks, as, ps, lineNumLinkAndTitle...)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 }
 
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) string {
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	WriteDetail(qb422016, path, b, urlPrefix, additionalLinks, as, ps, lineNumLinkAndTitle...)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	qs422016 := string(qb422016.B)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 	return qs422016
-//line views/vfile/Detail.html:62
+//line views/vfile/Detail.html:61
 }

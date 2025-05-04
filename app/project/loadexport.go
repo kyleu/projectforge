@@ -4,8 +4,6 @@ import (
 	"cmp"
 	"encoding/json"
 	"fmt"
-	"path"
-	"path/filepath"
 	"slices"
 	"strings"
 
@@ -21,11 +19,11 @@ import (
 
 func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, logger util.Logger) (*metamodel.Args, error) {
 	args := &metamodel.Args{Config: util.ValueMap{}}
-	exportPath := filepath.Join(ConfigDir, "export")
+	exportPath := util.StringFilePath(ConfigDir, "export")
 	if !fs.IsDir(exportPath) {
 		return args, nil
 	}
-	if exportCfgPath := filepath.Join(exportPath, "config.json"); fs.Exists(exportCfgPath) {
+	if exportCfgPath := util.StringFilePath(exportPath, "config.json"); fs.Exists(exportCfgPath) {
 		if cfg, err := fs.ReadFile(exportCfgPath); err == nil {
 			cfgMap, err := util.FromJSONMap(cfg)
 			if err != nil {
@@ -35,7 +33,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, lo
 			args.Config = cfgMap
 		}
 	}
-	if groupCfgPath := filepath.Join(exportPath, "groups.json"); fs.Exists(groupCfgPath) {
+	if groupCfgPath := util.StringFilePath(exportPath, "groups.json"); fs.Exists(groupCfgPath) {
 		if grpFile, err := fs.ReadFile(groupCfgPath); err == nil {
 			grps, err := util.FromJSONObj[model.Groups](grpFile)
 			if err != nil {
@@ -46,7 +44,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, lo
 		}
 	}
 
-	if extraTypesCfgPath := filepath.Join(exportPath, "types.json"); fs.Exists(extraTypesCfgPath) {
+	if extraTypesCfgPath := util.StringFilePath(exportPath, "types.json"); fs.Exists(extraTypesCfgPath) {
 		if extraTypesFile, err := fs.ReadFile(extraTypesCfgPath); err == nil {
 			extraTypes, err := util.FromJSONObj[model.Models](extraTypesFile)
 			if err != nil {
@@ -89,7 +87,7 @@ func (s *Service) loadExportArgs(fs filesystem.FileLoader, acronyms []string, lo
 }
 
 func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, enum.Enums, error) {
-	enumsPath := filepath.Join(exportPath, "enums")
+	enumsPath := util.StringFilePath(exportPath, "enums")
 	if !fs.IsDir(enumsPath) {
 		return nil, nil, nil
 	}
@@ -97,7 +95,7 @@ func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (
 	enums := make(enum.Enums, 0, len(enumNames))
 	enumFiles := make(map[string]json.RawMessage, len(enumNames))
 	for _, enumName := range enumNames {
-		fn := filepath.Join(enumsPath, enumName)
+		fn := util.StringFilePath(enumsPath, enumName)
 		content, err := fs.ReadFile(fn)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read export enum file from [%s]", fn)
@@ -113,7 +111,7 @@ func getEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (
 }
 
 func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, model.Models, error) {
-	modelsPath := filepath.Join(exportPath, "models")
+	modelsPath := util.StringFilePath(exportPath, "models")
 	if !fs.IsDir(modelsPath) {
 		return nil, nil, nil
 	}
@@ -121,7 +119,7 @@ func getModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) 
 	models := make(model.Models, 0, len(modelNames))
 	modelFiles := make(map[string]json.RawMessage, len(modelNames))
 	for _, modelName := range modelNames {
-		fn := filepath.Join(modelsPath, modelName)
+		fn := util.StringFilePath(modelsPath, modelName)
 		content, err := fs.ReadFile(fn)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "unable to read export model file from [%s]", fn)
@@ -158,7 +156,7 @@ func getJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoa
 		if strings.Contains(jsonFile, ".min.") {
 			continue
 		}
-		fn := path.Join(pth, jsonFile)
+		fn := util.StringFilePath(pth, jsonFile)
 		x, err := fs.ReadFile(fn)
 		if err != nil {
 			return nil, nil, errors.Wrapf(err, "can't read file [%s]", fn)

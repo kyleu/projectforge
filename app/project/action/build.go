@@ -2,7 +2,6 @@ package action
 
 import (
 	"context"
-	"path/filepath"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -68,15 +67,15 @@ var (
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
 	buildSize          = &Build{Key: "size", Title: "Binary Size", Description: "Visualizes the file size of the binary", Run: onSize}
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy", false)
-	buildFormat        = simpleBuild("format", "Format", filepath.Join("bin", "format."+build.ScriptExtension), false)
-	buildLint          = simpleBuild("lint", "Lint", filepath.Join("bin", "check."+build.ScriptExtension), true)
-	buildLintClient    = simpleBuild("lint-client", "Lint Client", filepath.Join("bin", "check-client."+build.ScriptExtension), false)
-	buildTemplates     = simpleBuild("templates", "Templates", filepath.Join("bin", "templates."+build.ScriptExtension), false)
+	buildFormat        = simpleBuild("format", "Format", util.StringFilePath("bin", "format."+build.ScriptExtension), false)
+	buildLint          = simpleBuild("lint", "Lint", util.StringFilePath("bin", "check."+build.ScriptExtension), true)
+	buildLintClient    = simpleBuild("lint-client", "Lint Client", util.StringFilePath("bin", "check-client."+build.ScriptExtension), false)
+	buildTemplates     = simpleBuild("templates", "Templates", util.StringFilePath("bin", "templates."+build.ScriptExtension), false)
 	buildClientInstall = &Build{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: onClientInstall}
-	buildClientBuild   = simpleBuild("clientBuild", "Client Build", filepath.Join("bin", "build", "client."+build.ScriptExtension), false)
+	buildClientBuild   = simpleBuild("clientBuild", "Client Build", util.StringFilePath("bin", "build", "client."+build.ScriptExtension), false)
 	buildDeployments   = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
 	buildTest          = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc(ctx, filepath.Join("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
+		return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
 	}, Expensive: true}
 	buildCoverage = &Build{Key: "coverage", Title: "Code Coverage", Description: "Runs unit tests, displaying a coverage report", Run: onCoverage, Expensive: true}
 )

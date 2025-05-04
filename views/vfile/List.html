@@ -1,14 +1,13 @@
 {% import (
-  "path/filepath"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/filesystem"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func List(path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <h3><a href="{%s urlPrefix %}">.</a>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s filepath.Join(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
+  <h3><a href="{%s urlPrefix %}">.</a>{%- for idx, p := range path -%}/<a href="{%s urlPrefix %}/{%s util.StringFilePath(path[:idx + 1]...) %}">{%s p %}</a>{%- endfor -%}</h3>
   <div class="mt">
   {%- for _, f := range files -%}
     {%- code

@@ -1,16 +1,12 @@
 package filesystem
 
-import (
-	"path"
-
-	"projectforge.dev/projectforge/app/util"
-)
+import "projectforge.dev/projectforge/app/util"
 
 func (f *FileSystem) listNodes(pth string, ign []string, logger util.Logger, tags ...string) (Nodes, error) {
 	files := f.ListFiles(pth, ign, logger)
 	nodes := make(Nodes, 0, len(files))
 	for _, fi := range files {
-		x := path.Join(pth, fi.Name)
+		x := util.StringPath(pth, fi.Name)
 		if fi.IsDir {
 			kids, err := f.listNodes(x, ign, logger)
 			if err != nil {

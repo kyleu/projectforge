@@ -2,7 +2,6 @@ package metaschema
 
 import (
 	"fmt"
-	"projectforge.dev/projectforge/app/util"
 	"slices"
 	"strings"
 
@@ -13,6 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.Args, error) {

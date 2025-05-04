@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"path"
 	"strings"
 
 	"github.com/samber/lo"
@@ -95,7 +94,7 @@ func (m *Model) PackageWithGroup(prefix string) string {
 }
 
 func (m *Model) ID() string {
-	return path.Join(m.PackageWithGroup(""), m.Name)
+	return util.StringPath(m.PackageWithGroup(""), m.Name)
 }
 
 func (m *Model) GroupString(prefix string, dflt string) string {

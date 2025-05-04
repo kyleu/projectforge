@@ -1,8 +1,6 @@
 package stats
 
 import (
-	"path/filepath"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -50,12 +48,12 @@ func GetFileStats(fs filesystem.FileLoader, pth string, logger util.Logger) (Fil
 var ignores = []string{"^tmp/", "^node_modules/", "^libs/"}
 
 func listDir(fs filesystem.FileLoader, logger util.Logger, pth ...string) (FileStats, error) {
-	curr := fs.ListFiles(filepath.Join(pth...), ignores, logger)
+	curr := fs.ListFiles(util.StringFilePath(pth...), ignores, logger)
 	ret := make(FileStats, 0, len(curr))
 	for _, f := range curr {
 		s := newFileStat(pth, f.Name, f.IsDir)
 		if f.IsDir {
-			kids, err := listDir(fs, logger, filepath.Join(append(pth, f.Name)...))
+			kids, err := listDir(fs, logger, util.StringFilePath(append(pth, f.Name)...))
 			if err != nil {
 				return nil, err
 			}

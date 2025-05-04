@@ -1,7 +1,6 @@
 package action
 
 import (
-	"path"
 	"path/filepath"
 	"strings"
 
@@ -47,8 +46,8 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			if e != nil {
 				return nil, nil, e
 			}
-			p, n := path.Split(newPath)
-			f.Path = strings.Split(p, string(filepath.ListSeparator))
+			p, n := util.StringSplitLast(newPath, '/', true)
+			f.Path = strings.Split(p, string(filepath.Separator))
 			f.Name = n
 		}
 		err = file.ReplaceSections(f, pm.FS)

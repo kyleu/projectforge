@@ -3,7 +3,6 @@ package clib
 import (
 	"fmt"
 	"net/http"
-	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -40,7 +39,7 @@ func NotebookFiles(w http.ResponseWriter, r *http.Request) {
 		pathS, path, bc := notebookGetText(r)
 		fsys := as.Services.Notebook.FS
 		if r.URL.Query().Get("download") == "true" {
-			b, err := fsys.ReadFile(filepath.Join(path...))
+			b, err := fsys.ReadFile(util.StringFilePath(path...))
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to read file [%s] for download", pathS)
 			}

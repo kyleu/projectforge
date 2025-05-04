@@ -3,7 +3,6 @@ package cproject
 import (
 	"fmt"
 	"net/http"
-	"path/filepath"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -42,7 +41,7 @@ func File(w http.ResponseWriter, r *http.Request) {
 		path := util.StringSplitAndTrim(pathS, "/")
 		fsys, _ := as.Services.Projects.GetFilesystem(prj)
 		if r.URL.Query().Get("download") == "true" {
-			b, err := fsys.ReadFile(filepath.Join(path...))
+			b, err := fsys.ReadFile(util.StringFilePath(path...))
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to read project file [%s] for download", pathS)
 			}

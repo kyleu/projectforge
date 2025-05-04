@@ -1,7 +1,5 @@
 {% import (
   "fmt"
-  "path"
-  "path/filepath"
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
@@ -23,7 +21,7 @@
   {%- code
     prj := p.Project
     u := prj.WebPath() + "/fs"
-    pth := filepath.Join(p.Path...)
+    pth := util.StringFilePath(p.Path...)
   -%}
   {%= Summary(prj, "/" + util.StringJoin(p.Path, "/"), nil, nil, nil, ps) %}
   {%- if p.FS.IsDir(pth) -%}
@@ -42,7 +40,7 @@
   <div class="card">
     {%- code
       links := map[string]string{"Download": "?download=true"}
-      lineNumLink := fmt.Sprintf("%s/blob/HEAD/%s#L{}", p.Project.Info.Sourcecode, path.Join(p.Path...))
+      lineNumLink := fmt.Sprintf("%s/blob/HEAD/%s#L{}", p.Project.Info.Sourcecode, util.StringPath(p.Path...))
     -%}
     {%= vfile.Detail(p.Path, b, u, links, as, ps, lineNumLink, "View line {} on GitHub") %}
   </div>

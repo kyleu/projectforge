@@ -3,7 +3,6 @@ package build
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"runtime"
 
 	"github.com/pkg/errors"
@@ -45,7 +44,7 @@ func (e *ExecHelper) Cmd(ctx context.Context, key string, cmd string, pth string
 func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]string, error) {
 	ex := &ExecHelper{}
 	ex.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
-	_, err := ex.Cmd(ctx, templatesNS+ScriptExtension, filepath.Join("bin", templatesNS+ScriptExtension), prj.Path, logger)
+	_, err := ex.Cmd(ctx, templatesNS+ScriptExtension, util.StringFilePath("bin", templatesNS+ScriptExtension), prj.Path, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
@@ -53,15 +52,15 @@ func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]stri
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "node install", "npm install", filepath.Join(prj.Path, "client"), logger)
+	_, err = ex.Cmd(ctx, "node install", "npm install", util.StringFilePath(prj.Path, "client"), logger)
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "client build", filepath.Join("bin", "build", "client."+ScriptExtension), prj.Path, logger)
+	_, err = ex.Cmd(ctx, "client build", util.StringFilePath("bin", "build", "client."+ScriptExtension), prj.Path, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "templates", filepath.Join("bin", "templates."+ScriptExtension), prj.Path, logger)
+	_, err = ex.Cmd(ctx, "templates", util.StringFilePath("bin", "templates."+ScriptExtension), prj.Path, logger)
 	if err != nil {
 		return ex.Logs, err
 	}

@@ -1,9 +1,8 @@
 {% import (
-  "path/filepath"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/module"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
   "projectforge.dev/projectforge/views/vfile"
@@ -22,15 +21,15 @@
     u := mod.FeaturesFilePath()
   -%}
 
-  {%- if fs.IsDir(filepath.Join(p.Path...)) -%}
-  {%- code files := fs.ListFiles(filepath.Join(p.Path...), nil, ps.Logger) -%}
+  {%- if fs.IsDir(util.StringFilePath(p.Path...)) -%}
+  {%- code files := fs.ListFiles(util.StringFilePath(p.Path...), nil, ps.Logger) -%}
   <div class="card">
     <h3>{%= components.SVGIcon(p.Module.Icon, ps) %} {%s p.Module.Title() %}</h3>
     {%= vfile.List(p.Path, files, fs, u, as, ps) %}
   </div>
   {%- else -%}
   {%- code
-    b, err := fs.ReadFile(filepath.Join(p.Path...))
+    b, err := fs.ReadFile(util.StringFilePath(p.Path...))
     if err != nil {
       panic(err)
     }

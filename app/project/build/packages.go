@@ -1,7 +1,6 @@
 package build
 
 import (
-	"path"
 	"strings"
 
 	"github.com/samber/lo"
@@ -23,7 +22,7 @@ func Packages(prj *project.Project, fs filesystem.FileLoader, showAll bool, logg
 			continue
 		}
 		dir, fn := util.StringSplitPath(f)
-		pth := path.Join(root, dir)
+		pth := util.StringPath(root, dir)
 		curr := ret.Get(pth)
 		if curr == nil {
 			curr = &Pkg{Path: pth}

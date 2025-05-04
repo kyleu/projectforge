@@ -14,7 +14,7 @@ import (
 
 func webAssets(ctx context.Context, _ *project.Project, orig string, fs filesystem.FileLoader, logger util.Logger) error {
 	webResize := func(size int, fn string, p string) {
-		if x := filepath.Dir(filepath.Join(p, fn)); !fs.Exists(x) {
+		if x := filepath.Dir(util.StringFilePath(p, fn)); !fs.Exists(x) {
 			_ = fs.CreateDirectory(x)
 		}
 		err := proc(ctx, fmt.Sprintf(noBG, size, size, fn), p, logger)
@@ -24,7 +24,7 @@ func webAssets(ctx context.Context, _ *project.Project, orig string, fs filesyst
 	}
 
 	// web assets
-	webPath := filepath.Join(fs.Root(), "assets")
+	webPath := util.StringFilePath(fs.Root(), "assets")
 	err := fs.WriteFile("assets/logo.svg", []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write initial [logo.svg]")

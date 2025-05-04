@@ -2,7 +2,6 @@ package filesystem_test
 
 import (
 	"os"
-	"path"
 	"strings"
 	"testing"
 
@@ -10,6 +9,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/log"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const testFile = "foo.txt"
@@ -42,11 +42,11 @@ func testFS(testDir string, fs filesystem.FileLoader, removeWhenDone bool) error
 		return err
 	}
 
-	if err := fs.WriteFile(path.Join(testDir, testFile), []byte(content), filesystem.DefaultMode, false); err != nil {
+	if err := fs.WriteFile(util.StringPath(testDir, testFile), []byte(content), filesystem.DefaultMode, false); err != nil {
 		return err
 	}
 
-	if b, err := fs.ReadFile(path.Join(testDir, testFile)); err != nil || string(b) != content {
+	if b, err := fs.ReadFile(util.StringPath(testDir, testFile)); err != nil || string(b) != content {
 		if err != nil {
 			return err
 		}
@@ -64,7 +64,7 @@ func testFS(testDir string, fs filesystem.FileLoader, removeWhenDone bool) error
 		return errors.Errorf("expected [%d] file size, observed [%d]", 18, files[0].Size)
 	}
 
-	if err := fs.Remove(path.Join(testDir, testFile), logger); err != nil {
+	if err := fs.Remove(util.StringPath(testDir, testFile), logger); err != nil {
 		return err
 	}
 

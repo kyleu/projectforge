@@ -1,7 +1,6 @@
 package project
 
 import (
-	"path/filepath"
 	"strings"
 
 	"github.com/samber/lo"
@@ -12,7 +11,7 @@ import (
 
 func (s *Service) add(path string, parent *Project) (*Project, error) {
 	if parent != nil && !strings.HasPrefix(path, "/") {
-		path = filepath.Join(parent.Path, path)
+		path = util.StringFilePath(parent.Path, path)
 	}
 	b, p, err := s.load(path)
 	if err != nil {

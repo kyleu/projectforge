@@ -39,7 +39,7 @@ func (f *FileSystem) UnzipToDir(src string, dest string) (*util.OrderedMap[int64
 			}
 		}()
 
-		path := filepath.Join(dest, zf.Name) // #nosec G305
+		path := util.StringFilePath(dest, zf.Name) // #nosec G305
 
 		if !strings.HasPrefix(path, filepath.Clean(dest)+string(os.PathSeparator)) {
 			return 0, errors.Errorf("illegal file path: %s", path)

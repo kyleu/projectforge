@@ -2,7 +2,6 @@ package metaschema
 
 import (
 	"context"
-	"path"
 	"slices"
 
 	"github.com/pkg/errors"
@@ -48,7 +47,7 @@ func parseExtraPath(ctx context.Context, pth string, coll *jsonschema.Collection
 	if fs.IsDir(pth) {
 		files := fs.ListJSON(pth, nil, false, logger)
 		for _, fn := range files {
-			if err := parseExtraPath(ctx, path.Join(pth, fn), coll, logger); err != nil {
+			if err := parseExtraPath(ctx, util.StringPath(pth, fn), coll, logger); err != nil {
 				return err
 			}
 		}

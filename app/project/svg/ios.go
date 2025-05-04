@@ -17,7 +17,7 @@ func iOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesy
 		return nil
 	}
 	iOSResize := func(size int, fn string, p string) {
-		if x := filepath.Dir(filepath.Join(p, fn)); !fs.Exists(x) {
+		if x := filepath.Dir(util.StringFilePath(p, fn)); !fs.Exists(x) {
 			_ = fs.CreateDirectory(x)
 		}
 		err := proc(ctx, fmt.Sprintf(pngMsg, size, size, fn), p, logger)
@@ -27,7 +27,7 @@ func iOSAssets(ctx context.Context, prj *project.Project, orig string, fs filesy
 	}
 
 	const iOSLogoPath = "tools/ios/Assets.xcassets/AppIcon.appiconset/logo.svg"
-	iOSPath := filepath.Join(fs.Root(), "tools", "ios", "Assets.xcassets", "AppIcon.appiconset")
+	iOSPath := util.StringFilePath(fs.Root(), "tools", "ios", "Assets.xcassets", "AppIcon.appiconset")
 	err := fs.WriteFile(iOSLogoPath, []byte(orig), filesystem.DefaultMode, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to write temporary iOS [logo.svg]")

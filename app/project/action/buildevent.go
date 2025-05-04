@@ -2,7 +2,6 @@ package action
 
 import (
 	"context"
-	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -124,7 +123,7 @@ func onSize(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 }
 
 func onClientInstall(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-	return simpleProc(ctx, "npm install", filepath.Join(pm.Prj.Path, "client"), ret, pm.Logger)
+	return simpleProc(ctx, "npm install", util.StringFilePath(pm.Prj.Path, "client"), ret, pm.Logger)
 }
 
 func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {

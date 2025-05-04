@@ -90,7 +90,7 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 			keys = append(keys, fn+"("+goStr+")")
 		}
 	})
-	ret.WF("\treturn path.Join(append(paths, %s)...)", util.StringJoin(keys, ", "))
+	ret.WF("\treturn util.StringPath(append(paths, %s)...)", util.StringJoin(keys, ", "))
 	ret.W("}")
 	return ret
 }

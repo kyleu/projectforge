@@ -3,7 +3,6 @@ package cmenu
 import (
 	"cmp"
 	"io/fs"
-	"path"
 	"slices"
 	"strings"
 
@@ -74,7 +73,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 }
 
 func addChild(p string, name string) *menu.Item {
-	r := "/" + path.Join("docs", p)
+	r := "/" + util.StringPath("docs", p)
 	title := util.StringToProper(name)
 	b, err := doc.FS.ReadFile(p + util.ExtMarkdown)
 	if err != nil {

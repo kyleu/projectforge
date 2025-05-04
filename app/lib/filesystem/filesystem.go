@@ -2,12 +2,13 @@ package filesystem
 
 import (
 	"fmt"
-	"path/filepath"
 	"runtime"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
+
+	"projectforge.dev/projectforge/app/util"
 )
 
 var memFS, osFS afero.Fs
@@ -60,11 +61,11 @@ func NewFileSystem(root string, readonly bool, mode string) (*FileSystem, error)
 }
 
 func (f *FileSystem) getPath(ss ...string) string {
-	s := filepath.Join(ss...)
+	s := util.StringFilePath(ss...)
 	if strings.HasPrefix(s, f.root) {
 		return s
 	}
-	return filepath.Join(f.root, s)
+	return util.StringFilePath(f.root, s)
 }
 
 func (f *FileSystem) Root() string {

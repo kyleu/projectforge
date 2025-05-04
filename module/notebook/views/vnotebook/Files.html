@@ -1,10 +1,10 @@
 {% import (
-  "path/filepath"
   "strings"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/filesystem"
+	"{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
   "{{{ .Package }}}/views/layout"
   "{{{ .Package }}}/views/vfile"
@@ -19,9 +19,9 @@
 {% func (p *Files) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
     u := "/notebook/files"
-    editPath := filepath.Join(p.Path...)
+    editPath := util.StringFilePath(p.Path...)
     hasView := strings.HasSuffix(editPath, ".md")
-    isDir := p.FS.IsDir(filepath.Join(p.Path...))
+    isDir := p.FS.IsDir(util.StringFilePath(p.Path...))
   -%}
   <div class="card">
     {%- if !isDir -%}
@@ -41,7 +41,7 @@
   </div>
   {%- else -%}
   {%- code
-    b, err := p.FS.ReadFile(filepath.Join(p.Path...))
+    b, err := p.FS.ReadFile(util.StringFilePath(p.Path...))
     if err != nil {
       panic(err)
     }

@@ -2,7 +2,6 @@ package enum
 
 import (
 	"fmt"
-	"path"
 	"strings"
 
 	"github.com/samber/lo"
@@ -124,7 +123,7 @@ func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
 }
 
 func (e *Enum) ID() string {
-	return path.Join(e.PackageWithGroup(""), e.Name)
+	return util.StringPath(e.PackageWithGroup(""), e.Name)
 }
 
 func (e *Enum) PackageWithGroup(prefix string) string {

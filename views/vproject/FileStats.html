@@ -1,5 +1,4 @@
 {% import (
-  "path/filepath"
   "slices"
 
   "github.com/samber/lo"
@@ -52,7 +51,7 @@
 {% func pathLinks(pth []string, ext string) %}{% stripspace %}
   <a href="?{% if ext != `` %}ext={%s ext %}{% endif %}">.</a>
   {%- for idx, px := range pth -%}
-    /<a href="?dir={%u filepath.Join(pth[:idx + 1]...) %}{% if ext != `` %}&ext={%s ext %}{% endif %}">{%s px %}</a>
+    /<a href="?dir={%u util.StringFilePath(pth[:idx + 1]...) %}{% if ext != `` %}&ext={%s ext %}{% endif %}">{%s px %}</a>
   {%- endfor -%}
 {% endstripspace %}{% endfunc %}
 

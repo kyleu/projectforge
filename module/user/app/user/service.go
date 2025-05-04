@@ -2,8 +2,6 @@
 package user
 
 import (
-	"path"
-
 	"github.com/google/uuid"
 
 	"{{{ .Package }}}/app/lib/filesystem"
@@ -25,5 +23,5 @@ func filters(orig *filter.Params) *filter.Params {
 }
 
 func dirFor(userID uuid.UUID) string {
-	return path.Join("users", userID.String())
+	return util.StringPath("users", userID.String())
 }

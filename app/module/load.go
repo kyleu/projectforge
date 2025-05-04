@@ -2,8 +2,6 @@ package module
 
 import (
 	"context"
-	"path"
-	"path/filepath"
 
 	"github.com/pkg/errors"
 
@@ -38,9 +36,9 @@ func (s *Service) load(ctx context.Context, key string, pth string, url string, 
 	var err error
 	switch {
 	case s.local.IsDir(key):
-		fs, err = filesystem.NewFileSystem(filepath.Join(s.local.Root(), key), false, "")
+		fs, err = filesystem.NewFileSystem(util.StringFilePath(s.local.Root(), key), false, "")
 	case s.config.IsDir(key):
-		fs, err = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), false, "")
+		fs, err = filesystem.NewFileSystem(util.StringFilePath(s.config.Root(), key), false, "")
 	case pth != "":
 		fs, err = filesystem.NewFileSystem(pth, false, "")
 		if key == "*" {
@@ -57,7 +55,7 @@ func (s *Service) load(ctx context.Context, key string, pth string, url string, 
 		if err != nil {
 			return nil, errors.Wrapf(err, "error downloading module [%s]", key)
 		}
-		fs, err = filesystem.NewFileSystem(filepath.Join(s.config.Root(), key), false, "")
+		fs, err = filesystem.NewFileSystem(util.StringFilePath(s.config.Root(), key), false, "")
 	}
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to load project file [%s]", key)
@@ -101,10 +99,10 @@ func (s *Service) loadDirectory(ctx context.Context, pth string, u string, fs fi
 	}
 	ret := make(Modules, 0, len(dirs))
 	for _, dir := range dirs {
-		if !fs.Exists(path.Join(dir, configFilename)) {
+		if !fs.Exists(util.StringPath(dir, configFilename)) {
 			continue
 		}
-		res, _, err := s.AddIfNeeded(ctx, dir, path.Join(pth, dir), u, logger)
+		res, _, err := s.AddIfNeeded(ctx, dir, util.StringPath(pth, dir), u, logger)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to load external module [%s]", dir)
 		}

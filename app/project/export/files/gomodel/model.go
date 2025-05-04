@@ -24,9 +24,6 @@ func Model(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 	lo.ForEach(helper.ImportsForTypes(types.KeyString, "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	if !m.SkipController() {
-		g.AddImport(helper.ImpPath)
-	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
 	if err != nil {
@@ -110,7 +107,7 @@ func routeMethod() *golang.Block {
 	ret.W("\tif len(paths) == 0 {")
 	ret.W("\t\tpaths = []string{DefaultRoute}")
 	ret.W("\t}")
-	ret.W("\treturn path.Join(paths...)")
+	ret.W("\treturn util.StringPath(paths...)")
 	ret.W("}")
 	return ret
 }

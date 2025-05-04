@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"path"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -183,6 +184,14 @@ func StringNullable(s fmt.Stringer) string {
 
 func StringJoin(elems []string, delim string) string {
 	return strings.Join(elems, delim)
+}
+
+func StringPath(elems ...string) string {
+	return path.Join(elems...)
+}
+
+func StringFilePath(elems ...string) string {
+	return filepath.Join(elems...)
 }
 
 func CountryFlag(code string) string {

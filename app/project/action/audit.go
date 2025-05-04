@@ -3,7 +3,6 @@ package action
 import (
 	"context"
 	"fmt"
-	"path"
 	"slices"
 
 	"github.com/pkg/errors"
@@ -105,7 +104,7 @@ func exportCheck(pm *PrjAndMods, ret *Result) {
 
 func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Logger, pth ...string) ([]string, error) {
 	ret := &util.StringSlice{}
-	pStr := path.Join(pth...)
+	pStr := util.StringPath(pth...)
 	fc := len(tgt.ListFiles(pStr, nil, logger))
 	ds := tgt.ListDirectories(pStr, ignore, logger)
 	if fc == 0 && len(ds) == 0 {
@@ -115,7 +114,7 @@ func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Log
 		p := append(slices.Clone(pth), d)
 		childRes, err := getEmptyFolders(tgt, ignore, logger, p...)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", path.Join(p...), d)
+			return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", util.StringPath(p...), d)
 		}
 		ret.Push(childRes...)
 	}
