@@ -27,17 +27,20 @@
       <ul class="accordion">
         {%- for _, x := range p.Args.Enums -%}
         {%- code sch := p.Collection.GetSchema(x.ID()) -%}
+        {%- code res := p.Results.Enums.Get(x.Name) -%}
+        {%- code df := util.DiffObjectsIgnoring(x, res, nil) -%}
         <li>
           <input id="accordion-enum-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-enum-{%s x.Name %}">
-            <div class="right">
-              <a href="{%s p.Project.WebPath() %}/export/enums/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
-            </div>
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
+            {%- if len(df) > 0 -%}
+            <div class="right"><em>{%s util.StringPlural(len(df), "difference") %}</em></div>
+            {%- endif -%}
+            {%= components.ExpandCollapse(3, ps) %}
+            {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %}
+            {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%- code res := p.Results.Enums.Get(x.Name) -%}
-            {%= renderJSONSchemaEnum(as, x, sch, res, ps) %}
+            {%= renderJSONSchemaEnum(p.Project, x, sch, res, df, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -50,17 +53,20 @@
       <ul class="accordion">
         {%- for _, x := range p.Args.Models -%}
         {%- code sch := p.Collection.GetSchema(x.ID()) -%}
+        {%- code res := p.Results.Models.Get(x.Name) -%}
+        {%- code df := util.DiffObjectsIgnoring(x, res, nil) -%}
         <li>
           <input id="accordion-model-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-model-{%s x.Name %}">
-            <div class="right">
-              <a href="{%s p.Project.WebPath() %}/export/models/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
-            </div>
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %} {%s x.Name %}
+            {%- if len(df) > 0 -%}
+            <div class="right"><em>{%s util.StringPlural(len(df), "difference") %}</em></div>
+            {%- endif -%}
+            {%= components.ExpandCollapse(3, ps) %}
+            {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %}
+            {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%- code res := p.Results.Models.Get(x.Name) -%}
-            {%= renderJSONSchemaModel(as, x, sch, res, ps) %}
+            {%= renderJSONSchemaModel(p.Project, x, sch, res, df, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}

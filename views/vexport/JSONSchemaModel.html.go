@@ -48,132 +48,150 @@ func (p *JSONSchemaModel) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
 
 //line views/vexport/JSONSchemaModel.html:21
 	qw422016.N().S(`  <div class="card">
-    <div class="right">
-      <a href="`)
-//line views/vexport/JSONSchemaModel.html:24
-	qw422016.E().S(p.Project.WebPath())
-//line views/vexport/JSONSchemaModel.html:24
-	qw422016.N().S(`/export/model/`)
-//line views/vexport/JSONSchemaModel.html:24
-	qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaModel.html:24
-	qw422016.N().S(`"><button>`)
-//line views/vexport/JSONSchemaModel.html:24
-	components.StreamSVGButton(qw422016, x.IconSafe(), ps)
-//line views/vexport/JSONSchemaModel.html:24
-	qw422016.N().S(` View</button></a>
-    </div>
-    <h3>`)
-//line views/vexport/JSONSchemaModel.html:26
-	components.StreamSVGIcon(qw422016, `table`, ps)
-//line views/vexport/JSONSchemaModel.html:26
-	qw422016.N().S(` [`)
-//line views/vexport/JSONSchemaModel.html:26
-	qw422016.E().S(p.Project.Key)
-//line views/vexport/JSONSchemaModel.html:26
-	qw422016.N().S(` / `)
-//line views/vexport/JSONSchemaModel.html:26
-	qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaModel.html:26
-	qw422016.N().S(`] JSON Schema</h3>
-    <div class="clear"></div>
 `)
-//line views/vexport/JSONSchemaModel.html:28
+//line views/vexport/JSONSchemaModel.html:23
 	sch := p.Collection.GetSchema(x.ID())
 
-//line views/vexport/JSONSchemaModel.html:28
-	qw422016.N().S(`    `)
+//line views/vexport/JSONSchemaModel.html:24
+	df := util.DiffObjectsIgnoring(x, p.Result, nil)
+
+//line views/vexport/JSONSchemaModel.html:25
+	if len(df) > 0 {
+//line views/vexport/JSONSchemaModel.html:25
+		qw422016.N().S(`    <div class="right">
+      `)
+//line views/vexport/JSONSchemaModel.html:27
+		qw422016.E().S(util.StringPlural(len(df), "difference"))
+//line views/vexport/JSONSchemaModel.html:27
+		qw422016.N().S(`
+    </div>
+`)
 //line views/vexport/JSONSchemaModel.html:29
-	streamrenderJSONSchemaModel(qw422016, as, x, sch, p.Result, ps)
+	}
 //line views/vexport/JSONSchemaModel.html:29
+	qw422016.N().S(`    <h3>`)
+//line views/vexport/JSONSchemaModel.html:30
+	components.StreamSVGIcon(qw422016, `table`, ps)
+//line views/vexport/JSONSchemaModel.html:30
+	qw422016.N().S(` [`)
+//line views/vexport/JSONSchemaModel.html:30
+	qw422016.E().S(p.Project.Key)
+//line views/vexport/JSONSchemaModel.html:30
+	qw422016.N().S(` / `)
+//line views/vexport/JSONSchemaModel.html:30
+	qw422016.E().S(x.Name)
+//line views/vexport/JSONSchemaModel.html:30
+	qw422016.N().S(`] JSON Schema</h3>
+    `)
+//line views/vexport/JSONSchemaModel.html:31
+	streamrenderJSONSchemaModel(qw422016, p.Project, x, sch, p.Result, df, ps)
+//line views/vexport/JSONSchemaModel.html:31
 	qw422016.N().S(`
   </div>
 `)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 }
 
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 func (p *JSONSchemaModel) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 }
 
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 func (p *JSONSchemaModel) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 	return qs422016
-//line views/vexport/JSONSchemaModel.html:31
+//line views/vexport/JSONSchemaModel.html:33
 }
 
-//line views/vexport/JSONSchemaModel.html:33
-func streamrenderJSONSchemaModel(qw422016 *qt422016.Writer, as *app.State, x *model.Model, sch *jsonschema.Schema, result *model.Model, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaModel.html:33
+//line views/vexport/JSONSchemaModel.html:35
+func streamrenderJSONSchemaModel(qw422016 *qt422016.Writer, prj *project.Project, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) {
+//line views/vexport/JSONSchemaModel.html:35
 	qw422016.N().S(`
-  <div class="flex" style="">
+  <div class="flex">
     <div class="flex-item">
-      <strong>Original</strong>
+      <a href="`)
+//line views/vexport/JSONSchemaModel.html:38
+	qw422016.E().S(prj.WebPath())
+//line views/vexport/JSONSchemaModel.html:38
+	qw422016.N().S(`/export/models/`)
+//line views/vexport/JSONSchemaModel.html:38
+	qw422016.E().S(x.Name)
+//line views/vexport/JSONSchemaModel.html:38
+	qw422016.N().S(`"><strong>Original</strong></a>
       <pre class="mt">`)
-//line views/vexport/JSONSchemaModel.html:37
+//line views/vexport/JSONSchemaModel.html:39
 	qw422016.E().S(util.ToJSON(x))
-//line views/vexport/JSONSchemaModel.html:37
-	qw422016.N().S(`</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Schema</strong>
-      <pre class="mt">`)
-//line views/vexport/JSONSchemaModel.html:41
-	qw422016.E().S(util.ToJSON(sch))
-//line views/vexport/JSONSchemaModel.html:41
+//line views/vexport/JSONSchemaModel.html:39
 	qw422016.N().S(`</pre>
     </div>
     <div class="flex-item">
       <strong>Result</strong>
       <pre class="mt">`)
-//line views/vexport/JSONSchemaModel.html:45
+//line views/vexport/JSONSchemaModel.html:43
 	qw422016.E().S(util.ToJSON(result))
-//line views/vexport/JSONSchemaModel.html:45
+//line views/vexport/JSONSchemaModel.html:43
+	qw422016.N().S(`</pre>
+    </div>
+  </div>
+  <div class="flex">
+    <div class="flex-item">
+      <strong>Schema</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaModel.html:49
+	qw422016.E().S(util.ToJSON(sch))
+//line views/vexport/JSONSchemaModel.html:49
+	qw422016.N().S(`</pre>
+    </div>
+    <div class="flex-item">
+      <strong>Diff</strong>
+      <pre class="mt">`)
+//line views/vexport/JSONSchemaModel.html:53
+	qw422016.E().S(util.ToJSON(df))
+//line views/vexport/JSONSchemaModel.html:53
 	qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
 }
 
-//line views/vexport/JSONSchemaModel.html:48
-func writerenderJSONSchemaModel(qq422016 qtio422016.Writer, as *app.State, x *model.Model, sch *jsonschema.Schema, result *model.Model, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
+func writerenderJSONSchemaModel(qq422016 qtio422016.Writer, prj *project.Project, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) {
+//line views/vexport/JSONSchemaModel.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaModel.html:48
-	streamrenderJSONSchemaModel(qw422016, as, x, sch, result, ps)
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
+	streamrenderJSONSchemaModel(qw422016, prj, x, sch, result, df, ps)
+//line views/vexport/JSONSchemaModel.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
 }
 
-//line views/vexport/JSONSchemaModel.html:48
-func renderJSONSchemaModel(as *app.State, x *model.Model, sch *jsonschema.Schema, result *model.Model, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
+func renderJSONSchemaModel(prj *project.Project, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) string {
+//line views/vexport/JSONSchemaModel.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaModel.html:48
-	writerenderJSONSchemaModel(qb422016, as, x, sch, result, ps)
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
+	writerenderJSONSchemaModel(qb422016, prj, x, sch, result, df, ps)
+//line views/vexport/JSONSchemaModel.html:56
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
 	return qs422016
-//line views/vexport/JSONSchemaModel.html:48
+//line views/vexport/JSONSchemaModel.html:56
 }

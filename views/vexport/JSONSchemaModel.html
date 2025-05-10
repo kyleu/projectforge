@@ -20,29 +20,37 @@
 {% func (p *JSONSchemaModel) Body(as *app.State, ps *cutil.PageState) %}
   {%- code x := p.Model -%}
   <div class="card">
-    <div class="right">
-      <a href="{%s p.Project.WebPath() %}/export/model/{%s x.Name %}"><button>{%= components.SVGButton(x.IconSafe(), ps) %} View</button></a>
-    </div>
-    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Key %} / {%s x.Name %}] JSON Schema</h3>
-    <div class="clear"></div>
     {%- code sch := p.Collection.GetSchema(x.ID()) -%}
-    {%= renderJSONSchemaModel(as, x, sch, p.Result, ps) %}
+    {%- code df := util.DiffObjectsIgnoring(x, p.Result, nil) -%}
+    {%- if len(df) > 0 -%}
+    <div class="right">
+      {%s util.StringPlural(len(df), "difference") %}
+    </div>
+    {%- endif -%}
+    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Key %} / {%s x.Name %}] JSON Schema</h3>
+    {%= renderJSONSchemaModel(p.Project, x, sch, p.Result, df, ps) %}
   </div>
 {% endfunc %}
 
-{% func renderJSONSchemaModel(as *app.State, x *model.Model, sch *jsonschema.Schema, result *model.Model, ps *cutil.PageState) %}
-  <div class="flex" style="">
+{% func renderJSONSchemaModel(prj *project.Project, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) %}
+  <div class="flex">
     <div class="flex-item">
-      <strong>Original</strong>
+      <a href="{%s prj.WebPath() %}/export/models/{%s x.Name %}"><strong>Original</strong></a>
       <pre class="mt">{%s util.ToJSON(x) %}</pre>
     </div>
+    <div class="flex-item">
+      <strong>Result</strong>
+      <pre class="mt">{%s util.ToJSON(result) %}</pre>
+    </div>
+  </div>
+  <div class="flex">
     <div class="flex-item">
       <strong>Schema</strong>
       <pre class="mt">{%s util.ToJSON(sch) %}</pre>
     </div>
     <div class="flex-item">
-      <strong>Result</strong>
-      <pre class="mt">{%s util.ToJSON(result) %}</pre>
+      <strong>Diff</strong>
+      <pre class="mt">{%s util.ToJSON(df) %}</pre>
     </div>
   </div>
 {% endfunc %}

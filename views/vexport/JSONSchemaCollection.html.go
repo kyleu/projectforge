@@ -71,243 +71,245 @@ func (p *JSONSchemaCollection) StreamBody(qw422016 *qt422016.Writer, as *app.Sta
 //line views/vexport/JSONSchemaCollection.html:29
 		sch := p.Collection.GetSchema(x.ID())
 
-//line views/vexport/JSONSchemaCollection.html:29
+//line views/vexport/JSONSchemaCollection.html:30
+		res := p.Results.Enums.Get(x.Name)
+
+//line views/vexport/JSONSchemaCollection.html:31
+		df := util.DiffObjectsIgnoring(x, res, nil)
+
+//line views/vexport/JSONSchemaCollection.html:31
 		qw422016.N().S(`        <li>
           <input id="accordion-enum-`)
-//line views/vexport/JSONSchemaCollection.html:31
+//line views/vexport/JSONSchemaCollection.html:33
 		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:31
+//line views/vexport/JSONSchemaCollection.html:33
 		qw422016.N().S(`" type="checkbox" hidden="hidden" />
           <label for="accordion-enum-`)
-//line views/vexport/JSONSchemaCollection.html:32
+//line views/vexport/JSONSchemaCollection.html:34
 		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:32
+//line views/vexport/JSONSchemaCollection.html:34
 		qw422016.N().S(`">
-            <div class="right">
-              <a href="`)
-//line views/vexport/JSONSchemaCollection.html:34
-		qw422016.E().S(p.Project.WebPath())
-//line views/vexport/JSONSchemaCollection.html:34
-		qw422016.N().S(`/export/enums/`)
-//line views/vexport/JSONSchemaCollection.html:34
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:34
-		qw422016.N().S(`"><button>`)
-//line views/vexport/JSONSchemaCollection.html:34
-		components.StreamSVGButton(qw422016, x.IconSafe(), ps)
-//line views/vexport/JSONSchemaCollection.html:34
-		qw422016.N().S(` View</button></a>
-            </div>
-            `)
+`)
+//line views/vexport/JSONSchemaCollection.html:35
+		if len(df) > 0 {
+//line views/vexport/JSONSchemaCollection.html:35
+			qw422016.N().S(`            <div class="right"><em>`)
 //line views/vexport/JSONSchemaCollection.html:36
+			qw422016.E().S(util.StringPlural(len(df), "difference"))
+//line views/vexport/JSONSchemaCollection.html:36
+			qw422016.N().S(`</em></div>
+`)
+//line views/vexport/JSONSchemaCollection.html:37
+		}
+//line views/vexport/JSONSchemaCollection.html:37
+		qw422016.N().S(`            `)
+//line views/vexport/JSONSchemaCollection.html:38
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchemaCollection.html:36
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:36
+//line views/vexport/JSONSchemaCollection.html:38
+		qw422016.N().S(`
+            `)
+//line views/vexport/JSONSchemaCollection.html:39
 		components.StreamSVGRef(qw422016, util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps)
-//line views/vexport/JSONSchemaCollection.html:36
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:36
+//line views/vexport/JSONSchemaCollection.html:39
+		qw422016.N().S(`
+            `)
+//line views/vexport/JSONSchemaCollection.html:40
 		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:36
+//line views/vexport/JSONSchemaCollection.html:40
 		qw422016.N().S(`
           </label>
           <div class="bd"><div><div>
-`)
-//line views/vexport/JSONSchemaCollection.html:39
-		res := p.Results.Enums.Get(x.Name)
-
-//line views/vexport/JSONSchemaCollection.html:39
-		qw422016.N().S(`            `)
-//line views/vexport/JSONSchemaCollection.html:40
-		streamrenderJSONSchemaEnum(qw422016, as, x, sch, res, ps)
-//line views/vexport/JSONSchemaCollection.html:40
+            `)
+//line views/vexport/JSONSchemaCollection.html:43
+		streamrenderJSONSchemaEnum(qw422016, p.Project, x, sch, res, df, ps)
+//line views/vexport/JSONSchemaCollection.html:43
 		qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vexport/JSONSchemaCollection.html:43
+//line views/vexport/JSONSchemaCollection.html:46
 	}
-//line views/vexport/JSONSchemaCollection.html:43
+//line views/vexport/JSONSchemaCollection.html:46
 	qw422016.N().S(`      </ul>
     </div>
   </div>
   <div class="card">
     <h3>`)
-//line views/vexport/JSONSchemaCollection.html:48
+//line views/vexport/JSONSchemaCollection.html:51
 	components.StreamSVGIcon(qw422016, `list`, ps)
-//line views/vexport/JSONSchemaCollection.html:48
+//line views/vexport/JSONSchemaCollection.html:51
 	qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:48
+//line views/vexport/JSONSchemaCollection.html:51
 	qw422016.E().S(util.StringPlural(len(p.Args.Models), "Model"))
-//line views/vexport/JSONSchemaCollection.html:48
+//line views/vexport/JSONSchemaCollection.html:51
 	qw422016.N().S(`</h3>
     <div class="mt">
       <ul class="accordion">
 `)
-//line views/vexport/JSONSchemaCollection.html:51
+//line views/vexport/JSONSchemaCollection.html:54
 	for _, x := range p.Args.Models {
-//line views/vexport/JSONSchemaCollection.html:52
+//line views/vexport/JSONSchemaCollection.html:55
 		sch := p.Collection.GetSchema(x.ID())
 
-//line views/vexport/JSONSchemaCollection.html:52
+//line views/vexport/JSONSchemaCollection.html:56
+		res := p.Results.Models.Get(x.Name)
+
+//line views/vexport/JSONSchemaCollection.html:57
+		df := util.DiffObjectsIgnoring(x, res, nil)
+
+//line views/vexport/JSONSchemaCollection.html:57
 		qw422016.N().S(`        <li>
           <input id="accordion-model-`)
-//line views/vexport/JSONSchemaCollection.html:54
+//line views/vexport/JSONSchemaCollection.html:59
 		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:54
+//line views/vexport/JSONSchemaCollection.html:59
 		qw422016.N().S(`" type="checkbox" hidden="hidden" />
           <label for="accordion-model-`)
-//line views/vexport/JSONSchemaCollection.html:55
+//line views/vexport/JSONSchemaCollection.html:60
 		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:55
+//line views/vexport/JSONSchemaCollection.html:60
 		qw422016.N().S(`">
-            <div class="right">
-              <a href="`)
-//line views/vexport/JSONSchemaCollection.html:57
-		qw422016.E().S(p.Project.WebPath())
-//line views/vexport/JSONSchemaCollection.html:57
-		qw422016.N().S(`/export/models/`)
-//line views/vexport/JSONSchemaCollection.html:57
-		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:57
-		qw422016.N().S(`"><button>`)
-//line views/vexport/JSONSchemaCollection.html:57
-		components.StreamSVGButton(qw422016, x.IconSafe(), ps)
-//line views/vexport/JSONSchemaCollection.html:57
-		qw422016.N().S(` View</button></a>
-            </div>
-            `)
-//line views/vexport/JSONSchemaCollection.html:59
+`)
+//line views/vexport/JSONSchemaCollection.html:61
+		if len(df) > 0 {
+//line views/vexport/JSONSchemaCollection.html:61
+			qw422016.N().S(`            <div class="right"><em>`)
+//line views/vexport/JSONSchemaCollection.html:62
+			qw422016.E().S(util.StringPlural(len(df), "difference"))
+//line views/vexport/JSONSchemaCollection.html:62
+			qw422016.N().S(`</em></div>
+`)
+//line views/vexport/JSONSchemaCollection.html:63
+		}
+//line views/vexport/JSONSchemaCollection.html:63
+		qw422016.N().S(`            `)
+//line views/vexport/JSONSchemaCollection.html:64
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchemaCollection.html:59
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:59
+//line views/vexport/JSONSchemaCollection.html:64
+		qw422016.N().S(`
+            `)
+//line views/vexport/JSONSchemaCollection.html:65
 		components.StreamSVGRef(qw422016, util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps)
-//line views/vexport/JSONSchemaCollection.html:59
-		qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:59
+//line views/vexport/JSONSchemaCollection.html:65
+		qw422016.N().S(`
+            `)
+//line views/vexport/JSONSchemaCollection.html:66
 		qw422016.E().S(x.Name)
-//line views/vexport/JSONSchemaCollection.html:59
+//line views/vexport/JSONSchemaCollection.html:66
 		qw422016.N().S(`
           </label>
           <div class="bd"><div><div>
-`)
-//line views/vexport/JSONSchemaCollection.html:62
-		res := p.Results.Models.Get(x.Name)
-
-//line views/vexport/JSONSchemaCollection.html:62
-		qw422016.N().S(`            `)
-//line views/vexport/JSONSchemaCollection.html:63
-		streamrenderJSONSchemaModel(qw422016, as, x, sch, res, ps)
-//line views/vexport/JSONSchemaCollection.html:63
+            `)
+//line views/vexport/JSONSchemaCollection.html:69
+		streamrenderJSONSchemaModel(qw422016, p.Project, x, sch, res, df, ps)
+//line views/vexport/JSONSchemaCollection.html:69
 		qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vexport/JSONSchemaCollection.html:66
+//line views/vexport/JSONSchemaCollection.html:72
 	}
-//line views/vexport/JSONSchemaCollection.html:66
+//line views/vexport/JSONSchemaCollection.html:72
 	qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaCollection.html:70
+//line views/vexport/JSONSchemaCollection.html:76
 	ex := p.Collection.Extra()
 
-//line views/vexport/JSONSchemaCollection.html:71
+//line views/vexport/JSONSchemaCollection.html:77
 	if len(ex) > 0 {
-//line views/vexport/JSONSchemaCollection.html:71
+//line views/vexport/JSONSchemaCollection.html:77
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vexport/JSONSchemaCollection.html:73
+//line views/vexport/JSONSchemaCollection.html:79
 		components.StreamSVGIcon(qw422016, `cog`, ps)
-//line views/vexport/JSONSchemaCollection.html:73
+//line views/vexport/JSONSchemaCollection.html:79
 		qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:73
+//line views/vexport/JSONSchemaCollection.html:79
 		qw422016.E().S(util.StringPlural(len(ex), "Extra"))
-//line views/vexport/JSONSchemaCollection.html:73
+//line views/vexport/JSONSchemaCollection.html:79
 		qw422016.N().S(`</h3>
     <div class="mt">
       <ul class="accordion">
 `)
-//line views/vexport/JSONSchemaCollection.html:76
+//line views/vexport/JSONSchemaCollection.html:82
 		for _, sch := range ex {
-//line views/vexport/JSONSchemaCollection.html:76
+//line views/vexport/JSONSchemaCollection.html:82
 			qw422016.N().S(`        <li>
           <input id="accordion-model-`)
-//line views/vexport/JSONSchemaCollection.html:78
+//line views/vexport/JSONSchemaCollection.html:84
 			qw422016.E().S(sch.ID)
-//line views/vexport/JSONSchemaCollection.html:78
+//line views/vexport/JSONSchemaCollection.html:84
 			qw422016.N().S(`" type="checkbox" hidden="hidden" />
           <label for="accordion-model-`)
-//line views/vexport/JSONSchemaCollection.html:79
+//line views/vexport/JSONSchemaCollection.html:85
 			qw422016.E().S(sch.ID)
-//line views/vexport/JSONSchemaCollection.html:79
+//line views/vexport/JSONSchemaCollection.html:85
 			qw422016.N().S(`">`)
-//line views/vexport/JSONSchemaCollection.html:79
+//line views/vexport/JSONSchemaCollection.html:85
 			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/JSONSchemaCollection.html:79
+//line views/vexport/JSONSchemaCollection.html:85
 			qw422016.N().S(` `)
-//line views/vexport/JSONSchemaCollection.html:79
+//line views/vexport/JSONSchemaCollection.html:85
 			qw422016.E().S(sch.ID)
-//line views/vexport/JSONSchemaCollection.html:79
+//line views/vexport/JSONSchemaCollection.html:85
 			qw422016.N().S(`</label>
           <div class="bd"><div><div>
 `)
-//line views/vexport/JSONSchemaCollection.html:81
+//line views/vexport/JSONSchemaCollection.html:87
 			res := p.Results.Models.Get(sch.ID)
 
-//line views/vexport/JSONSchemaCollection.html:81
+//line views/vexport/JSONSchemaCollection.html:87
 			qw422016.N().S(`            `)
-//line views/vexport/JSONSchemaCollection.html:82
+//line views/vexport/JSONSchemaCollection.html:88
 			streamrenderJSONSchemaExtra(qw422016, as, sch, res, ps)
-//line views/vexport/JSONSchemaCollection.html:82
+//line views/vexport/JSONSchemaCollection.html:88
 			qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vexport/JSONSchemaCollection.html:85
+//line views/vexport/JSONSchemaCollection.html:91
 		}
-//line views/vexport/JSONSchemaCollection.html:85
+//line views/vexport/JSONSchemaCollection.html:91
 		qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaCollection.html:89
+//line views/vexport/JSONSchemaCollection.html:95
 	}
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 }
 
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 func (p *JSONSchemaCollection) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	p.StreamBody(qw422016, as, ps)
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 }
 
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 func (p *JSONSchemaCollection) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	p.WriteBody(qb422016, as, ps)
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 	return qs422016
-//line views/vexport/JSONSchemaCollection.html:90
+//line views/vexport/JSONSchemaCollection.html:96
 }
 
-//line views/vexport/JSONSchemaCollection.html:92
+//line views/vexport/JSONSchemaCollection.html:98
 func streamrenderJSONSchemaExtra(qw422016 *qt422016.Writer, as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaCollection.html:92
+//line views/vexport/JSONSchemaCollection.html:98
 	qw422016.N().S(`
   <div class="flex" style="">
     <div class="flex-item">
@@ -317,46 +319,46 @@ func streamrenderJSONSchemaExtra(qw422016 *qt422016.Writer, as *app.State, sch *
     <div class="flex-item">
       <strong>Schema</strong>
       <pre class="mt">`)
-//line views/vexport/JSONSchemaCollection.html:100
+//line views/vexport/JSONSchemaCollection.html:106
 	qw422016.E().S(util.ToJSON(sch))
-//line views/vexport/JSONSchemaCollection.html:100
+//line views/vexport/JSONSchemaCollection.html:106
 	qw422016.N().S(`</pre>
     </div>
     <div class="flex-item">
       <strong>Result</strong>
       <pre class="mt">`)
-//line views/vexport/JSONSchemaCollection.html:104
+//line views/vexport/JSONSchemaCollection.html:110
 	qw422016.E().S(util.ToJSON(result))
-//line views/vexport/JSONSchemaCollection.html:104
+//line views/vexport/JSONSchemaCollection.html:110
 	qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 }
 
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 func writerenderJSONSchemaExtra(qq422016 qtio422016.Writer, as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	streamrenderJSONSchemaExtra(qw422016, as, sch, result, ps)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 }
 
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	writerenderJSONSchemaExtra(qb422016, as, sch, result, ps)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 	return qs422016
-//line views/vexport/JSONSchemaCollection.html:107
+//line views/vexport/JSONSchemaCollection.html:113
 }

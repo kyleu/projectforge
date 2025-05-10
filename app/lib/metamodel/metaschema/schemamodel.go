@@ -13,7 +13,7 @@ func ModelSchema(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args
 	ret.Type = "object"
 	ret.Description = x.Description
 	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
-	ret.Required = x.Columns.Required().CamelNames()
+	ret.Required = x.Columns.Required().Names()
 	for _, col := range x.Columns {
 		colSch, err := ColumnSchema(col, sch, arg)
 		if err != nil {

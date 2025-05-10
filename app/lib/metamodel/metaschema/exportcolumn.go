@@ -14,7 +14,7 @@ func ExportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 	if err != nil {
 		return nil, err
 	}
-	nullable := !slices.Contains(parent.Required, key) && !typ.Scalar()
+	nullable := !slices.Contains(parent.Required, key)
 	col := &model.Column{Name: key, Type: typ, Nullable: nullable}
 	if prop.Metadata != nil {
 		for _, k := range prop.Metadata.Keys() {

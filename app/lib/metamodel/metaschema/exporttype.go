@@ -31,7 +31,7 @@ func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	case "number":
 		ret = types.NewFloat(0)
 	case "object":
-		ret = types.NewValueMap()
+		ret = types.NewMap(types.NewString(), types.NewAny())
 	case "string":
 		switch sch.Format {
 		case "date":
