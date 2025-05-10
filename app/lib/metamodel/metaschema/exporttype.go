@@ -16,37 +16,39 @@ func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	if err != nil {
 		return nil, err
 	}
+	var ret *types.Wrapped
 	switch t {
 	case "", "nil", "<nil>", "null":
-		return types.NewNil(), nil
+		ret = types.NewNil()
 	case "array":
-		return types.NewList(types.NewAny()), nil
+		ret = types.NewList(types.NewAny())
 	case "boolean":
-		return types.NewBool(), nil
+		ret = types.NewBool()
 	case "enum":
-		return types.NewEnum("?"), nil
+		ret = types.NewEnum("?")
 	case "integer":
-		return types.NewInt(0), nil
+		ret = types.NewInt(0)
 	case "number":
-		return types.NewFloat(0), nil
+		ret = types.NewFloat(0)
 	case "object":
-		return types.NewValueMap(), nil
+		ret = types.NewValueMap()
 	case "string":
 		switch sch.Format {
 		case "date":
-			return types.NewDate(), nil
+			ret = types.NewDate()
 		case "date-time":
-			return types.NewTimestamp(), nil
+			ret = types.NewTimestamp()
 		case "uuid":
-			return types.NewUUID(), nil
+			ret = types.NewUUID()
 		case "":
-			return types.NewString(), nil
+			ret = types.NewString()
 		default:
 			return nil, errors.Errorf("invalid string format [%s] for schema [%s]", sch.Format, sch.String())
 		}
 	default:
 		return nil, errors.Errorf("unhandled schema type [%s] in schema [%T]", t, sch.String())
 	}
+	return ret, nil
 }
 
 func exportGetType(sch *jsonschema.Schema, expected ...string) (string, error) {

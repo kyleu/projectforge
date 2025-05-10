@@ -2,7 +2,6 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
-
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
@@ -22,12 +21,10 @@ func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	ret := &model.Model{Name: n, Package: pkg, Group: grp, Description: sch.Description}
 
 	for _, propKey := range sch.Properties.Order {
-		prop := sch.Properties.Map[propKey]
-		typ, e := ExportType(prop, coll, args)
+		col, e := ExportColumn(propKey, sch, coll, args)
 		if e != nil {
 			return nil, e
 		}
-		col := &model.Column{Name: propKey, Type: typ}
 		ret.Columns = append(ret.Columns, col)
 	}
 
