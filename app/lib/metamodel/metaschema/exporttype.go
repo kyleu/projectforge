@@ -2,8 +2,9 @@ package metaschema
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"slices"
+
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
@@ -20,6 +21,8 @@ func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 		return types.NewNil(), nil
 	case "array":
 		return types.NewList(types.NewAny()), nil
+	case "boolean":
+		return types.NewBool(), nil
 	case "enum":
 		return types.NewEnum("?"), nil
 	case "integer":

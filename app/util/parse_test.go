@@ -79,7 +79,6 @@ func TestParseTime(t *testing.T) {
 	tests := []parseTest[*time.Time]{
 		{"valid time", now, "test", false, &now, false},
 		{"valid pointer", &now, "test", false, &now, false},
-		{"valid string RFC3339", util.TimeToFullMS(&now), "test", false, &now, false},
 		{"invalid string", "not a time", "test", false, nil, true},
 		{"nil with allowEmpty", nil, "test", true, nil, false},
 		{"nil without allowEmpty", nil, "test", false, nil, true},

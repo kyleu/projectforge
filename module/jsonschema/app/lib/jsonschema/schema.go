@@ -1,7 +1,7 @@
 package jsonschema
 
 import (
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type Schema struct {

@@ -2,12 +2,12 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/lib/filter"
-	"projectforge.dev/projectforge/app/util"
 
+	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*model.Model, error) {

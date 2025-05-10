@@ -32,3 +32,7 @@ func (x *Nil) From(v any) any {
 func (x *Nil) Default(string) any {
 	return "<nil>"
 }
+
+func NewNil() *Wrapped {
+	return Wrap(&Nil{})
+}
