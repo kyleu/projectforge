@@ -9,6 +9,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*types.Wrapped, error) {
@@ -21,7 +22,27 @@ func ExportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	case "", "nil", "<nil>", "null":
 		ret = types.NewNil()
 	case "array":
-		ret = types.NewList(types.NewAny())
+		if sch.Items == nil {
+			ret = types.NewList(types.NewAny())
+		} else {
+			switch itemType := sch.Items.(type) {
+			case string:
+				ret = types.NewList(types.ForString(itemType))
+			case map[string]any:
+				b := util.ToJSONBytes(itemType, true)
+				itemSch, e := jsonschema.FromJSON(b)
+				if e != nil {
+					return nil, errors.Wrapf(e, "invalid array item subschema [%s] for schema [%s]", util.ToJSON(itemType), sch.String())
+				}
+				itemT, e := ExportType(itemSch, coll, args)
+				if e != nil {
+					return nil, errors.Wrapf(e, "error processing item subschema [%s] for schema [%s]", util.ToJSON(itemType), sch.String())
+				}
+				ret = types.NewList(itemT)
+			default:
+				return nil, errors.Errorf("invalid array item type [%T] for schema [%s]", itemType, sch.String())
+			}
+		}
 	case "boolean":
 		ret = types.NewBool()
 	case "enum":

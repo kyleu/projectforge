@@ -20,3 +20,28 @@ func Bits(t Type) int {
 	}
 	return 0
 }
+
+func ForString(s string) *Wrapped {
+	switch s {
+	case "", "null":
+		return NewAny()
+	case "nil", "<nil>":
+		return NewNil()
+	case "array":
+		return NewList(NewAny())
+	case "boolean":
+		return NewBool()
+	case "enum":
+		return NewEnum("?")
+	case "integer":
+		return NewInt(0)
+	case "number":
+		return NewFloat(0)
+	case "object":
+		return NewMap(NewString(), NewAny())
+	case "string":
+		return NewString()
+	default:
+		return NewError(fmt.Sprintf("unhandled type [%s]", s))
+	}
+}

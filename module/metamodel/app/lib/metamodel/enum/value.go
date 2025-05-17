@@ -44,6 +44,29 @@ func (x *Value) Title() string {
 	return util.StringToTitle(x.Key)
 }
 
+func (x *Value) ToOrderedMap(includeKey bool) *util.OrderedMap[any] {
+	ret := util.NewOrderedMap[any](false, 6)
+	if includeKey {
+		ret.Set("key", x.Key)
+	}
+	if x.Name != "" {
+		ret.Set("name", x.Name)
+	}
+	if x.Description != "" {
+		ret.Set("description", x.Description)
+	}
+	if x.Icon != "" {
+		ret.Set("icon", x.Icon)
+	}
+	if x.Default {
+		ret.Set("default", x.Default)
+	}
+	if x.Extra != nil && len(x.Extra.Order) > 0 {
+		ret.Set("extra", x.Extra)
+	}
+	return ret
+}
+
 func (x *Value) MarshalJSON() ([]byte, error) {
 	if x.Simple {
 		return util.ToJSONBytes(x.Key, false), nil

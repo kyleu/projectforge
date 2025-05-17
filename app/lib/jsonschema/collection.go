@@ -25,7 +25,7 @@ func (c *Collection) GetSchema(id string) *Schema {
 	}
 	medium := strings.TrimPrefix(big, "/")
 	ret := lo.FindOrElse(c.Schemas, nil, func(x *Schema) bool {
-		return x.ID == little || x.ID == medium || x.ID == big
+		return x.ID() == little || x.ID() == medium || x.ID() == big
 	})
 	return ret
 }
@@ -36,7 +36,7 @@ func (c *Collection) NewSchema(id string) *Schema {
 		u += ".schema.json"
 	}
 	comment := fmt.Sprintf("managed by %s", util.AppName)
-	ret := &Schema{Schema: "https://json-schema.org/draft/2020-12/schema", ID: u, Comment: comment}
+	ret := &Schema{Schema: "https://json-schema.org/draft/2020-12/schema", MetaID: u, Comment: comment}
 	c.AddSchema(ret)
 	return ret
 }

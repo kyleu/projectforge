@@ -24,7 +24,8 @@ func TypeSchema(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 	case *types.Int:
 		ret.Type = "integer"
 	case *types.List:
-		ret.Type = "array" // TODO: Ref
+		ret.Type = "array"
+		ret.Items = t.V.String()
 	case *types.Map:
 		ret.Type = "object"
 	case *types.Reference:

@@ -23,7 +23,10 @@ func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 				return nil, err
 			}
 			ret.Models = append(ret.Models, x)
-		case "enum":
+		case "string":
+			if len(sch.Enum) == 0 {
+				return nil, errors.Errorf("unhandled type [string] without [enum] values for schema [%s]", sch.String())
+			}
 			x, err := ExportEnum(sch, coll, args)
 			if err != nil {
 				return nil, err

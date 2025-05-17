@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -27,11 +28,15 @@ type Result struct {
 	Metadata util.ValueMap `json:"metadata,omitempty"`
 	Success  bool          `json:"success"`
 	Error    string        `json:"error,omitempty"`
+	syncMu   *sync.Mutex
 	fns      []ResultLogFn
 }
 
 func NewResult(task *Task, run string, args util.ValueMap, fns ...ResultLogFn) *Result {
-	return &Result{ID: util.UUID(), Task: task, Run: run, Args: args, Started: time.Now(), Status: "ok", Metadata: util.ValueMap{}, fns: fns}
+	return &Result{
+		ID: util.UUID(), Task: task, Run: run, Args: args, Started: time.Now(), Status: "ok",
+		Metadata: util.ValueMap{}, syncMu: &sync.Mutex{}, fns: fns,
+	}
 }
 
 func CompletedResult(task *Task, run string, args util.ValueMap, data any, err error, logs ...string) *Result {
@@ -50,6 +55,8 @@ func (r *Result) Log(msg string, args ...any) {
 }
 
 func (r *Result) AddLogs(msgs ...string) {
+	r.syncMu.Lock()
+	defer r.syncMu.Unlock()
 	r.Logs = append(r.Logs, msgs...)
 	for _, fn := range r.fns {
 		for _, msg := range msgs {
@@ -59,6 +66,8 @@ func (r *Result) AddLogs(msgs ...string) {
 }
 
 func (r *Result) AddTags(tags ...string) {
+	r.syncMu.Lock()
+	defer r.syncMu.Unlock()
 	r.Tags = util.ArraySorted(lo.Uniq(append(r.Tags, tags...)))
 }
 

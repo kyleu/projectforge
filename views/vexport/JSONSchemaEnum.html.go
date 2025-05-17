@@ -140,56 +140,58 @@ func streamrenderJSONSchemaEnum(qw422016 *qt422016.Writer, prj *project.Project,
 	qw422016.N().S(`</pre>
     </div>
     <div class="flex-item">
-      <strong>Schema</strong>
+      <strong>Result</strong>
       <pre class="mt">`)
 //line views/vexport/JSONSchemaEnum.html:43
-	qw422016.E().S(util.ToJSON(sch))
+	qw422016.E().S(util.ToJSON(result))
 //line views/vexport/JSONSchemaEnum.html:43
 	qw422016.N().S(`</pre>
     </div>
+  </div>
+  <div class="flex" style="">
     <div class="flex-item">
-      <strong>Result</strong>
+      <strong>Schema</strong>
       <pre class="mt">`)
-//line views/vexport/JSONSchemaEnum.html:47
-	qw422016.E().S(util.ToJSON(result))
-//line views/vexport/JSONSchemaEnum.html:47
+//line views/vexport/JSONSchemaEnum.html:49
+	qw422016.E().S(util.ToJSON(sch))
+//line views/vexport/JSONSchemaEnum.html:49
 	qw422016.N().S(`</pre>
     </div>
     <div class="flex-item">
       <strong>Diff</strong>
       <pre class="mt">`)
-//line views/vexport/JSONSchemaEnum.html:51
+//line views/vexport/JSONSchemaEnum.html:53
 	qw422016.E().S(util.ToJSON(df))
-//line views/vexport/JSONSchemaEnum.html:51
+//line views/vexport/JSONSchemaEnum.html:53
 	qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 }
 
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 func writerenderJSONSchemaEnum(qq422016 qtio422016.Writer, prj *project.Project, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) {
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	streamrenderJSONSchemaEnum(qw422016, prj, x, sch, result, df, ps)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 }
 
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 func renderJSONSchemaEnum(prj *project.Project, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) string {
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	writerenderJSONSchemaEnum(qb422016, prj, x, sch, result, df, ps)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	qs422016 := string(qb422016.B)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 	return qs422016
-//line views/vexport/JSONSchemaEnum.html:54
+//line views/vexport/JSONSchemaEnum.html:56
 }

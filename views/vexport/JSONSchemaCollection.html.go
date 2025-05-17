@@ -239,12 +239,12 @@ func (p *JSONSchemaCollection) StreamBody(qw422016 *qt422016.Writer, as *app.Sta
 			qw422016.N().S(`        <li>
           <input id="accordion-model-`)
 //line views/vexport/JSONSchemaCollection.html:84
-			qw422016.E().S(sch.ID)
+			qw422016.E().S(sch.ID())
 //line views/vexport/JSONSchemaCollection.html:84
 			qw422016.N().S(`" type="checkbox" hidden="hidden" />
           <label for="accordion-model-`)
 //line views/vexport/JSONSchemaCollection.html:85
-			qw422016.E().S(sch.ID)
+			qw422016.E().S(sch.ID())
 //line views/vexport/JSONSchemaCollection.html:85
 			qw422016.N().S(`">`)
 //line views/vexport/JSONSchemaCollection.html:85
@@ -252,13 +252,13 @@ func (p *JSONSchemaCollection) StreamBody(qw422016 *qt422016.Writer, as *app.Sta
 //line views/vexport/JSONSchemaCollection.html:85
 			qw422016.N().S(` `)
 //line views/vexport/JSONSchemaCollection.html:85
-			qw422016.E().S(sch.ID)
+			qw422016.E().S(sch.ID())
 //line views/vexport/JSONSchemaCollection.html:85
 			qw422016.N().S(`</label>
           <div class="bd"><div><div>
 `)
 //line views/vexport/JSONSchemaCollection.html:87
-			res := p.Results.Models.Get(sch.ID)
+			res := p.Results.Models.Get(sch.ID())
 
 //line views/vexport/JSONSchemaCollection.html:87
 			qw422016.N().S(`            `)

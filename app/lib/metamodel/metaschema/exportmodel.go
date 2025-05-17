@@ -17,7 +17,7 @@ func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	if err != nil {
 		return nil, err
 	}
-	n, pkg, grp := parseID(sch.ID)
+	n, pkg, grp := parseID(sch.ID())
 	ret := &model.Model{Name: n, Package: pkg, Group: grp, Description: sch.Description}
 
 	for _, propKey := range sch.Properties.Order {
@@ -36,8 +36,8 @@ func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	}
 	if x := sch.Metadata["ordering"]; x != nil {
 		var ords filter.Orderings
-		if e := util.CycleJSON(x, &ords); e != nil {
-			return nil, e
+		if err = util.CycleJSON(x, &ords); err != nil {
+			return nil, err
 		}
 		ret.Ordering = ords
 	}
@@ -64,6 +64,41 @@ func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	}
 	if x := sch.Metadata.GetStringOpt("view"); x != "" {
 		ret.View = x
+	}
+	if x, ok := sch.Metadata["relations"]; ok {
+		var rels model.Relations
+		if err = util.CycleJSON(x, &rels); err != nil {
+			return nil, err
+		}
+		ret.Relations = rels
+	}
+	if x, ok := sch.Metadata["indexes"]; ok {
+		var idxs model.Indexes
+		if err = util.CycleJSON(x, &idxs); err != nil {
+			return nil, err
+		}
+		ret.Indexes = idxs
+	}
+	if x, ok := sch.Metadata["seedData"]; ok {
+		var seed [][]any
+		if err = util.CycleJSON(x, &seed); err != nil {
+			return nil, err
+		}
+		ret.SeedData = seed
+	}
+	if x, ok := sch.Metadata["links"]; ok {
+		var links model.Links
+		if err = util.CycleJSON(x, &links); err != nil {
+			return nil, err
+		}
+		ret.Links = links
+	}
+	if x, ok := sch.Metadata["imports"]; ok {
+		var imps model.Imports
+		if err = util.CycleJSON(x, &imps); err != nil {
+			return nil, err
+		}
+		ret.Imports = imps
 	}
 	return ret, nil
 }

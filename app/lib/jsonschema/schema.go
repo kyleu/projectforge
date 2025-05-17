@@ -7,14 +7,16 @@ import (
 type Schema struct {
 	// core vocabulary & metadata
 	Schema        string                    `json:"$schema,omitempty"`        // uri identifying the schema dialect (e.g., "https://json-schema.org/draft/2020-12/schema")
-	ID            string                    `json:"$id,omitempty"`            // base uri for the schema
+	MetaID        string                    `json:"$id,omitempty"`            // base uri for the schema
+	ExplicitID    string                    `json:"id,omitempty"`             // base uri for the schema
 	Anchor        string                    `json:"$anchor,omitempty"`        // an identifier for this subschema
 	Ref           string                    `json:"$ref,omitempty"`           // reference to another schema (uri or json pointer)
 	DynamicRef    string                    `json:"$dynamicRef,omitempty"`    // reference that resolves dynamically (requires $dynamicanchor)
 	DynamicAnchor string                    `json:"$dynamicAnchor,omitempty"` // anchor for dynamic resolution
 	Vocabulary    *util.OrderedMap[bool]    `json:"$vocabulary,omitempty"`    // declares vocabularies used (keys are uris, values must be true)
 	Comment       string                    `json:"$comment,omitempty"`       // a comment string, ignored by validators
-	Defs          *util.OrderedMap[*Schema] `json:"$defs,omitempty"`          // definitions for reusable subschemas
+	MetaDefs      *util.OrderedMap[*Schema] `json:"$defs,omitempty"`          // definitions for reusable subschemas
+	ExplicitDefs  *util.OrderedMap[*Schema] `json:"definitions,omitempty"`    // definitions for reusable subschemas
 
 	// annotations (metadata keywords)
 	Title       string `json:"title,omitempty"`       // a short description of the schema
@@ -61,6 +63,7 @@ type Schema struct {
 	Properties            *util.OrderedMap[*Schema]  `json:"properties,omitempty"`            // schemas for named properties
 	PatternProperties     *util.OrderedMap[*Schema]  `json:"patternProperties,omitempty"`     // schemas for properties matching regex patterns
 	AdditionalProperties  any                        `json:"additionalProperties,omitempty"`  // controls handling of properties not explicitly listed or matched by patterns (schema or boolean). use `unevaluatedproperties` for more control.
+	AllowTrailingCommas   bool                       `json:"allowTrailingCommas,omitempty"`   // indicates that trailing commas are allowed
 	UnevaluatedProperties any                        `json:"unevaluatedProperties,omitempty"` // validation for properties not covered by `properties`, `patternproperties`, or `additionalproperties` (schema or boolean)
 	Required              []string                   `json:"required,omitempty"`              // array of required property names
 	PropertyNames         *Schema                    `json:"propertyNames,omitempty"`         // schema for property names
@@ -82,4 +85,11 @@ type Schema struct {
 
 	// extensions
 	Metadata util.ValueMap `json:"metadata,omitempty"` // additional information about the schema
+}
+
+func (s *Schema) ID() string {
+	if s.MetaID != "" {
+		return s.MetaID
+	}
+	return s.ExplicitID
 }

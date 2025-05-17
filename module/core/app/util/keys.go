@@ -28,11 +28,11 @@ const (
 	OK    = "ok"
 	Error = "error"{{{ if .HasDatabase }}}
 
-	{{{ if .MySQL }}}DatabaseMySQL = "mysql"
-	{{{ end }}}{{{ if .PostgreSQL }}}DatabasePostgreSQL = "postgres"
-	{{{ end }}}{{{ if .SQLite }}}DatabaseSQLite = "sqlite"
-	{{{ end }}}{{{ if .SQLServer }}}DatabaseSQLServer = "sqlserver"
-	{{{ end }}}{{{ end }}}
+{{{ if .MySQL }}}	DatabaseMySQL = "mysql"
+{{{ end }}}{{{ if .PostgreSQL }}}	DatabasePostgreSQL = "postgres"
+{{{ end }}}{{{ if .SQLite }}}	DatabaseSQLite = "sqlite"
+{{{ end }}}{{{ if .SQLServer }}}	DatabaseSQLServer = "sqlserver"
+{{{ end }}}{{{ end }}}
 	// $PF_SECTION_START(keys)$
 	// $PF_SECTION_END(keys)$.
 )

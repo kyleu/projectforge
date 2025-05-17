@@ -81,10 +81,10 @@
       <ul class="accordion">
         {%- for _, sch := range ex -%}
         <li>
-          <input id="accordion-model-{%s sch.ID %}" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-{%s sch.ID %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID %}</label>
+          <input id="accordion-model-{%s sch.ID() %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-model-{%s sch.ID() %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID() %}</label>
           <div class="bd"><div><div>
-            {%- code res := p.Results.Models.Get(sch.ID) -%}
+            {%- code res := p.Results.Models.Get(sch.ID()) -%}
             {%= renderJSONSchemaExtra(as, sch, res, ps) %}
           </div></div></div>
         </li>

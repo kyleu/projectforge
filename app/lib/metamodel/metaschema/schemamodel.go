@@ -54,5 +54,20 @@ func ModelSchema(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args
 	if x.View != "" {
 		ret.AddMetadata("view", x.View)
 	}
+	if len(x.Relations) > 0 {
+		ret.AddMetadata("relations", x.Relations)
+	}
+	if len(x.Indexes) > 0 {
+		ret.AddMetadata("indexes", x.Indexes)
+	}
+	if len(x.SeedData) > 0 {
+		ret.AddMetadata("seedData", x.SeedData)
+	}
+	if len(x.Links) > 0 {
+		ret.AddMetadata("links", x.Links)
+	}
+	if len(x.Imports) > 0 {
+		ret.AddMetadata("imports", x.Imports)
+	}
 	return ret, nil
 }

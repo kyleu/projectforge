@@ -2,10 +2,11 @@ package metaschema
 
 import (
 	"fmt"
+	"slices"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
-	"slices"
 )
 
 func ExportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*model.Column, error) {

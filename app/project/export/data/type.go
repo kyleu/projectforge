@@ -14,7 +14,7 @@ import (
 )
 
 func exportColumn(f *Field, ex []any) (*model.Column, error) {
-	typ, tags, err := typeFor(f.Type, ex)
+	typ, tags, err := TypeForString(f.Type, ex)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to parse type for field [%s]", f.Name)
 	}
@@ -38,7 +38,7 @@ func exportColumn(f *Field, ex []any) (*model.Column, error) {
 	return ret, nil
 }
 
-func typeFor(t string, ex []any) (*types.Wrapped, []string, error) {
+func TypeForString(t string, ex []any) (*types.Wrapped, []string, error) {
 	var tags []string
 	isRef := strings.HasPrefix(t, "ref|")
 	if isRef {
@@ -49,7 +49,7 @@ func typeFor(t string, ex []any) (*types.Wrapped, []string, error) {
 	if isList {
 		tags = append(tags, "list")
 		t = strings.TrimPrefix(t, "list|")
-		n, nt, err := typeFor(t, ex)
+		n, nt, err := TypeForString(t, ex)
 		if err != nil {
 			return nil, nil, err
 		}
