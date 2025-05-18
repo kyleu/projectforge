@@ -24,9 +24,6 @@ func Bits(t Type) int {
 func FromJSONType(s string, ref string) *Wrapped {
 	switch s {
 	case "", "null":
-		if ref != "" {
-
-		}
 		return NewAny()
 	case "nil", "<nil>":
 		return NewNil()

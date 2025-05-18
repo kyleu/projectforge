@@ -72,7 +72,7 @@ func NewReferencePath(pth string, isPointer bool) *Wrapped {
 	parts := strings.Split(pth, "/")
 	pkg := parts[:len(parts)-1]
 	ref := parts[len(parts)-1]
-	if isPointer {
+	if isPointer && !strings.HasPrefix(ref, "*") {
 		ref = "*" + ref
 	}
 	return NewReferenceArgs(pkg, ref)
