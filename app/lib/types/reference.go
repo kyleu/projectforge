@@ -66,3 +66,14 @@ func NewReference() *Wrapped {
 func NewReferenceArgs(pkg util.Pkg, k string) *Wrapped {
 	return Wrap(&Reference{Pkg: pkg, K: k})
 }
+
+func NewReferencePath(pth string, isPointer bool) *Wrapped {
+	pth = strings.TrimPrefix(pth, "ref:")
+	parts := strings.Split(pth, "/")
+	pkg := parts[:len(parts)-1]
+	ref := parts[len(parts)-1]
+	if isPointer && !strings.HasPrefix(ref, "*") {
+		ref = "*" + ref
+	}
+	return NewReferenceArgs(pkg, ref)
+}

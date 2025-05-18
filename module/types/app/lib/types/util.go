@@ -21,9 +21,12 @@ func Bits(t Type) int {
 	return 0
 }
 
-func ForString(s string) *Wrapped {
+func FromJSONType(s string, ref string) *Wrapped {
 	switch s {
 	case "", "null":
+		if ref != "" {
+
+		}
 		return NewAny()
 	case "nil", "<nil>":
 		return NewNil()
@@ -42,6 +45,23 @@ func ForString(s string) *Wrapped {
 	case "string":
 		return NewString()
 	default:
-		return NewError(fmt.Sprintf("unhandled type [%s]", s))
+		return NewError(fmt.Sprintf("unhandled type [%s] for FromJSONType", s))
+	}
+}
+
+func ToJSONType(v Type) string {
+	switch t := v.(type) {
+	case *Wrapped:
+		return ToJSONType(t.T)
+	case *Float:
+		return "number"
+	case *Int:
+		return "integer"
+	case *Map:
+		return "object"
+	case *String:
+		return "string"
+	default:
+		return fmt.Sprintf("unhandled type [%T] for ToJSONType", t)
 	}
 }

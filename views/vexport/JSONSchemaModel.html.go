@@ -53,7 +53,7 @@ func (p *JSONSchemaModel) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
 	sch := p.Collection.GetSchema(x.ID())
 
 //line views/vexport/JSONSchemaModel.html:24
-	df := util.DiffObjectsIgnoring(x, p.Result, nil)
+	df := util.DiffObjects(x, p.Result)
 
 //line views/vexport/JSONSchemaModel.html:25
 	if len(df) > 0 {

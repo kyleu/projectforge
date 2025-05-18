@@ -11,6 +11,7 @@ import (
 func exportRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/p/{key}/export", cproject.ProjectExportOverview)
 	makeRoute(r, http.MethodGet, "/p/{key}/export/jsonschema", cproject.ProjectExportJSONSchema)
+	makeRoute(r, http.MethodGet, "/p/{key}/export/jsonschema/write", cproject.ProjectExportWriteJSONSchema)
 
 	makeRoute(r, http.MethodGet, "/p/{key}/export/config", cproject.ProjectExportConfigForm)
 	makeRoute(r, http.MethodPost, "/p/{key}/export/config", cproject.ProjectExportConfigSave)

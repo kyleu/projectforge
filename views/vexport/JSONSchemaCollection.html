@@ -19,6 +19,11 @@
 
 {% func (p *JSONSchemaCollection) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
+    <div class="right">
+      <a href="{%s p.Project.WebPath() %}/export/jsonschema/write">
+        <button>{%= components.SVGButton("file", ps) %} Write Schema</button>
+      </a>
+    </div>
     <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}] JSON Schema</h3>
   </div>
   <div class="card">
@@ -28,7 +33,7 @@
         {%- for _, x := range p.Args.Enums -%}
         {%- code sch := p.Collection.GetSchema(x.ID()) -%}
         {%- code res := p.Results.Enums.Get(x.Name) -%}
-        {%- code df := util.DiffObjectsIgnoring(x, res, nil) -%}
+        {%- code df := util.DiffObjects(x, res) -%}
         <li>
           <input id="accordion-enum-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-enum-{%s x.Name %}">
@@ -54,7 +59,7 @@
         {%- for _, x := range p.Args.Models -%}
         {%- code sch := p.Collection.GetSchema(x.ID()) -%}
         {%- code res := p.Results.Models.Get(x.Name) -%}
-        {%- code df := util.DiffObjectsIgnoring(x, res, nil) -%}
+        {%- code df := util.DiffObjects(x, res) -%}
         <li>
           <input id="accordion-model-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-model-{%s x.Name %}">

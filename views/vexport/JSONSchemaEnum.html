@@ -21,7 +21,7 @@
   {%- code x := p.Enum -%}
   <div class="card">
     {%- code sch := p.Collection.GetSchema(x.ID()) -%}
-    {%- code df := util.DiffObjectsIgnoring(x, p.Result, nil) -%}
+    {%- code df := util.DiffObjects(x, p.Result) -%}
     {%- if len(df) > 0 -%}
     <div class="right">
       {%s util.StringPlural(len(df), "difference") %}

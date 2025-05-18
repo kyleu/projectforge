@@ -63,6 +63,9 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 	if len(path) > 0 && lo.Contains(ignored, path[len(path)-1]) {
 		return nil
 	}
+	if l == nil && r == nil {
+		return nil
+	}
 	if l == nil {
 		return Diffs{NewDiff(StringJoin(path, "."), "", fmt.Sprint(r))}
 	}

@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.Args, error) {
+func ImportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.Args, error) {
 	if coll == nil || len(coll.Schemas) == 0 {
 		return nil, errors.New("empty collection provided for arguments")
 	}
@@ -18,7 +18,7 @@ func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 	for _, sch := range coll.Schemas {
 		switch sch.Type {
 		case "object":
-			x, err := ExportModel(sch, coll, args)
+			x, err := ImportModel(sch, coll, args)
 			if err != nil {
 				return nil, err
 			}
@@ -27,7 +27,7 @@ func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 			if len(sch.Enum) == 0 {
 				return nil, errors.Errorf("unhandled type [string] without [enum] values for schema [%s]", sch.String())
 			}
-			x, err := ExportEnum(sch, coll, args)
+			x, err := ImportEnum(sch, coll, args)
 			if err != nil {
 				return nil, err
 			}
@@ -42,9 +42,9 @@ func ExportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 func ExportAny(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (any, error) {
 	switch sch.Type {
 	case "object":
-		return ExportModel(sch, coll, args)
+		return ImportModel(sch, coll, args)
 	case "enum":
-		return ExportEnum(sch, coll, args)
+		return ImportEnum(sch, coll, args)
 	default:
 		return nil, errors.Errorf("invalid type [%v] for schema [%s]", sch.Type, sch.String())
 	}

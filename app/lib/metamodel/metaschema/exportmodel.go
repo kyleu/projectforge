@@ -2,103 +2,73 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
-	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ExportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*model.Model, error) {
-	if sch == nil {
-		return nil, errors.New("nil schema provided for model")
-	}
-	_, err := exportGetType(sch, "object")
-	if err != nil {
-		return nil, err
-	}
-	n, pkg, grp := parseID(sch.ID())
-	ret := &model.Model{Name: n, Package: pkg, Group: grp, Description: sch.Description}
-
-	for _, propKey := range sch.Properties.Order {
-		col, e := ExportColumn(propKey, sch, coll, args)
-		if e != nil {
-			return nil, e
+func ExportModel(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {
+	id := util.StringPath(x.PackageWithGroup(""), x.Name)
+	ret := sch.NewSchema(id)
+	ret.Type = "object"
+	ret.Description = x.Description
+	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
+	ret.Required = x.Columns.Required().Names()
+	for _, col := range x.Columns {
+		colSch, err := ExportColumn(col, sch, arg)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to parse column [%s]", col.String())
 		}
-		ret.Columns = append(ret.Columns, col)
+		ret.Properties.Set(col.Name, colSch)
 	}
-
-	if x := sch.Metadata.GetMapOpt("config"); len(x) > 0 {
-		ret.Config = x
+	if len(x.Config) > 0 {
+		ret.AddMetadata("config", x.Config)
 	}
-	if x := sch.Metadata.GetStringOpt("icon"); x != "" {
-		ret.Icon = x
+	if x.Icon != "" {
+		ret.AddMetadata("icon", x.Icon)
 	}
-	if x := sch.Metadata["ordering"]; x != nil {
-		var ords filter.Orderings
-		if err = util.CycleJSON(x, &ords); err != nil {
-			return nil, err
-		}
-		ret.Ordering = ords
+	if len(x.Ordering) > 0 {
+		ret.AddMetadata("ordering", x.Ordering)
 	}
-	if x := sch.Metadata.GetStringOpt("plural"); x != "" {
-		ret.PluralOverride = x
+	if x.PluralOverride != "" {
+		ret.AddMetadata("plural", x.PluralOverride)
 	}
-	if x := sch.Metadata.GetStringOpt("route"); len(x) > 0 {
-		ret.RouteOverride = x
+	if x.RouteOverride != "" {
+		ret.AddMetadata("route", x.RouteOverride)
 	}
-	if x := sch.Metadata.GetStringArrayOpt("search"); len(x) > 0 {
-		ret.Search = x
+	if len(x.Search) > 0 {
+		ret.AddMetadata("search", x.Search)
 	}
-	if x := sch.Metadata.GetIntOpt("sortIndex"); x != 0 {
-		ret.SortIndex = x
+	if x.SortIndex != 0 {
+		ret.AddMetadata("sortIndex", x.SortIndex)
 	}
-	if x := sch.Metadata.GetStringOpt("table"); len(x) > 0 {
-		ret.TableOverride = x
+	if x.TableOverride != "" {
+		ret.AddMetadata("table", x.TableOverride)
 	}
-	if x := sch.Metadata.GetStringArrayOpt("tags"); len(x) > 0 {
-		ret.Tags = x
+	if len(x.Tags) > 0 {
+		ret.AddMetadata("tags", x.Tags)
 	}
-	if x := sch.Metadata.GetStringOpt("title"); x != "" {
-		ret.TitleOverride = x
+	if x.TitleOverride != "" {
+		ret.AddMetadata("title", x.TitleOverride)
 	}
-	if x := sch.Metadata.GetStringOpt("view"); x != "" {
-		ret.View = x
+	if x.View != "" {
+		ret.AddMetadata("view", x.View)
 	}
-	if x, ok := sch.Metadata["relations"]; ok {
-		var rels model.Relations
-		if err = util.CycleJSON(x, &rels); err != nil {
-			return nil, err
-		}
-		ret.Relations = rels
+	if len(x.Relations) > 0 {
+		ret.AddMetadata("relations", x.Relations)
 	}
-	if x, ok := sch.Metadata["indexes"]; ok {
-		var idxs model.Indexes
-		if err = util.CycleJSON(x, &idxs); err != nil {
-			return nil, err
-		}
-		ret.Indexes = idxs
+	if len(x.Indexes) > 0 {
+		ret.AddMetadata("indexes", x.Indexes)
 	}
-	if x, ok := sch.Metadata["seedData"]; ok {
-		var seed [][]any
-		if err = util.CycleJSON(x, &seed); err != nil {
-			return nil, err
-		}
-		ret.SeedData = seed
+	if len(x.SeedData) > 0 {
+		ret.AddMetadata("seedData", x.SeedData)
 	}
-	if x, ok := sch.Metadata["links"]; ok {
-		var links model.Links
-		if err = util.CycleJSON(x, &links); err != nil {
-			return nil, err
-		}
-		ret.Links = links
+	if len(x.Links) > 0 {
+		ret.AddMetadata("links", x.Links)
 	}
-	if x, ok := sch.Metadata["imports"]; ok {
-		var imps model.Imports
-		if err = util.CycleJSON(x, &imps); err != nil {
-			return nil, err
-		}
-		ret.Imports = imps
+	if len(x.Imports) > 0 {
+		ret.AddMetadata("imports", x.Imports)
 	}
 	return ret, nil
 }

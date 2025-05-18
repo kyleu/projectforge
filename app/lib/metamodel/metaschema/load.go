@@ -18,7 +18,7 @@ func LoadSchemas(ctx context.Context, key string, args *metamodel.Args, extraPat
 		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
 			continue
 		}
-		_, err := EnumSchema(x, ret, args)
+		_, err := ExportEnum(x, ret, args)
 		if err != nil {
 			return nil, err
 		}
@@ -27,7 +27,7 @@ func LoadSchemas(ctx context.Context, key string, args *metamodel.Args, extraPat
 		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
 			continue
 		}
-		_, err := ModelSchema(x, ret, args)
+		_, err := ExportModel(x, ret, args)
 		if err != nil {
 			return nil, err
 		}

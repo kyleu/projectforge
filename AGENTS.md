@@ -1,16 +1,17 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to autonomus agents for working with code in this repository.
 
 ## Build Commands
 - Build: `make build`
-- Run: `make dev` or `./build/debug/projectforge`
-- Lint: `make lint` or `bin/check.sh`
-- Format: `bin/format.sh`
-- Test all: `bin/test.sh` or `gotestsum -- -race ./app/...`
+- Run: `make build`, then `./build/debug/projectforge`
+- Run and watch: `make dev` or `./bin/dev.sh`
+- Lint: `make lint` or `./bin/check.sh`
+- Format: `./bin/format.sh`
+- Test all: `./bin/test.sh` or `gotestsum -- ./app/...`
 - Test single: `go test ./path/to/package -run TestName`
-- Test with clean cache: `bin/test.sh -c`
-- Test and watch: `bin/test.sh -w`
+- Test with clean cache: `./bin/test.sh -c`
+- Test and watch: `./bin/test.sh -w`
 
 ## Code Style Guidelines
 - Use `gofumpt` for formatting (enforced by linters)
