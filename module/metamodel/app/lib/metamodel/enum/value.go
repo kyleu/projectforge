@@ -49,7 +49,7 @@ func (x *Value) ToOrderedMap(includeKey bool) *util.OrderedMap[any] {
 	if includeKey {
 		ret.Set("key", x.Key)
 	}
-	if x.Name != "" {
+	if x.Name != "" && x.Name != x.Key {
 		ret.Set("name", x.Name)
 	}
 	if x.Description != "" {

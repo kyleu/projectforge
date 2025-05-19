@@ -18,8 +18,7 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 		ret.Type = "string"
 		ret.Format = "date"
 	case *types.Enum:
-		ret.Type = "enum"
-		ret.Ref = t.Ref
+		ret.Ref = t.Ref + ".schema.json"
 	case *types.Float:
 		ret.Type = "number"
 		if t.Bits != 0 {

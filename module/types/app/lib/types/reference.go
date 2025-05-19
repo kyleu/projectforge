@@ -69,6 +69,8 @@ func NewReferenceArgs(pkg util.Pkg, k string) *Wrapped {
 
 func NewReferencePath(pth string, isPointer bool) *Wrapped {
 	pth = strings.TrimPrefix(pth, "ref:")
+	pth = strings.TrimSuffix(pth, ".json")
+	pth = strings.TrimSuffix(pth, ".schema")
 	parts := strings.Split(pth, "/")
 	pkg := parts[:len(parts)-1]
 	ref := parts[len(parts)-1]

@@ -3,6 +3,7 @@ package metaschema
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -26,7 +27,14 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 		case "Numeric":
 			ret = types.NewNumeric()
 		default:
-			ret = types.NewReferencePath(sch.Ref, true)
+			if strings.Contains(sch.Ref, "/") {
+				ret = types.NewReferencePath(sch.Ref, true)
+			} else {
+				ref := sch.Ref
+				ref = strings.TrimSuffix(ref, ".json")
+				ref = strings.TrimSuffix(ref, ".schema")
+				ret = types.NewEnum(ref)
+			}
 		}
 	case "array":
 		if sch.Items == nil {

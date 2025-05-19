@@ -2,21 +2,22 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ExportModel(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {
+func ExportModel(x *model.Model, coll *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {
 	id := util.StringPath(x.PackageWithGroup(""), x.Name)
-	ret := sch.NewSchema(id)
+	ret := coll.NewSchema(id)
 	ret.Type = "object"
 	ret.Description = x.Description
 	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
 	ret.Required = x.Columns.Required().Names()
 	for _, col := range x.Columns {
-		colSch, err := ExportColumn(col, sch, arg)
+		colSch, err := ExportColumn(col, coll, arg)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to parse column [%s]", col.String())
 		}
@@ -50,7 +51,7 @@ func ExportModel(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args
 		ret.AddMetadata("tags", x.Tags)
 	}
 	if x.TitleOverride != "" {
-		ret.AddMetadata("title", x.TitleOverride)
+		ret.Title = x.TitleOverride
 	}
 	if x.View != "" {
 		ret.AddMetadata("view", x.View)
@@ -62,7 +63,9 @@ func ExportModel(x *model.Model, sch *jsonschema.Collection, arg *metamodel.Args
 		ret.AddMetadata("indexes", x.Indexes)
 	}
 	if len(x.SeedData) > 0 {
-		ret.AddMetadata("seedData", x.SeedData)
+		ret.Examples = lo.Map(x.SeedData, func(d []any, _ int) any {
+			return d
+		})
 	}
 	if len(x.Links) > 0 {
 		ret.AddMetadata("links", x.Links)

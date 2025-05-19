@@ -59,8 +59,8 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	if x := sch.Metadata.GetStringArrayOpt("tags"); len(x) > 0 {
 		ret.Tags = x
 	}
-	if x := sch.Metadata.GetStringOpt("title"); x != "" {
-		ret.TitleOverride = x
+	if sch.Title != "" && sch.Title != n {
+		ret.TitleOverride = sch.Title
 	}
 	if x := sch.Metadata.GetStringOpt("view"); x != "" {
 		ret.View = x
@@ -79,12 +79,8 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 		}
 		ret.Indexes = idxs
 	}
-	if x, ok := sch.Metadata["seedData"]; ok {
-		var seed [][]any
-		if err = util.CycleJSON(x, &seed); err != nil {
-			return nil, err
-		}
-		ret.SeedData = seed
+	if len(sch.Examples) > 0 {
+		ret.SeedData = util.ArrayFromAny[[]any](sch.Examples)
 	}
 	if x, ok := sch.Metadata["links"]; ok {
 		var links model.Links

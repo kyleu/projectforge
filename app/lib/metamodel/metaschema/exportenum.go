@@ -16,7 +16,10 @@ func ExportEnum(x *enum.Enum, sch *jsonschema.Collection, args *metamodel.Args) 
 	vals := util.ValueMap{}
 	for _, v := range x.Values {
 		ret.Enum = append(ret.Enum, v.Key)
-		vals[v.Key] = v.ToOrderedMap(false)
+		m := v.ToOrderedMap(false)
+		if len(m.Order) > 0 {
+			vals[v.Key] = m
+		}
 	}
 	if len(vals) > 0 {
 		ret.AddMetadata("values", vals)

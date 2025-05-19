@@ -25,7 +25,6 @@ type Schema struct {
 	Deprecated  bool   `json:"deprecated,omitempty"`  // indicates the instance is deprecated (default: false)
 	ReadOnly    bool   `json:"readOnly,omitempty"`    // indicates the instance should not be modified (default: false)
 	WriteOnly   bool   `json:"writeOnly,omitempty"`   // indicates the instance may be set but should not be returned (default: false)
-	Examples    []any  `json:"examples,omitempty"`    // array of example values that validate against the schema
 
 	// generic validation keywords
 	Type  any   `json:"type,omitempty"`  // expected data type(s) (string or array of strings: "string", "number", "integer", "object", "array", "boolean", "null")
@@ -82,6 +81,9 @@ type Schema struct {
 	AnyOf Schemas `json:"anyOf,omitempty"` // instance must validate against at least one of these schemas
 	OneOf Schemas `json:"oneOf,omitempty"` // instance must validate against exactly one of these schemas
 	Not   *Schema `json:"not,omitempty"`   // instance must not validate against this schema
+
+	// examples
+	Examples []any `json:"examples,omitempty"` // array of example values that validate against the schema
 
 	// extensions
 	Metadata util.ValueMap `json:"metadata,omitempty"` // additional information about the schema
