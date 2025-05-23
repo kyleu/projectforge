@@ -2,7 +2,6 @@ package grep
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 

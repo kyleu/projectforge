@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
@@ -51,8 +53,7 @@ func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 			case "help":
 				col.HelpString = prop.Metadata.GetStringOpt(k)
 			default:
-				println(fmt.Sprintf("unhandled metadata key [%s]", k))
-				// return nil, errors.Errorf("unhandled metadata key [%s]", k)
+				return nil, errors.Errorf("unhandled metadata key [%s]", k)
 			}
 		}
 	}

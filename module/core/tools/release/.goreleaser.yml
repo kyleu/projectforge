@@ -47,7 +47,7 @@ checksum:
     - glob: "./build/dist/*_app.zip"{{{ end }}}{{{ if .BuildWASM }}}
     - glob: "./build/dist/*_wasm_html.zip"{{{ end }}}
     # $PF_SECTION_START(checksums)$
-    # $PF_SECTION_END(checksums)$
+    # $PF_SECTION_END(checksums)${{{ if .HasDocker }}}
 
 dockers:
   -
@@ -59,7 +59,7 @@ dockers:
     image_templates:
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}-debug"
       - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
-    dockerfile: ./tools/release/Dockerfile.debug{{{ .ExtraFilesContent }}}
+    dockerfile: ./tools/release/Dockerfile.debug{{{ end }}}{{{ .ExtraFilesContent }}}
 
 dist: "build/dist"
 {{{ if .Build.NFPMS }}}

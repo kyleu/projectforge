@@ -26,13 +26,19 @@ const (
 	ExtMarkdown = ".md"
 
 	OK    = "ok"
-	Error = "error"{{{ if .HasDatabase }}}
+	Error = "error"{{{ if .HasModule "metamodel" }}}
+
+	DatabaseMySQL      = "mysql"
+	DatabasePostgreSQL = "postgres"
+	DatabaseSQLite     = "sqlite"
+	DatabaseSQLServer  = "sqlserver"
+{{{else}}}{{{ if .HasDatabase }}}
 
 {{{ if .MySQL }}}	DatabaseMySQL = "mysql"
 {{{ end }}}{{{ if .PostgreSQL }}}	DatabasePostgreSQL = "postgres"
 {{{ end }}}{{{ if .SQLite }}}	DatabaseSQLite = "sqlite"
 {{{ end }}}{{{ if .SQLServer }}}	DatabaseSQLServer = "sqlserver"
-{{{ end }}}{{{ end }}}
+{{{ end }}}{{{ end }}}{{{ end }}}
 	// $PF_SECTION_START(keys)$
 	// $PF_SECTION_END(keys)$.
 )

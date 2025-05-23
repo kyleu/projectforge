@@ -37,6 +37,10 @@
       "description": "if set, signs the results with PGP",
       "type": "boolean"
     },
+    "skipDocker": {
+      "description": "if set, skips the Docker builds",
+      "type": "boolean"
+    },
     "safeMode": {
       "description": "if set, limits dangerous activities",
       "type": "boolean"

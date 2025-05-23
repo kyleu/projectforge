@@ -60,7 +60,6 @@ func ProjectExportWriteJSONSchema(w http.ResponseWriter, r *http.Request) {
 				_, id = util.StringSplitLast(id, '/', true)
 			}
 			fn := "tmp/schema/" + id
-			println(fn)
 			err = fs.WriteFile(fn, util.ToJSONBytes(sch, true), filesystem.DefaultMode, true)
 			if err != nil {
 				return "", err

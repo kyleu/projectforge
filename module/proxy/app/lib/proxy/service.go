@@ -89,7 +89,6 @@ func replaceHeaders(src http.Header, dst http.Header) {
 	for k, vv := range src {
 		for _, v := range vv {
 			if !slices.Contains(badHeaders, v) {
-				println(k, v)
 				dst.Add(k, v)
 			}
 		}

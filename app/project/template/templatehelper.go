@@ -169,24 +169,76 @@ func (t *Context) HasExport() bool {
 	return t.HasModules("export") && !t.ExportArgs.Empty()
 }
 
+func (t *Context) HasDocker() bool {
+	return !t.Build.SkipDocker
+}
+
 func (t *Context) HasDatabase() bool {
 	return t.DatabaseEngine != ""
+}
+
+func (t *Context) HasDatabaseOrMetamodel() bool {
+	return t.HasDatabase() || t.HasModule("metamodel")
 }
 
 func (t *Context) MySQL() bool {
 	return t.DatabaseEngine == util.DatabaseMySQL || t.HasModule(util.DatabaseMySQL)
 }
 
+func (t *Context) MySQLOrExport() bool {
+	return t.MySQL() || t.HasExport()
+}
+
+func (t *Context) MySQLOrMetamodel() bool {
+	return t.MySQL() || t.HasModule("metamodel")
+}
+
+func (t *Context) MySQLOnly() bool {
+	return t.MySQL() && !t.PostgreSQL() && !t.SQLite() && !t.SQLServer()
+}
+
 func (t *Context) PostgreSQL() bool {
 	return t.DatabaseEngine == util.DatabasePostgreSQL || t.HasModule(util.DatabasePostgreSQL)
+}
+
+func (t *Context) PostgreSQLOrExport() bool {
+	return t.PostgreSQL() || t.HasExport()
+}
+
+func (t *Context) PostgreSQLOrMetamodel() bool {
+	return t.PostgreSQL() || t.HasModule("metamodel")
+}
+
+func (t *Context) PostgreSQLOnly() bool {
+	return t.PostgreSQL() && !t.MySQL() && !t.SQLite() && !t.SQLServer()
 }
 
 func (t *Context) SQLite() bool {
 	return t.DatabaseEngine == util.DatabaseSQLite || t.HasModule(util.DatabaseSQLite)
 }
 
+func (t *Context) SQLiteOrExport() bool {
+	return t.SQLite() || t.HasExport()
+}
+
+func (t *Context) SQLiteOrMetamodel() bool {
+	return t.SQLite() || t.HasModule("metamodel")
+}
+
+func (t *Context) SQLiteOnly() bool {
+	return t.SQLite() && !t.MySQL() && !t.PostgreSQL() && !t.SQLServer()
+}
+
 func (t *Context) SQLServer() bool {
 	return t.DatabaseEngine == util.DatabaseSQLServer || t.HasModule(util.DatabaseSQLServer)
+}
+
+func (t *Context) SQLServerOrExport() bool {
+	return t.SQLServer() || t.HasExport()
+}
+
+func (t *Context) SQLServerOrMetamodel() bool {
+	return t.SQLServer() || t.HasModule("metamodel")
 }
 
 func (t *Context) SQLServerOnly() bool {

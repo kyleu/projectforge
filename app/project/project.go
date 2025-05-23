@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/theme"
+	"projectforge.dev/projectforge/app/project/export/load"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -103,7 +104,7 @@ func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) error {
 		if err != nil {
 			return err
 		}
-		p.ExportArgs, err = pSvc.loadExportArgs(fs, p.Info.Acronyms, logger)
+		p.ExportArgs, err = load.ExportArgs(fs, ConfigDir, p.Info.Acronyms, logger)
 		if err != nil {
 			return err
 		}

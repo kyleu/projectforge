@@ -9,6 +9,8 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"
+	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project/template"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -36,7 +38,15 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return f.FullPath()
 		})
 	}
-	configVars, portOffsets := parse(pm)
+	settingsJSON, err := parseSettings(pm.FS, pm.Prj.Theme)
+	if err != nil {
+		return nil, nil, errors.Wrapf(err, "unable to generate [.vscode/settings.json]")
+	}
+	if settingsJSON != nil {
+		srcFiles = append(srcFiles, settingsJSON)
+	}
+
+	configVars, portOffsets := parseConfig(pm)
 	lb := util.StringDetectLinebreak(string(pm.File))
 	tCtx := template.ToTemplateContext(pm.Prj, configVars, portOffsets, lb)
 	for _, f := range srcFiles {
@@ -68,7 +78,35 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	return srcFiles, dfs, nil
 }
 
-func parse(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
+const vscodeSettingsPath = ".vscode/settings.json"
+
+func parseSettings(fs filesystem.FileLoader, thm *theme.Theme) (*file.File, error) {
+	ret := util.ValueMap{}
+	if fs.Exists(vscodeSettingsPath) {
+		b, err := fs.ReadFile(vscodeSettingsPath)
+		if err != nil {
+			return nil, err
+		}
+		err = util.FromJSON(b, &ret)
+		if err != nil {
+			return nil, err
+		}
+	}
+	colors := ret.GetMapOpt("workbench.colorCustomization")
+	if colors == nil {
+		colors = util.ValueMap{}
+	}
+	colors["titleBar.activeForeground"] = "#000000"
+	colors["titleBar.inactiveForeground"] = "#000000aa"
+	colors["titleBar.activeBackground"] = thm.Light.NavBackground
+	colors["titleBar.inactiveBackground"] = thm.Light.MenuBackground
+	ret["workbench.colorCustomizations"] = colors
+
+	f := file.NewFile(vscodeSettingsPath, filesystem.DefaultMode, util.ToJSONBytes(ret, true))
+	return f, nil
+}
+
+func parseConfig(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 	var configVars util.KeyTypeDescs
 	portOffsets := map[string]int{}
 

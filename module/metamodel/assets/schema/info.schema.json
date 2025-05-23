@@ -62,11 +62,11 @@
       "type": "string"
     },
     "notarizeEmail": {
-      "description": "Email address used for Apple notarization, defaults to owner",
+      "description": "email address used for Apple notarization, defaults to owner",
       "type": "string"
     },
     "databaseEngine": {
-      "description": "Email address used for Apple notarization, defaults to owner",
+      "description": "database engine to prefer",
       "enum": ["mysql", "postgresql", "sqlite", "sqlserver"]
     },
     "slack": {
@@ -89,7 +89,7 @@
       "type": "string"
     },
     "goBinary": {
-      "description": "The binary used for Go, defaults to \"go\"",
+      "description": "the binary used for Go, defaults to \"go\"",
       "type": "string"
     },
     "configVars": {

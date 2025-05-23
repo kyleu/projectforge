@@ -13,10 +13,11 @@ type Build struct {
 	NoScript  bool `json:"noScript,omitempty"`
 	Simple    bool `json:"simple,omitempty"`
 
-	Desktop  bool `json:"desktop,omitempty"`
-	Notarize bool `json:"notarize,omitempty"`
-	Signing  bool `json:"signing,omitempty"`
-	SafeMode bool `json:"safeMode,omitempty"`
+	Desktop    bool `json:"desktop,omitempty"`
+	Notarize   bool `json:"notarize,omitempty"`
+	Signing    bool `json:"signing,omitempty"`
+	SkipDocker bool `json:"skipDocker,omitempty"`
+	SafeMode   bool `json:"safeMode,omitempty"`
 
 	Android bool `json:"android,omitempty"`
 	IOS     bool `json:"iOS,omitempty"`
@@ -53,7 +54,7 @@ func (b *Build) HasArm() bool {
 
 func (b *Build) Empty() bool {
 	ret := b.Private || b.Changelog || b.TestsFail || b.NoScript || b.Simple ||
-		b.Desktop || b.Notarize || b.Signing || b.SafeMode ||
+		b.Desktop || b.Notarize || b.Signing || b.SkipDocker || b.SafeMode ||
 		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.AIX || b.Dragonfly || b.Illumos ||
 		b.FreeBSD || b.NetBSD || b.OpenBSD || b.Plan9 || b.Solaris ||
@@ -64,7 +65,7 @@ func (b *Build) Empty() bool {
 func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
 		"private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail, "noScript": b.NoScript,
-		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "safeMode": b.SafeMode,
+		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "skipDocker": b.SkipDocker, "safeMode": b.SafeMode,
 		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "x86": b.X86, "windows-arm": b.WindowsARM,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"aix": b.AIX, "dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
@@ -80,7 +81,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 	}
 	return &Build{
 		Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"), NoScript: x("noScript"),
-		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"), SafeMode: x("safeMode"),
+		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"), SkipDocker: x("skipDocker"), SafeMode: x("safeMode"),
 		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
 		AIX: x("aix"), Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
@@ -104,6 +105,7 @@ var AllBuildOptions = []*BuildOption{
 	{Key: "desktop", Title: "Desktop", Description: "Webview-based applications for the three major operating systems (requires \"desktop\" module)"},
 	{Key: "notarize", Title: "Notarize", Description: "Sends build artifacts to Apple for notarization (requires \"notarize\" module)"},
 	{Key: "signing", Title: "Signing", Description: "Signs the checksums using gpg"},
+	{Key: "skipDocker", Title: "Skip Docker", Description: "When set, skips the docker builds"},
 	{Key: "safeMode", Title: "Safe Mode", Description: "Limits dangerous activities that can be performed on the server"},
 
 	{Key: "android", Title: "Android", Description: "Builds the application as an Android library and webview-based APK (requires \"android\" module)"},

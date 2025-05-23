@@ -27,12 +27,13 @@ const (
 
 	OK    = "ok"
 	Error = "error"
-	// $PF_SECTION_START(keys)$.
+
 	DatabaseMySQL      = "mysql"
 	DatabasePostgreSQL = "postgres"
 	DatabaseSQLite     = "sqlite"
 	DatabaseSQLServer  = "sqlserver"
 
+	// $PF_SECTION_START(keys)$.
 	KeyDetail = "detail"
 	KeySimple = "simple"
 
