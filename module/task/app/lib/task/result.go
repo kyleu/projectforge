@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -60,6 +61,9 @@ func (r *Result) AddLogs(msgs ...string) {
 	r.Logs = append(r.Logs, msgs...)
 	for _, fn := range r.fns {
 		for _, msg := range msgs {
+			if !strings.HasSuffix(msg, "\n") {
+				msg += "\n"
+			}
 			fn("log", msg)
 		}
 	}
