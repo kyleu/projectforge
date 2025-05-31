@@ -2,6 +2,7 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
@@ -9,7 +10,7 @@ import (
 )
 
 func ImportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*enum.Enum, error) {
-	_, err := exportGetType(sch, "string")
+	_, err := exportGetType(sch, KeyString)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func ImportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	if x := sch.Metadata.GetStringOpt("proper"); x != "" {
 		ret.ProperOverride = x
 	}
-	if x := sch.Metadata.GetStringOpt("route"); len(x) > 0 {
+	if x := sch.Metadata.GetStringOpt("route"); x != "" {
 		ret.RouteOverride = x
 	}
 	if x := sch.Metadata.GetStringArrayOpt("tags"); len(x) > 0 {

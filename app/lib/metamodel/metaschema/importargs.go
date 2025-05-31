@@ -17,13 +17,13 @@ func ImportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 	ret := &metamodel.Args{}
 	for _, sch := range coll.Schemas {
 		switch sch.Type {
-		case "object":
+		case KeyObject:
 			x, err := ImportModel(sch, coll, args)
 			if err != nil {
 				return nil, err
 			}
 			ret.Models = append(ret.Models, x)
-		case "string":
+		case KeyString:
 			if len(sch.Enum) == 0 {
 				return nil, errors.Errorf("unhandled type [string] without [enum] values for schema [%s]", sch.String())
 			}
@@ -52,7 +52,7 @@ func ExportAny(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamo
 
 func parseID(id string) (string, string, []string) {
 	parts := util.StringSplitAndTrim(id, "/")
-	pid, pkg := "", ""
+	var pid, pkg string
 	var grp []string
 	switch len(parts) {
 	case 1:

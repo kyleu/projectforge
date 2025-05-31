@@ -18,10 +18,10 @@ func NewCollection() *Collection {
 }
 
 func (c *Collection) GetSchema(id string) *Schema {
-	little := strings.TrimPrefix(strings.TrimSuffix(id, ".schema.json"), "/")
+	little := strings.TrimPrefix(strings.TrimSuffix(id, KeyExtension), "/")
 	big := id
-	if !strings.HasSuffix(big, ".schema.json") {
-		big += ".schema.json"
+	if !strings.HasSuffix(big, KeyExtension) {
+		big += KeyExtension
 	}
 	medium := strings.TrimPrefix(big, "/")
 	ret := lo.FindOrElse(c.Schemas, nil, func(x *Schema) bool {
@@ -32,8 +32,8 @@ func (c *Collection) GetSchema(id string) *Schema {
 
 func (c *Collection) NewSchema(id string) *Schema {
 	u := id
-	if !strings.HasSuffix(u, ".schema.json") {
-		u += ".schema.json"
+	if !strings.HasSuffix(u, KeyExtension) {
+		u += KeyExtension
 	}
 	comment := fmt.Sprintf("managed by %s", util.AppName)
 	ret := &Schema{Schema: "https://json-schema.org/draft/2020-12/schema", MetaID: u, Comment: comment}

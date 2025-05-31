@@ -20,11 +20,11 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	}
 	var ret *types.Wrapped
 	switch t {
-	case "", "nil", "<nil>", "null":
+	case "", KeyNil, KeyNilString, KeyNull:
 		switch sch.Ref {
 		case "":
 			ret = types.NewAny()
-		case "Numeric":
+		case KeyNumeric:
 			ret = types.NewNumeric()
 		default:
 			if strings.Contains(sch.Ref, "/") {
@@ -36,13 +36,13 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 				ret = types.NewEnum(ref)
 			}
 		}
-	case "array":
+	case KeyArray:
 		if sch.Items == nil {
 			ret = types.NewList(types.NewAny())
 		} else {
 			switch itemType := sch.Items.(type) {
 			case string:
-				ret = types.NewList(types.FromJSONType(itemType, sch.Ref))
+				ret = types.NewList(FromJSONType(itemType, sch.Ref))
 			case map[string]any:
 				b := util.ToJSONBytes(itemType, true)
 				itemSch, e := jsonschema.FromJSON(b)
@@ -64,23 +64,23 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 				return nil, errors.Errorf("invalid array item type [%T] for schema [%s]", itemType, sch.String())
 			}
 		}
-	case "boolean":
+	case KeyBoolean:
 		ret = types.NewBool()
-	case "enum":
+	case KeyEnum:
 		ret = types.NewEnum(sch.Ref)
-	case "integer":
+	case KeyInteger:
 		ret = types.NewInt(sch.Metadata.GetIntOpt("bits"))
-	case "number":
+	case KeyNumber:
 		ret = types.NewFloat(sch.Metadata.GetIntOpt("bits"))
-	case "object":
+	case KeyObject:
 		ret = types.NewMap(types.NewString(), types.NewAny())
-	case "string":
+	case KeyString:
 		switch sch.Format {
-		case "date":
+		case KeyDate:
 			ret = types.NewDate()
-		case "date-time":
+		case KeyDateTime:
 			ret = types.NewTimestamp()
-		case "uuid":
+		case KeyUUID:
 			ret = types.NewUUID()
 		case "":
 			ret = types.NewString()
@@ -98,7 +98,7 @@ func exportGetType(sch *jsonschema.Schema, expected ...string) (string, error) {
 		return "", errors.New("nil schema provided")
 	}
 	if sch.Type == nil {
-		return "nil", nil
+		return KeyNil, nil
 	}
 	t, ok := sch.Type.(string)
 	if !ok {

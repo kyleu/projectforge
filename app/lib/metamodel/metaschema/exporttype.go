@@ -2,6 +2,7 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -11,28 +12,28 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 	ret := &jsonschema.Schema{}
 	switch t := typ.(type) {
 	case *types.Any:
-		ret.Type = nil // TODO: Hoo boy...
+		ret.Type = nil
 	case *types.Bool:
-		ret.Type = "boolean"
+		ret.Type = KeyBoolean
 	case *types.Date:
-		ret.Type = "string"
-		ret.Format = "date"
+		ret.Type = KeyString
+		ret.Format = KeyDate
 	case *types.Enum:
 		ret.Ref = t.Ref + ".schema.json"
 	case *types.Float:
-		ret.Type = "number"
+		ret.Type = KeyNumber
 		if t.Bits != 0 {
 			ret.AddMetadata("bits", t.Bits)
 		}
 	case *types.Int:
-		ret.Type = "integer"
+		ret.Type = KeyInteger
 		if t.Bits != 0 {
 			ret.AddMetadata("bits", t.Bits)
 		}
 	case *types.List:
-		ret.Type = "array"
+		ret.Type = KeyArray
 		if t.V.Scalar() && t.V.EnumKey() == "" {
-			ret.Items = types.ToJSONType(t.V)
+			ret.Items = ToJSONType(t.V)
 		} else {
 			itemSchema, e := ExportType(t.V, coll, args)
 			if e != nil {
@@ -41,9 +42,9 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 			ret.Items = itemSchema
 		}
 	case *types.Map:
-		ret.Type = "object"
+		ret.Type = KeyObject
 	case *types.Numeric:
-		ret.Ref = "Numeric"
+		ret.Ref = KeyNumeric
 	case *types.Reference:
 		ret.Ref = t.String()
 	case *types.String:
@@ -58,13 +59,13 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 			ret.Pattern = t.Pattern
 		}
 	case *types.Timestamp:
-		ret.Type = "string"
-		ret.Format = "date-time"
+		ret.Type = KeyString
+		ret.Format = KeyDateTime
 	case *types.UUID:
-		ret.Type = "string"
-		ret.Format = "uuid"
+		ret.Type = KeyString
+		ret.Format = KeyUUID
 	case *types.ValueMap:
-		ret.Type = "object"
+		ret.Type = KeyObject
 	case *types.Wrapped:
 		return ExportType(t.T, coll, args)
 	default:

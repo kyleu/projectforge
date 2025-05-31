@@ -2,6 +2,7 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/filter"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
@@ -36,15 +37,15 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	}
 	if x := sch.Metadata["ordering"]; x != nil {
 		var ords filter.Orderings
-		if err = util.CycleJSON(x, &ords); err != nil {
-			return nil, err
+		if e := util.CycleJSON(x, &ords); e != nil {
+			return nil, e
 		}
 		ret.Ordering = ords
 	}
 	if x := sch.Metadata.GetStringOpt("plural"); x != "" {
 		ret.PluralOverride = x
 	}
-	if x := sch.Metadata.GetStringOpt("route"); len(x) > 0 {
+	if x := sch.Metadata.GetStringOpt("route"); x != "" {
 		ret.RouteOverride = x
 	}
 	if x := sch.Metadata.GetStringArrayOpt("search"); len(x) > 0 {
@@ -53,7 +54,7 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	if x := sch.Metadata.GetIntOpt("sortIndex"); x != 0 {
 		ret.SortIndex = x
 	}
-	if x := sch.Metadata.GetStringOpt("table"); len(x) > 0 {
+	if x := sch.Metadata.GetStringOpt("table"); x != "" {
 		ret.TableOverride = x
 	}
 	if x := sch.Metadata.GetStringArrayOpt("tags"); len(x) > 0 {
@@ -65,36 +66,43 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	if x := sch.Metadata.GetStringOpt("view"); x != "" {
 		ret.View = x
 	}
-	if x, ok := sch.Metadata["relations"]; ok {
-		var rels model.Relations
-		if err = util.CycleJSON(x, &rels); err != nil {
-			return nil, err
-		}
-		ret.Relations = rels
-	}
-	if x, ok := sch.Metadata["indexes"]; ok {
-		var idxs model.Indexes
-		if err = util.CycleJSON(x, &idxs); err != nil {
-			return nil, err
-		}
-		ret.Indexes = idxs
-	}
 	if len(sch.Examples) > 0 {
 		ret.SeedData = util.ArrayFromAny[[]any](sch.Examples)
 	}
-	if x, ok := sch.Metadata["links"]; ok {
+	if e := parseExtra(sch.Metadata, ret); e != nil {
+		return nil, e
+	}
+	return ret, nil
+}
+
+func parseExtra(md util.ValueMap, ret *model.Model) error {
+	if x, ok := md["relations"]; ok {
+		var rels model.Relations
+		if err := util.CycleJSON(x, &rels); err != nil {
+			return err
+		}
+		ret.Relations = rels
+	}
+	if x, ok := md["indexes"]; ok {
+		var idxs model.Indexes
+		if err := util.CycleJSON(x, &idxs); err != nil {
+			return err
+		}
+		ret.Indexes = idxs
+	}
+	if x, ok := md["links"]; ok {
 		var links model.Links
-		if err = util.CycleJSON(x, &links); err != nil {
-			return nil, err
+		if err := util.CycleJSON(x, &links); err != nil {
+			return err
 		}
 		ret.Links = links
 	}
-	if x, ok := sch.Metadata["imports"]; ok {
+	if x, ok := md["imports"]; ok {
 		var imps model.Imports
-		if err = util.CycleJSON(x, &imps); err != nil {
-			return nil, err
+		if err := util.CycleJSON(x, &imps); err != nil {
+			return err
 		}
 		ret.Imports = imps
 	}
-	return ret, nil
+	return nil
 }

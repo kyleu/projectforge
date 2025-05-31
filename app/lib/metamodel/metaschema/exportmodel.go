@@ -3,6 +3,7 @@ package metaschema
 import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
@@ -12,7 +13,7 @@ import (
 func ExportModel(x *model.Model, coll *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {
 	id := util.StringPath(x.PackageWithGroup(""), x.Name)
 	ret := coll.NewSchema(id)
-	ret.Type = "object"
+	ret.Type = KeyObject
 	ret.Description = x.Description
 	ret.Properties = util.NewOrderedMap[*jsonschema.Schema](false, len(x.Columns))
 	ret.Required = x.Columns.Required().Names()

@@ -10,7 +10,7 @@ import (
 func ExportEnum(x *enum.Enum, sch *jsonschema.Collection, args *metamodel.Args) (*jsonschema.Schema, error) {
 	id := util.StringPath(x.PackageWithGroup(""), x.Name)
 	ret := sch.NewSchema(id)
-	ret.Type = "string"
+	ret.Type = KeyString
 	ret.Description = x.Description
 
 	vals := util.ValueMap{}
