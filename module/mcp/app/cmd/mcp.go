@@ -19,7 +19,7 @@ func runMCP(ctx context.Context) error {
 		return err
 	}
 	mcpserver.InitMCP(_buildInfo, _flags.Debug)
-	mcp, err := mcpserver.NewServer(ctx, _version)
+	mcp, err := mcpserver.NewServer(ctx, _buildInfo.Version)
 	if err != nil {
 		return err
 	}
