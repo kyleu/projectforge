@@ -34,7 +34,7 @@ func (t Tool) ToMCP() (mcp.Tool, error) {
 
 func (t Tool) Handler() server.ToolHandlerFunc {
 	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		args := util.ValueMapFrom(req.Params.Arguments)
+		args := util.ValueMapFrom(req.GetArguments())
 		if t.Fn == nil {
 			return nil, errors.Errorf("no handler for tool [%s]", t.Name)
 		}
