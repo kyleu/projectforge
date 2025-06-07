@@ -30,7 +30,7 @@ func (s *Service) GetFilenames(mods Modules, logger util.Logger) ([]string, erro
 func (s *Service) GetFiles(mods Modules, isPrivate bool, logger util.Logger) (file.Files, error) {
 	ret := map[string]*file.File{}
 	for _, mod := range mods {
-		err := s.loadFiles(mod, ret, isPrivate, logger)
+		err := s.loadFiles(mod, false, ret, isPrivate, logger)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to load module [%s]", mod.Key)
 		}
@@ -40,7 +40,18 @@ func (s *Service) GetFiles(mods Modules, isPrivate bool, logger util.Logger) (fi
 	}), nil
 }
 
-func (s *Service) loadFiles(mod *Module, ret map[string]*file.File, isPrivate bool, logger util.Logger) error {
+func (s *Service) GetDocFiles(mod *Module, isPrivate bool, logger util.Logger) (file.Files, error) {
+	ret := map[string]*file.File{}
+	err := s.loadFiles(mod, true, ret, isPrivate, logger)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to load module [%s]", mod.Key)
+	}
+	return lo.Map(util.ArraySorted(lo.Keys(ret)), func(k string, _ int) *file.File {
+		return ret[k]
+	}), nil
+}
+
+func (s *Service) loadFiles(mod *Module, docsOnly bool, ret map[string]*file.File, isPrivate bool, logger util.Logger) error {
 	loader := s.GetFilesystem(mod.Key)
 	fs, err := loader.ListFilesRecursive("", nil, logger)
 	if err != nil {
@@ -54,6 +65,9 @@ func (s *Service) loadFiles(mod *Module, ret map[string]*file.File, isPrivate bo
 			continue
 		}
 		if strings.HasSuffix(f, ".png") || strings.HasSuffix(f, ".ico") || strings.HasSuffix(f, ".icns") {
+			continue
+		}
+		if docsOnly && !strings.HasPrefix(f, "doc/") {
 			continue
 		}
 		mode, b, err := fileContent(loader, f)

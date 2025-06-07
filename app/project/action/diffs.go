@@ -26,7 +26,17 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
 	}
-
+	if pm.Prj.Key == util.AppKey {
+		for _, x := range pm.MSvc.Modules() {
+			if pm.Mods.Get(x.Key) == nil {
+				docs, err := pm.MSvc.GetDocFiles(x, isPrivate, pm.Logger)
+				if err != nil {
+					return nil, nil, err
+				}
+				srcFiles = append(srcFiles, docs...)
+			}
+		}
+	}
 	if pm.Mods.Get("export") != nil && len(srcFiles) > 0 {
 		linebreak := util.StringDetectLinebreak(srcFiles[0].Content)
 		pm.Prj.ExportArgs.Modules = pm.Mods.Keys()
