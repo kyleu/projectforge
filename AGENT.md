@@ -212,7 +212,7 @@ import (
 
 ### Template Conventions
 
-- Use (quicktemplate)[https://github.com/vayala/quicktemplate] syntax (not html/template)
+- Use [quicktemplate](https://github.com/vayala/quicktemplate) syntax (not html/template)
 - Templates in `/views/` compile to `.html.go` files
 - Follow existing naming patterns (PascalCase for template names)
 - Leverage existing component templates in `/views/components/`
@@ -261,21 +261,6 @@ See [technology.md](doc/technology.md) for a complete list.
 
 ## Common Patterns
 
-### Controllers (MVC)
-
-Controllers handle HTTP requests and are organized by feature:
-
-```go
-func Home(w http.ResponseWriter, r *http.Request) {
-	Act("home", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := "any variable" // will be used for JSON and other data-oriented content types; it can be any type
-		ps.SetTitleAndData("My Home Page", ret) // alternately, set properties of `ps` directly
-        page := &views.Debug{} // HTML quicktemplate file; this one just displays the data set in the line above
-		return Render(r, as, page, ps) // this will render the page or return the content type's data; return `"/foo", nil` to redirect
-	})
-}
-```
-
 ### Services
 
 Business logic lives in service packages:
@@ -301,6 +286,49 @@ func process() error {
         return errors.Wrap(err, "failed to fetch data")
     }
     return nil
+}
+```
+
+### Controllers (MVC)
+
+Project Forge controllers can serve both HTML pages and API responses using the same handler. The `Act` helper provides authentication, CORS, telemetry, error handling, and request state:
+
+```go
+func APIEndpoint(w http.ResponseWriter, r *http.Request) {
+	controller.Act("api.endpoint", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		// Business logic here
+		data := getSomeData()
+		
+		// Set data for API responses (JSON, XML, CSV, etc.)
+		ps.SetTitleAndData("API Response", data)
+		
+		// Render handles content negotiation automatically
+		// Returns JSON for Accept: application/json
+		// Returns HTML page for browser requests
+		page := &views.SomePage{Data: data}
+		return controller.Render(r, as, page, ps, "breadcrumb")
+	})
+}
+```
+
+**Content Type Support**: The `Render` function automatically serves multiple formats based on Accept headers or `?format=` query params:
+- **JSON**: `Accept: application/json` or `?format=json`
+- **CSV**: `Accept: text/csv` or `?format=csv` 
+- **XML**: `Accept: application/xml` or `?format=xml`
+- **YAML**: `Accept: application/yaml` or `?format=yaml`
+- **HTML**: Default for browser requests
+
+**Custom Format Handling**: Handle special formats with query parameters:
+
+```go
+switch r.URL.Query().Get("fmt") {
+case "custom":
+	result := processCustomFormat(data)
+	_, _ = ps.W.Write([]byte(result))
+	return "", nil
+default:
+	// Normal rendering
+	return controller.Render(r, as, page, ps)
 }
 ```
 
