@@ -1,18 +1,32 @@
 {% import (
   "encoding/base64"
+  "strings"
   "unicode/utf8"
 
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/filesystem"
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) %}
   {%- if additionalLinks != nil && len(additionalLinks) > 0 -%}
   <div class="right">
     {%- for k, v := range additionalLinks -%}
-    <a href="{%s v %}"><button>{%s k %}</button></a>
+    {%- code
+      var icon string
+      if iconIdx := strings.Index(k, "**"); iconIdx > -1 {
+        icon = k[iconIdx+2:]
+        k = k[:iconIdx]
+      }
+      var newWindow bool
+      if strings.HasPrefix(k, "!") {
+        newWindow = true
+        k = k[1:]
+      }
+    -%}
+    <a href="{%s v %}"{% if newWindow %} target="_blank"{% endif %}><button>{% if icon != "" %}{%= components.SVGButton(icon, ps) %} {% endif %}{%s k %}</button></a>
     {%- endfor -%}
   </div>
   {%- endif -%}

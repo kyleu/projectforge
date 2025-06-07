@@ -36,7 +36,7 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
   <div class="card">
     <h3>`)
 //line views/Debug.html:13
-	components.StreamSVGIcon(qw422016, `graph`, ps)
+	components.StreamSVGIcon(qw422016, util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps)
 //line views/Debug.html:13
 	qw422016.N().S(` `)
 //line views/Debug.html:13
