@@ -18,7 +18,9 @@
     <div class="right"><a href="{%s p.Module.FeaturesPath() %}/files"><button>Files</button></a></div>
     <h3>{%= components.SVGIcon(p.Module.Icon, ps) %} {%s p.Module.Title() %}</h3>
     <em>{%s p.Module.Description %}</em>
-    {%s= p.HTML %}
   </div>
   {%= vmodule.ModuleTech(p.Module, ps) %}
+  <div class="card markdown">
+    {%s= p.HTML %}
+  </div>
 {% endfunc %}

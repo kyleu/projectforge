@@ -58,43 +58,45 @@ func (p *FeatureDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	qw422016.E().S(p.Module.Description)
 //line views/vsite/FeatureDetail.html:20
 	qw422016.N().S(`</em>
-    `)
-//line views/vsite/FeatureDetail.html:21
-	qw422016.N().S(p.HTML)
-//line views/vsite/FeatureDetail.html:21
-	qw422016.N().S(`
   </div>
   `)
-//line views/vsite/FeatureDetail.html:23
+//line views/vsite/FeatureDetail.html:22
 	vmodule.StreamModuleTech(qw422016, p.Module, ps)
-//line views/vsite/FeatureDetail.html:23
+//line views/vsite/FeatureDetail.html:22
 	qw422016.N().S(`
+  <div class="card markdown">
+    `)
+//line views/vsite/FeatureDetail.html:24
+	qw422016.N().S(p.HTML)
+//line views/vsite/FeatureDetail.html:24
+	qw422016.N().S(`
+  </div>
 `)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 }
 
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 func (p *FeatureDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	p.StreamBody(qw422016, as, ps)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 }
 
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 func (p *FeatureDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	p.WriteBody(qb422016, as, ps)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	qs422016 := string(qb422016.B)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 	return qs422016
-//line views/vsite/FeatureDetail.html:24
+//line views/vsite/FeatureDetail.html:26
 }

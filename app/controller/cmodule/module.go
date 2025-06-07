@@ -2,7 +2,6 @@ package cmodule
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -37,9 +36,6 @@ func ModuleDetail(w http.ResponseWriter, r *http.Request) {
 			ret, e := cutil.FormatMarkdown(s)
 			if e != nil {
 				return "", "", e
-			}
-			if aIdx := strings.Index(ret, "CC0</a>"); aIdx > -1 {
-				ret = strings.TrimPrefix(ret[aIdx+7:], "</p>")
 			}
 			return "", ret, nil
 		})

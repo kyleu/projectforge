@@ -18,7 +18,7 @@
     <h3>{%= components.SVGIcon(`app`, ps) %} {%s util.AppName %} Features</h3>
   </div>
   {%- for _, mod := range p.Modules -%}
-    <a class="link-section" href="/m/{%s mod.Key %}">
+    <a class="link-section" href="/features/{%s mod.Key %}">
       <div class="card">
         {%= vmodule.ModuleTechList(mod, ps) %}
         <div class="left mrs">{%= components.SVGRef(mod.IconSafe(), 40, 40, "", ps) %}</div>

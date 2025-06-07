@@ -141,7 +141,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vmodule/Detail.html:62
 	if p.HTML != "" {
 //line views/vmodule/Detail.html:62
-		qw422016.N().S(`  <div class="card">
+		qw422016.N().S(`  <div class="card markdown">
     `)
 //line views/vmodule/Detail.html:64
 		qw422016.N().S(p.HTML)
