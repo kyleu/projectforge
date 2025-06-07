@@ -36,6 +36,16 @@
     <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Tool.Name %}</h3>
     <em>{%s p.Tool.Description %}</em>
     <div class="mt">
+      Register this tool as an MCP server by:
+      <ul>
+        <li>calling this app using the command line as <code>{%s util.AppKey %} mcp</code></li>
+        <li>sending an SSE POST to <code>/admin/mcp</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`play`, ps) %} Arguments</h3>
+    <div class="mt">
       {%= edit.TableEditor("args", p.Tool.Args, p.Args, "/admin/mcp/tool/" + p.Tool.Name, "post", "Run") %}
     </div>
   </div>

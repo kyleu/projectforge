@@ -4,8 +4,11 @@ import (
 	"context"
 
 	"github.com/muesli/coral"
+	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/mcpserver"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func mcpCmd() *coral.Command {
@@ -16,14 +19,17 @@ func mcpCmd() *coral.Command {
 
 func runMCP(ctx context.Context) error {
 	if err := initIfNeeded(); err != nil {
-		return err
+		return errors.Wrap(err, "error initializing application")
 	}
-	mcpserver.InitMCP(_buildInfo, _flags.Debug)
-	mcp, err := mcpserver.NewServer(ctx, _buildInfo.Version)
+	st, err := app.Bootstrap(_buildInfo, _flags.ConfigDir, _flags.Port, _flags.Debug, util.RootLogger)
 	if err != nil {
 		return err
 	}
-	if err := mcp.Serve(ctx); err != nil {
+	mcp, err := mcpserver.NewServer(ctx, st, util.RootLogger)
+	if err != nil {
+		return err
+	}
+	if err := mcp.ServeCLI(ctx); err != nil {
 		return err
 	}
 	return nil

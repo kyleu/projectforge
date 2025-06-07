@@ -48,7 +48,7 @@ func MCPTaskRun(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		ret, err := tool.Fn(ps.Context, frm, mcp.CallToolRequest{})
+		ret, err := tool.Fn(ps.Context, as, mcp.CallToolRequest{}, frm, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -57,10 +57,20 @@ func MCPTaskRun(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func MCPTaskSSE(w http.ResponseWriter, r *http.Request) {
+	controller.Act("mcp.task.sse", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mcpx, _, err := mcpTool(r, as, ps)
+		if err != nil {
+			return "", err
+		}
+		mcpx.ServeHTTP(w, r)
+		return "", nil
+	})
+}
+
 func mcpTool(r *http.Request, as *app.State, ps *cutil.PageState) (*mcpserver.Server, *mcpserver.Tool, error) {
-	mcpserver.InitMCP(as.BuildInfo, as.Debug)
 	toolKey, _ := cutil.PathString(r, "tool", false)
-	mcpx, err := mcpserver.NewServer(ps.Context, as.BuildInfo.Version)
+	mcpx, err := mcpserver.NewServer(ps.Context, as, ps.Logger)
 	if err != nil {
 		return nil, nil, err
 	}

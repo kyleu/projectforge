@@ -2,6 +2,7 @@ package mcpserver
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/mark3labs/mcp-go/server"
 
@@ -9,48 +10,43 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var (
-	buildInfo *app.BuildInfo
-	debug     bool
-)
-
-func InitMCP(bi *app.BuildInfo, dbg bool) {
-	buildInfo = bi
-	debug = dbg
-}
-
 type Server struct {
-	MCP   *server.MCPServer
+	MCP   *server.MCPServer `json:"-"`
+	State *app.State        `json:"-"`
 	Tools map[string]*Tool
+	HTTP  http.Handler `json:"-"`
 }
 
-func NewServer(ctx context.Context, version string) (*Server, error) {
-	ms := server.NewMCPServer(util.AppName, version)
+func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server, error) {
+	ms := server.NewMCPServer(util.AppName, as.BuildInfo.Version)
 	mcp := &Server{MCP: ms, Tools: make(map[string]*Tool)}
 	// $PF_SECTION_START(tools)$
-	if err := mcp.AddTools(ProjectsTool); err != nil {
+	if err := mcp.AddTools(as, logger, ProjectsTool); err != nil {
 		return nil, err
 	}
 	// $PF_SECTION_END(tools)$
 	return mcp, nil
 }
 
-func (s *Server) AddTools(tools ...*Tool) error {
+func (s *Server) AddTools(as *app.State, logger util.Logger, tools ...*Tool) error {
 	for _, tool := range tools {
 		s.Tools[tool.Name] = tool
 		t, err := tool.ToMCP()
 		if err != nil {
 			return err
 		}
-		s.MCP.AddTool(t, tool.Handler())
+		s.MCP.AddTool(t, tool.Handler(as, logger))
 	}
 	return nil
 }
 
-func (s *Server) Serve(ctx context.Context) error {
+func (s *Server) ServeCLI(ctx context.Context) error {
 	return server.ServeStdio(s.MCP)
 }
 
-func MCPConfig() (*app.BuildInfo, bool) {
-	return buildInfo, debug
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if s.HTTP == nil {
+		s.HTTP = server.NewSSEServer(s.MCP, server.WithBaseURL("/admin/mcp")).SSEHandler()
+	}
+	s.HTTP.ServeHTTP(w, r)
 }

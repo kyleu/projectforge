@@ -105,61 +105,79 @@ func (p *MCP) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 //line views/vadmin/MCP.html:37
 		qw422016.N().S(`</em>
     <div class="mt">
+      Register this tool as an MCP server by:
+      <ul>
+        <li>calling this app using the command line as <code>`)
+//line views/vadmin/MCP.html:41
+		qw422016.E().S(util.AppKey)
+//line views/vadmin/MCP.html:41
+		qw422016.N().S(` mcp</code></li>
+        <li>sending an SSE POST to <code>/admin/mcp</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>`)
+//line views/vadmin/MCP.html:47
+		components.StreamSVGIcon(qw422016, `play`, ps)
+//line views/vadmin/MCP.html:47
+		qw422016.N().S(` Arguments</h3>
+    <div class="mt">
       `)
-//line views/vadmin/MCP.html:39
+//line views/vadmin/MCP.html:49
 		edit.StreamTableEditor(qw422016, "args", p.Tool.Args, p.Args, "/admin/mcp/tool/"+p.Tool.Name, "post", "Run")
-//line views/vadmin/MCP.html:39
+//line views/vadmin/MCP.html:49
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vadmin/MCP.html:42
+//line views/vadmin/MCP.html:52
 	}
-//line views/vadmin/MCP.html:43
+//line views/vadmin/MCP.html:53
 	if p.Result != "" {
-//line views/vadmin/MCP.html:43
+//line views/vadmin/MCP.html:53
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vadmin/MCP.html:45
+//line views/vadmin/MCP.html:55
 		components.StreamSVGIcon(qw422016, `file`, ps)
-//line views/vadmin/MCP.html:45
+//line views/vadmin/MCP.html:55
 		qw422016.N().S(` Result</h3>
     <div class="mt">
       <pre>`)
-//line views/vadmin/MCP.html:47
+//line views/vadmin/MCP.html:57
 		qw422016.E().S(p.Result)
-//line views/vadmin/MCP.html:47
+//line views/vadmin/MCP.html:57
 		qw422016.N().S(`</pre>
     </div>
   </div>
 `)
-//line views/vadmin/MCP.html:50
+//line views/vadmin/MCP.html:60
 	}
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 }
 
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 func (p *MCP) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 }
 
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 func (p *MCP) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	qs422016 := string(qb422016.B)
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 	return qs422016
-//line views/vadmin/MCP.html:51
+//line views/vadmin/MCP.html:61
 }

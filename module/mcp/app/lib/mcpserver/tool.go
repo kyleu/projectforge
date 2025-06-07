@@ -7,10 +7,11 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 	"github.com/pkg/errors"
 
+	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/util"
 )
 
-type ToolHandler func(ctx context.Context, args util.ValueMap, req mcp.CallToolRequest) (string, error)
+type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error)
 
 type Tool struct {
 	Name        string
@@ -32,13 +33,13 @@ func (t Tool) ToMCP() (mcp.Tool, error) {
 	return mcp.NewTool(t.Name, opts...), nil
 }
 
-func (t Tool) Handler() server.ToolHandlerFunc {
+func (t Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc {
 	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		args := util.ValueMapFrom(req.GetArguments())
 		if t.Fn == nil {
 			return nil, errors.Errorf("no handler for tool [%s]", t.Name)
 		}
-		ret, err := t.Fn(ctx, args, req)
+		ret, err := t.Fn(ctx, as, req, args, logger)
 		if err != nil {
 			return nil, errors.Errorf("errors running [%s] with arguments %s: %+v", t.Name, util.ToJSONCompact(args), err)
 		}

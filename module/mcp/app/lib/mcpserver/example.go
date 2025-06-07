@@ -7,6 +7,7 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/pkg/errors"
 
+	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/util"
 )
 
@@ -17,7 +18,7 @@ var ExampleTool = &Tool{
 	Fn:          exampleHandler,
 }
 
-func exampleHandler(ctx context.Context, args util.ValueMap, req mcp.CallToolRequest) (string, error) {
+func exampleHandler(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error) {
 	mx, err := args.GetInt("max", true)
 	if err != nil {
 		return "", errors.Errorf("argument [max] must be an integer")

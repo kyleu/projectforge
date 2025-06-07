@@ -5,7 +5,7 @@ import (
 
 	"github.com/mark3labs/mcp-go/mcp"
 
-	"projectforge.dev/projectforge/app/lib/log"
+	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -19,10 +19,9 @@ var ProjectsTool = &Tool{
 	Fn: projectsHandler,
 }
 
-func projectsHandler(_ context.Context, args util.ValueMap, _ mcp.CallToolRequest) (string, error) {
+func projectsHandler(_ context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error) {
 	id, _ := args.GetString("id", true)
-	logger, _ := log.InitLogging(false)
-	svc := project.NewService()
+	svc := as.Services.Projects
 	ret, err := svc.Refresh(logger)
 	if err != nil {
 		return "", err
