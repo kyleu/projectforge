@@ -1,3 +1,5 @@
+import { replaceDom } from "./socketdom";
+
 let appUnloading = false;
 
 export type Message = {
@@ -73,6 +75,8 @@ export class Socket {
       }
       if (msg.cmd === "close-connection") {
         s.disconnect();
+      } else if (msg.cmd === "dom-replace") {
+        replaceDom(msg.param);
       } else {
         s.recv(msg);
       }
