@@ -1,4 +1,4 @@
-# AGENTS.md
+# AGENT.md
 
 This file provides guidance for AI agents and humans working with the Project Forge codebase.
 
