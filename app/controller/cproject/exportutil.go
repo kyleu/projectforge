@@ -1,6 +1,7 @@
 package cproject
 
 import (
+	"math"
 	"net/http"
 	"strconv"
 
@@ -35,7 +36,9 @@ func exportModelFromForm(frm util.ValueMap, m *model.Model) error {
 	m.Ordering = ords
 
 	sIdx, _ := strconv.ParseInt(get("sortIndex", "0"), 10, 64)
-	m.SortIndex = int(sIdx)
+	if sIdx <= math.MaxInt32 {
+		m.SortIndex = int(sIdx)
+	}
 	m.View = get("view", m.View)
 	m.Search = util.StringSplitAndTrim(get("search", util.StringJoin(m.Search, ",")), ",")
 	m.Tags = util.StringSplitAndTrim(get("tags", util.StringJoin(m.Tags, ",")), ",")
