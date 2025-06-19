@@ -107,6 +107,7 @@ func (e *Exec) Kill() error {
 	if e.execCmd == nil {
 		return errors.New("not started")
 	}
+	e.Completed = util.TimeCurrentP()
 	return e.execCmd.Process.Kill()
 }
 

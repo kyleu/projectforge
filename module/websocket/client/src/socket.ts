@@ -77,7 +77,7 @@ export class Socket {
         s.recv(msg);
       }
     };
-    this.sock.onerror = (event) => () => {
+    this.sock.onerror = (event) => {
       s.err("socket", event.type);
     };
     this.sock.onclose = () => {
