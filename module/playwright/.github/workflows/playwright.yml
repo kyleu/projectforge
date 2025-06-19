@@ -48,7 +48,6 @@ jobs:
         run: "make build-release"
 
       - name: "Run Playwright tests"
-        working-directory: "./test/playwright"
         run: "bin/build/playwright.sh"
 
       - name: "Upload report"
