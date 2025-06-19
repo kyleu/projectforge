@@ -41,19 +41,8 @@ jobs:
         with:
           go-version: "{{{ .GoVersionSafe }}}"
 
-      - name: "Cache"
-        uses: "actions/cache@v4"
-        with:
-          path: "~/go/pkg/mod"
-          key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
-          restore-keys: |
-            ${{ runner.os }}-go-
-
       - name: "Bootstrap"
         run: "bin/bootstrap.sh"
-
-      - name: "Build App"
-        run: "make release"
 
       - name: "Build App"
         run: "make build-release"
