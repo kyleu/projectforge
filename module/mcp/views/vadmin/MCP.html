@@ -8,54 +8,66 @@
   "{{{ .Package }}}/views/layout"
 ) %}
 
-{% code type MCP struct {
+{% code type MCPList struct {
   layout.Basic
-  Tools map[string]*mcpserver.Tool
+  Server *mcpserver.Server
+} %}
+
+{% func (p *MCPList) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`chart`, ps) %} Model Context Protocol Tools</h3>
+    <div class="mt">You can register {%s util.AppName %} as a Model Context Protocol server using the command line or HTTP.</div>
+    <div class="mt">
+      <ul class="accordion">
+        <li>
+          <input id="accordion-cli" type="checkbox" hidden="hidden" />
+          <label for="accordion-cli">{%= components.ExpandCollapse(3, ps) %} Command Line</label>
+          <div class="bd"><div><div>
+            Register {%s util.AppName %} as a command line MCP server by calling this app using the command line as <code>{%s util.AppKey %} mcp</code>.
+            <div class="mt">{%s= cutil.FormatLangIgnoreErrors(mcpserver.UsageCLI(), "json") %}</div>
+          </div></div></div>
+        </li>
+        <li>
+          <input id="accordion-http" type="checkbox" hidden="hidden" />
+          <label for="accordion-http">{%= components.ExpandCollapse(3, ps) %} HTTP SSE</label>
+          <div class="bd"><div><div>
+            Register {%s util.AppName %} as an HTTP MCP server by sending a POST to <code>/admin/mcp/sse</code>.
+            <div class="mt">{%s= cutil.FormatLangIgnoreErrors(mcpserver.UsageHTTP(), "json") %}</div>
+            </div>
+          </div></div></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  {%- for _, t := range p.Server.Tools -%}
+  <a class="link-section" href="/admin/mcp/tool/{%s t.Name %}">
+    <div class="card">
+      <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
+      <strong class="highlight">{%s t.Name %}</strong>
+      <div><em>{%s t.Description %}</em></div>
+    </div>
+  </a>
+  {%- endfor -%}
+{% endfunc %}
+
+{% code type MCPDetail struct {
+  layout.Basic
+  Server *mcpserver.Server
   Tool *mcpserver.Tool
   Args util.ValueMap
   Result string
 } %}
 
-{% func (p *MCP) Body(as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <h3>{%= components.SVGIcon(`chart`, ps) %} Model Context Protocol Tools</h3>
-    <ul class="mt">
-      {%- for _, k := range util.MapKeysSorted(p.Tools) -%}
-      {%- code t := p.Tools[k] -%}
-      <li>
-        <a href="/admin/mcp/tool/{%s t.Name %}"><strong>{%s t.Name %}</strong></a>
-        {%- if p.Tool == nil -%}
-        <div><em>{%s t.Description %}</em></div>
-        {%- endif -%}
-      </li>
-      {%- endfor -%}
-    </ul>
-  </div>
-  {%- if p.Tool != nil -%}
+{% func (p *MCPDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Tool.Name %}</h3>
     <em>{%s p.Tool.Description %}</em>
-    <div class="mt">
-      Register this tool as an MCP server by:
-      <ul>
-        <li>calling this app using the command line as <code>{%s util.AppKey %} mcp</code></li>
-        <li>sending an SSE POST to <code>/admin/mcp/sse</code></li>
-      </ul>
-    </div>
+    <div class="mt">{%= edit.TableEditor("args", p.Tool.Args, p.Args, "/admin/mcp/tool/" + p.Tool.Name, "post", "Run") %}</div>
   </div>
-  <div class="card">
-    <h3>{%= components.SVGIcon(`play`, ps) %} Arguments</h3>
-    <div class="mt">
-      {%= edit.TableEditor("args", p.Tool.Args, p.Args, "/admin/mcp/tool/" + p.Tool.Name, "post", "Run") %}
-    </div>
-  </div>
-  {%- endif -%}
   {%- if p.Result != "" -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} Result</h3>
-    <div class="mt">
-      <pre>{%s p.Result %}</pre>
-    </div>
+    <div class="mt">{%= components.JSON([]byte(p.Result)) %}</div>
   </div>
   {%- endif -%}
 {% endfunc %}

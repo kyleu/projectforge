@@ -26,10 +26,10 @@ func adminRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/admin/database/{key}/tables/{schema}/{table}/stats", clib.DatabaseTableStats){{{ if .DatabaseUISQLEditor }}}
 	makeRoute(r, http.MethodPost, "/admin/database/{key}/sql", clib.DatabaseSQLRun){{{ end }}}{{{ end }}}{{{ if .HasModule "mcp" }}}
 	makeRoute(r, http.MethodGet, "/admin/mcp", clib.MCPIndex)
-	makeRoute(r, http.MethodGet, "/admin/mcp/sse", clib.MCPTaskSSE)
-	makeRoute(r, http.MethodPost, "/admin/mcp/sse", clib.MCPTaskSSE)
-	makeRoute(r, http.MethodGet, "/admin/mcp/tool/{tool}", clib.MCPTask)
-	makeRoute(r, http.MethodPost, "/admin/mcp/tool/{tool}", clib.MCPTaskRun){{{ end }}}{{{ if .HasModule "schedule" }}}
+	makeRoute(r, http.MethodGet, "/admin/mcp/sse", clib.MCPServe)
+	makeRoute(r, http.MethodPost, "/admin/mcp/sse", clib.MCPServe)
+	makeRoute(r, http.MethodGet, "/admin/mcp/tool/{tool}", clib.MCPTool)
+	makeRoute(r, http.MethodPost, "/admin/mcp/tool/{tool}", clib.MCPToolRun){{{ end }}}{{{ if .HasModule "schedule" }}}
 	makeRoute(r, http.MethodGet, "/admin/schedule", clib.ScheduleList)
 	makeRoute(r, http.MethodGet, "/admin/schedule/{id}", clib.ScheduleDetail){{{ end }}}{{{ if .HasModule "queue" }}}
 	makeRoute(r, http.MethodGet, "/admin/queue", clib.QueueIndex)

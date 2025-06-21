@@ -17,29 +17,40 @@ import (
 const mcpBreadcrumb = "MCP||/admin/mcp**graph"
 
 func MCPIndex(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.index", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("mcp.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mcpx, _, err := mcpTool(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("MCP", mcpx)
-		return controller.Render(r, as, &vadmin.MCP{Tools: mcpx.Tools}, ps, keyAdmin, mcpBreadcrumb)
+		return controller.Render(r, as, &vadmin.MCPList{Server: mcpx}, ps, keyAdmin, mcpBreadcrumb)
 	})
 }
 
-func MCPTask(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.task", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+func MCPServe(w http.ResponseWriter, r *http.Request) {
+	controller.Act("mcp.serve.sse", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		mcpx, _, err := mcpTool(r, as, ps)
+		if err != nil {
+			return "", err
+		}
+		mcpx.ServeHTTP(ps.Context, w, r, ps.Logger)
+		return "", nil
+	})
+}
+
+func MCPTool(w http.ResponseWriter, r *http.Request) {
+	controller.Act("mcp.tool", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mcpx, tool, err := mcpTool(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s]", tool.Name), tool)
-		return controller.Render(r, as, &vadmin.MCP{Tools: mcpx.Tools, Tool: tool}, ps, keyAdmin, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool}, ps, keyAdmin, mcpBreadcrumb, tool.Name)
 	})
 }
 
-func MCPTaskRun(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.task", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+func MCPToolRun(w http.ResponseWriter, r *http.Request) {
+	controller.Act("mcp.tool.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mcpx, tool, err := mcpTool(r, as, ps)
 		if err != nil {
 			return "", err
@@ -53,18 +64,7 @@ func MCPTaskRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s] Result", tool.Name), ret)
-		return controller.Render(r, as, &vadmin.MCP{Tools: mcpx.Tools, Tool: tool, Args: frm, Result: ret}, ps, keyAdmin, mcpBreadcrumb, tool.Name)
-	})
-}
-
-func MCPTaskSSE(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.task.sse", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mcpx, _, err := mcpTool(r, as, ps)
-		if err != nil {
-			return "", err
-		}
-		mcpx.ServeHTTP(ps.Context, w, r, ps.Logger)
-		return "", nil
+		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, keyAdmin, mcpBreadcrumb, tool.Name)
 	})
 }
 
@@ -76,7 +76,7 @@ func mcpTool(r *http.Request, as *app.State, ps *cutil.PageState) (*mcpserver.Se
 	}
 	var tool *mcpserver.Tool
 	if toolKey != "" {
-		tool = mcpx.Tools[toolKey]
+		tool = mcpx.Tools.Get(toolKey)
 		if tool == nil {
 			return nil, nil, errors.Errorf("unable to find tool [%s]", toolKey)
 		}

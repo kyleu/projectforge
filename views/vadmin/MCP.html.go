@@ -29,155 +29,213 @@ var (
 )
 
 //line views/vadmin/MCP.html:11
-type MCP struct {
+type MCPList struct {
 	layout.Basic
-	Tools  map[string]*mcpserver.Tool
+	Server *mcpserver.Server
+}
+
+//line views/vadmin/MCP.html:16
+func (p *MCPList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/MCP.html:16
+	qw422016.N().S(`
+  <div class="card">
+    <h3>`)
+//line views/vadmin/MCP.html:18
+	components.StreamSVGIcon(qw422016, `chart`, ps)
+//line views/vadmin/MCP.html:18
+	qw422016.N().S(` Model Context Protocol Tools</h3>
+    <div class="mt">You can register `)
+//line views/vadmin/MCP.html:19
+	qw422016.E().S(util.AppName)
+//line views/vadmin/MCP.html:19
+	qw422016.N().S(` as a Model Context Protocol server using the command line or HTTP.</div>
+    <div class="mt">
+      <ul class="accordion">
+        <li>
+          <input id="accordion-cli" type="checkbox" hidden="hidden" />
+          <label for="accordion-cli">`)
+//line views/vadmin/MCP.html:24
+	components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vadmin/MCP.html:24
+	qw422016.N().S(` Command Line</label>
+          <div class="bd"><div><div>
+            Register `)
+//line views/vadmin/MCP.html:26
+	qw422016.E().S(util.AppName)
+//line views/vadmin/MCP.html:26
+	qw422016.N().S(` as a command line MCP server by calling this app using the command line as <code>`)
+//line views/vadmin/MCP.html:26
+	qw422016.E().S(util.AppKey)
+//line views/vadmin/MCP.html:26
+	qw422016.N().S(` mcp</code>.
+            <div class="mt">`)
+//line views/vadmin/MCP.html:27
+	qw422016.N().S(cutil.FormatLangIgnoreErrors(mcpserver.UsageCLI(), "json"))
+//line views/vadmin/MCP.html:27
+	qw422016.N().S(`</div>
+          </div></div></div>
+        </li>
+        <li>
+          <input id="accordion-http" type="checkbox" hidden="hidden" />
+          <label for="accordion-http">`)
+//line views/vadmin/MCP.html:32
+	components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vadmin/MCP.html:32
+	qw422016.N().S(` HTTP SSE</label>
+          <div class="bd"><div><div>
+            Register `)
+//line views/vadmin/MCP.html:34
+	qw422016.E().S(util.AppName)
+//line views/vadmin/MCP.html:34
+	qw422016.N().S(` as an HTTP MCP server by sending a POST to <code>/admin/mcp/sse</code>.
+            <div class="mt">`)
+//line views/vadmin/MCP.html:35
+	qw422016.N().S(cutil.FormatLangIgnoreErrors(mcpserver.UsageHTTP(), "json"))
+//line views/vadmin/MCP.html:35
+	qw422016.N().S(`</div>
+            </div>
+          </div></div></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+`)
+//line views/vadmin/MCP.html:42
+	for _, t := range p.Server.Tools {
+//line views/vadmin/MCP.html:42
+		qw422016.N().S(`  <a class="link-section" href="/admin/mcp/tool/`)
+//line views/vadmin/MCP.html:43
+		qw422016.E().S(t.Name)
+//line views/vadmin/MCP.html:43
+		qw422016.N().S(`">
+    <div class="card">
+      <div class="left mrs">`)
+//line views/vadmin/MCP.html:45
+		components.StreamSVGRef(qw422016, t.IconSafe(), 40, 40, "", ps)
+//line views/vadmin/MCP.html:45
+		qw422016.N().S(`</div>
+      <strong class="highlight">`)
+//line views/vadmin/MCP.html:46
+		qw422016.E().S(t.Name)
+//line views/vadmin/MCP.html:46
+		qw422016.N().S(`</strong>
+      <div><em>`)
+//line views/vadmin/MCP.html:47
+		qw422016.E().S(t.Description)
+//line views/vadmin/MCP.html:47
+		qw422016.N().S(`</em></div>
+    </div>
+  </a>
+`)
+//line views/vadmin/MCP.html:50
+	}
+//line views/vadmin/MCP.html:51
+}
+
+//line views/vadmin/MCP.html:51
+func (p *MCPList) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/MCP.html:51
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vadmin/MCP.html:51
+	p.StreamBody(qw422016, as, ps)
+//line views/vadmin/MCP.html:51
+	qt422016.ReleaseWriter(qw422016)
+//line views/vadmin/MCP.html:51
+}
+
+//line views/vadmin/MCP.html:51
+func (p *MCPList) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vadmin/MCP.html:51
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vadmin/MCP.html:51
+	p.WriteBody(qb422016, as, ps)
+//line views/vadmin/MCP.html:51
+	qs422016 := string(qb422016.B)
+//line views/vadmin/MCP.html:51
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vadmin/MCP.html:51
+	return qs422016
+//line views/vadmin/MCP.html:51
+}
+
+//line views/vadmin/MCP.html:53
+type MCPDetail struct {
+	layout.Basic
+	Server *mcpserver.Server
 	Tool   *mcpserver.Tool
 	Args   util.ValueMap
 	Result string
 }
 
-//line views/vadmin/MCP.html:19
-func (p *MCP) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/MCP.html:19
+//line views/vadmin/MCP.html:61
+func (p *MCPDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/MCP.html:61
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vadmin/MCP.html:21
-	components.StreamSVGIcon(qw422016, `chart`, ps)
-//line views/vadmin/MCP.html:21
-	qw422016.N().S(` Model Context Protocol Tools</h3>
-    <ul class="mt">
-`)
-//line views/vadmin/MCP.html:23
-	for _, k := range util.MapKeysSorted(p.Tools) {
-//line views/vadmin/MCP.html:24
-		t := p.Tools[k]
-
-//line views/vadmin/MCP.html:24
-		qw422016.N().S(`      <li>
-        <a href="/admin/mcp/tool/`)
-//line views/vadmin/MCP.html:26
-		qw422016.E().S(t.Name)
-//line views/vadmin/MCP.html:26
-		qw422016.N().S(`"><strong>`)
-//line views/vadmin/MCP.html:26
-		qw422016.E().S(t.Name)
-//line views/vadmin/MCP.html:26
-		qw422016.N().S(`</strong></a>
-`)
-//line views/vadmin/MCP.html:27
-		if p.Tool == nil {
-//line views/vadmin/MCP.html:27
-			qw422016.N().S(`        <div><em>`)
-//line views/vadmin/MCP.html:28
-			qw422016.E().S(t.Description)
-//line views/vadmin/MCP.html:28
-			qw422016.N().S(`</em></div>
-`)
-//line views/vadmin/MCP.html:29
-		}
-//line views/vadmin/MCP.html:29
-		qw422016.N().S(`      </li>
-`)
-//line views/vadmin/MCP.html:31
-	}
-//line views/vadmin/MCP.html:31
-	qw422016.N().S(`    </ul>
-  </div>
-`)
-//line views/vadmin/MCP.html:34
-	if p.Tool != nil {
-//line views/vadmin/MCP.html:34
-		qw422016.N().S(`  <div class="card">
-    <h3>`)
-//line views/vadmin/MCP.html:36
-		components.StreamSVGIcon(qw422016, `cog`, ps)
-//line views/vadmin/MCP.html:36
-		qw422016.N().S(` `)
-//line views/vadmin/MCP.html:36
-		qw422016.E().S(p.Tool.Name)
-//line views/vadmin/MCP.html:36
-		qw422016.N().S(`</h3>
+//line views/vadmin/MCP.html:63
+	components.StreamSVGIcon(qw422016, `cog`, ps)
+//line views/vadmin/MCP.html:63
+	qw422016.N().S(` `)
+//line views/vadmin/MCP.html:63
+	qw422016.E().S(p.Tool.Name)
+//line views/vadmin/MCP.html:63
+	qw422016.N().S(`</h3>
     <em>`)
-//line views/vadmin/MCP.html:37
-		qw422016.E().S(p.Tool.Description)
-//line views/vadmin/MCP.html:37
-		qw422016.N().S(`</em>
-    <div class="mt">
-      Register this tool as an MCP server by:
-      <ul>
-        <li>calling this app using the command line as <code>`)
-//line views/vadmin/MCP.html:41
-		qw422016.E().S(util.AppKey)
-//line views/vadmin/MCP.html:41
-		qw422016.N().S(` mcp</code></li>
-        <li>sending an SSE POST to <code>/admin/mcp/sse</code></li>
-      </ul>
-    </div>
-  </div>
-  <div class="card">
-    <h3>`)
-//line views/vadmin/MCP.html:47
-		components.StreamSVGIcon(qw422016, `play`, ps)
-//line views/vadmin/MCP.html:47
-		qw422016.N().S(` Arguments</h3>
-    <div class="mt">
-      `)
-//line views/vadmin/MCP.html:49
-		edit.StreamTableEditor(qw422016, "args", p.Tool.Args, p.Args, "/admin/mcp/tool/"+p.Tool.Name, "post", "Run")
-//line views/vadmin/MCP.html:49
-		qw422016.N().S(`
-    </div>
+//line views/vadmin/MCP.html:64
+	qw422016.E().S(p.Tool.Description)
+//line views/vadmin/MCP.html:64
+	qw422016.N().S(`</em>
+    <div class="mt">`)
+//line views/vadmin/MCP.html:65
+	edit.StreamTableEditor(qw422016, "args", p.Tool.Args, p.Args, "/admin/mcp/tool/"+p.Tool.Name, "post", "Run")
+//line views/vadmin/MCP.html:65
+	qw422016.N().S(`</div>
   </div>
 `)
-//line views/vadmin/MCP.html:52
-	}
-//line views/vadmin/MCP.html:53
+//line views/vadmin/MCP.html:67
 	if p.Result != "" {
-//line views/vadmin/MCP.html:53
+//line views/vadmin/MCP.html:67
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vadmin/MCP.html:55
+//line views/vadmin/MCP.html:69
 		components.StreamSVGIcon(qw422016, `file`, ps)
-//line views/vadmin/MCP.html:55
+//line views/vadmin/MCP.html:69
 		qw422016.N().S(` Result</h3>
-    <div class="mt">
-      <pre>`)
-//line views/vadmin/MCP.html:57
-		qw422016.E().S(p.Result)
-//line views/vadmin/MCP.html:57
-		qw422016.N().S(`</pre>
-    </div>
+    <div class="mt">`)
+//line views/vadmin/MCP.html:70
+		components.StreamJSON(qw422016, []byte(p.Result))
+//line views/vadmin/MCP.html:70
+		qw422016.N().S(`</div>
   </div>
 `)
-//line views/vadmin/MCP.html:60
+//line views/vadmin/MCP.html:72
 	}
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 }
 
-//line views/vadmin/MCP.html:61
-func (p *MCP) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
+func (p *MCPDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/MCP.html:73
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 }
 
-//line views/vadmin/MCP.html:61
-func (p *MCP) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
+func (p *MCPDetail) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vadmin/MCP.html:73
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 	qs422016 := string(qb422016.B)
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 	return qs422016
-//line views/vadmin/MCP.html:61
+//line views/vadmin/MCP.html:73
 }

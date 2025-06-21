@@ -10,9 +10,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var ProjectsTool = &Tool{
-	Name:        "projects",
-	Description: "Returns the projects managed by " + util.AppName,
+var ListProjectsTool = &Tool{
+	Name:        "list_projects",
+	Description: "List the projects managed by " + util.AppName,
+	Fn:          projectsHandler,
+}
+
+var GetProjectTool = &Tool{
+	Name:        "get_project",
+	Description: "Get details of a specific project managed by " + util.AppName,
 	Args: util.FieldDescs{
 		{Key: "id", Description: "Optional project id. If omitted, all projects will be returned"},
 	},

@@ -6,6 +6,7 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/util"
@@ -14,10 +15,11 @@ import (
 type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error)
 
 type Tool struct {
-	Name        string
-	Description string
-	Args        util.FieldDescs
-	Fn          ToolHandler
+	Name        string          `json:"name"`
+	Description string          `json:"description,omitempty"`
+	Icon        string          `json:"icon,omitempty"`
+	Args        util.FieldDescs `json:"args,omitempty"`
+	Fn          ToolHandler     `json:"-"`
 }
 
 func (t Tool) ToMCP() (mcp.Tool, error) {
@@ -47,4 +49,14 @@ func (t Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc 
 	}
 }
 
+func (t Tool) IconSafe() string {
+	return util.Choose(t.Icon == "", "cog", t.Icon)
+}
+
 type Tools []*Tool
+
+func (t Tools) Get(n string) *Tool {
+	return lo.FindOrElse(t, nil, func(x *Tool) bool {
+		return x.Name == n
+	})
+}
