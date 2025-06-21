@@ -52,7 +52,7 @@
 
 {% func modelSummary(baseURL string, model *model.Model, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>{%s model.Name %}</td></tr>
         <tr><th>Package</th><td>{%s model.Package %}</td></tr>
@@ -120,7 +120,7 @@
   <p><em>no columns</em></p>
   {%- else -%}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Name</th>
@@ -158,7 +158,7 @@
 
 {% func modelRelations(model *model.Model, baseURL string, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Name</th>
@@ -183,7 +183,7 @@
 
 {% func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Name</th>
@@ -204,7 +204,7 @@
 
 {% func modelLinks(model *model.Model, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Title</th>

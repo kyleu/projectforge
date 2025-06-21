@@ -7,7 +7,7 @@
 
 {% func DetailModules(modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="min-200 full-width">
+    <table class="min-200 expanded">
       <tbody>
         {%- for _, mKey := range modKeys -%}
         {%- code mod := mods.Get(mKey) -%}

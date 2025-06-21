@@ -43,6 +43,7 @@ func featureDetail(key string, as *app.State, ps *cutil.PageState) (layout.Page,
 				ret = ret[:h1Idx] + ret[h1EndIdx+5:]
 			}
 		}
+		ret = strings.ReplaceAll(ret, `.md"`, `"`)
 		return "", ret, nil
 	})
 	if err != nil {

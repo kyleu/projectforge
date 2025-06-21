@@ -4,14 +4,14 @@
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func RichEditor(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
+{% func RichEditor(key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) %}{% stripspace %}
   {% code if values == nil { values = []any{} } %}
   <div class="rich-editor" data-key="{%s key %}" data-title="{%s title %}" data-columns="{%j util.ToJSONCompact(columns) %}">
     {%= Textarea(key, id, 8, util.ToJSON(values), placeholder...) %}
   </div>
 {% endstripspace %}{% endfunc %}
 
-{% func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
+{% func RichEditorTable(key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) %}{% stripspace %}
   <tr>
     <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
     <td>
@@ -20,7 +20,7 @@
   </tr>
 {% endstripspace %}{% endfunc %}
 
-{% func RichEditorCard(key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns []*util.FieldDesc, values []any, placeholder ...string) %}{% stripspace %}
+{% func RichEditorCard(key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns util.FieldDescs, values []any, placeholder ...string) %}{% stripspace %}
   <div class="card">
     <div class="right">
       {%- if headerExtra != "" -%}

@@ -86,7 +86,7 @@
 
 {% func EnumList(enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
         {%- for _, e := range enums -%}
         {%- code
@@ -108,7 +108,7 @@
 
 {% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
         {%- for _, m := range models -%}
         {%- code

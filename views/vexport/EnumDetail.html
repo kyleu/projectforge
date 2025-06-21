@@ -38,7 +38,7 @@
 
 {% func enumSummary(enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>{%s enum.Name %}</td></tr>
         <tr><th>Package</th><td>{%s enum.Package %}</td></tr>
@@ -70,7 +70,7 @@
   {%- else -%}
   {%- code ef := enum.ExtraFields() -%}
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Key</th>

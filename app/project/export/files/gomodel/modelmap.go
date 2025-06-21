@@ -98,7 +98,7 @@ func modelToOrderedMap(m *model.Model) *golang.Block {
 		return fmt.Sprintf(`{K: %q, V: %s.%s}`, col.Camel(), m.FirstLetter(), col.Proper())
 	}), ", ")
 	ret.W("\tpairs := util.OrderedPairs[any]{" + content + "}")
-	ret.W("\treturn util.NewOrderedMap[any](false, 4, pairs...)")
+	ret.W("\treturn util.NewOrderedMap(false, 4, pairs...)")
 	ret.W("}")
 	return ret
 }

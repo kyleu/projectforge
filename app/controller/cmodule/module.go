@@ -2,6 +2,7 @@ package cmodule
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/samber/lo"
 
@@ -37,6 +38,7 @@ func ModuleDetail(w http.ResponseWriter, r *http.Request) {
 			if e != nil {
 				return "", "", e
 			}
+			ret = strings.ReplaceAll(ret, `.md"`, `"`)
 			return "", ret, nil
 		})
 		if err != nil {

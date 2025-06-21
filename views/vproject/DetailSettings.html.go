@@ -32,7 +32,7 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
 //line views/vproject/DetailSettings.html:10
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="min-200 full-width">
+    <table class="min-200 expanded">
       <tbody>
         <tr>
           <th class="shrink">Key</th>

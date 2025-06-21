@@ -25,7 +25,7 @@ var (
 )
 
 //line views/components/edit/RichEdit.html:7
-func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:8
 	if values == nil {
 		values = []any{}
@@ -53,7 +53,7 @@ func StreamRichEditor(qw422016 *qt422016.Writer, key string, id string, title st
 }
 
 //line views/components/edit/RichEdit.html:12
-func WriteRichEditor(qq422016 qtio422016.Writer, key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func WriteRichEditor(qq422016 qtio422016.Writer, key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:12
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/RichEdit.html:12
@@ -64,7 +64,7 @@ func WriteRichEditor(qq422016 qtio422016.Writer, key string, id string, title st
 }
 
 //line views/components/edit/RichEdit.html:12
-func RichEditor(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) string {
+func RichEditor(key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) string {
 //line views/components/edit/RichEdit.html:12
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/RichEdit.html:12
@@ -79,7 +79,7 @@ func RichEditor(key string, id string, title string, columns []*util.FieldDesc, 
 }
 
 //line views/components/edit/RichEdit.html:14
-func StreamRichEditorTable(qw422016 *qt422016.Writer, key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func StreamRichEditorTable(qw422016 *qt422016.Writer, key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:14
 	qw422016.N().S(`<tr><th class="shrink"><label for="`)
 //line views/components/edit/RichEdit.html:16
@@ -98,7 +98,7 @@ func StreamRichEditorTable(qw422016 *qt422016.Writer, key string, id string, tit
 }
 
 //line views/components/edit/RichEdit.html:21
-func WriteRichEditorTable(qq422016 qtio422016.Writer, key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func WriteRichEditorTable(qq422016 qtio422016.Writer, key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/RichEdit.html:21
@@ -109,7 +109,7 @@ func WriteRichEditorTable(qq422016 qtio422016.Writer, key string, id string, tit
 }
 
 //line views/components/edit/RichEdit.html:21
-func RichEditorTable(key string, id string, title string, columns []*util.FieldDesc, values []any, placeholder ...string) string {
+func RichEditorTable(key string, id string, title string, columns util.FieldDescs, values []any, placeholder ...string) string {
 //line views/components/edit/RichEdit.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/RichEdit.html:21
@@ -124,7 +124,7 @@ func RichEditorTable(key string, id string, title string, columns []*util.FieldD
 }
 
 //line views/components/edit/RichEdit.html:23
-func StreamRichEditorCard(qw422016 *qt422016.Writer, key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func StreamRichEditorCard(qw422016 *qt422016.Writer, key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns util.FieldDescs, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:23
 	qw422016.N().S(`<div class="card"><div class="right">`)
 //line views/components/edit/RichEdit.html:26
@@ -165,7 +165,7 @@ func StreamRichEditorCard(qw422016 *qt422016.Writer, key string, id string, titl
 }
 
 //line views/components/edit/RichEdit.html:36
-func WriteRichEditorCard(qq422016 qtio422016.Writer, key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns []*util.FieldDesc, values []any, placeholder ...string) {
+func WriteRichEditorCard(qq422016 qtio422016.Writer, key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns util.FieldDescs, values []any, placeholder ...string) {
 //line views/components/edit/RichEdit.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/RichEdit.html:36
@@ -176,7 +176,7 @@ func WriteRichEditorCard(qq422016 qtio422016.Writer, key string, id string, titl
 }
 
 //line views/components/edit/RichEdit.html:36
-func RichEditorCard(key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns []*util.FieldDesc, values []any, placeholder ...string) string {
+func RichEditorCard(key string, id string, title string, ps *cutil.PageState, headerExtra string, icon string, columns util.FieldDescs, values []any, placeholder ...string) string {
 //line views/components/edit/RichEdit.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/RichEdit.html:36

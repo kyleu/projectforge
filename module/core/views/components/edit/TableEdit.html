@@ -2,13 +2,13 @@
   "{{{ .Package }}}/app/util"
 ) %}
 
-{% func TableEditor(key string, columns []*util.FieldDesc, values util.ValueMap, action string, method string, title string) %}
+{% func TableEditor(key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) %}
   <form action="{%s action %}" method="{%s method %}">
     {%= TableEditorNoForm(key, columns, values, "", "", title) %}
   </form>
 {% endfunc %}
 
-{% func TableEditorNoForm(key string, columns []*util.FieldDesc, values util.ValueMap, name string, value string, title string) %}
+{% func TableEditorNoForm(key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <tbody>
@@ -25,7 +25,7 @@
   </div>
 {% endfunc %}
 
-{% func TableEditorNoTable(key string, columns []*util.FieldDesc, values util.ValueMap) %}{% stripspace %}
+{% func TableEditorNoTable(key string, columns util.FieldDescs, values util.ValueMap) %}{% stripspace %}
   {%- for _, arg := range columns -%}
     {%- switch arg.Type -%}
     {%- case "bool" -%}

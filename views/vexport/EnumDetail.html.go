@@ -153,7 +153,7 @@ func streamenumSummary(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State
 //line views/vexport/EnumDetail.html:39
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>`)
 //line views/vexport/EnumDetail.html:43
@@ -284,7 +284,7 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
 
 //line views/vexport/EnumDetail.html:71
 		qw422016.N().S(`  <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Key</th>

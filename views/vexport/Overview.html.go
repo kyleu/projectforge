@@ -312,7 +312,7 @@ func StreamEnumList(qw422016 *qt422016.Writer, enums enum.Enums, urlPrefix strin
 //line views/vexport/Overview.html:87
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
 `)
 //line views/vexport/Overview.html:91
@@ -391,7 +391,7 @@ func StreamModelList(qw422016 *qt422016.Writer, models model.Models, urlPrefix s
 //line views/vexport/Overview.html:109
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
 `)
 //line views/vexport/Overview.html:113

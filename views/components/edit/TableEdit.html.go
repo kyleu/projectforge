@@ -23,7 +23,7 @@ var (
 )
 
 //line views/components/edit/TableEdit.html:5
-func StreamTableEditor(qw422016 *qt422016.Writer, key string, columns []*util.FieldDesc, values util.ValueMap, action string, method string, title string) {
+func StreamTableEditor(qw422016 *qt422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) {
 //line views/components/edit/TableEdit.html:5
 	qw422016.N().S(`
   <form action="`)
@@ -46,7 +46,7 @@ func StreamTableEditor(qw422016 *qt422016.Writer, key string, columns []*util.Fi
 }
 
 //line views/components/edit/TableEdit.html:9
-func WriteTableEditor(qq422016 qtio422016.Writer, key string, columns []*util.FieldDesc, values util.ValueMap, action string, method string, title string) {
+func WriteTableEditor(qq422016 qtio422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) {
 //line views/components/edit/TableEdit.html:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/TableEdit.html:9
@@ -57,7 +57,7 @@ func WriteTableEditor(qq422016 qtio422016.Writer, key string, columns []*util.Fi
 }
 
 //line views/components/edit/TableEdit.html:9
-func TableEditor(key string, columns []*util.FieldDesc, values util.ValueMap, action string, method string, title string) string {
+func TableEditor(key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) string {
 //line views/components/edit/TableEdit.html:9
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/TableEdit.html:9
@@ -72,7 +72,7 @@ func TableEditor(key string, columns []*util.FieldDesc, values util.ValueMap, ac
 }
 
 //line views/components/edit/TableEdit.html:11
-func StreamTableEditorNoForm(qw422016 *qt422016.Writer, key string, columns []*util.FieldDesc, values util.ValueMap, name string, value string, title string) {
+func StreamTableEditorNoForm(qw422016 *qt422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) {
 //line views/components/edit/TableEdit.html:11
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -123,7 +123,7 @@ func StreamTableEditorNoForm(qw422016 *qt422016.Writer, key string, columns []*u
 }
 
 //line views/components/edit/TableEdit.html:26
-func WriteTableEditorNoForm(qq422016 qtio422016.Writer, key string, columns []*util.FieldDesc, values util.ValueMap, name string, value string, title string) {
+func WriteTableEditorNoForm(qq422016 qtio422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) {
 //line views/components/edit/TableEdit.html:26
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/TableEdit.html:26
@@ -134,7 +134,7 @@ func WriteTableEditorNoForm(qq422016 qtio422016.Writer, key string, columns []*u
 }
 
 //line views/components/edit/TableEdit.html:26
-func TableEditorNoForm(key string, columns []*util.FieldDesc, values util.ValueMap, name string, value string, title string) string {
+func TableEditorNoForm(key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) string {
 //line views/components/edit/TableEdit.html:26
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/TableEdit.html:26
@@ -149,7 +149,7 @@ func TableEditorNoForm(key string, columns []*util.FieldDesc, values util.ValueM
 }
 
 //line views/components/edit/TableEdit.html:28
-func StreamTableEditorNoTable(qw422016 *qt422016.Writer, key string, columns []*util.FieldDesc, values util.ValueMap) {
+func StreamTableEditorNoTable(qw422016 *qt422016.Writer, key string, columns util.FieldDescs, values util.ValueMap) {
 //line views/components/edit/TableEdit.html:29
 	for _, arg := range columns {
 //line views/components/edit/TableEdit.html:30
@@ -182,7 +182,7 @@ func StreamTableEditorNoTable(qw422016 *qt422016.Writer, key string, columns []*
 }
 
 //line views/components/edit/TableEdit.html:43
-func WriteTableEditorNoTable(qq422016 qtio422016.Writer, key string, columns []*util.FieldDesc, values util.ValueMap) {
+func WriteTableEditorNoTable(qq422016 qtio422016.Writer, key string, columns util.FieldDescs, values util.ValueMap) {
 //line views/components/edit/TableEdit.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/components/edit/TableEdit.html:43
@@ -193,7 +193,7 @@ func WriteTableEditorNoTable(qq422016 qtio422016.Writer, key string, columns []*
 }
 
 //line views/components/edit/TableEdit.html:43
-func TableEditorNoTable(key string, columns []*util.FieldDesc, values util.ValueMap) string {
+func TableEditorNoTable(key string, columns util.FieldDescs, values util.ValueMap) string {
 //line views/components/edit/TableEdit.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/components/edit/TableEdit.html:43

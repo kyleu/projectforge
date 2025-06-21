@@ -7,7 +7,7 @@
 {% func DetailBuild(build *project.Build, as *app.State, ps *cutil.PageState) %}
   {%- code buildMap := build.ToMap() -%}
   <div class="overflow full-width">
-    <table class="min-200 full-width">
+    <table class="min-200 expanded">
       <tbody>
       {%- for _, o := range project.AllBuildOptions -%}
       {%- if buildMap[o.Key] -%}

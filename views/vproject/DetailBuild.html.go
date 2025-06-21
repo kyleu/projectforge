@@ -34,7 +34,7 @@ func StreamDetailBuild(qw422016 *qt422016.Writer, build *project.Build, as *app.
 
 //line views/vproject/DetailBuild.html:8
 	qw422016.N().S(`  <div class="overflow full-width">
-    <table class="min-200 full-width">
+    <table class="min-200 expanded">
       <tbody>
 `)
 //line views/vproject/DetailBuild.html:12

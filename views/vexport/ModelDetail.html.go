@@ -206,7 +206,7 @@ func streammodelSummary(qw422016 *qt422016.Writer, baseURL string, model *model.
 //line views/vexport/ModelDetail.html:53
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>`)
 //line views/vexport/ModelDetail.html:57
@@ -465,7 +465,7 @@ func streammodelColumns(qw422016 *qt422016.Writer, model *model.Model, as *app.S
 	} else {
 //line views/vexport/ModelDetail.html:121
 		qw422016.N().S(`  <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Name</th>
@@ -581,7 +581,7 @@ func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, baseURL
 //line views/vexport/ModelDetail.html:159
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Name</th>
@@ -667,7 +667,7 @@ func streammodelIndexes(qw422016 *qt422016.Writer, model *model.Model, as *app.S
 //line views/vexport/ModelDetail.html:184
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Name</th>
@@ -733,7 +733,7 @@ func streammodelLinks(qw422016 *qt422016.Writer, model *model.Model, as *app.Sta
 //line views/vexport/ModelDetail.html:205
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 full-width">
+    <table class="mt min-200 expanded">
       <thead>
         <tr>
           <th class="shrink">Title</th>

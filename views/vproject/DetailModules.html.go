@@ -30,7 +30,7 @@ func StreamDetailModules(qw422016 *qt422016.Writer, modKeys []string, mods modul
 //line views/vproject/DetailModules.html:8
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="min-200 full-width">
+    <table class="min-200 expanded">
       <tbody>
 `)
 //line views/vproject/DetailModules.html:12
