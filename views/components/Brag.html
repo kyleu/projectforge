@@ -1,43 +1,63 @@
 {% func BragApp() %}
     <p>
-      <a href="https://projectforge.dev">Project Forge</a> is an application that allows you to generate, manage, and grow web applications built using the Go programming language.
-      You control your application's features, provided via "modules" that enable everything from databases to OAuth.
-      When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application you want, without compromise.
+      <a href="https://projectforge.dev">Project Forge</a> is a powerful application generator and project manager for building modern web applications in Go.
+      It empowers developers to rapidly create, customize, and scale applications through a modular architecture that puts you in complete control.
+      Choose from dozens of optional modules—from database integrations and OAuth providers to advanced features like GraphQL APIs, WebSocket support, and desktop app builds.
     </p>
 
     <p>
-      All projects managed by Project Forge provide an HTTP server using <a href="https://github.com/valyala/quicktemplate">quicktemplate</a> for HTML templates (and SQL, if enabled).
-      An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
+      Every Project Forge application includes a blazingly fast HTTP server built on <a href="https://github.com/valyala/quicktemplate">quicktemplate</a> for type-safe HTML rendering.
+      The optional Model-View-Controller framework provides enterprise-grade features out of the box: content negotiation, hierarchical navigation, breadcrumbs, OAuth integration with 40+ providers, stateless sessions, comprehensive theming with dark mode, SVG icon management, syntax highlighting, rich form components, and optimized asset embedding.
     </p>
 
     <p>
-      Project Forge applications can support any UI framework, but the included UI (used for this very page) is heavily optimized for speed and accessibility, with a modern UX that works surprisingly well without JavaScript.
-      This page is animated, themed, and responsive, and only creates three requests (HTML, CSS, JS) totaling less than 20KB zipped.
-      It serves in less than a millisecond, and renders in Chrome in less than 20ms.
-      Progressive enhancement is provided by an included ESBuild TypeScript project, though all functionality is supported with JavaScript disabled.
+      The included UI framework delivers exceptional performance without sacrificing developer experience or user accessibility.
+      This very page demonstrates the power: fully animated, themed, and responsive design delivered in just three HTTP requests (HTML, CSS, JS) totaling under 20KB compressed.
+      Sub-millisecond server response times and sub-20ms browser rendering create an incredibly snappy user experience.
+      Progressive enhancement via an integrated ESBuild TypeScript pipeline ensures full functionality even with JavaScript disabled.
     </p>
 
     <p>
-      Your application can (optionally) build for <em>every</em> platform; desktop and mobile webview apps, WASM, and notarized universal macOS binaries.
-      If you enable all the build options, it will produce almost 60 builds for various platforms. They all produce a ~20MB native binary.
-      The binaries produced can be configured to auto-upgrade from GitHub Releases, or be upgraded by the user using a CLI or UI (module "upgrade" must be in your project).
-      CI/CD workflows based on GitHub Actions are provided, handling building, testing, linting, and publishing to GitHub Releases (and any configured Docker repos).
+      Deploy anywhere, run everywhere. Project Forge applications can target virtually every platform: native desktop apps via system webviews, mobile applications for iOS and Android, WebAssembly modules, and notarized universal macOS binaries.
+      Enable all build targets and generate nearly 60 platform-specific builds, each producing a compact ~20MB self-contained binary.
+      Built-in auto-update capabilities work seamlessly with GitHub Releases, while comprehensive CI/CD workflows handle building, testing, linting, and publishing to multiple distribution channels.
     </p>
 {% endfunc %}
 
 {% func BragProject() %}
   <div class="card">
-    <h3>A project managed by Project Forge...</h3>
+    <h3>Standard Project Forge Workflow</h3>
+    <div class="mt">
+      <h4>Getting Started</h4>
+      <ol class="padded">
+        <li><strong>Install Project Forge</strong> - Download from <a href="https://projectforge.dev/download">projectforge.dev</a>, use Homebrew, or build from source</li>
+        <li><strong>Create Your Project</strong> - Run <code>projectforge</code> to launch the web interface and generate a new application</li>
+        <li><strong>Choose Modules</strong> - Select from 40+ optional modules like databases, OAuth, GraphQL, desktop builds, and more</li>
+        <li><strong>Generate & Customize</strong> - Project Forge creates a complete Go application with your chosen features</li>
+      </ol>
+    </div>
+    <div class="mt">
+      <h4>Development Workflow</h4>
+      <ol class="padded">
+        <li><strong>Live Development</strong> - Run <code>./bin/dev.sh</code> for instant live-reload during development</li>
+        <li><strong>Add Features</strong> - Use the web interface to add new modules, modify existing ones, or update your configuration</li>
+        <li><strong>Customize Code</strong> - Add or edit controllers in <code>app/controller/</code>, add services in <code>app/services.go</code></li>
+        <li><strong>Build & Deploy</strong> - Generate production builds for multiple platforms with included CI/CD workflows</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card">
+    <h3>What You Get</h3>
     <ul class="mts padded">
-      <li>Is written in the Go programming language, using the latest versions and dependencies</li>
-      <li>Has a beautiful and fast HTML UI, no JavaScript required</li>
-      <li>Optimizes for speed and developer experience, sub-second turnaround times</li>
-      <li>Builds in seconds, live-reloads in dev mode when code or templates change</li>
-      <li>Builds native apps for dozens of platforms; mobile, desktop, weird architectures, macOS universal apps</li>
-      <li>Produces a small self-contained binary, includes full REST server and command line interface</li>
-      <li>Optionally supports OAuth with dozens of providers, full theme and stateless session support</li>
-      <li>Provides a type-safe API for working with PostgreSQL, MySQL, and SQLite databases (or no database at all)</li>
-      <li>Uses ESBuild for a TypeScript client with progressive enhancement, SVGs, and modern CSS</li>
+      <li><strong>Modern Go Architecture</strong> - Latest Go version with clean, maintainable code structure and comprehensive standard library</li>
+      <li><strong>Lightning-Fast UI</strong> - Beautiful, accessible HTML interface that works perfectly without JavaScript</li>
+      <li><strong>Developer Experience</strong> - Sub-second build times, instant live-reload, and intuitive project management</li>
+      <li><strong>Multi-Platform Builds</strong> - Native applications for mobile, desktop, web, and specialized architectures</li>
+      <li><strong>Self-Contained Deployment</strong> - Single ~20MB binary includes web server, CLI tools, and all dependencies</li>
+      <li><strong>Enterprise Authentication</strong> - OAuth integration with 40+ providers, stateless sessions, and comprehensive theming</li>
+      <li><strong>Database Flexibility</strong> - Type-safe APIs for PostgreSQL, MySQL, SQLite, or go database-free</li>
+      <li><strong>Modern Frontend</strong> - ESBuild-powered TypeScript, progressive enhancement, embedded SVGs, and responsive CSS</li>
+      <li><strong>Production Ready</strong> - Built-in CI/CD, auto-updates, monitoring, logging, and deployment automation</li>
     </ul>
   </div>
 {% endfunc %}

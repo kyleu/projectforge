@@ -60,6 +60,13 @@ func (p *Project) CleanKey() string {
 	return CleanKey(p.Key)
 }
 
+func (p *Project) ExecSafe() string {
+	if p.Exec != "" {
+		return p.Exec
+	}
+	return p.Key
+}
+
 func (p *Project) IconSafe() string {
 	if _, ok := util.SVGLibrary[p.Icon]; ok {
 		return p.Icon
