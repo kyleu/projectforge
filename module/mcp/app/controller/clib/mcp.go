@@ -63,14 +63,14 @@ func MCPTaskSSE(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		mcpx.ServeHTTP(w, r)
+		mcpx.ServeHTTP(ps.Context, w, r, ps.Logger)
 		return "", nil
 	})
 }
 
 func mcpTool(r *http.Request, as *app.State, ps *cutil.PageState) (*mcpserver.Server, *mcpserver.Tool, error) {
 	toolKey, _ := cutil.PathString(r, "tool", false)
-	mcpx, err := mcpserver.NewServer(ps.Context, as, ps.Logger)
+	mcpx, err := mcpserver.GetDefaultServer(ps.Context, as, ps.Logger)
 	if err != nil {
 		return nil, nil, err
 	}

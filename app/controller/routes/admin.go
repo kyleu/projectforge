@@ -11,7 +11,8 @@ import (
 func adminRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/admin", clib.Admin)
 	makeRoute(r, http.MethodGet, "/admin/mcp", clib.MCPIndex)
-	makeRoute(r, http.MethodPost, "/admin/mcp", clib.MCPTaskSSE)
+	makeRoute(r, http.MethodGet, "/admin/mcp/sse", clib.MCPTaskSSE)
+	makeRoute(r, http.MethodPost, "/admin/mcp/sse", clib.MCPTaskSSE)
 	makeRoute(r, http.MethodGet, "/admin/mcp/tool/{tool}", clib.MCPTask)
 	makeRoute(r, http.MethodPost, "/admin/mcp/tool/{tool}", clib.MCPTaskRun)
 	makeRoute(r, http.MethodGet, "/admin/task", clib.TaskList)

@@ -17,7 +17,7 @@ type Server struct {
 	HTTP  http.Handler `json:"-"`
 }
 
-func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server, error) {
+func NewServer(ctx context.Context, as *app.State, logger util.Logger, tools ...*Tool) (*Server, error) {
 	ms := server.NewMCPServer(util.AppName, as.BuildInfo.Version)
 	mcp := &Server{MCP: ms, Tools: make(map[string]*Tool)}
 	// $PF_SECTION_START(tools)$
@@ -25,6 +25,9 @@ func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server,
 		return nil, err
 	}
 	// $PF_SECTION_END(tools)$
+	if err := mcp.AddTools(as, logger, tools...); err != nil {
+		return nil, err
+	}
 	return mcp, nil
 }
 
@@ -44,9 +47,10 @@ func (s *Server) ServeCLI(ctx context.Context) error {
 	return server.ServeStdio(s.MCP)
 }
 
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(ctx context.Context, w http.ResponseWriter, r *http.Request, logger util.Logger) {
+	logger.Debugf("MCP SSE request: %s %s", r.Method, r.URL.Path)
 	if s.HTTP == nil {
-		s.HTTP = server.NewSSEServer(s.MCP, server.WithBaseURL("/admin/mcp")).SSEHandler()
+		s.HTTP = server.NewSSEServer(s.MCP, server.WithBaseURL("/admin/mcp/sse")).SSEHandler()
 	}
 	s.HTTP.ServeHTTP(w, r)
 }

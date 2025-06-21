@@ -112,7 +112,7 @@ func (p *MCP) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 		qw422016.E().S(util.AppKey)
 //line views/vadmin/MCP.html:41
 		qw422016.N().S(` mcp</code></li>
-        <li>sending an SSE POST to <code>/admin/mcp</code></li>
+        <li>sending an SSE POST to <code>/admin/mcp/sse</code></li>
       </ul>
     </div>
   </div>
