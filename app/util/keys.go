@@ -5,6 +5,7 @@ const (
 	AppName    = "Project Forge"
 	AppSummary = "Build and maintain feature-rich applications using Golang"
 	AppPort    = 40000
+	AppCmd     = AppKey
 	AppContact = "Kyle U <projectforge@kyleu.com>"
 	AppURL     = "https://projectforge.dev"
 	AppSource  = "https://github.com/kyleu/projectforge"

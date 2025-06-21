@@ -1,0 +1,11 @@
+{
+  "search.exclude": {
+    "module/": true
+  },
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#72a0c1",
+    "titleBar.activeForeground": "#000000",
+    "titleBar.inactiveBackground": "#acc5da",
+    "titleBar.inactiveForeground": "#000000aa"
+  }
+}

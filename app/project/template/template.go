@@ -18,7 +18,7 @@ type Context struct {
 	Exec        string            `json:"exec,omitempty"`
 	Version     string            `json:"version"`
 	Package     string            `json:"package,omitempty"`
-	Args        string            `json:"args,omitempty"`
+	Args        []string          `json:"args,omitempty"`
 	Port        int               `json:"port,omitempty"`
 	ConfigVars  util.KeyTypeDescs `json:"configVars,omitempty"`
 	PortOffsets map[string]int    `json:"portOffsets,omitempty"`
@@ -51,6 +51,8 @@ func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOff
 		t = theme.Default
 	}
 
+	args := util.StringSplitAndTrim(p.Args, " ")
+
 	var ignoreGrep string
 	lo.ForEach(p.Ignore, func(ig string, _ int) {
 		if strings.HasPrefix(ig, "^") {
@@ -66,7 +68,7 @@ func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOff
 
 	ret := &Context{
 		Key: p.Key, Name: p.Name, Exec: p.Executable(), Version: p.Version,
-		Package: p.Package, Args: p.Args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
+		Package: p.Package, Args: args, Port: p.Port, ConfigVars: cv, PortOffsets: portOffsets,
 		Ignore: p.Ignore, IgnoreGrep: ignoreGrep, Modules: p.Modules, Tags: p.Tags,
 		ExportArgs: p.ExportArgs, Config: p.Config, Info: i, Build: b, Theme: t, DatabaseEngine: p.DatabaseEngineDefault(), Linebreak: linebreak,
 	}
@@ -74,11 +76,11 @@ func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOff
 	if ret.Name == "" {
 		ret.Name = ret.Key
 	}
-	if ret.Args == "" {
+	if len(ret.Args) == 0 {
 		if p.HasModule("marketing") {
-			ret.Args = " -v --addr=0.0.0.0 all"
+			ret.Args = []string{"-v", "--addr=0.0.0.0", "all"}
 		} else {
-			ret.Args = " -v --addr=0.0.0.0 server"
+			ret.Args = []string{"-v", "--addr=0.0.0.0", "server"}
 		}
 	}
 

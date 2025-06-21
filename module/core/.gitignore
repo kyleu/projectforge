@@ -1,7 +1,6 @@
 # $PF_GENERATE_ONCE$
 .DS_Store
 /.env
-/.vscode
 /.idea
 /.scannerwork
 /build

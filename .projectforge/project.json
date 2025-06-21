@@ -35,7 +35,8 @@
   "ignore": [
     "^data",
     "^module",
-    "^testproject"
+    "^testproject",
+    "^assets/module"
   ],
   "tags": [
     "kyleu",
@@ -56,7 +57,6 @@
     "notarizeEmail": "kyle@kyleu.com",
     "javaPackage": "dev.projectforge",
     "ignoredFiles": [
-      ".air.conf",
       "app/site/handle.go",
       "app/site/menu.go",
       "views/vsite/Index.html"

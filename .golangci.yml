@@ -134,6 +134,7 @@ linters:
       - /data
       - /module
       - /testproject
+      - /assets/module
       - third_party$
       - builtin$
       - examples$
@@ -161,6 +162,7 @@ formatters:
       - /data
       - /module
       - /testproject
+      - /assets/module
       - third_party$
       - builtin$
       - examples$

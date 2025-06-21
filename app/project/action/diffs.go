@@ -9,8 +9,6 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"
-	"projectforge.dev/projectforge/app/lib/filesystem"
-	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project/template"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -50,10 +48,19 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 	settingsJSON, err := parseSettings(pm.FS, pm.Prj.Theme)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "unable to generate [.vscode/settings.json]")
+		// return nil, nil, errors.Wrapf(err, "unable to generate [" + vscodeSettingsPath + "]")
+		pm.Logger.Warnf("unable to generate ["+vscodeSettingsPath+"]: %+v", err)
 	}
 	if settingsJSON != nil {
 		srcFiles = append(srcFiles, settingsJSON)
+	}
+	launchJSON, err := parseLaunch(pm.FS, pm.Prj.Name, pm.Prj.ExecSafe(), pm.Prj.HasModule("upgrade"))
+	if err != nil {
+		// return nil, nil, errors.Wrapf(err, "unable to generate [" + vscodeLaunchPath + "]")
+		pm.Logger.Warnf("unable to generate ["+vscodeLaunchPath+"]: %+v", err)
+	}
+	if launchJSON != nil {
+		srcFiles = append(srcFiles, launchJSON)
 	}
 
 	configVars, portOffsets := parseConfig(pm)
@@ -86,53 +93,4 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		return nil, nil, err
 	}
 	return srcFiles, dfs, nil
-}
-
-const vscodeSettingsPath = ".vscode/settings.json"
-
-func parseSettings(fs filesystem.FileLoader, thm *theme.Theme) (*file.File, error) {
-	ret := util.ValueMap{}
-	if fs.Exists(vscodeSettingsPath) {
-		b, err := fs.ReadFile(vscodeSettingsPath)
-		if err != nil {
-			return nil, err
-		}
-		err = util.FromJSON(b, &ret)
-		if err != nil {
-			return nil, err
-		}
-	}
-	colors := ret.GetMapOpt("workbench.colorCustomization")
-	if colors == nil {
-		colors = util.ValueMap{}
-	}
-	colors["titleBar.activeForeground"] = "#000000"
-	colors["titleBar.inactiveForeground"] = "#000000aa"
-	colors["titleBar.activeBackground"] = thm.Light.NavBackground
-	colors["titleBar.inactiveBackground"] = thm.Light.MenuBackground
-	ret["workbench.colorCustomizations"] = colors
-
-	f := file.NewFile(vscodeSettingsPath, filesystem.DefaultMode, util.ToJSONBytes(ret, true))
-	return f, nil
-}
-
-func parseConfig(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
-	var configVars util.KeyTypeDescs
-	portOffsets := map[string]int{}
-
-	lo.ForEach(pm.Prj.Modules, func(m string, _ int) {
-		mod := pm.Mods.Get(m)
-		lo.ForEach(mod.ConfigVars, func(src *util.KeyTypeDesc, _ int) {
-			hit := lo.ContainsBy(configVars, func(tgt *util.KeyTypeDesc) bool {
-				return src.Matches(tgt)
-			})
-			if !hit {
-				configVars = append(configVars, src)
-			}
-		})
-		for k, v := range mod.PortOffsets {
-			portOffsets[k] = v
-		}
-	})
-	return configVars.Sort(), portOffsets
 }

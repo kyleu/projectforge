@@ -5,6 +5,7 @@ const (
 	AppName    = "{{{ .Name }}}"
 	AppSummary = "{{{ .Info.Summary }}}"
 	AppPort    = {{{ .Port }}}
+	AppCmd     = {{{ .ExecSafe }}}
 	AppContact = "{{{ .Info.AuthorName }}} <{{{ .Info.AuthorEmail }}}>"
 	AppURL     = "{{{ .Info.Homepage }}}"
 	AppSource  = "{{{ .Info.Sourcecode }}}"

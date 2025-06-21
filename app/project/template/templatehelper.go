@@ -43,6 +43,17 @@ func (t *Context) SourceTrimmed() string {
 	return strings.TrimPrefix(strings.TrimPrefix(t.Info.Sourcecode, "http://"), "https://")
 }
 
+func (t *Context) ExecSafe() string {
+	if t.Exec == t.Key {
+		return "AppKey"
+	}
+	return fmt.Sprintf("%q", t.Exec)
+}
+
+func (t *Context) ArgsQuoted() string {
+	return strings.Join(util.StringArrayQuoted(append(util.ArrayCopy(t.Args), t.Exec)), ", ")
+}
+
 func (t *Context) DangerousOK() bool {
 	return !t.Build.SafeMode
 }

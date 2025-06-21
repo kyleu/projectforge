@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "mode": "local",
+      "name": "Attach to Project Forge",
+      "processId": "projectforge",
+      "request": "attach",
+      "type": "go"
+    },
+    {
+      "mode": "auto",
+      "name": "Start Project Forge",
+      "program": "main.go",
+      "request": "launch",
+      "type": "go"
+    },
+    {
+      "args": [
+        "upgrade"
+      ],
+      "mode": "auto",
+      "name": "Upgrade Project Forge",
+      "program": "main.go",
+      "request": "launch",
+      "type": "go"
+    }
+  ],
+  "version": "0.2.0"
+}
