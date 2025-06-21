@@ -15,13 +15,16 @@
 
 {% func (p *MCPList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`chart`, ps) %} Model Context Protocol Tools</h3>
+    <h3>{%= components.SVGIcon(`chart`, ps) %} Model Context Protocol</h3>
     <div class="mt">You can register {%s util.AppName %} as a Model Context Protocol server using the command line or HTTP.</div>
     <div class="mt">
       <ul class="accordion">
         <li>
           <input id="accordion-cli" type="checkbox" hidden="hidden" />
-          <label for="accordion-cli">{%= components.ExpandCollapse(3, ps) %} Command Line</label>
+          <label for="accordion-cli">
+            <div class="right"><em>preferred</em></div>
+            {%= components.ExpandCollapse(3, ps) %} Command Line
+          </label>
           <div class="bd"><div><div>
             Register {%s util.AppName %} as a command line MCP server by calling this app using the command line as <code>{%s util.AppKey %} mcp</code>.
             <div class="mt">{%s= cutil.FormatLangIgnoreErrors(mcpserver.UsageCLI(), "json") %}</div>
@@ -29,7 +32,10 @@
         </li>
         <li>
           <input id="accordion-http" type="checkbox" hidden="hidden" />
-          <label for="accordion-http">{%= components.ExpandCollapse(3, ps) %} HTTP SSE</label>
+          <label for="accordion-http">
+            <div class="right"><em>experimental</em></div>
+            {%= components.ExpandCollapse(3, ps) %} HTTP SSE
+          </label>
           <div class="bd"><div><div>
             Register {%s util.AppName %} as an HTTP MCP server by sending a POST to <code>/admin/mcp/sse</code>.
             <div class="mt">{%s= cutil.FormatLangIgnoreErrors(mcpserver.UsageHTTP(), "json") %}</div>
@@ -42,6 +48,7 @@
   {%- for _, t := range p.Server.Tools -%}
   <a class="link-section" href="/admin/mcp/tool/{%s t.Name %}">
     <div class="card">
+      <div class="right"><em>tool</em></div>
       <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
       <strong class="highlight">{%s t.Name %}</strong>
       <div><em>{%s t.Description %}</em></div>

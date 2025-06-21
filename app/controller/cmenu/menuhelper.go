@@ -13,6 +13,9 @@ import (
 func projectMenu(_ context.Context, prjs project.Projects) *menu.Item {
 	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	lo.ForEach(prjs, func(prj *project.Project, _ int) {
+		if prj == nil {
+			return
+		}
 		key := prj.Key
 		i := &menu.Item{Key: key, Title: prj.Title(), Description: prj.DescriptionSafe(), Icon: prj.IconSafe(), Route: prj.WebPath()}
 		ret.Children = append(ret.Children, i)

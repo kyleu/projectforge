@@ -36,6 +36,9 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 		return errors.Wrap(err, "unable to initialize projects")
 	}
 	root := as.Services.Projects.Default()
+	if root == nil {
+		root = &project.Project{Key: "root"}
+	}
 	if root.Info == nil {
 		allowed := lo.ContainsBy(allowedRoutes, func(r string) bool {
 			return strings.HasSuffix(ps.URI.Path, r)
