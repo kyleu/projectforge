@@ -76,13 +76,15 @@ func initIfNeeded() error {
 	if err != nil {
 		return err
 	}
-	l, err := log.InitLogging(_flags.Debug)
-	if err != nil {
-		return err
+	if util.RootLogger == nil {
+		l, err := log.InitLogging(_flags.Debug)
+		if err != nil {
+			return err
+		}
+		util.RootLogger = l
 	}
 	util.ConfigDir = _flags.ConfigDir
 	util.DEBUG = _flags.Debug
-	util.RootLogger = l
 	_initialized = true
 	return nil
 }

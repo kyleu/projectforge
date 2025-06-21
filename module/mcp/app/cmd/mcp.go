@@ -5,8 +5,10 @@ import (
 
 	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/lib/log"
 	"{{{ .Package }}}/app/lib/mcpserver"
 	"{{{ .Package }}}/app/util"
 )
@@ -18,10 +20,15 @@ func mcpCmd() *coral.Command {
 }
 
 func runMCP(ctx context.Context) error {
-	if err := initIfNeeded(); err != nil {
+	l, err := log.InitDevLogging(log.GetLevel(zap.FatalLevel))
+	if err != nil {
+		return errors.Wrap(err, "error initializing logging")
+	}
+	util.RootLogger = l.Sugar()
+	if err = initIfNeeded(); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
-	st, err := app.Bootstrap(_buildInfo, _flags.ConfigDir, _flags.Port, _flags.Debug, util.RootLogger)
+	st, err := app.Bootstrap(_buildInfo, _flags.ConfigDir, _flags.Port, false, util.RootLogger)
 	if err != nil {
 		return err
 	}
