@@ -52,7 +52,7 @@ const usageHTTP = `{
   "mcpServers": {
     "%s": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "http://localhost:%d/admin/mcp"]
+      "args": ["-y", "mcp-remote", "http://localhost:%d/mcp"]
     }
   }
 }`

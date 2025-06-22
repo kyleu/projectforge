@@ -1,71 +1,28 @@
 # Model Context Protocol (MCP)
 
-The **`mcp`** module provides a complete [Model Context Protocol](https://modelcontextprotocol.io) server implementation for [Project Forge](https://projectforge.dev) applications. MCP is a standardized protocol that enables Large Language Models to securely connect to external tools and data sources.
+The **`mcp`** module provides a complete [Model Context Protocol](https://modelcontextprotocol.io) server implementation for your application. MCP is a standardized protocol that enables Large Language Models to securely connect to external tools and data sources.
 
 ## Overview
 
-This module provides:
+This module provides a complete MCP protocol implementation with tools, resources, and prompts. A UI is provided for testing, and the server can be exposed over HTTP and called via command line
 
-- **MCP Server**: Complete MCP protocol implementation with tool registration
-- **CLI Interface**: Command-line interface for serving MCP requests via stdio
-- **Web Admin Interface**: Browser-based tool testing and management interface
-- **Tool Framework**: Extensible framework for creating custom MCP tools
-- **Example Tools**: Built-in example tools to demonstrate usage patterns
+## Integration
 
-## Key Features
-
-### Protocol Compliance
-
-- Full MCP specification compliance
-- Secure request/response handling
-- Error handling and validation
-- Tool discovery and registration
-
-### Developer Experience
-
-- Simple tool registration API
-- Built-in example tools as templates
-- Web-based testing interface
-- Comprehensive logging and debugging
-
-### Integration
-
-- CLI command: `<app> mcp` for MCP client integration
-- HTTP admin interface at `/admin/mcp`
-- Seamless integration with Project Forge applications
-- Support for custom tool development
-
-## Package Structure
-
-### Core Components
-
-- **`cmd/mcp.go`** - CLI command implementation
-
-  - MCP server initialization
-  - Stdio protocol handling
-  - Context management
-
-- **`lib/mcpserver/`** - MCP server implementation
-
-  - `server.go` - Core MCP server and tool registration
-  - `tool.go` - Tool definition and handler framework
-  - `example.go` - Example tools for demonstration
-
-- **`controller/clib/mcp.go`** - Web admin interface
-  - Tool listing and management
-  - Interactive tool testing
-  - Request/response inspection
+**`lib/mcpserver/`** - MCP server implementation. Add your tools and resources here.
 
 ### Tool Development
 
 Tools are defined using the `Tool` struct:
 
 ```go
+type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error)
+
 type Tool struct {
-    Name        string
-    Description string
-    InputSchema map[string]any
-    Handler     func(context.Context, map[string]any) (any, error)
+	Name        string          `json:"name"`
+	Description string          `json:"description,omitempty"`
+	Icon        string          `json:"icon,omitempty"`
+	Args        util.FieldDescs `json:"args,omitempty"`
+	Fn          ToolHandler     `json:"-"`
 }
 ```
 
@@ -73,7 +30,7 @@ type Tool struct {
 
 ### CLI Integration
 
-Configure your MCP client to use your application as an MCP server:
+Configure your MCP client to use your application as an MCP server via CLI:
 
 ```json
 {
@@ -85,6 +42,18 @@ Configure your MCP client to use your application as an MCP server:
   }
 }
 ```
+
+...or via HTTP:
+
+```json
+{
+  "mcpServers": {
+    "myapp": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:port/mcp"]
+    }
+  }
+}
 
 ### Adding Custom Tools
 
