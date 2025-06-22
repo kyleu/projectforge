@@ -14,7 +14,7 @@ import (
 	"{{{ .Package }}}/views/vadmin"
 )
 
-const mcpBreadcrumb = "MCP||/admin/mcp**graph"
+const mcpBreadcrumb = "mcp"
 
 func MCPIndex(w http.ResponseWriter, r *http.Request) {
 	controller.Act("mcp.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -23,12 +23,12 @@ func MCPIndex(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("MCP", mcpx)
-		return controller.Render(r, as, &vadmin.MCPList{Server: mcpx}, ps, keyAdmin, mcpBreadcrumb)
+		return controller.Render(r, as, &vadmin.MCPList{Server: mcpx}, ps, mcpBreadcrumb)
 	})
 }
 
 func MCPServe(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.serve.sse", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("mcp.serve.streamable", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		mcpx, _, err := mcpTool(r, as, ps)
 		if err != nil {
 			return "", err
@@ -45,7 +45,7 @@ func MCPTool(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s]", tool.Name), tool)
-		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool}, ps, keyAdmin, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool}, ps, mcpBreadcrumb, tool.Name)
 	})
 }
 
@@ -64,7 +64,7 @@ func MCPToolRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s] Result", tool.Name), ret)
-		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, keyAdmin, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, mcpBreadcrumb, tool.Name)
 	})
 }
 

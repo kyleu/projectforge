@@ -30,7 +30,7 @@ func MenuFor(
 	if len(as.Services.Exec.Execs) > 0 {
 		ret = append(ret, processMenu(as.Services.Exec.Execs))
 	}
-	ret = append(ret, DoctorMenu("first-aid", "/doctor"))
+	ret = append(ret, DoctorMenu("first-aid", "/doctor"), mcpMenu())
 	const desc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: desc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(menu)$

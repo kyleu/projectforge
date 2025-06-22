@@ -28,6 +28,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave)
 	makeRoute(r, http.MethodGet, cutil.DefaultSearchPath, clib.Search)
 
+	mcpRoutes("", r)
 	themeRoutes(r)
 
 	// $PF_SECTION_START(routes)$

@@ -21,10 +21,7 @@
       <ul class="accordion">
         <li>
           <input id="accordion-cli" type="checkbox" hidden="hidden" />
-          <label for="accordion-cli">
-            <div class="right"><em>preferred</em></div>
-            {%= components.ExpandCollapse(3, ps) %} Command Line
-          </label>
+          <label for="accordion-cli">{%= components.ExpandCollapse(3, ps) %} Command Line</label>
           <div class="bd"><div><div>
             Register {%s util.AppName %} as a command line MCP server by calling this app using the command line as <code>{%s util.AppKey %} mcp</code>.
             <div class="mt">{%s= cutil.FormatLangIgnoreErrors(mcpserver.UsageCLI(), "json") %}</div>
@@ -32,12 +29,9 @@
         </li>
         <li>
           <input id="accordion-http" type="checkbox" hidden="hidden" />
-          <label for="accordion-http">
-            <div class="right"><em>experimental</em></div>
-            {%= components.ExpandCollapse(3, ps) %} HTTP SSE
-          </label>
+          <label for="accordion-http">{%= components.ExpandCollapse(3, ps) %} Streamable HTTP</label>
           <div class="bd"><div><div>
-            Register {%s util.AppName %} as an HTTP MCP server by sending a POST to <code>/admin/mcp/sse</code>.
+            Register {%s util.AppName %} as an HTTP MCP server by sending a POST to <code>/mcp</code>.
             <div class="mt">{%s= cutil.FormatLangIgnoreErrors(mcpserver.UsageHTTP(), "json") %}</div>
             </div>
           </div></div></div>
@@ -46,7 +40,7 @@
     </div>
   </div>
   {%- for _, t := range p.Server.Tools -%}
-  <a class="link-section" href="/admin/mcp/tool/{%s t.Name %}">
+  <a class="link-section" href="/mcp/tool/{%s t.Name %}">
     <div class="card">
       <div class="right"><em>tool</em></div>
       <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
@@ -69,7 +63,7 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Tool.Name %}</h3>
     <em>{%s p.Tool.Description %}</em>
-    <div class="mt">{%= edit.TableEditor("args", p.Tool.Args, p.Args, "/admin/mcp/tool/" + p.Tool.Name, "post", "Run") %}</div>
+    <div class="mt">{%= edit.TableEditor("args", p.Tool.Args, p.Args, "/mcp/tool/" + p.Tool.Name, "post", "Run") %}</div>
   </div>
   {%- if p.Result != "" -%}
   <div class="card">
