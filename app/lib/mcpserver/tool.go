@@ -22,12 +22,16 @@ type Tool struct {
 	Fn          ToolHandler     `json:"-"`
 }
 
-func (t Tool) ToMCP() (mcp.Tool, error) {
+func (t *Tool) ToMCP() (mcp.Tool, error) {
 	opts := []mcp.ToolOption{mcp.WithDescription(t.Description)}
 	for _, x := range t.Args {
 		switch x.Type {
 		case "string", "":
 			opts = append(opts, mcp.WithString(x.Key, mcp.Required(), mcp.Description(x.Description), mcp.DefaultString(x.Default)))
+		case "float", "float64", "int", "int64", "number":
+			opts = append(opts, mcp.WithNumber(x.Key, mcp.Required(), mcp.Description(x.Description), mcp.DefaultString(x.Default)))
+		case "bool", "boolean":
+			opts = append(opts, mcp.WithBoolean(x.Key, mcp.Required(), mcp.Description(x.Description), mcp.DefaultString(x.Default)))
 		default:
 			return mcp.Tool{}, errors.Errorf("unable to parse tool argument [%s] as type [%s]", x.Key, x.Type)
 		}
@@ -35,7 +39,7 @@ func (t Tool) ToMCP() (mcp.Tool, error) {
 	return mcp.NewTool(t.Name, opts...), nil
 }
 
-func (t Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc {
+func (t *Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc {
 	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		args := util.ValueMapFrom(req.GetArguments())
 		if t.Fn == nil {
@@ -43,13 +47,13 @@ func (t Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc 
 		}
 		ret, err := t.Fn(ctx, as, req, args, logger)
 		if err != nil {
-			return nil, errors.Errorf("errors running [%s] with arguments %s: %+v", t.Name, util.ToJSONCompact(args), err)
+			return nil, errors.Errorf("errors running tool [%s] with arguments %s: %+v", t.Name, util.ToJSONCompact(args), err)
 		}
 		return mcp.NewToolResultText(ret), nil
 	}
 }
 
-func (t Tool) IconSafe() string {
+func (t *Tool) IconSafe() string {
 	return util.Choose(t.Icon == "", "cog", t.Icon)
 }
 
@@ -59,4 +63,16 @@ func (t Tools) Get(n string) *Tool {
 	return lo.FindOrElse(t, nil, func(x *Tool) bool {
 		return x.Name == n
 	})
+}
+
+func (s *Server) AddTools(as *app.State, logger util.Logger, tools ...*Tool) error {
+	for _, tl := range tools {
+		s.Tools = append(s.Tools, tl)
+		m, err := tl.ToMCP()
+		if err != nil {
+			return err
+		}
+		s.MCP.AddTool(m, tl.Handler(as, logger))
+	}
+	return nil
 }

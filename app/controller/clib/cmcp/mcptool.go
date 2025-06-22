@@ -1,4 +1,4 @@
-package clib
+package cmcp
 
 import (
 	"fmt"
@@ -11,32 +11,8 @@ import (
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/mcpserver"
-	"projectforge.dev/projectforge/views/vadmin"
+	"projectforge.dev/projectforge/views/vmcp"
 )
-
-const mcpBreadcrumb = "mcp"
-
-func MCPIndex(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mcpx, _, err := mcpTool(r, as, ps)
-		if err != nil {
-			return "", err
-		}
-		ps.SetTitleAndData("MCP", mcpx)
-		return controller.Render(r, as, &vadmin.MCPList{Server: mcpx}, ps, mcpBreadcrumb)
-	})
-}
-
-func MCPServe(w http.ResponseWriter, r *http.Request) {
-	controller.Act("mcp.serve.streamable", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		mcpx, _, err := mcpTool(r, as, ps)
-		if err != nil {
-			return "", err
-		}
-		mcpx.ServeHTTP(ps.Context, w, r, ps.Logger)
-		return "", nil
-	})
-}
 
 func MCPTool(w http.ResponseWriter, r *http.Request) {
 	controller.Act("mcp.tool", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -45,7 +21,7 @@ func MCPTool(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s]", tool.Name), tool)
-		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool}, ps, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vmcp.ToolDetail{Server: mcpx, Tool: tool}, ps, mcpBreadcrumb, tool.Name)
 	})
 }
 
@@ -64,7 +40,7 @@ func MCPToolRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s] Result", tool.Name), ret)
-		return controller.Render(r, as, &vadmin.MCPDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vmcp.ToolDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, mcpBreadcrumb, tool.Name)
 	})
 }
 

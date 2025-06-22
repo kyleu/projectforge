@@ -1,0 +1,45 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/mcpserver"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ResourceDetail struct {
+  layout.Basic
+  Server *mcpserver.Server
+  Resource *mcpserver.Resource
+} %}
+
+{% func (p *ResourceDetail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right" title="{%s p.Resource.Extension() %}"><em>{%s p.Resource.MIMEType %}</em></div>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Resource.Name %}</h3>
+    <em>{%s p.Resource.Description %}</em>
+    <div class="mt">
+      {%- code
+        out, err := cutil.FormatLang(p.Resource.Content, p.Resource.Extension())
+      -%}
+      {%- if err == nil -%}
+      {%s= out %}
+      {%- else -%}
+      <pre>{%s p.Resource.Content %}</pre>
+      <div class="mt"><em>unknown extension [{%s p.Resource.Extension() %}]: {%s err.Error() %}</em></div>
+      {%- endif -%}
+    </div>
+  </div>
+{% endfunc %}
+
+{% func listResources(rs mcpserver.Resources, ps *cutil.PageState) %}
+  {%- for _, r := range rs -%}
+  <a class="link-section" href="/mcp/resource/{%s r.Name %}">
+    <div class="card">
+      <div class="right"><em>resource</em></div>
+      <div class="left mrs">{%= components.SVGRef(r.IconSafe(), 40, 40, "", ps) %}</div>
+      <strong class="highlight">{%s r.Name %}</strong>
+      <div><em>{%s r.Description %}</em></div>
+    </div>
+  </a>
+  {%- endfor -%}
+{% endfunc %}

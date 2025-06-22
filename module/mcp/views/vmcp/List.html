@@ -4,7 +4,6 @@
 	"{{{ .Package }}}/app/lib/mcpserver"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -39,36 +38,7 @@
       </ul>
     </div>
   </div>
-  {%- for _, t := range p.Server.Tools -%}
-  <a class="link-section" href="/mcp/tool/{%s t.Name %}">
-    <div class="card">
-      <div class="right"><em>tool</em></div>
-      <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
-      <strong class="highlight">{%s t.Name %}</strong>
-      <div><em>{%s t.Description %}</em></div>
-    </div>
-  </a>
-  {%- endfor -%}
-{% endfunc %}
-
-{% code type MCPDetail struct {
-  layout.Basic
-  Server *mcpserver.Server
-  Tool *mcpserver.Tool
-  Args util.ValueMap
-  Result string
-} %}
-
-{% func (p *MCPDetail) Body(as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Tool.Name %}</h3>
-    <em>{%s p.Tool.Description %}</em>
-    <div class="mt">{%= edit.TableEditor("args", p.Tool.Args, p.Args, "/mcp/tool/" + p.Tool.Name, "post", "Run") %}</div>
-  </div>
-  {%- if p.Result != "" -%}
-  <div class="card">
-    <h3>{%= components.SVGIcon(`file`, ps) %} Result</h3>
-    <div class="mt">{%= components.JSON([]byte(p.Result)) %}</div>
-  </div>
-  {%- endif -%}
+  {%= listResources(p.Server.Resources, ps) %}
+  {%= listTools(p.Server.Tools, ps) %}
+  {%= listPrompts(p.Server.Prompts, ps) %}
 {% endfunc %}

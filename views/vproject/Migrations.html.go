@@ -73,50 +73,45 @@ func (p *Migrations) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vproject/Migrations.html:25
 		qw422016.N().S(`</label>
         <div class="bd"><div><div>
-`)
+          `)
 //line views/vproject/Migrations.html:27
-		out, _ := cutil.FormatLang(m.Content, "sql")
-
+		qw422016.N().S(cutil.FormatLangIgnoreErrors(m.Content, "sql"))
 //line views/vproject/Migrations.html:27
-		qw422016.N().S(`          `)
-//line views/vproject/Migrations.html:28
-		qw422016.N().S(out)
-//line views/vproject/Migrations.html:28
 		qw422016.N().S(`
         </div></div></div>
       </li>
 `)
-//line views/vproject/Migrations.html:31
+//line views/vproject/Migrations.html:30
 	}
-//line views/vproject/Migrations.html:31
+//line views/vproject/Migrations.html:30
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 }
 
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 func (p *Migrations) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 }
 
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 func (p *Migrations) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	qs422016 := string(qb422016.B)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 	return qs422016
-//line views/vproject/Migrations.html:34
+//line views/vproject/Migrations.html:33
 }

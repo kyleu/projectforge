@@ -24,8 +24,7 @@
         <input id="accordion-{%s m.Filename %}" type="checkbox" hidden="hidden" />
         <label for="accordion-{%s m.Filename %}">{%= components.ExpandCollapse(3, ps) %}{%s m.Filename %}</label>
         <div class="bd"><div><div>
-          {%- code out, _ := cutil.FormatLang(m.Content, "sql") -%}
-          {%s= out %}
+          {%s= cutil.FormatLangIgnoreErrors(m.Content, "sql") %}
         </div></div></div>
       </li>
       {%- endfor -%}

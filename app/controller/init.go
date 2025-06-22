@@ -10,6 +10,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/mcpserver"
 	"projectforge.dev/projectforge/app/lib/task"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
@@ -17,14 +18,18 @@ import (
 
 var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
 
-func initApp(_ context.Context, as *app.State, logger util.Logger) error {
+func initApp(ctx context.Context, as *app.State, logger util.Logger) error {
 	tf := func(ctx context.Context, res *task.Result, logger util.Logger) *task.Result {
 		res.Log("Testbed!")
 		return res.CompleteSimple(res.Args)
 	}
+	_, err := mcpserver.GetDefaultServer(ctx, as, logger)
+	if err != nil {
+		return err
+	}
 	t := task.NewTask("testbed", "", "utility", "star", "Who knows what it'll do?", tf)
 	t.Fields = util.FieldDescs{{Key: "project", Title: "Project"}}
-	err := as.Services.Task.RegisterTask(t)
+	err = as.Services.Task.RegisterTask(t)
 	if err != nil {
 		return err
 	}

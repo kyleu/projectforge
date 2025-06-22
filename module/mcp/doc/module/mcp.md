@@ -54,6 +54,7 @@ Configure your MCP client to use your application as an MCP server via CLI:
     }
   }
 }
+```
 
 ### Adding Custom Tools
 
