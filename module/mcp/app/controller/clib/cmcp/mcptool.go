@@ -21,7 +21,7 @@ func MCPTool(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s]", tool.Name), tool)
-		return controller.Render(r, as, &vmcp.ToolDetail{Server: mcpx, Tool: tool}, ps, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vmcp.ToolDetail{Server: mcpx, Tool: tool}, ps, mcpBreadcrumb, "tool", tool.Name)
 	})
 }
 
@@ -40,7 +40,7 @@ func MCPToolRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Tool [%s] Result", tool.Name), ret)
-		return controller.Render(r, as, &vmcp.ToolDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, mcpBreadcrumb, tool.Name)
+		return controller.Render(r, as, &vmcp.ToolDetail{Server: mcpx, Tool: tool, Args: frm, Result: ret}, ps, mcpBreadcrumb, "tool", tool.Name)
 	})
 }
 

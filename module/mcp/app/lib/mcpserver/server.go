@@ -11,12 +11,13 @@ import (
 )
 
 type Server struct {
-	MCP       *server.MCPServer `json:"-"`
-	State     *app.State        `json:"-"`
-	Resources Resources         `json:"resources"`
-	Prompts   Prompts           `json:"prompts"`
-	Tools     Tools             `json:"tools"`
-	HTTP      http.Handler      `json:"-"`
+	MCP               *server.MCPServer `json:"-"`
+	State             *app.State        `json:"-"`
+	Resources         Resources         `json:"resources"`
+	ResourceTemplates ResourceTemplates `json:"resourceTemplates"`
+	Prompts           Prompts           `json:"prompts"`
+	Tools             Tools             `json:"tools"`
+	HTTP              http.Handler      `json:"-"`
 }
 
 func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server, error) {

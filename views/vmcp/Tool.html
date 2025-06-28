@@ -18,7 +18,7 @@
 
 {% func (p *ToolDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(p.Tool.IconSafe(), ps) %} {%s p.Tool.Name %}</h3>
+    <h3>{%= components.SVGIcon(p.Tool.IconSafe(), ps) %} Tool [{%s p.Tool.Name %}]</h3>
     <em>{%s p.Tool.Description %}</em>
     <div class="mt">{%= edit.TableEditor("args", p.Tool.Args, p.Args, "/mcp/tool/" + p.Tool.Name, "post", "Run") %}</div>
   </div>
@@ -33,8 +33,7 @@
 {% func listTools(ts mcpserver.Tools, ps *cutil.PageState) %}
   {%- for _, t := range ts -%}
   <a class="link-section" href="/mcp/tool/{%s t.Name %}">
-    <div class="card">
-      <div class="right"><em>tool</em></div>
+    <div class="clear mt">
       <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
       <strong class="highlight">{%s t.Name %}</strong>
       <div><em>{%s t.Description %}</em></div>

@@ -46,11 +46,11 @@ func (p *ToolDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vmcp/Tool.html:21
 	components.StreamSVGIcon(qw422016, p.Tool.IconSafe(), ps)
 //line views/vmcp/Tool.html:21
-	qw422016.N().S(` `)
+	qw422016.N().S(` Tool [`)
 //line views/vmcp/Tool.html:21
 	qw422016.E().S(p.Tool.Name)
 //line views/vmcp/Tool.html:21
-	qw422016.N().S(`</h3>
+	qw422016.N().S(`]</h3>
     <em>`)
 //line views/vmcp/Tool.html:22
 	qw422016.E().S(p.Tool.Description)
@@ -123,53 +123,52 @@ func streamlistTools(qw422016 *qt422016.Writer, ts mcpserver.Tools, ps *cutil.Pa
 		qw422016.E().S(t.Name)
 //line views/vmcp/Tool.html:35
 		qw422016.N().S(`">
-    <div class="card">
-      <div class="right"><em>tool</em></div>
+    <div class="clear mt">
       <div class="left mrs">`)
-//line views/vmcp/Tool.html:38
+//line views/vmcp/Tool.html:37
 		components.StreamSVGRef(qw422016, t.IconSafe(), 40, 40, "", ps)
-//line views/vmcp/Tool.html:38
+//line views/vmcp/Tool.html:37
 		qw422016.N().S(`</div>
       <strong class="highlight">`)
-//line views/vmcp/Tool.html:39
+//line views/vmcp/Tool.html:38
 		qw422016.E().S(t.Name)
-//line views/vmcp/Tool.html:39
+//line views/vmcp/Tool.html:38
 		qw422016.N().S(`</strong>
       <div><em>`)
-//line views/vmcp/Tool.html:40
+//line views/vmcp/Tool.html:39
 		qw422016.E().S(t.Description)
-//line views/vmcp/Tool.html:40
+//line views/vmcp/Tool.html:39
 		qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:42
 	}
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 }
 
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 func writelistTools(qq422016 qtio422016.Writer, ts mcpserver.Tools, ps *cutil.PageState) {
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	streamlistTools(qw422016, ts, ps)
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 }
 
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 func listTools(ts mcpserver.Tools, ps *cutil.PageState) string {
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	writelistTools(qb422016, ts, ps)
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 	return qs422016
-//line views/vmcp/Tool.html:44
+//line views/vmcp/Tool.html:43
 }

@@ -98,47 +98,114 @@ func (p *MCPList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       </ul>
     </div>
   </div>
-  `)
-//line views/vmcp/List.html:41
-	streamlistResources(qw422016, p.Server.Resources, ps)
-//line views/vmcp/List.html:41
-	qw422016.N().S(`
-  `)
+
+`)
 //line views/vmcp/List.html:42
-	streamlistTools(qw422016, p.Server.Tools, ps)
+	if len(p.Server.Resources) > 0 {
 //line views/vmcp/List.html:42
-	qw422016.N().S(`
-  `)
-//line views/vmcp/List.html:43
-	streamlistPrompts(qw422016, p.Server.Prompts, ps)
-//line views/vmcp/List.html:43
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vmcp/List.html:44
+		components.StreamSVGIcon(qw422016, `file`, ps)
+//line views/vmcp/List.html:44
+		qw422016.N().S(` Resources</h3>
+    `)
+//line views/vmcp/List.html:45
+		streamlistResources(qw422016, p.Server.Resources, ps)
+//line views/vmcp/List.html:45
+		qw422016.N().S(`
+  </div>
+`)
+//line views/vmcp/List.html:47
+	}
+//line views/vmcp/List.html:47
 	qw422016.N().S(`
 `)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:49
+	if len(p.Server.ResourceTemplates) > 0 {
+//line views/vmcp/List.html:49
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vmcp/List.html:51
+		components.StreamSVGIcon(qw422016, `folder`, ps)
+//line views/vmcp/List.html:51
+		qw422016.N().S(` Resource Templates</h3>
+    `)
+//line views/vmcp/List.html:52
+		streamlistResourceTemplates(qw422016, p.Server.ResourceTemplates, ps)
+//line views/vmcp/List.html:52
+		qw422016.N().S(`
+  </div>
+`)
+//line views/vmcp/List.html:54
+	}
+//line views/vmcp/List.html:54
+	qw422016.N().S(`
+`)
+//line views/vmcp/List.html:56
+	if len(p.Server.Tools) > 0 {
+//line views/vmcp/List.html:56
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vmcp/List.html:58
+		components.StreamSVGIcon(qw422016, `cog`, ps)
+//line views/vmcp/List.html:58
+		qw422016.N().S(` Tools</h3>
+    `)
+//line views/vmcp/List.html:59
+		streamlistTools(qw422016, p.Server.Tools, ps)
+//line views/vmcp/List.html:59
+		qw422016.N().S(`
+  </div>
+`)
+//line views/vmcp/List.html:61
+	}
+//line views/vmcp/List.html:61
+	qw422016.N().S(`
+`)
+//line views/vmcp/List.html:63
+	if len(p.Server.Prompts) > 0 {
+//line views/vmcp/List.html:63
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/vmcp/List.html:65
+		components.StreamSVGIcon(qw422016, `gift`, ps)
+//line views/vmcp/List.html:65
+		qw422016.N().S(` Prompts</h3>
+    `)
+//line views/vmcp/List.html:66
+		streamlistPrompts(qw422016, p.Server.Prompts, ps)
+//line views/vmcp/List.html:66
+		qw422016.N().S(`
+  </div>
+`)
+//line views/vmcp/List.html:68
+	}
+//line views/vmcp/List.html:69
 }
 
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 func (p *MCPList) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	p.StreamBody(qw422016, as, ps)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 }
 
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 func (p *MCPList) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	p.WriteBody(qb422016, as, ps)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	qs422016 := string(qb422016.B)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 	return qs422016
-//line views/vmcp/List.html:44
+//line views/vmcp/List.html:69
 }

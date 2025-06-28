@@ -15,8 +15,9 @@ func mcpRoutes(base string, r *mux.Router) {
 	makeRoute(r, http.MethodGet, base, cmcp.MCPIndex)
 	makeRoute(r, http.MethodPost, base, cmcp.MCPServe)
 	makeRoute(r, http.MethodGet, base+"/resource/{resource}", cmcp.MCPResource)
+	makeRoute(r, http.MethodGet, base+"/resourcetemplate/{rt}", cmcp.MCPResourceTemplate)
+	makeRoute(r, http.MethodPost, base+"/resourcetemplate/{rt}", cmcp.MCPResourceTemplateRun)
 	makeRoute(r, http.MethodGet, base+"/tool/{tool}", cmcp.MCPTool)
 	makeRoute(r, http.MethodPost, base+"/tool/{tool}", cmcp.MCPToolRun)
 	makeRoute(r, http.MethodGet, base+"/prompt/{prompt}", cmcp.MCPPrompt)
-	makeRoute(r, http.MethodPost, base+"/prompt/{prompt}", cmcp.MCPPromptRun)
 }

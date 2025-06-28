@@ -20,7 +20,7 @@ func MCPResource(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Resource [%s]", resource.Name), resource)
-		return controller.Render(r, as, &vmcp.ResourceDetail{Server: mcpx, Resource: resource}, ps, mcpBreadcrumb, resource.Name)
+		return controller.Render(r, as, &vmcp.ResourceDetail{Server: mcpx, Resource: resource}, ps, mcpBreadcrumb, "resource", resource.Name)
 	})
 }
 

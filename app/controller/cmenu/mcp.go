@@ -8,14 +8,33 @@ import (
 func mcpMenu() *menu.Item {
 	ret := &menu.Item{Key: "mcp", Title: "Model Context Protocol", Icon: "robot", Route: "/mcp"}
 	if x := mcpserver.CurrentDefaultServer(); x != nil {
-		for _, r := range x.Resources {
-			ret.Children = append(ret.Children, &menu.Item{Key: r.Name, Title: r.Name, Description: r.Description, Icon: r.IconSafe(), Route: "/mcp/resource/" + r.Name})
+		if len(x.Resources) > 0 {
+			kid := &menu.Item{Key: "resource", Title: "Resources", Description: "Static resources for your AI to use", Icon: "file"}
+			for _, r := range x.Resources {
+				kid.Children = append(kid.Children, &menu.Item{Key: r.Name, Title: r.Name, Description: r.Description, Icon: r.IconSafe(), Route: "/mcp/resource/" + r.Name})
+			}
+			ret.Children = append(ret.Children, kid)
 		}
-		for _, t := range x.Tools {
-			ret.Children = append(ret.Children, &menu.Item{Key: t.Name, Title: t.Name, Description: t.Description, Icon: t.IconSafe(), Route: "/mcp/tool/" + t.Name})
+		if len(x.ResourceTemplates) > 0 {
+			kid := &menu.Item{Key: "resourcetemplate", Title: "Resource Templates", Description: "Dynamic resources for your AI use", Icon: "folder"}
+			for _, rt := range x.ResourceTemplates {
+				kid.Children = append(kid.Children, &menu.Item{Key: rt.Name, Title: rt.Name, Description: rt.Description, Icon: rt.IconSafe(), Route: "/mcp/resourcetemplate/" + rt.Name})
+			}
+			ret.Children = append(ret.Children, kid)
 		}
-		for _, p := range x.Prompts {
-			ret.Children = append(ret.Children, &menu.Item{Key: p.Name, Title: p.Name, Description: p.Description, Icon: p.IconSafe(), Route: "/mcp/prompt/" + p.Name})
+		if len(x.Tools) > 0 {
+			kid := &menu.Item{Key: "tool", Title: "Tools", Description: "Tools your AI can call", Icon: "cog"}
+			for _, t := range x.Tools {
+				kid.Children = append(kid.Children, &menu.Item{Key: t.Name, Title: t.Name, Description: t.Description, Icon: t.IconSafe(), Route: "/mcp/tool/" + t.Name})
+			}
+			ret.Children = append(ret.Children, kid)
+		}
+		if len(x.Prompts) > 0 {
+			kid := &menu.Item{Key: "prompt", Title: "Prompts", Description: "Prompts for your AI to use", Icon: "gift"}
+			for _, p := range x.Prompts {
+				kid.Children = append(kid.Children, &menu.Item{Key: p.Name, Title: p.Name, Description: p.Description, Icon: p.IconSafe(), Route: "/mcp/prompt/" + p.Name})
+			}
+			ret.Children = append(ret.Children, kid)
 		}
 	}
 	return ret

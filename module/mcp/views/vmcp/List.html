@@ -38,7 +38,32 @@
       </ul>
     </div>
   </div>
-  {%= listResources(p.Server.Resources, ps) %}
-  {%= listTools(p.Server.Tools, ps) %}
-  {%= listPrompts(p.Server.Prompts, ps) %}
+
+  {%- if len(p.Server.Resources) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`file`, ps) %} Resources</h3>
+    {%= listResources(p.Server.Resources, ps) %}
+  </div>
+  {%- endif -%}
+
+  {%- if len(p.Server.ResourceTemplates) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`folder`, ps) %} Resource Templates</h3>
+    {%= listResourceTemplates(p.Server.ResourceTemplates, ps) %}
+  </div>
+  {%- endif -%}
+
+  {%- if len(p.Server.Tools) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Tools</h3>
+    {%= listTools(p.Server.Tools, ps) %}
+  </div>
+  {%- endif -%}
+
+  {%- if len(p.Server.Prompts) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`gift`, ps) %} Prompts</h3>
+    {%= listPrompts(p.Server.Prompts, ps) %}
+  </div>
+  {%- endif -%}
 {% endfunc %}

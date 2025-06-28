@@ -19,7 +19,9 @@ func updateF(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	for _, mod := range mSvc.Modules().Sort() {
+	keys := util.ArraySorted(mSvc.Modules().Keys())
+	for _, key := range keys {
+		mod := mSvc.Modules().Get(key)
 		url := mod.URL
 		var err error
 		if url == "" {

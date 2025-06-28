@@ -9,78 +9,91 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/mcpserver"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
-	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vmcp/Prompt.html:11
+//line views/vmcp/Prompt.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vmcp/Prompt.html:11
+//line views/vmcp/Prompt.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vmcp/Prompt.html:11
+//line views/vmcp/Prompt.html:9
 type PromptDetail struct {
 	layout.Basic
 	Server *mcpserver.Server
 	Prompt *mcpserver.Prompt
-	Args   util.ValueMap
-	Result string
 }
 
-//line views/vmcp/Prompt.html:19
+//line views/vmcp/Prompt.html:15
 func (p *PromptDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/Prompt.html:19
+//line views/vmcp/Prompt.html:15
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vmcp/Prompt.html:21
+//line views/vmcp/Prompt.html:17
 	components.StreamSVGIcon(qw422016, p.Prompt.IconSafe(), ps)
-//line views/vmcp/Prompt.html:21
+//line views/vmcp/Prompt.html:17
 	qw422016.N().S(` `)
-//line views/vmcp/Prompt.html:21
+//line views/vmcp/Prompt.html:17
 	qw422016.E().S(p.Prompt.Name)
-//line views/vmcp/Prompt.html:21
+//line views/vmcp/Prompt.html:17
 	qw422016.N().S(`</h3>
     <em>`)
-//line views/vmcp/Prompt.html:22
+//line views/vmcp/Prompt.html:18
 	qw422016.E().S(p.Prompt.Description)
-//line views/vmcp/Prompt.html:22
+//line views/vmcp/Prompt.html:18
 	qw422016.N().S(`</em>
-    <div class="mt">`)
-//line views/vmcp/Prompt.html:23
-	edit.StreamTableEditor(qw422016, "args", p.Prompt.Args, p.Args, "/mcp/prompt/"+p.Prompt.Name, "post", "Run")
-//line views/vmcp/Prompt.html:23
-	qw422016.N().S(`</div>
   </div>
-`)
-//line views/vmcp/Prompt.html:25
-	if p.Result != "" {
-//line views/vmcp/Prompt.html:25
-		qw422016.N().S(`  <div class="card">
+  <div class="card">
     <h3>`)
+//line views/vmcp/Prompt.html:21
+	components.StreamSVGIcon(qw422016, `file`, ps)
+//line views/vmcp/Prompt.html:21
+	qw422016.N().S(` Prompt Content</h3>
+    <div class="mt">
+      `)
+//line views/vmcp/Prompt.html:23
+	out, err := cutil.FormatLang(p.Prompt.Content, "markdown")
+
+//line views/vmcp/Prompt.html:23
+	qw422016.N().S(`
+      `)
+//line views/vmcp/Prompt.html:24
+	if err == nil {
+//line views/vmcp/Prompt.html:24
+		qw422016.N().S(`
+      `)
+//line views/vmcp/Prompt.html:25
+		qw422016.N().S(out)
+//line views/vmcp/Prompt.html:25
+		qw422016.N().S(`
+      `)
+//line views/vmcp/Prompt.html:26
+	} else {
+//line views/vmcp/Prompt.html:26
+		qw422016.N().S(`
+      `)
 //line views/vmcp/Prompt.html:27
-		components.StreamSVGIcon(qw422016, `file`, ps)
+		qw422016.E().S(p.Prompt.Content)
 //line views/vmcp/Prompt.html:27
-		qw422016.N().S(` Result</h3>
-    <div class="mt">`)
+		qw422016.N().S(`
+      `)
 //line views/vmcp/Prompt.html:28
-		qw422016.E().S(p.Result)
+	}
 //line views/vmcp/Prompt.html:28
-		qw422016.N().S(`</div>
+	qw422016.N().S(`
+    </div>
   </div>
 `)
-//line views/vmcp/Prompt.html:30
-	}
 //line views/vmcp/Prompt.html:31
 }
 
@@ -123,53 +136,52 @@ func streamlistPrompts(qw422016 *qt422016.Writer, ts mcpserver.Prompts, ps *cuti
 		qw422016.E().S(t.Name)
 //line views/vmcp/Prompt.html:35
 		qw422016.N().S(`">
-    <div class="card">
-      <div class="right"><em>prompt</em></div>
+    <div class="clear mt">
       <div class="left mrs">`)
-//line views/vmcp/Prompt.html:38
+//line views/vmcp/Prompt.html:37
 		components.StreamSVGRef(qw422016, t.IconSafe(), 40, 40, "", ps)
-//line views/vmcp/Prompt.html:38
+//line views/vmcp/Prompt.html:37
 		qw422016.N().S(`</div>
       <strong class="highlight">`)
-//line views/vmcp/Prompt.html:39
+//line views/vmcp/Prompt.html:38
 		qw422016.E().S(t.Name)
-//line views/vmcp/Prompt.html:39
+//line views/vmcp/Prompt.html:38
 		qw422016.N().S(`</strong>
       <div><em>`)
-//line views/vmcp/Prompt.html:40
+//line views/vmcp/Prompt.html:39
 		qw422016.E().S(t.Description)
-//line views/vmcp/Prompt.html:40
+//line views/vmcp/Prompt.html:39
 		qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:42
 	}
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 }
 
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 func writelistPrompts(qq422016 qtio422016.Writer, ts mcpserver.Prompts, ps *cutil.PageState) {
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	streamlistPrompts(qw422016, ts, ps)
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 }
 
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 func listPrompts(ts mcpserver.Prompts, ps *cutil.PageState) string {
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	writelistPrompts(qb422016, ts, ps)
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 	return qs422016
-//line views/vmcp/Prompt.html:44
+//line views/vmcp/Prompt.html:43
 }

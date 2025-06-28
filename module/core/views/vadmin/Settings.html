@@ -46,8 +46,7 @@
     {%= settingsLink("/admin/schedule", "stopwatch", "Scheduled Jobs", "Manage the execution and results from scheduled tasks", ps) %}{{{ end }}}{{{ if .HasModule "process" }}}
     {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}{{{ end }}}{{{ if .HasModule "scripting" }}}
     {%= settingsLink("/admin/scripting", "archive", "Script Files", "View and run the JavaScript files managed by the server", ps) %}{{{ end }}}{{{ if .HasModule "task" }}}
-    {%= settingsLink("/admin/task", "task", "Task Engine", "See the tasks that have run, and start new runs", ps) %}{{{ end }}}{{{ if .HasModule "mcp" }}}
-    {%= settingsLink("/admin/mcp", "mcp", "Model Context Protocol", "Manage the available tasks for MCP", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/task", "task", "Task Engine", "See the tasks that have run, and start new runs", ps) %}{{{ end }}}
     {%= settingsLink("/admin/logs", "folder", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
     <div class="clear"></div>
   </div>

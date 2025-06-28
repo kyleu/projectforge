@@ -2,9 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/mcpserver"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
-  "projectforge.dev/projectforge/views/components/edit"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -12,29 +10,30 @@
   layout.Basic
   Server *mcpserver.Server
   Prompt *mcpserver.Prompt
-  Args util.ValueMap
-  Result string
 } %}
 
 {% func (p *PromptDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(p.Prompt.IconSafe(), ps) %} {%s p.Prompt.Name %}</h3>
     <em>{%s p.Prompt.Description %}</em>
-    <div class="mt">{%= edit.TableEditor("args", p.Prompt.Args, p.Args, "/mcp/prompt/" + p.Prompt.Name, "post", "Run") %}</div>
   </div>
-  {%- if p.Result != "" -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`file`, ps) %} Result</h3>
-    <div class="mt">{%s p.Result %}</div>
+    <h3>{%= components.SVGIcon(`file`, ps) %} Prompt Content</h3>
+    <div class="mt">
+      {% code out, err := cutil.FormatLang(p.Prompt.Content, "markdown") %}
+      {% if err == nil %}
+      {%s= out %}
+      {% else %}
+      {%s p.Prompt.Content %}
+      {% endif %}
+    </div>
   </div>
-  {%- endif -%}
 {% endfunc %}
 
 {% func listPrompts(ts mcpserver.Prompts, ps *cutil.PageState) %}
   {%- for _, t := range ts -%}
   <a class="link-section" href="/mcp/prompt/{%s t.Name %}">
-    <div class="card">
-      <div class="right"><em>prompt</em></div>
+    <div class="clear mt">
       <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
       <strong class="highlight">{%s t.Name %}</strong>
       <div><em>{%s t.Description %}</em></div>

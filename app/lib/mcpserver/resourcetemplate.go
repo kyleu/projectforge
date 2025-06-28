@@ -1,0 +1,92 @@
+package mcpserver
+
+import (
+	"context"
+	"mime"
+	"strings"
+
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+	"github.com/pkg/errors"
+	"github.com/samber/lo"
+
+	"projectforge.dev/projectforge/app"
+	"projectforge.dev/projectforge/app/util"
+)
+
+type ResourceTemplateHandler func(ctx context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, error)
+
+var ResourceTemplateArgs = util.FieldDescs{{Key: "uri", Description: "URI to request", Type: "string"}}
+
+type ResourceTemplate struct {
+	Name        string                  `json:"name"`
+	Description string                  `json:"description,omitempty"`
+	Icon        string                  `json:"icon,omitempty"`
+	URI         string                  `json:"uri"`
+	MIMEType    string                  `json:"mimeType"`
+	Args        util.FieldDescs         `json:"args,omitempty"`
+	Fn          ResourceTemplateHandler `json:"-"`
+}
+
+func NewResourceTemplate(name string, description string, uri string, mimeType string, content string) *Resource {
+	if mimeType == "" {
+		mimeType = "application/json"
+	}
+	return &Resource{Name: name, Description: description, URI: uri, MIMEType: mimeType, Content: content}
+}
+
+func (r *ResourceTemplate) ToMCP() (mcp.ResourceTemplate, error) {
+	return mcp.NewResourceTemplate(r.URI, r.Name, mcp.WithTemplateDescription(r.Description)), nil
+}
+
+func (r *ResourceTemplate) IconSafe() string {
+	return util.Choose(r.Icon == "", "folder", r.Icon)
+}
+
+func (r *ResourceTemplate) Extension() string {
+	mt := r.MIMEType
+	if mt == "" {
+		mt = "application/json"
+	}
+	if mt == "text/markdown" {
+		return "md"
+	}
+	mts, _ := mime.ExtensionsByType(mt)
+	if len(mts) == 0 {
+		return r.MIMEType
+	}
+	return strings.TrimPrefix(mts[0], ".")
+}
+
+func (r *ResourceTemplate) Handler(as *app.State, logger util.Logger) server.ResourceTemplateHandlerFunc {
+	return func(ctx context.Context, req mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+		var ret []mcp.ResourceContents
+		args := util.ValueMapFrom(req.Params.Arguments)
+		content, err := r.Fn(ctx, as, req, util.ValueMapFrom(args), logger)
+		if err != nil {
+			return nil, errors.Errorf("error running resource template [%s] with arguments %s: %+v", r.Name, util.ToJSONCompact(args), err)
+		}
+		ret = append(ret, mcp.TextResourceContents{URI: r.URI, MIMEType: r.MIMEType, Text: content})
+		return ret, nil
+	}
+}
+
+type ResourceTemplates []*ResourceTemplate
+
+func (r ResourceTemplates) Get(n string) *ResourceTemplate {
+	return lo.FindOrElse(r, nil, func(x *ResourceTemplate) bool {
+		return x.Name == n
+	})
+}
+
+func (s *Server) AddResourceTemplates(as *app.State, logger util.Logger, resources ...*ResourceTemplate) error {
+	for _, r := range resources {
+		s.ResourceTemplates = append(s.ResourceTemplates, r)
+		m, err := r.ToMCP()
+		if err != nil {
+			return err
+		}
+		s.MCP.AddResourceTemplate(m, r.Handler(as, logger))
+	}
+	return nil
+}
