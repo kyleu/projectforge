@@ -2,6 +2,7 @@ package mcpserver
 
 import (
 	"context"
+	"encoding/base64"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -49,16 +50,18 @@ func (r *ResourceTemplate) Handler(as *app.State, logger util.Logger) server.Res
 		if err != nil {
 			return nil, errors.Errorf("error running resource template [%s] with arguments %s: %+v", r.Name, util.ToJSONCompact(args), err)
 		}
-		trc := mcp.TextResourceContents{URI: util.Choose(u == "", r.URI, u), MIMEType: util.Choose(mt == "", r.MIMEType, mt)}
+		var rc mcp.ResourceContents
+		u = util.Choose(u == "", r.URI, u)
+		mt = util.Choose(mt == "", r.MIMEType, mt)
 		switch t := content.(type) {
 		case string:
-			trc.Text = t
+			rc = mcp.TextResourceContents{URI: u, MIMEType: mt, Text: t}
 		case []byte:
-			trc.Text = string(t)
+			rc = mcp.BlobResourceContents{URI: u, MIMEType: mt, Blob: base64.StdEncoding.EncodeToString(t)}
 		default:
-			trc.Text = util.ToJSON(t)
+			rc = mcp.TextResourceContents{URI: u, MIMEType: mt, Text: util.ToJSON(t)}
 		}
-		ret = append(ret, trc)
+		ret = append(ret, rc)
 		return ret, nil
 	}
 }

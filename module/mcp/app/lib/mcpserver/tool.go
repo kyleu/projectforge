@@ -26,13 +26,19 @@ type Tool struct {
 func (t *Tool) ToMCP() (mcp.Tool, error) {
 	opts := []mcp.ToolOption{mcp.WithDescription(t.Description)}
 	for _, x := range t.Args {
+		argOpts := []mcp.PropertyOption{mcp.Description(x.Description)}
+		if x.Default == "" {
+			argOpts = append(argOpts, mcp.Required())
+		} else {
+			argOpts = append(argOpts, mcp.DefaultString(x.Default))
+		}
 		switch x.Type {
 		case "string", "":
-			opts = append(opts, mcp.WithString(x.Key, mcp.Required(), mcp.Description(x.Description), mcp.DefaultString(x.Default)))
+			opts = append(opts, mcp.WithString(x.Key, argOpts...))
 		case "float", "float64", "int", "int64", "number":
-			opts = append(opts, mcp.WithNumber(x.Key, mcp.Required(), mcp.Description(x.Description), mcp.DefaultString(x.Default)))
+			opts = append(opts, mcp.WithNumber(x.Key, argOpts...))
 		case "bool", "boolean":
-			opts = append(opts, mcp.WithBoolean(x.Key, mcp.Required(), mcp.Description(x.Description), mcp.DefaultString(x.Default)))
+			opts = append(opts, mcp.WithBoolean(x.Key, argOpts...))
 		default:
 			return mcp.Tool{}, errors.Errorf("unable to parse tool argument [%s] as type [%s]", x.Key, x.Type)
 		}

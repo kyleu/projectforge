@@ -110,134 +110,132 @@ func (p *ResourceTemplateDetail) StreamBody(qw422016 *qt422016.Writer, as *app.S
 			ext = "txt"
 		}
 		ext = strings.TrimPrefix(ext, ".")
-		println(ext)
 		res := mcpserver.ResultString(p.Result)
-		println(res)
 		out, err := cutil.FormatLang(res, ext)
 
-//line views/vmcp/ResourceTemplate.html:50
+//line views/vmcp/ResourceTemplate.html:48
 		if err == nil {
-//line views/vmcp/ResourceTemplate.html:50
+//line views/vmcp/ResourceTemplate.html:48
 			qw422016.N().S(`      `)
-//line views/vmcp/ResourceTemplate.html:51
+//line views/vmcp/ResourceTemplate.html:49
 			qw422016.N().S(out)
-//line views/vmcp/ResourceTemplate.html:51
+//line views/vmcp/ResourceTemplate.html:49
 			qw422016.N().S(`
 `)
-//line views/vmcp/ResourceTemplate.html:52
+//line views/vmcp/ResourceTemplate.html:50
 		} else {
-//line views/vmcp/ResourceTemplate.html:52
+//line views/vmcp/ResourceTemplate.html:50
 			qw422016.N().S(`      <pre>`)
-//line views/vmcp/ResourceTemplate.html:53
+//line views/vmcp/ResourceTemplate.html:51
 			qw422016.E().S(util.ToJSON(p.Result))
-//line views/vmcp/ResourceTemplate.html:53
+//line views/vmcp/ResourceTemplate.html:51
 			qw422016.N().S(`</pre>
       <div class="mt"><em>unknown extension [`)
-//line views/vmcp/ResourceTemplate.html:54
+//line views/vmcp/ResourceTemplate.html:52
 			qw422016.E().S(ext)
-//line views/vmcp/ResourceTemplate.html:54
+//line views/vmcp/ResourceTemplate.html:52
 			qw422016.N().S(`]: `)
-//line views/vmcp/ResourceTemplate.html:54
+//line views/vmcp/ResourceTemplate.html:52
 			qw422016.E().S(err.Error())
-//line views/vmcp/ResourceTemplate.html:54
+//line views/vmcp/ResourceTemplate.html:52
 			qw422016.N().S(`</em></div>
 `)
-//line views/vmcp/ResourceTemplate.html:55
+//line views/vmcp/ResourceTemplate.html:53
 		}
-//line views/vmcp/ResourceTemplate.html:55
+//line views/vmcp/ResourceTemplate.html:53
 		qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vmcp/ResourceTemplate.html:58
+//line views/vmcp/ResourceTemplate.html:56
 	}
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 }
 
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 func (p *ResourceTemplateDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	p.StreamBody(qw422016, as, ps)
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 }
 
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 func (p *ResourceTemplateDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	p.WriteBody(qb422016, as, ps)
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	qs422016 := string(qb422016.B)
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 	return qs422016
-//line views/vmcp/ResourceTemplate.html:59
+//line views/vmcp/ResourceTemplate.html:57
 }
 
-//line views/vmcp/ResourceTemplate.html:61
+//line views/vmcp/ResourceTemplate.html:59
 func streamlistResourceTemplates(qw422016 *qt422016.Writer, rts mcpserver.ResourceTemplates, ps *cutil.PageState) {
-//line views/vmcp/ResourceTemplate.html:61
+//line views/vmcp/ResourceTemplate.html:59
 	qw422016.N().S(`
 `)
-//line views/vmcp/ResourceTemplate.html:62
+//line views/vmcp/ResourceTemplate.html:60
 	for _, rt := range rts {
-//line views/vmcp/ResourceTemplate.html:62
+//line views/vmcp/ResourceTemplate.html:60
 		qw422016.N().S(`  <a class="link-section" href="/mcp/resourcetemplate/`)
-//line views/vmcp/ResourceTemplate.html:63
+//line views/vmcp/ResourceTemplate.html:61
 		qw422016.E().S(rt.Name)
-//line views/vmcp/ResourceTemplate.html:63
+//line views/vmcp/ResourceTemplate.html:61
 		qw422016.N().S(`">
     <div class="clear mt">
       <div class="left mrs">`)
-//line views/vmcp/ResourceTemplate.html:65
+//line views/vmcp/ResourceTemplate.html:63
 		components.StreamSVGRef(qw422016, rt.IconSafe(), 40, 40, "", ps)
-//line views/vmcp/ResourceTemplate.html:65
+//line views/vmcp/ResourceTemplate.html:63
 		qw422016.N().S(`</div>
       <strong class="highlight">`)
-//line views/vmcp/ResourceTemplate.html:66
+//line views/vmcp/ResourceTemplate.html:64
 		qw422016.E().S(rt.Name)
-//line views/vmcp/ResourceTemplate.html:66
+//line views/vmcp/ResourceTemplate.html:64
 		qw422016.N().S(`</strong>
       <div><em>`)
-//line views/vmcp/ResourceTemplate.html:67
+//line views/vmcp/ResourceTemplate.html:65
 		qw422016.E().S(rt.Description)
-//line views/vmcp/ResourceTemplate.html:67
+//line views/vmcp/ResourceTemplate.html:65
 		qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
-//line views/vmcp/ResourceTemplate.html:70
+//line views/vmcp/ResourceTemplate.html:68
 	}
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 }
 
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 func writelistResourceTemplates(qq422016 qtio422016.Writer, rts mcpserver.ResourceTemplates, ps *cutil.PageState) {
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	streamlistResourceTemplates(qw422016, rts, ps)
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 }
 
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 func listResourceTemplates(rts mcpserver.ResourceTemplates, ps *cutil.PageState) string {
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	writelistResourceTemplates(qb422016, rts, ps)
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	qs422016 := string(qb422016.B)
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 	return qs422016
-//line views/vmcp/ResourceTemplate.html:71
+//line views/vmcp/ResourceTemplate.html:69
 }
