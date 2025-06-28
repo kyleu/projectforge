@@ -2,6 +2,7 @@ package mcpserver
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -12,7 +13,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error)
+type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (any, error)
 
 type Tool struct {
 	Name        string          `json:"name"`
@@ -47,9 +48,18 @@ func (t *Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc
 		}
 		ret, err := t.Fn(ctx, as, req, args, logger)
 		if err != nil {
-			return nil, errors.Errorf("errors running tool [%s] with arguments %s: %+v", t.Name, util.ToJSONCompact(args), err)
+			return mcp.NewToolResultErrorFromErr(fmt.Sprintf("errors running tool [%s] with arguments %s", t.Name, util.ToJSONCompact(args)), err), nil
 		}
-		return mcp.NewToolResultText(ret), nil
+		switch t := ret.(type) {
+		case nil:
+			return mcp.NewToolResultText("<no result>"), nil
+		case string:
+			return mcp.NewToolResultText(t), nil
+		case []byte:
+			return mcp.NewToolResultText(string(t)), nil
+		default:
+			return mcp.NewToolResultText(util.ToJSON(t)), nil
+		}
 	}
 }
 

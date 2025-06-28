@@ -2,8 +2,6 @@ package mcpserver
 
 import (
 	"context"
-	"mime"
-	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -14,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type ResourceTemplateHandler func(ctx context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, error)
+type ResourceTemplateHandler func(ctx context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, string, any, error)
 
 var ResourceTemplateArgs = util.FieldDescs{{Key: "uri", Description: "URI to request", Type: "string"}}
 
@@ -43,30 +41,24 @@ func (r *ResourceTemplate) IconSafe() string {
 	return util.Choose(r.Icon == "", "folder", r.Icon)
 }
 
-func (r *ResourceTemplate) Extension() string {
-	mt := r.MIMEType
-	if mt == "" {
-		mt = "application/json"
-	}
-	if mt == "text/markdown" {
-		return "md"
-	}
-	mts, _ := mime.ExtensionsByType(mt)
-	if len(mts) == 0 {
-		return r.MIMEType
-	}
-	return strings.TrimPrefix(mts[0], ".")
-}
-
 func (r *ResourceTemplate) Handler(as *app.State, logger util.Logger) server.ResourceTemplateHandlerFunc {
 	return func(ctx context.Context, req mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
 		var ret []mcp.ResourceContents
 		args := util.ValueMapFrom(req.Params.Arguments)
-		content, err := r.Fn(ctx, as, req, util.ValueMapFrom(args), logger)
+		u, mt, content, err := r.Fn(ctx, as, req, util.ValueMapFrom(args), logger)
 		if err != nil {
 			return nil, errors.Errorf("error running resource template [%s] with arguments %s: %+v", r.Name, util.ToJSONCompact(args), err)
 		}
-		ret = append(ret, mcp.TextResourceContents{URI: r.URI, MIMEType: r.MIMEType, Text: content})
+		trc := mcp.TextResourceContents{URI: util.Choose(u == "", r.URI, u), MIMEType: util.Choose(mt == "", r.MIMEType, mt)}
+		switch t := content.(type) {
+		case string:
+			trc.Text = t
+		case []byte:
+			trc.Text = string(t)
+		default:
+			trc.Text = util.ToJSON(t)
+		}
+		ret = append(ret, trc)
 		return ret, nil
 	}
 }

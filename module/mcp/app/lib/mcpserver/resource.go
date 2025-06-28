@@ -3,8 +3,6 @@ package mcpserver
 import (
 	"context"
 	"encoding/base64"
-	"mime"
-	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -48,18 +46,7 @@ func (r *Resource) IconSafe() string {
 }
 
 func (r *Resource) Extension() string {
-	mt := r.MIMEType
-	if mt == "" {
-		mt = "application/json"
-	}
-	if mt == "text/markdown" {
-		return "md"
-	}
-	mts, _ := mime.ExtensionsByType(mt)
-	if len(mts) == 0 {
-		return r.MIMEType
-	}
-	return strings.TrimPrefix(mts[0], ".")
+	return util.ExtensionFromMIME(r.MIMEType)
 }
 
 func (r *Resource) Handler(as *app.State, logger util.Logger) server.ResourceHandlerFunc {

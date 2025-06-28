@@ -29,13 +29,7 @@ func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server,
 	)
 	mcp := &Server{MCP: ms}
 	// $PF_SECTION_START(tools)$
-	if err := mcp.AddTools(as, logger, AllTools...); err != nil {
-		return nil, err
-	}
-	if err := mcp.AddResources(as, logger, AllResources...); err != nil {
-		return nil, err
-	}
-	if err := mcp.AddPrompts(as, logger, AllPrompts...); err != nil {
+	if err := WireLibrary(mcp, as, logger); err != nil {
 		return nil, err
 	}
 	// $PF_SECTION_END(tools)$

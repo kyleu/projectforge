@@ -60,3 +60,15 @@ const usageHTTP = `{
 func UsageHTTP() string {
 	return fmt.Sprintf(usageHTTP, util.AppCmd, util.AppPort)
 }
+
+func ResultString(r any) string {
+	switch t := r.(type) {
+	case string:
+		return t
+	case []byte:
+		return string(t)
+	default:
+		println(fmt.Sprintf("unsupported type: %T", t))
+		return util.ToJSON(t)
+	}
+}

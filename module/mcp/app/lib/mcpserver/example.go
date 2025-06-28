@@ -2,7 +2,6 @@ package mcpserver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/pkg/errors"
@@ -18,7 +17,7 @@ var ExampleTool = &Tool{
 	Fn:          exampleHandler,
 }
 
-func exampleHandler(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error) {
+func exampleHandler(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (any, error) {
 	mx, err := args.GetInt("max", true)
 	if err != nil {
 		return "", errors.Errorf("argument [max] must be an integer")
@@ -26,5 +25,5 @@ func exampleHandler(ctx context.Context, as *app.State, req mcp.CallToolRequest,
 	if mx == 0 {
 		mx = 100
 	}
-	return fmt.Sprint(util.RandomInt(mx)), nil
+	return util.RandomInt(mx), nil
 }

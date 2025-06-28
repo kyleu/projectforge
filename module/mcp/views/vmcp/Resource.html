@@ -1,10 +1,8 @@
 {% import (
   "{{{ .Package }}}/app"
   "{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/lib/mcpserver"
-	"{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/app/lib/mcpserver"
   "{{{ .Package }}}/views/components"
-  "{{{ .Package }}}/views/components/edit"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -40,48 +38,6 @@
       <div class="left mrs">{%= components.SVGRef(r.IconSafe(), 40, 40, "", ps) %}</div>
       <strong class="highlight">{%s r.Name %}</strong>
       <div><em>{%s r.Description %}</em></div>
-    </div>
-  </a>
-  {%- endfor -%}
-{% endfunc %}
-
-{% code type ResourceTemplateDetail struct {
-  layout.Basic
-  Server *mcpserver.Server
-  ResourceTemplate *mcpserver.ResourceTemplate
-  Args util.ValueMap
-  Result string
-} %}
-
-{% func (p *ResourceTemplateDetail) Body(as *app.State, ps *cutil.PageState) %}
-  <div class="card">
-    <div class="right" title="{%s p.ResourceTemplate.Extension() %}"><em>{%s p.ResourceTemplate.MIMEType %}</em></div>
-    <h3>{%= components.SVGIcon(`cog`, ps) %} Resource [{%s p.ResourceTemplate.Name %}]</h3>
-    <em>{%s p.ResourceTemplate.Description %}</em>
-    <div class="mt">{%= edit.TableEditor("args", p.ResourceTemplate.Args, p.Args, "/mcp/resourcetemplate/" + p.ResourceTemplate.Name, "post", "Run") %}</div>
-    {%- if p.Result != "" -%}
-    <div class="mt">
-      {%- code
-        out, err := cutil.FormatLang(p.Result, p.ResourceTemplate.Extension())
-      -%}
-      {%- if err == nil -%}
-      {%s= out %}
-      {%- else -%}
-      <pre>{%s p.Result %}</pre>
-      <div class="mt"><em>unknown extension [{%s p.ResourceTemplate.Extension() %}]: {%s err.Error() %}</em></div>
-      {%- endif -%}
-    </div>
-    {%- endif -%}
-  </div>
-{% endfunc %}
-
-{% func listResourceTemplates(rts mcpserver.ResourceTemplates, ps *cutil.PageState) %}
-  {%- for _, rt := range rts -%}
-  <a class="link-section" href="/mcp/resourcetemplate/{%s rt.Name %}">
-    <div class="clear mt">
-      <div class="left mrs">{%= components.SVGRef(rt.IconSafe(), 40, 40, "", ps) %}</div>
-      <strong class="highlight">{%s rt.Name %}</strong>
-      <div><em>{%s rt.Description %}</em></div>
     </div>
   </a>
   {%- endfor -%}

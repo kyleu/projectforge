@@ -9,366 +9,184 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/mcpserver"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
-	"projectforge.dev/projectforge/views/components/edit"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vmcp/Resource.html:11
+//line views/vmcp/Resource.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vmcp/Resource.html:11
+//line views/vmcp/Resource.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vmcp/Resource.html:11
+//line views/vmcp/Resource.html:9
 type ResourceDetail struct {
 	layout.Basic
 	Server   *mcpserver.Server
 	Resource *mcpserver.Resource
 }
 
-//line views/vmcp/Resource.html:17
+//line views/vmcp/Resource.html:15
 func (p *ResourceDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:17
+//line views/vmcp/Resource.html:15
 	qw422016.N().S(`
   <div class="card">
     <div class="right" title="`)
-//line views/vmcp/Resource.html:19
+//line views/vmcp/Resource.html:17
 	qw422016.E().S(p.Resource.Extension())
-//line views/vmcp/Resource.html:19
+//line views/vmcp/Resource.html:17
 	qw422016.N().S(`"><em>`)
-//line views/vmcp/Resource.html:19
+//line views/vmcp/Resource.html:17
 	qw422016.E().S(p.Resource.MIMEType)
-//line views/vmcp/Resource.html:19
+//line views/vmcp/Resource.html:17
 	qw422016.N().S(`</em></div>
     <h3>`)
-//line views/vmcp/Resource.html:20
+//line views/vmcp/Resource.html:18
 	components.StreamSVGIcon(qw422016, `cog`, ps)
-//line views/vmcp/Resource.html:20
+//line views/vmcp/Resource.html:18
 	qw422016.N().S(` Resource [`)
-//line views/vmcp/Resource.html:20
+//line views/vmcp/Resource.html:18
 	qw422016.E().S(p.Resource.Name)
-//line views/vmcp/Resource.html:20
+//line views/vmcp/Resource.html:18
 	qw422016.N().S(`]</h3>
     <em>`)
-//line views/vmcp/Resource.html:21
+//line views/vmcp/Resource.html:19
 	qw422016.E().S(p.Resource.Description)
-//line views/vmcp/Resource.html:21
+//line views/vmcp/Resource.html:19
 	qw422016.N().S(`</em>
     <div class="mt">
 `)
-//line views/vmcp/Resource.html:24
+//line views/vmcp/Resource.html:22
 	out, err := cutil.FormatLang(p.Resource.Content, p.Resource.Extension())
 
-//line views/vmcp/Resource.html:26
+//line views/vmcp/Resource.html:24
 	if err == nil {
-//line views/vmcp/Resource.html:26
+//line views/vmcp/Resource.html:24
 		qw422016.N().S(`      `)
-//line views/vmcp/Resource.html:27
+//line views/vmcp/Resource.html:25
 		qw422016.N().S(out)
-//line views/vmcp/Resource.html:27
+//line views/vmcp/Resource.html:25
 		qw422016.N().S(`
 `)
-//line views/vmcp/Resource.html:28
+//line views/vmcp/Resource.html:26
 	} else {
-//line views/vmcp/Resource.html:28
+//line views/vmcp/Resource.html:26
 		qw422016.N().S(`      <pre>`)
-//line views/vmcp/Resource.html:29
+//line views/vmcp/Resource.html:27
 		qw422016.E().S(p.Resource.Content)
-//line views/vmcp/Resource.html:29
+//line views/vmcp/Resource.html:27
 		qw422016.N().S(`</pre>
       <div class="mt"><em>unknown extension [`)
-//line views/vmcp/Resource.html:30
+//line views/vmcp/Resource.html:28
 		qw422016.E().S(p.Resource.Extension())
-//line views/vmcp/Resource.html:30
+//line views/vmcp/Resource.html:28
 		qw422016.N().S(`]: `)
-//line views/vmcp/Resource.html:30
+//line views/vmcp/Resource.html:28
 		qw422016.E().S(err.Error())
-//line views/vmcp/Resource.html:30
+//line views/vmcp/Resource.html:28
 		qw422016.N().S(`</em></div>
 `)
-//line views/vmcp/Resource.html:31
+//line views/vmcp/Resource.html:29
 	}
-//line views/vmcp/Resource.html:31
+//line views/vmcp/Resource.html:29
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 }
 
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 func (p *ResourceDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	p.StreamBody(qw422016, as, ps)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 }
 
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 func (p *ResourceDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	p.WriteBody(qb422016, as, ps)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 	return qs422016
-//line views/vmcp/Resource.html:34
+//line views/vmcp/Resource.html:32
 }
 
-//line views/vmcp/Resource.html:36
+//line views/vmcp/Resource.html:34
 func streamlistResources(qw422016 *qt422016.Writer, rs mcpserver.Resources, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:36
+//line views/vmcp/Resource.html:34
 	qw422016.N().S(`
 `)
-//line views/vmcp/Resource.html:37
+//line views/vmcp/Resource.html:35
 	for _, r := range rs {
-//line views/vmcp/Resource.html:37
+//line views/vmcp/Resource.html:35
 		qw422016.N().S(`  <a class="link-section" href="/mcp/resource/`)
-//line views/vmcp/Resource.html:38
+//line views/vmcp/Resource.html:36
 		qw422016.E().S(r.Name)
-//line views/vmcp/Resource.html:38
+//line views/vmcp/Resource.html:36
 		qw422016.N().S(`">
     <div class="clear mt">
       <div class="left mrs">`)
-//line views/vmcp/Resource.html:40
+//line views/vmcp/Resource.html:38
 		components.StreamSVGRef(qw422016, r.IconSafe(), 40, 40, "", ps)
-//line views/vmcp/Resource.html:40
+//line views/vmcp/Resource.html:38
 		qw422016.N().S(`</div>
       <strong class="highlight">`)
-//line views/vmcp/Resource.html:41
+//line views/vmcp/Resource.html:39
 		qw422016.E().S(r.Name)
-//line views/vmcp/Resource.html:41
+//line views/vmcp/Resource.html:39
 		qw422016.N().S(`</strong>
       <div><em>`)
-//line views/vmcp/Resource.html:42
+//line views/vmcp/Resource.html:40
 		qw422016.E().S(r.Description)
-//line views/vmcp/Resource.html:42
+//line views/vmcp/Resource.html:40
 		qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
-//line views/vmcp/Resource.html:45
+//line views/vmcp/Resource.html:43
 	}
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 }
 
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 func writelistResources(qq422016 qtio422016.Writer, rs mcpserver.Resources, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	streamlistResources(qw422016, rs, ps)
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 }
 
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 func listResources(rs mcpserver.Resources, ps *cutil.PageState) string {
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	writelistResources(qb422016, rs, ps)
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Resource.html:46
+//line views/vmcp/Resource.html:44
 	return qs422016
-//line views/vmcp/Resource.html:46
-}
-
-//line views/vmcp/Resource.html:48
-type ResourceTemplateDetail struct {
-	layout.Basic
-	Server           *mcpserver.Server
-	ResourceTemplate *mcpserver.ResourceTemplate
-	Args             util.ValueMap
-	Result           string
-}
-
-//line views/vmcp/Resource.html:56
-func (p *ResourceTemplateDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:56
-	qw422016.N().S(`
-  <div class="card">
-    <div class="right" title="`)
-//line views/vmcp/Resource.html:58
-	qw422016.E().S(p.ResourceTemplate.Extension())
-//line views/vmcp/Resource.html:58
-	qw422016.N().S(`"><em>`)
-//line views/vmcp/Resource.html:58
-	qw422016.E().S(p.ResourceTemplate.MIMEType)
-//line views/vmcp/Resource.html:58
-	qw422016.N().S(`</em></div>
-    <h3>`)
-//line views/vmcp/Resource.html:59
-	components.StreamSVGIcon(qw422016, `cog`, ps)
-//line views/vmcp/Resource.html:59
-	qw422016.N().S(` Resource [`)
-//line views/vmcp/Resource.html:59
-	qw422016.E().S(p.ResourceTemplate.Name)
-//line views/vmcp/Resource.html:59
-	qw422016.N().S(`]</h3>
-    <em>`)
-//line views/vmcp/Resource.html:60
-	qw422016.E().S(p.ResourceTemplate.Description)
-//line views/vmcp/Resource.html:60
-	qw422016.N().S(`</em>
-    <div class="mt">`)
-//line views/vmcp/Resource.html:61
-	edit.StreamTableEditor(qw422016, "args", p.ResourceTemplate.Args, p.Args, "/mcp/resourcetemplate/"+p.ResourceTemplate.Name, "post", "Run")
-//line views/vmcp/Resource.html:61
-	qw422016.N().S(`</div>
-`)
-//line views/vmcp/Resource.html:62
-	if p.Result != "" {
-//line views/vmcp/Resource.html:62
-		qw422016.N().S(`    <div class="mt">
-`)
-//line views/vmcp/Resource.html:65
-		out, err := cutil.FormatLang(p.Result, p.ResourceTemplate.Extension())
-
-//line views/vmcp/Resource.html:67
-		if err == nil {
-//line views/vmcp/Resource.html:67
-			qw422016.N().S(`      `)
-//line views/vmcp/Resource.html:68
-			qw422016.N().S(out)
-//line views/vmcp/Resource.html:68
-			qw422016.N().S(`
-`)
-//line views/vmcp/Resource.html:69
-		} else {
-//line views/vmcp/Resource.html:69
-			qw422016.N().S(`      <pre>`)
-//line views/vmcp/Resource.html:70
-			qw422016.E().S(p.Result)
-//line views/vmcp/Resource.html:70
-			qw422016.N().S(`</pre>
-      <div class="mt"><em>unknown extension [`)
-//line views/vmcp/Resource.html:71
-			qw422016.E().S(p.ResourceTemplate.Extension())
-//line views/vmcp/Resource.html:71
-			qw422016.N().S(`]: `)
-//line views/vmcp/Resource.html:71
-			qw422016.E().S(err.Error())
-//line views/vmcp/Resource.html:71
-			qw422016.N().S(`</em></div>
-`)
-//line views/vmcp/Resource.html:72
-		}
-//line views/vmcp/Resource.html:72
-		qw422016.N().S(`    </div>
-`)
-//line views/vmcp/Resource.html:74
-	}
-//line views/vmcp/Resource.html:74
-	qw422016.N().S(`  </div>
-`)
-//line views/vmcp/Resource.html:76
-}
-
-//line views/vmcp/Resource.html:76
-func (p *ResourceTemplateDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:76
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Resource.html:76
-	p.StreamBody(qw422016, as, ps)
-//line views/vmcp/Resource.html:76
-	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Resource.html:76
-}
-
-//line views/vmcp/Resource.html:76
-func (p *ResourceTemplateDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vmcp/Resource.html:76
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Resource.html:76
-	p.WriteBody(qb422016, as, ps)
-//line views/vmcp/Resource.html:76
-	qs422016 := string(qb422016.B)
-//line views/vmcp/Resource.html:76
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Resource.html:76
-	return qs422016
-//line views/vmcp/Resource.html:76
-}
-
-//line views/vmcp/Resource.html:78
-func streamlistResourceTemplates(qw422016 *qt422016.Writer, rts mcpserver.ResourceTemplates, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:78
-	qw422016.N().S(`
-`)
-//line views/vmcp/Resource.html:79
-	for _, rt := range rts {
-//line views/vmcp/Resource.html:79
-		qw422016.N().S(`  <a class="link-section" href="/mcp/resourcetemplate/`)
-//line views/vmcp/Resource.html:80
-		qw422016.E().S(rt.Name)
-//line views/vmcp/Resource.html:80
-		qw422016.N().S(`">
-    <div class="clear mt">
-      <div class="left mrs">`)
-//line views/vmcp/Resource.html:82
-		components.StreamSVGRef(qw422016, rt.IconSafe(), 40, 40, "", ps)
-//line views/vmcp/Resource.html:82
-		qw422016.N().S(`</div>
-      <strong class="highlight">`)
-//line views/vmcp/Resource.html:83
-		qw422016.E().S(rt.Name)
-//line views/vmcp/Resource.html:83
-		qw422016.N().S(`</strong>
-      <div><em>`)
-//line views/vmcp/Resource.html:84
-		qw422016.E().S(rt.Description)
-//line views/vmcp/Resource.html:84
-		qw422016.N().S(`</em></div>
-    </div>
-  </a>
-`)
-//line views/vmcp/Resource.html:87
-	}
-//line views/vmcp/Resource.html:88
-}
-
-//line views/vmcp/Resource.html:88
-func writelistResourceTemplates(qq422016 qtio422016.Writer, rts mcpserver.ResourceTemplates, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:88
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Resource.html:88
-	streamlistResourceTemplates(qw422016, rts, ps)
-//line views/vmcp/Resource.html:88
-	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Resource.html:88
-}
-
-//line views/vmcp/Resource.html:88
-func listResourceTemplates(rts mcpserver.ResourceTemplates, ps *cutil.PageState) string {
-//line views/vmcp/Resource.html:88
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Resource.html:88
-	writelistResourceTemplates(qb422016, rts, ps)
-//line views/vmcp/Resource.html:88
-	qs422016 := string(qb422016.B)
-//line views/vmcp/Resource.html:88
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Resource.html:88
-	return qs422016
-//line views/vmcp/Resource.html:88
+//line views/vmcp/Resource.html:44
 }

@@ -36,12 +36,12 @@ func MCPResourceTemplateRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		params := mcp.ReadResourceParams{URI: rt.URI, Arguments: frm}
-		ret, err := rt.Fn(ps.Context, as, mcp.ReadResourceRequest{Params: params}, frm, ps.Logger)
+		u, mt, ret, err := rt.Fn(ps.Context, as, mcp.ReadResourceRequest{Params: params}, frm, ps.Logger)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("MCP Resource Template [%s] Result", rt.Name), ret)
-		page := &vmcp.ResourceTemplateDetail{Server: mcpx, ResourceTemplate: rt, Result: ret}
+		page := &vmcp.ResourceTemplateDetail{Server: mcpx, ResourceTemplate: rt, Args: frm, URI: u, MIMEType: mt, Result: ret}
 		return controller.Render(r, as, page, ps, mcpBreadcrumb, "resourcetemplate", rt.Name)
 	})
 }
