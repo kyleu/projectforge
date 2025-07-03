@@ -10,12 +10,13 @@ import (
 )
 
 // Lib starts the application as a library, returning the actual TCP port the server is listening on (as an int32 to make interop easier).
-func Lib(ctx context.Context, path string) int32 {
+func Lib(path string) int32 {
 	if _buildInfo == nil {
 		_buildInfo = &app.BuildInfo{Version: "{{{ .Version }}}"}
 	}
 	f := &Flags{Address: "0.0.0.0", Port: 0, ConfigDir: path}
 
+	ctx := context.Background()
 	logger, err := initIfNeeded(ctx)
 	if err != nil {
 		panic(errors.WithStack(errors.Wrap(err, "error initializing application")))
