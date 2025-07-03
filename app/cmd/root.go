@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/muesli/coral"
@@ -8,18 +9,20 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+var rootCtx = context.Background()
+
 func rootF(*coral.Command, []string) error {
 	// $PF_SECTION_START(rootAction)$
-	return startServer(_flags)
+	return startServer(rootCtx, _flags)
 	// $PF_SECTION_END(rootAction)$
 }
 
-func rootCmd() *coral.Command {
+func rootCmd(ctx context.Context) *coral.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := &coral.Command{Use: util.AppKey, Short: short, RunE: rootF}
 	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), mcpCmd(), upgradeCmd(), wasmCmd())
 	// $PF_SECTION_START(cmds)$
-	ret.AddCommand(actionCommands()...)
+	ret.AddCommand(actionCommands(ctx)...)
 	ret.AddCommand(updateCmd(), upCmd())
 	// $PF_SECTION_END(cmds)$
 	ret.AddCommand(versionCmd())

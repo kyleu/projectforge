@@ -38,7 +38,7 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, _ uint16, logger util.Logger) (*State, error) {
+func NewState(ctx context.Context, debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, _ uint16, logger util.Logger) (*State, error) {
 	var loadLocationError error
 	once.Do(func() {
 		loc, err := time.LoadLocation("UTC")
@@ -52,7 +52,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 		return nil, loadLocationError
 	}
 
-	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
+	_ = telemetry.InitializeIfNeeded(ctx, enableTelemetry, bi.Version, logger)
 
 	return &State{
 		Debug:     debug,
@@ -68,19 +68,19 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 	return s.Services.Close(ctx, logger)
 }
 
-func Bootstrap(bi *BuildInfo, cfgDir string, port uint16, debug bool, logger util.Logger) (*State, error) {
+func Bootstrap(ctx context.Context, bi *BuildInfo, cfgDir string, port uint16, debug bool, logger util.Logger) (*State, error) {
 	fs, err := filesystem.NewFileSystem(cfgDir, false, "")
 	if err != nil {
 		return nil, err
 	}
 
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
-	st, err := NewState(debug, bi, fs, !telemetryDisabled, port, logger)
+	st, err := NewState(ctx, debug, bi, fs, !telemetryDisabled, port, logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ctx, span, logger := telemetry.StartSpan(context.Background(), "app:init", logger)
+	ctx, span, logger := telemetry.StartSpan(ctx, "app:init", logger)
 	defer span.Complete()
 	t := util.TimerStart()
 	svcs, err := NewServices(ctx, st, logger)
@@ -93,9 +93,9 @@ func Bootstrap(bi *BuildInfo, cfgDir string, port uint16, debug bool, logger uti
 	return st, nil
 }
 
-func BootstrapRunDefault[T any](bi *BuildInfo, fn func(as *State, logger util.Logger) (T, error)) (T, error) {
+func BootstrapRunDefault[T any](ctx context.Context, bi *BuildInfo, fn func(as *State, logger util.Logger) (T, error)) (T, error) {
 	logger, _ := log.InitLogging(false)
-	as, err := Bootstrap(bi, util.ConfigDir, 0, false, logger)
+	as, err := Bootstrap(ctx, bi, util.ConfigDir, 0, false, logger)
 	if err != nil {
 		var dflt T
 		return dflt, err
@@ -105,7 +105,7 @@ func BootstrapRunDefault[T any](bi *BuildInfo, fn func(as *State, logger util.Lo
 		var dflt T
 		return dflt, err
 	}
-	err = as.Close(context.Background(), logger)
+	err = as.Close(ctx, logger)
 	if err != nil {
 		var dflt T
 		return dflt, err

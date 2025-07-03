@@ -18,16 +18,16 @@ var (
 	_currentSiteRootLogger util.Logger
 )
 
-func SetAppState(a *app.State, logger util.Logger) error {
+func SetAppState(ctx context.Context, a *app.State, logger util.Logger) error {
 	_currentAppState = a
 	_currentAppRootLogger = logger
-	return initApp(context.Background(), a, logger)
+	return initApp(ctx, a, logger)
 }
 
-func SetSiteState(a *app.State, logger util.Logger) error {
+func SetSiteState(ctx context.Context, a *app.State, logger util.Logger) error {
 	_currentSiteState = a
 	_currentSiteRootLogger = logger
-	return initSite(context.Background(), a, logger)
+	return initSite(ctx, a, logger)
 }
 
 func handleError(key string, as *app.State, ps *cutil.PageState, r *http.Request, err error) (string, error) {

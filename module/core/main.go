@@ -1,6 +1,8 @@
 package main // import {{{ .Package }}}
 
 import (
+	"context"
+
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/cmd"
 )
@@ -12,5 +14,5 @@ var (
 )
 
 func main() {
-	cmd.Entrypoint(&app.BuildInfo{Version: version, Commit: commit, Date: date})
+	cmd.Entrypoint(context.Background(), &app.BuildInfo{Version: version, Commit: commit, Date: date})
 }

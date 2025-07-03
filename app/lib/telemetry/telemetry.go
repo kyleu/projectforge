@@ -21,18 +21,18 @@ var (
 	tracerProvider *sdktrace.TracerProvider
 )
 
-func InitializeIfNeeded(enabled bool, version string, logger util.Logger) bool {
+func InitializeIfNeeded(ctx context.Context, enabled bool, version string, logger util.Logger) bool {
 	if initialized {
 		return false
 	}
 	if enabled {
-		Initialize(version, logger)
+		Initialize(ctx, version, logger)
 	}
 	util.HTTPDefaultClient = WrapHTTPClient(util.HTTPDefaultClient)
 	return true
 }
 
-func Initialize(_ string, logger util.Logger) {
+func Initialize(ctx context.Context, _ string, logger util.Logger) {
 	if initialized {
 		logger.Warn("double telemetry initialization")
 		return
@@ -45,7 +45,7 @@ func Initialize(_ string, logger util.Logger) {
 		endpoint = env
 	}
 	logger.Debugf("initializing OpenTelemetry tracing using endpoint [%s]", endpoint)
-	tp, err := buildTP(endpoint)
+	tp, err := buildTP(ctx, endpoint)
 	if err != nil {
 		logger.Errorf("unable to create tracing provider: %+v", err)
 		return
@@ -55,8 +55,8 @@ func Initialize(_ string, logger util.Logger) {
 	otel.SetTextMapPropagator(p)
 }
 
-func buildTP(endpoint string) (*sdktrace.TracerProvider, error) {
-	exporter, err := otlptracehttp.New(context.Background(), otlptracehttp.WithEndpoint(endpoint), otlptracehttp.WithInsecure())
+func buildTP(ctx context.Context, endpoint string) (*sdktrace.TracerProvider, error) {
+	exporter, err := otlptracehttp.New(ctx, otlptracehttp.WithEndpoint(endpoint), otlptracehttp.WithInsecure())
 	if err != nil {
 		return nil, err
 	}

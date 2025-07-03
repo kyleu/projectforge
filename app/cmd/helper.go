@@ -14,12 +14,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap) *action.Result {
-	mSvc, _ := module.NewService(ctx, _flags.ConfigDir, util.RootLogger)
+func runToCompletion(ctx context.Context, projectKey string, t action.Type, cfg util.ValueMap, logger util.Logger) *action.Result {
+	mSvc, _ := module.NewService(ctx, _flags.ConfigDir, logger)
 	pSvc := project.NewService()
 	eSvc := export.NewService()
 	xSvc := exec.NewService()
-	logger := util.RootLogger.With("service", "runner")
+	logger = logger.With("service", "runner")
 	p := &action.Params{ProjectKey: projectKey, T: t, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, SSvc: nil, XSvc: xSvc, ESvc: eSvc, CLI: true, Logger: logger}
 	return action.Apply(ctx, p)
 }

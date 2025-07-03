@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/muesli/coral"
@@ -8,13 +9,15 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+var rootCtx = context.Background()
+
 func rootF(*coral.Command, []string) error {
 	// $PF_SECTION_START(rootAction)$
-	return startServer(_flags)
+	return startServer(rootCtx, _flags)
 	// $PF_SECTION_END(rootAction)$
 }
 
-func rootCmd() *coral.Command {
+func rootCmd(ctx context.Context) *coral.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := &coral.Command{Use: util.AppKey, Short: short, RunE: rootF}
 	ret.AddCommand(serverCmd(){{{ if .HasModule "marketing" }}}, siteCmd(), allCmd(){{{ end }}}{{{ if .HasModule "mcp" }}}, mcpCmd(){{{ end }}}{{{ if .HasModule "migration" }}}, migrateCmd(){{{ end }}}{{{ if .HasModule "upgrade" }}}, upgradeCmd(){{{ end }}}{{{ if .HasModule "wasmserver" }}}, wasmCmd(){{{ end }}})

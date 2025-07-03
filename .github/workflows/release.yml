@@ -16,7 +16,7 @@ jobs:
       - name: "Golang"
         uses: "actions/setup-go@v5"
         with:
-          go-version: "1.24.0"
+          go-version: "1.24.4"
       - name: "Login"
         uses: "docker/login-action@v1"
         with:

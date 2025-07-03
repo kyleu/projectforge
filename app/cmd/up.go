@@ -16,7 +16,7 @@ func upF(ctx context.Context) error {
 }
 
 func upCmd() *coral.Command {
-	f := func(_ *coral.Command, _ []string) error { return upF(context.Background()) }
+	f := func(_ *coral.Command, _ []string) error { return upF(rootCtx) }
 	ret := &coral.Command{Use: "up", Short: "Full update and upgrade of " + util.AppName, RunE: f}
 	ret.PersistentFlags().StringVar(&_version, "version", "", "version number to upgrade to")
 	ret.PersistentFlags().BoolVarP(&_force, "force", "f", false, "force upgrade, even if same or earlier")

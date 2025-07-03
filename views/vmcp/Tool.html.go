@@ -74,7 +74,7 @@ func (p *ToolDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 		qw422016.N().S(` Result</h3>
     <div class="mt">`)
 //line views/vmcp/Tool.html:28
-		components.StreamJSON(qw422016, []byte(mcpserver.ResultString(p.Result)))
+		components.StreamJSON(qw422016, []byte(mcpserver.ResultString(p.Result, ps.Logger)))
 //line views/vmcp/Tool.html:28
 		qw422016.N().S(`</div>
   </div>

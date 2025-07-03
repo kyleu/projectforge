@@ -18,7 +18,7 @@ import (
 
 func Notebook(w http.ResponseWriter, r *http.Request) {
 	controller.Act("notebook.view", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		status := as.Services.Notebook.Status()
+		status := as.Services.Notebook.Status(ps.Context)
 		if status == "running" {
 			pathS, _ := cutil.PathString(r, "path", false)
 			path := util.StringSplitAndTrim(pathS, "/")
@@ -109,7 +109,7 @@ func NotebookAction(w http.ResponseWriter, r *http.Request) {
 		}
 		switch act {
 		case util.KeyStart:
-			err = as.Services.Notebook.Start()
+			err = as.Services.Notebook.Start(ps.Context)
 			if err != nil {
 				return "", err
 			}

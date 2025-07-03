@@ -9,6 +9,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/file/diff"
+	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/project/template"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -66,21 +67,9 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	configVars, portOffsets := parseConfig(pm)
 	lb := util.StringDetectLinebreak(string(pm.File))
 	tCtx := template.ToTemplateContext(pm.Prj, configVars, portOffsets, lb)
-	for _, f := range srcFiles {
-		origPath := f.FullPath()
-		if strings.Contains(origPath, delimStart) {
-			newPath, e := runTemplate("filename", origPath, tCtx)
-			if e != nil {
-				return nil, nil, e
-			}
-			p, n := util.StringSplitLast(newPath, '/', true)
-			f.Path = strings.Split(p, string(filepath.Separator))
-			f.Name = n
-		}
-		err = file.ReplaceSections(f, pm.FS)
-		if err != nil {
-			return nil, nil, err
-		}
+	err = runTemplates(srcFiles, tCtx, pm.FS)
+	if err != nil {
+		return nil, nil, err
 	}
 	for _, f := range srcFiles {
 		f.Content, err = runTemplateFile(f, tCtx)
@@ -93,4 +82,24 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		return nil, nil, err
 	}
 	return srcFiles, dfs, nil
+}
+
+func runTemplates(srcFiles file.Files, tCtx *template.Context, fs filesystem.FileLoader) error {
+	for _, f := range srcFiles {
+		origPath := f.FullPath()
+		if strings.Contains(origPath, delimStart) {
+			newPath, err := runTemplate("filename", origPath, tCtx)
+			if err != nil {
+				return err
+			}
+			p, n := util.StringSplitLast(newPath, '/', true)
+			f.Path = strings.Split(p, string(filepath.Separator))
+			f.Name = n
+		}
+		err := file.ReplaceSections(f, fs)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

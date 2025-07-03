@@ -24,14 +24,14 @@ type Resource struct {
 
 func NewTextResource(name string, description string, uri string, mimeType string, content string) *Resource {
 	if mimeType == "" {
-		mimeType = "application/json"
+		mimeType = util.MIMETypeJSON
 	}
 	return &Resource{Name: name, Description: description, URI: uri, MIMEType: mimeType, Content: content}
 }
 
 func NewBlobResource(name string, description string, uri string, mimeType string, content []byte) *Resource {
 	if mimeType == "" {
-		mimeType = "application/json"
+		mimeType = util.MIMETypeJSON
 	}
 	out := base64.StdEncoding.EncodeToString(content)
 	return &Resource{Name: name, Description: description, URI: uri, MIMEType: mimeType, Content: out, Binary: true}

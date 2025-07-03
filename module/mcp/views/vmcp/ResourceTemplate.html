@@ -42,7 +42,7 @@
           ext = "txt"
         }
         ext = strings.TrimPrefix(ext, ".")
-        res := mcpserver.ResultString(p.Result)
+        res := mcpserver.ResultString(p.Result, ps.Logger)
         out, err := cutil.FormatLang(res, ext)
       -%}
       {%- if err == nil -%}

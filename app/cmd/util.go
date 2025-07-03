@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"net/http"
@@ -50,19 +51,19 @@ func (f *Flags) Clone(port uint16) *Flags {
 
 var initMu sync.Mutex
 
-func initIfNeeded() error {
+func initIfNeeded(ctx context.Context) (util.Logger, error) {
 	initMu.Lock()
 	defer initMu.Unlock()
 
 	if _initialized {
-		return nil
+		return util.RootLogger, nil
 	}
 	if _buildInfo == nil {
-		return errors.New("no build info")
+		return nil, errors.New("no build info")
 	}
 	if _flags.WorkingDir != "" && _flags.WorkingDir != "." {
 		if err := os.Chdir(_flags.WorkingDir); err != nil {
-			return errors.Wrapf(err, "failed to change working directory to [%s]", _flags.WorkingDir)
+			return nil, errors.Wrapf(err, "failed to change working directory to [%s]", _flags.WorkingDir)
 		}
 	}
 	if _flags.ConfigDir == "" {
@@ -74,19 +75,19 @@ func initIfNeeded() error {
 	}
 	err := util.InitAcronyms()
 	if err != nil {
-		return err
+		return util.RootLogger, err
 	}
 	if util.RootLogger == nil {
 		l, err := log.InitLogging(_flags.Debug)
 		if err != nil {
-			return err
+			return l, err
 		}
 		util.RootLogger = l
 	}
 	util.ConfigDir = _flags.ConfigDir
 	util.DEBUG = _flags.Debug
 	_initialized = true
-	return nil
+	return util.RootLogger, nil
 }
 
 func listen(address string, port uint16) (uint16, net.Listener, error) {
@@ -116,7 +117,7 @@ func serve(listener net.Listener, h http.Handler) error {
 	return nil
 }
 
-func listenandserve(addr string, port uint16, h http.Handler) (uint16, error) {
+func listenAndServe(addr string, port uint16, h http.Handler) (uint16, error) {
 	p, l, err := listen(addr, port)
 	if err != nil {
 		return p, err

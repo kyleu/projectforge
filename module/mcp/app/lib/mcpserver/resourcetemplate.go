@@ -13,7 +13,9 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-type ResourceTemplateHandler func(ctx context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, string, any, error)
+type ResourceTemplateHandler func(
+	ctx context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger,
+) (string, string, any, error)
 
 var ResourceTemplateArgs = util.FieldDescs{{Key: "uri", Description: "URI to request", Type: "string"}}
 
@@ -29,7 +31,7 @@ type ResourceTemplate struct {
 
 func NewResourceTemplate(name string, description string, uri string, mimeType string, content string) *Resource {
 	if mimeType == "" {
-		mimeType = "application/json"
+		mimeType = util.MIMETypeJSON
 	}
 	return &Resource{Name: name, Description: description, URI: uri, MIMEType: mimeType, Content: content}
 }

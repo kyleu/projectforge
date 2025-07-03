@@ -13,12 +13,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Download(_ context.Context, key string, url string, logger util.Logger) error {
+func (s *Service) Download(ctx context.Context, key string, url string, logger util.Logger) error {
 	if url == "" {
 		return errors.New("must provide URL")
 	}
 	logger.Infof("downloading module [%s] from URL [%s]", key, url)
-	response, err := util.NewHTTPRequest(context.Background(), http.MethodGet, url).Run()
+	response, err := util.NewHTTPRequest(ctx, http.MethodGet, url).Run()
 	if err != nil {
 		return errors.Wrapf(err, "unable to retrieve module [%s] from [%s]", key, url)
 	}

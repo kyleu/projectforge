@@ -1,6 +1,7 @@
 package action
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/samber/lo"
@@ -55,7 +56,11 @@ func parseLaunch(fs filesystem.FileLoader, name string, ex string, upgrade bool)
 	}
 	config, _ := ret.GetMapArray("configurations", true)
 	keys := lo.Map(config, func(x util.ValueMap, _ int) string {
-		return x["name"].(string)
+		v := x["name"]
+		if s, ok := v.(string); ok {
+			return s
+		}
+		return fmt.Sprint(v)
 	})
 	add := func(l util.ValueMap) {
 		if !slices.Contains(keys, l.GetStringOpt("name")) {

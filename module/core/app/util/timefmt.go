@@ -89,13 +89,13 @@ func TimeFromYMD(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtYMD)
 }
 
-func TimeFromStringFmt(s string, fmt string) (*time.Time, error) {
+func TimeFromStringFmt(s string, format string) (*time.Time, error) {
 	if s == "" {
 		return nil, nil
 	}
-	ret, err := time.Parse(fmt, s)
+	ret, err := time.Parse(format, s)
 	if err != nil {
-		return nil, errors.Errorf("invalid date string [%s], expected [%s]", s, fmt)
+		return nil, errors.Errorf("invalid date string [%s], expected [%s]", s, format)
 	}
 	return &ret, nil
 }

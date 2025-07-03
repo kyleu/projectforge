@@ -124,7 +124,7 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		x, err := svg.AddToProject(prj.Key, pfs, src, tgt)
+		x, err := svg.AddToProject(ps.Context, prj.Key, pfs, src, tgt)
 		if err != nil {
 			return "", err
 		}

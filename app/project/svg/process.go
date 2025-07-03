@@ -19,8 +19,8 @@ const (
 	svgRoot       = "client/src/svg/"
 )
 
-func AddToProject(prj string, fs filesystem.FileLoader, src string, tgt string) (*SVG, error) {
-	ret, err := load(src, tgt)
+func AddToProject(ctx context.Context, prj string, fs filesystem.FileLoader, src string, tgt string) (*SVG, error) {
+	ret, err := load(ctx, src, tgt)
 	if err != nil {
 		return nil, err
 	}
@@ -59,10 +59,10 @@ func svgPath(prj string, key string) string {
 	return svgRoot + key + util.ExtSVG
 }
 
-func load(src string, tgt string) (*SVG, error) {
+func load(ctx context.Context, src string, tgt string) (*SVG, error) {
 	tgt, _ = util.StringSplit(tgt, '@', true)
 	test := func(u string) ([]byte, error) {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		ctx, cancel := context.WithTimeout(ctx, time.Minute)
 		defer cancel()
 		rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, u).RunSimple()
 		defer func() {

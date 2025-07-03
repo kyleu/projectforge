@@ -16,11 +16,12 @@ import (
 )
 
 func actionF(ctx context.Context, t action.Type, args []string) error {
-	if err := initIfNeeded(); err != nil {
+	logger, err := initIfNeeded(ctx)
+	if err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
 	cfg := extractConfig(args)
-	logResult(t, runToCompletion(ctx, "", t, cfg), util.RootLogger)
+	logResult(t, runToCompletion(ctx, "", t, cfg, logger), logger)
 	return nil
 }
 
@@ -48,8 +49,7 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	return ret
 }
 
-func actionCommands() []*coral.Command {
-	ctx := context.Background()
+func actionCommands(ctx context.Context) []*coral.Command {
 	ret := lo.FilterMap(action.AllTypes, func(a action.Type, _ int) (*coral.Command, bool) {
 		if a.Hidden {
 			return nil, false

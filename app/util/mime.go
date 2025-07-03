@@ -5,12 +5,18 @@ import (
 	"strings"
 )
 
+const (
+	MIMETypeJSON     = "application/json"
+	MIMETypeMarkdown = "text/markdown"
+	extMarkdown      = "md"
+)
+
 func ExtensionFromMIME(mt string) string {
 	if mt == "" {
-		mt = "application/json"
+		mt = MIMETypeJSON
 	}
-	if mt == "text/markdown" {
-		return "md"
+	if mt == MIMETypeMarkdown {
+		return extMarkdown
 	}
 	mts, _ := mime.ExtensionsByType(mt)
 	if len(mts) == 0 {
@@ -24,12 +30,12 @@ func MIMEFromExtension(ext string) string {
 	if ext == "" {
 		ext = "txt"
 	}
-	if ext == "md" {
-		return "text/markdown"
+	if ext == extMarkdown {
+		return MIMETypeMarkdown
 	}
 	mt := mime.TypeByExtension(ext)
 	if mt == "" {
-		mt = "application/json"
+		mt = MIMETypeJSON
 	}
 	return mt
 }

@@ -33,7 +33,8 @@ func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server,
 		return nil, err
 	}
 	// $PF_SECTION_END(tools)$
-	logger.Debugf("MCP server initialized in [%s] with [%d] resources, [%d] tools, and [%d] prompts", t.EndString(), len(mcp.Resources), len(mcp.Tools), len(mcp.Prompts))
+	const msg = "MCP server initialized in [%s] with [%d] resources, [%d] tools, and [%d] prompts"
+	logger.Debugf(msg, t.EndString(), len(mcp.Resources), len(mcp.Tools), len(mcp.Prompts))
 	return mcp, nil
 }
 

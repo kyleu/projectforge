@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"runtime"
@@ -19,27 +20,27 @@ const keySite = "site"
 
 func siteCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the marketing site on port %d (by default)", util.AppPort)
-	f := func(*coral.Command, []string) error { return startSite(_flags) }
+	f := func(*coral.Command, []string) error { return startSite(rootCtx, _flags) }
 	ret := &coral.Command{Use: keySite, Short: short, RunE: f}
 	return ret
 }
 
-func startSite(flags *Flags) error {
-	err := initIfNeeded()
+func startSite(ctx context.Context, flags *Flags) error {
+	logger, err := initIfNeeded(ctx)
 	if err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	r, _, err := loadSite(flags, util.RootLogger)
+	r, _, err := loadSite(ctx, flags, logger)
 	if err != nil {
 		return err
 	}
 
-	_, err = listenandserve(flags.Address, flags.Port, r)
+	_, err = listenAndServe(flags.Address, flags.Port, r)
 	return err
 }
 
-func loadSite(flags *Flags, logger util.Logger) (http.Handler, util.Logger, error) {
+func loadSite(ctx context.Context, flags *Flags, logger util.Logger) (http.Handler, util.Logger, error) {
 	r, err := routes.SiteRoutes(logger)
 	if err != nil {
 		return nil, logger, err
@@ -50,12 +51,12 @@ func loadSite(flags *Flags, logger util.Logger) (http.Handler, util.Logger, erro
 	}
 
 	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
-	st, err := app.NewState(flags.Debug, _buildInfo, f, !telemetryDisabled, flags.Port, logger)
+	st, err := app.NewState(ctx, flags.Debug, _buildInfo, f, !telemetryDisabled, flags.Port, logger)
 	if err != nil {
 		return nil, logger, err
 	}
 
-	err = controller.SetSiteState(st, logger)
+	err = controller.SetSiteState(ctx, st, logger)
 	if err != nil {
 		return nil, logger, err
 	}

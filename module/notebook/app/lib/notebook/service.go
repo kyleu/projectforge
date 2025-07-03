@@ -27,8 +27,8 @@ func NewService() *Service {
 	return &Service{BaseURL: baseURL, FS: fs}
 }
 
-func (s *Service) Status() string {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+func (s *Service) Status(ctx context.Context) string {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.BaseURL, http.NoBody)
 	if err != nil {
@@ -47,8 +47,8 @@ func (s *Service) Status() string {
 	return "running"
 }
 
-func (s *Service) Start() error {
-	if s.Status() == "running" {
+func (s *Service) Start(ctx context.Context) error {
+	if s.Status(ctx) == "running" {
 		return errors.Errorf("can't start notebook, something is already listening on port [%d]", util.AppPort+10)
 	}
 	_, err := util.StartProcess("bin/dev.sh", "./notebook", nil, nil, nil)

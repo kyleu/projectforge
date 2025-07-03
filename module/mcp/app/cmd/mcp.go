@@ -14,25 +14,28 @@ import (
 )
 
 func mcpCmd() *coral.Command {
-	f := func(*coral.Command, []string) error { return runMCP(context.Background()) }
+	f := func(*coral.Command, []string) error { return runMCP(rootCtx) }
 	ret := &coral.Command{Use: "mcp", Short: "Handles Model Context Protocol requests", RunE: f}
 	return ret
 }
 
 func runMCP(ctx context.Context) error {
+	// override logging
 	l, err := log.InitDevLogging(log.GetLevel(zap.FatalLevel))
 	if err != nil {
 		return errors.Wrap(err, "error initializing logging")
 	}
-	util.RootLogger = l.Sugar()
-	if err = initIfNeeded(); err != nil {
+	logger := l.Sugar()
+	util.RootLogger = logger
+
+	if _, err = initIfNeeded(ctx); err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
-	st, err := app.Bootstrap(_buildInfo, _flags.ConfigDir, _flags.Port, false, util.RootLogger)
+	st, err := app.Bootstrap(ctx, _buildInfo, _flags.ConfigDir, _flags.Port, false, logger)
 	if err != nil {
 		return err
 	}
-	mcp, err := mcpserver.NewServer(ctx, st, util.RootLogger)
+	mcp, err := mcpserver.NewServer(ctx, st, logger)
 	if err != nil {
 		return err
 	}

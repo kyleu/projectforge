@@ -110,7 +110,7 @@ func (p *ResourceTemplateDetail) StreamBody(qw422016 *qt422016.Writer, as *app.S
 			ext = "txt"
 		}
 		ext = strings.TrimPrefix(ext, ".")
-		res := mcpserver.ResultString(p.Result)
+		res := mcpserver.ResultString(p.Result, ps.Logger)
 		out, err := cutil.FormatLang(res, ext)
 
 //line views/vmcp/ResourceTemplate.html:48

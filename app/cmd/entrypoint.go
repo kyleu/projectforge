@@ -1,14 +1,15 @@
 package cmd
 
 import (
+	"context"
 	"os"
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/lib/log"
 )
 
-func Entrypoint(bi *app.BuildInfo) {
-	logger, err := Run(bi)
+func Entrypoint(ctx context.Context, bi *app.BuildInfo) {
+	logger, err := Run(ctx, bi)
 	if err != nil {
 		const msg = "exiting due to error"
 		if logger == nil {

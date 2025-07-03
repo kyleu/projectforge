@@ -13,7 +13,7 @@ import (
 )
 
 func migrateCmd() *coral.Command {
-	f := func(*coral.Command, []string) error { return runMigrations(context.Background()) }
+	f := func(*coral.Command, []string) error { return runMigrations(rootCtx) }
 	ret := &coral.Command{Use: "migrate", Short: "Runs database migrations and exits", RunE: f}
 	return ret
 }

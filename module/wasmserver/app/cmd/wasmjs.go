@@ -14,7 +14,6 @@ import (
 	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/controller/cutil"
-	"{{{ .Package }}}/app/util"
 )
 
 const keyWASM = "wasm"
@@ -23,23 +22,24 @@ var _router http.Handler
 
 func wasmCmd() *coral.Command {
 	short := "Starts the server and exposes a WebAssembly application to scripts"
-	f := func(*coral.Command, []string) error { return startWASM(_flags) }
+	f := func(*coral.Command, []string) error { return startWASM(rootCtx, _flags) }
 	ret := &coral.Command{Use: keyWASM, Short: short, RunE: f}
 	return ret
 }
 
-func startWASM(flags *Flags) error {
+func startWASM(ctx context.Context, flags *Flags) error {
 	initScript()
-	if err := initIfNeeded(); err != nil {
+	logger, err := initIfNeeded(ctx)
+	if err != nil {
 		return errors.Wrap(err, "error initializing application")
 	}
 
-	st, r, logger, err := loadServer(flags, util.RootLogger)
+	st, r, logger, err := loadServer(ctx, flags, logger)
 	if err != nil {
 		return err
 	}
 	logger.Infof("Started WASM server")
-	defer func() { _ = st.Close(context.Background(), util.RootLogger) }()
+	defer func() { _ = st.Close(ctx, logger) }()
 	_router = r
 
 	select {}
@@ -87,7 +87,7 @@ func populateRequest(req js.Value, headers js.Value, reqBody js.Value) (r *http.
 		}
 	}()
 
-	ret, err := http.NewRequestWithContext(context.Background(), req.Get("method").String(), req.Get("url").String(), http.NoBody)
+	ret, err := http.NewRequestWithContext(rootCtx, req.Get("method").String(), req.Get("url").String(), http.NoBody)
 	if err != nil {
 		return nil, err
 	}
