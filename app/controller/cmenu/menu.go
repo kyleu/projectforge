@@ -25,12 +25,11 @@ func MenuFor(
 		moduleMenu(ctx, as.Services.Modules.ModulesVisible()),
 		menu.Separator,
 	)
-	adm := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
-	ret = append(ret, docMenu(logger), menu.Separator, adm)
 	if len(as.Services.Exec.Execs) > 0 {
 		ret = append(ret, processMenu(as.Services.Exec.Execs))
 	}
-	ret = append(ret, DoctorMenu("first-aid", "/doctor"), mcpMenu())
+	adm := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
+	ret = append(ret, DoctorMenu("first-aid", "/doctor"), mcpMenu(), docMenu(logger), adm)
 	const desc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: desc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(menu)$
