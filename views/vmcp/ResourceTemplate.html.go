@@ -183,7 +183,7 @@ func streamlistResourceTemplates(qw422016 *qt422016.Writer, rts mcpserver.Resour
 	qw422016.N().S(`
 `)
 //line views/vmcp/ResourceTemplate.html:60
-	for _, rt := range rts {
+	for idx, rt := range rts {
 //line views/vmcp/ResourceTemplate.html:60
 		qw422016.N().S(`  <a class="link-section" href="/mcp/resourcetemplate/`)
 //line views/vmcp/ResourceTemplate.html:61
@@ -210,32 +210,39 @@ func streamlistResourceTemplates(qw422016 *qt422016.Writer, rts mcpserver.Resour
   </a>
 `)
 //line views/vmcp/ResourceTemplate.html:68
+		if idx < len(rts)-1 {
+//line views/vmcp/ResourceTemplate.html:68
+			qw422016.N().S(`  <hr />
+`)
+//line views/vmcp/ResourceTemplate.html:70
+		}
+//line views/vmcp/ResourceTemplate.html:71
 	}
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 }
 
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 func writelistResourceTemplates(qq422016 qtio422016.Writer, rts mcpserver.ResourceTemplates, ps *cutil.PageState) {
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	streamlistResourceTemplates(qw422016, rts, ps)
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 }
 
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 func listResourceTemplates(rts mcpserver.ResourceTemplates, ps *cutil.PageState) string {
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	writelistResourceTemplates(qb422016, rts, ps)
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	qs422016 := string(qb422016.B)
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 	return qs422016
-//line views/vmcp/ResourceTemplate.html:69
+//line views/vmcp/ResourceTemplate.html:72
 }

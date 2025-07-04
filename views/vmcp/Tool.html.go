@@ -116,7 +116,7 @@ func streamlistTools(qw422016 *qt422016.Writer, ts mcpserver.Tools, ps *cutil.Pa
 	qw422016.N().S(`
 `)
 //line views/vmcp/Tool.html:34
-	for _, t := range ts {
+	for idx, t := range ts {
 //line views/vmcp/Tool.html:34
 		qw422016.N().S(`  <a class="link-section" href="/mcp/tool/`)
 //line views/vmcp/Tool.html:35
@@ -143,32 +143,39 @@ func streamlistTools(qw422016 *qt422016.Writer, ts mcpserver.Tools, ps *cutil.Pa
   </a>
 `)
 //line views/vmcp/Tool.html:42
+		if idx < len(ts)-1 {
+//line views/vmcp/Tool.html:42
+			qw422016.N().S(`  <hr />
+`)
+//line views/vmcp/Tool.html:44
+		}
+//line views/vmcp/Tool.html:45
 	}
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 }
 
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 func writelistTools(qq422016 qtio422016.Writer, ts mcpserver.Tools, ps *cutil.PageState) {
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	streamlistTools(qw422016, ts, ps)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 }
 
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 func listTools(ts mcpserver.Tools, ps *cutil.PageState) string {
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	writelistTools(qb422016, ts, ps)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 	return qs422016
-//line views/vmcp/Tool.html:43
+//line views/vmcp/Tool.html:46
 }

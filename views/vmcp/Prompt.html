@@ -30,14 +30,17 @@
   </div>
 {% endfunc %}
 
-{% func listPrompts(ts mcpserver.Prompts, ps *cutil.PageState) %}
-  {%- for _, t := range ts -%}
-  <a class="link-section" href="/mcp/prompt/{%s t.Name %}">
+{% func listPrompts(prompts mcpserver.Prompts, ps *cutil.PageState) %}
+  {%- for idx, p := range prompts -%}
+  <a class="link-section" href="/mcp/prompt/{%s p.Name %}">
     <div class="clear mt">
-      <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
-      <strong class="highlight">{%s t.Name %}</strong>
-      <div><em>{%s t.Description %}</em></div>
+      <div class="left mrs">{%= components.SVGRef(p.IconSafe(), 40, 40, "", ps) %}</div>
+      <strong class="highlight">{%s p.Name %}</strong>
+      <div><em>{%s p.Description %}</em></div>
     </div>
   </a>
+  {%- if idx < len(prompts) - 1 -%}
+  <hr />
+  {%- endif -%}
   {%- endfor -%}
 {% endfunc %}

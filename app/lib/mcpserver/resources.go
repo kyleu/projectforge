@@ -25,6 +25,15 @@ var ProjectContentResource = &ResourceTemplate{
 	Fn: projectContentHandler,
 }
 
+var _ = &Resource{
+	Name:     "custom_resource",
+	Icon:     "",
+	URI:      uriTemplate,
+	MIMEType: "",
+	Content:  "",
+	Binary:   false,
+}
+
 func projectContentHandler(_ context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, string, any, error) {
 	id, err := args.GetString("id", false)
 	if err != nil {

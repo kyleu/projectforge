@@ -124,64 +124,71 @@ func (p *PromptDetail) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vmcp/Prompt.html:33
-func streamlistPrompts(qw422016 *qt422016.Writer, ts mcpserver.Prompts, ps *cutil.PageState) {
+func streamlistPrompts(qw422016 *qt422016.Writer, prompts mcpserver.Prompts, ps *cutil.PageState) {
 //line views/vmcp/Prompt.html:33
 	qw422016.N().S(`
 `)
 //line views/vmcp/Prompt.html:34
-	for _, t := range ts {
+	for idx, p := range prompts {
 //line views/vmcp/Prompt.html:34
 		qw422016.N().S(`  <a class="link-section" href="/mcp/prompt/`)
 //line views/vmcp/Prompt.html:35
-		qw422016.E().S(t.Name)
+		qw422016.E().S(p.Name)
 //line views/vmcp/Prompt.html:35
 		qw422016.N().S(`">
     <div class="clear mt">
       <div class="left mrs">`)
 //line views/vmcp/Prompt.html:37
-		components.StreamSVGRef(qw422016, t.IconSafe(), 40, 40, "", ps)
+		components.StreamSVGRef(qw422016, p.IconSafe(), 40, 40, "", ps)
 //line views/vmcp/Prompt.html:37
 		qw422016.N().S(`</div>
       <strong class="highlight">`)
 //line views/vmcp/Prompt.html:38
-		qw422016.E().S(t.Name)
+		qw422016.E().S(p.Name)
 //line views/vmcp/Prompt.html:38
 		qw422016.N().S(`</strong>
       <div><em>`)
 //line views/vmcp/Prompt.html:39
-		qw422016.E().S(t.Description)
+		qw422016.E().S(p.Description)
 //line views/vmcp/Prompt.html:39
 		qw422016.N().S(`</em></div>
     </div>
   </a>
 `)
 //line views/vmcp/Prompt.html:42
+		if idx < len(prompts)-1 {
+//line views/vmcp/Prompt.html:42
+			qw422016.N().S(`  <hr />
+`)
+//line views/vmcp/Prompt.html:44
+		}
+//line views/vmcp/Prompt.html:45
 	}
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
 }
 
-//line views/vmcp/Prompt.html:43
-func writelistPrompts(qq422016 qtio422016.Writer, ts mcpserver.Prompts, ps *cutil.PageState) {
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
+func writelistPrompts(qq422016 qtio422016.Writer, prompts mcpserver.Prompts, ps *cutil.PageState) {
+//line views/vmcp/Prompt.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Prompt.html:43
-	streamlistPrompts(qw422016, ts, ps)
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
+	streamlistPrompts(qw422016, prompts, ps)
+//line views/vmcp/Prompt.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
 }
 
-//line views/vmcp/Prompt.html:43
-func listPrompts(ts mcpserver.Prompts, ps *cutil.PageState) string {
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
+func listPrompts(prompts mcpserver.Prompts, ps *cutil.PageState) string {
+//line views/vmcp/Prompt.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Prompt.html:43
-	writelistPrompts(qb422016, ts, ps)
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
+	writelistPrompts(qb422016, prompts, ps)
+//line views/vmcp/Prompt.html:46
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
 	return qs422016
-//line views/vmcp/Prompt.html:43
+//line views/vmcp/Prompt.html:46
 }

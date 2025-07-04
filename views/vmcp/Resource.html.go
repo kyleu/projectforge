@@ -134,7 +134,7 @@ func streamlistResources(qw422016 *qt422016.Writer, rs mcpserver.Resources, ps *
 	qw422016.N().S(`
 `)
 //line views/vmcp/Resource.html:35
-	for _, r := range rs {
+	for idx, r := range rs {
 //line views/vmcp/Resource.html:35
 		qw422016.N().S(`  <a class="link-section" href="/mcp/resource/`)
 //line views/vmcp/Resource.html:36
@@ -161,32 +161,39 @@ func streamlistResources(qw422016 *qt422016.Writer, rs mcpserver.Resources, ps *
   </a>
 `)
 //line views/vmcp/Resource.html:43
+		if idx < len(rs)-1 {
+//line views/vmcp/Resource.html:43
+			qw422016.N().S(`  <hr />
+`)
+//line views/vmcp/Resource.html:45
+		}
+//line views/vmcp/Resource.html:46
 	}
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 }
 
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 func writelistResources(qq422016 qtio422016.Writer, rs mcpserver.Resources, ps *cutil.PageState) {
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	streamlistResources(qw422016, rs, ps)
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 }
 
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 func listResources(rs mcpserver.Resources, ps *cutil.PageState) string {
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	writelistResources(qb422016, rs, ps)
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	qs422016 := string(qb422016.B)
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 	return qs422016
-//line views/vmcp/Resource.html:44
+//line views/vmcp/Resource.html:47
 }

@@ -32,7 +32,7 @@
 {% endfunc %}
 
 {% func listResources(rs mcpserver.Resources, ps *cutil.PageState) %}
-  {%- for _, r := range rs -%}
+  {%- for idx, r := range rs -%}
   <a class="link-section" href="/mcp/resource/{%s r.Name %}">
     <div class="clear mt">
       <div class="left mrs">{%= components.SVGRef(r.IconSafe(), 40, 40, "", ps) %}</div>
@@ -40,5 +40,8 @@
       <div><em>{%s r.Description %}</em></div>
     </div>
   </a>
+  {%- if idx < len(rs) - 1 -%}
+  <hr />
+  {%- endif -%}
   {%- endfor -%}
 {% endfunc %}

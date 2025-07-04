@@ -6,29 +6,9 @@ The **`mcp`** module provides a complete [Model Context Protocol](https://modelc
 
 This module provides a complete MCP protocol implementation with tools, resources, and prompts. A UI is provided for testing, and the server can be exposed over HTTP and called via command line
 
-## Integration
-
-**`lib/mcpserver/`** - MCP server implementation. Add your tools and resources here.
-
-### Tool Development
-
-Tools are defined using the `Tool` struct:
-
-```go
-type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (string, error)
-
-type Tool struct {
-	Name        string          `json:"name"`
-	Description string          `json:"description,omitempty"`
-	Icon        string          `json:"icon,omitempty"`
-	Args        util.FieldDescs `json:"args,omitempty"`
-	Fn          ToolHandler     `json:"-"`
-}
-```
-
 ## Usage
 
-### CLI Integration
+### Server Registration
 
 Configure your MCP client to use your application as an MCP server via CLI:
 
@@ -43,7 +23,20 @@ Configure your MCP client to use your application as an MCP server via CLI:
 }
 ```
 
-...or via HTTP:
+If your tools support "http" server types, you can use:
+
+```json
+{
+  "mcpServers": {
+    "myapp": {
+      "type": "http",
+      "url": "http://localhost:port/mcp"
+    }
+  }
+}
+```
+
+Otherwise, you can use the `mcp-remote` tool:
 
 ```json
 {
@@ -56,42 +49,78 @@ Configure your MCP client to use your application as an MCP server via CLI:
 }
 ```
 
-### Adding Custom Tools
+## Integration
 
-Register custom tools in your application:
+**`lib/mcpserver/`** - MCP server implementation. Register your tools and resources here.
+
+### Tools
 
 ```go
-// In your application initialization
-server, err := mcpserver.NewServer(ctx, version)
-if err != nil {
-    return err
+var CustomTool = &Tool{
+	Name:        "custom_tool",
+	Description: "Run a custom tool from " + util.AppName,
+	Args: util.FieldDescs{
+		{Key: "id", Description: "The id to us"},
+	},
+	Fn: func(_ context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (any, error) {
+		return "TODO", nil
+	},
 }
 
-customTool := &mcpserver.Tool{
-    Name:        "custom-tool",
-    Description: "Description of what this tool does",
-    InputSchema: map[string]any{
-        "type": "object",
-        "properties": map[string]any{
-            "input": map[string]any{
-                "type": "string",
-                "description": "Input parameter description",
-            },
-        },
-        "required": []string{"input"},
-    },
-    Handler: func(ctx context.Context, params map[string]any) (any, error) {
-        // Tool implementation
-        return result, nil
-    },
+mcpServer, _ := mcpserver.NewServer(ctx, as, logger)
+err := mcpServer.AddTools(as, logger, AllTools...)
+```
+
+### Resources (static)
+
+```go
+var CustomResource = mcpserver.NewTextResource("resource", "resource description", "resource://foo", "text/plain", "Hello!")
+
+mcpServer, _ := mcpserver.NewServer(ctx, as, logger)
+err := mcpServer.AddResources(as, logger, CustomResource)
+```
+
+### Resources (dynamic)
+
+```go
+
+var CustomResource = &ResourceTemplate{
+	Name:        "custom_resource",
+	Description: "Load a custom resource from " + util.AppName,
+	URI:         "custom_resource://{id}/{path*}",
+	Args: util.FieldDescs{
+		{Key: "id", Description: "Some ID"},
+		{Key: "path", Description: "A path to some file"},
+	},
+	Fn: func(_ context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, string, any, error) {
+		id := args.GetStringOpt("id")
+		path := args.GetStringOpt("path")
+		u := fmt.Sprintf("custom_resource://%s/%s", id, path)
+		return u, "text/plain", []byte("Hello!"), nil
+	},
 }
 
-server.AddTools(customTool)
+mcpServer, _ := mcpserver.NewServer(ctx, as, logger)
+err := mcpServer.AddResourceTemplates(as, logger, CustomResourceTemplate)
+```
+
+### Prompts
+
+```go
+
+var CustomPrompt = &Prompt{
+	Name:        "custom_prompt",
+	Description: "A custom prompt from " + util.AppName,
+	Content:     `This is a prompt!`,
+}
+
+mcpServer, _ := mcpserver.NewServer(ctx, as, logger)
+err := mcpServer.AddPrompts(as, logger, CustomPrompt)
 ```
 
 ### Web Admin Interface
 
-Access the web admin interface at `/admin/mcp` to:
+Access the web admin interface at `/mcp` to:
 
 - View registered tools
 - Test tool execution

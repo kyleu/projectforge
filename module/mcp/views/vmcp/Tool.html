@@ -31,7 +31,7 @@
 {% endfunc %}
 
 {% func listTools(ts mcpserver.Tools, ps *cutil.PageState) %}
-  {%- for _, t := range ts -%}
+  {%- for idx, t := range ts -%}
   <a class="link-section" href="/mcp/tool/{%s t.Name %}">
     <div class="clear mt">
       <div class="left mrs">{%= components.SVGRef(t.IconSafe(), 40, 40, "", ps) %}</div>
@@ -39,5 +39,8 @@
       <div><em>{%s t.Description %}</em></div>
     </div>
   </a>
+  {%- if idx < len(ts) - 1 -%}
+  <hr />
+  {%- endif -%}
   {%- endfor -%}
 {% endfunc %}
