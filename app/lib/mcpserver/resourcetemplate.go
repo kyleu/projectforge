@@ -13,21 +13,19 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type ResourceTemplateHandler func(
-	ctx context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger,
-) (string, string, any, error)
-
-var ResourceTemplateArgs = util.FieldDescs{{Key: "uri", Description: "URI to request", Type: "string"}}
-
-type ResourceTemplate struct {
-	Name        string                  `json:"name"`
-	Description string                  `json:"description,omitempty"`
-	Icon        string                  `json:"icon,omitempty"`
-	URI         string                  `json:"uri"`
-	MIMEType    string                  `json:"mimeType"`
-	Args        util.FieldDescs         `json:"args,omitempty"`
-	Fn          ResourceTemplateHandler `json:"-"`
-}
+type (
+	ResourceReq             mcp.ReadResourceRequest
+	ResourceTemplateHandler func(ctx context.Context, as *app.State, req ResourceReq, args util.ValueMap, logger util.Logger) (string, string, any, error)
+	ResourceTemplate        struct {
+		Name        string                  `json:"name"`
+		Description string                  `json:"description,omitempty"`
+		Icon        string                  `json:"icon,omitempty"`
+		URI         string                  `json:"uri"`
+		MIMEType    string                  `json:"mimeType"`
+		Args        util.FieldDescs         `json:"args,omitempty"`
+		Fn          ResourceTemplateHandler `json:"-"`
+	}
+)
 
 func NewResourceTemplate(name string, description string, uri string, mimeType string, content string) *Resource {
 	if mimeType == "" {
@@ -48,7 +46,7 @@ func (r *ResourceTemplate) Handler(as *app.State, logger util.Logger) server.Res
 	return func(ctx context.Context, req mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
 		var ret []mcp.ResourceContents
 		args := util.ValueMapFrom(req.Params.Arguments)
-		u, mt, content, err := r.Fn(ctx, as, req, util.ValueMapFrom(args), logger)
+		u, mt, content, err := r.Fn(ctx, as, ResourceReq(req), util.ValueMapFrom(args), logger)
 		if err != nil {
 			return nil, errors.Errorf("error running resource template [%s] with arguments %s: %+v", r.Name, util.ToJSONCompact(args), err)
 		}

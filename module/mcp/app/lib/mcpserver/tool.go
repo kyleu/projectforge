@@ -56,16 +56,7 @@ func (t *Tool) Handler(as *app.State, logger util.Logger) server.ToolHandlerFunc
 		if err != nil {
 			return mcp.NewToolResultErrorFromErr(fmt.Sprintf("errors running tool [%s] with arguments %s", t.Name, util.ToJSONCompact(args)), err), nil
 		}
-		switch t := ret.(type) {
-		case nil:
-			return mcp.NewToolResultText("<no result>"), nil
-		case string:
-			return mcp.NewToolResultText(t), nil
-		case []byte:
-			return mcp.NewToolResultText(string(t)), nil
-		default:
-			return mcp.NewToolResultText(util.ToJSON(t)), nil
-		}
+		return mcp.NewToolResultText(valToText(ret)), nil
 	}
 }
 

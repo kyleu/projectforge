@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app"
@@ -34,7 +33,7 @@ var _ = &Resource{
 	Binary:   false,
 }
 
-func projectContentHandler(_ context.Context, as *app.State, req mcp.ReadResourceRequest, args util.ValueMap, logger util.Logger) (string, string, any, error) {
+func projectContentHandler(_ context.Context, as *app.State, req ResourceReq, args util.ValueMap, logger util.Logger) (string, string, any, error) {
 	id, err := args.GetString("id", false)
 	if err != nil {
 		return "", "", nil, errors.Wrap(err, "must provide [id] argument")

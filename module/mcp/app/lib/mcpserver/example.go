@@ -13,7 +13,7 @@ import (
 var ExampleTool = &Tool{
 	Name:        "example_mcp_server",
 	Description: "Returns a random integer",
-	Args:        util.FieldDescs{{Key: "max", Description: "Maximum possible random int (exclusive), defaults to 100"}},
+	Args:        util.FieldDescs{{Key: "max", Description: "Maximum possible random int (exclusive), defaults to 100", Default: "100"}},
 	Fn:          exampleHandler,
 }
 

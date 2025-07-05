@@ -27,15 +27,13 @@ func NewServer(ctx context.Context, as *app.State, logger util.Logger) (*Server,
 		server.WithPromptCapabilities(true),
 		server.WithToolCapabilities(true),
 	)
-	mcp := &Server{MCP: ms}
+	ret := &Server{MCP: ms}
 	// $PF_SECTION_START(tools)$
-	// if err := mcp.AddTools(as, logger, ...); err != nil {
-	// 	return nil, err
-	// }
+	// register your custom resources and tools here
 	// $PF_SECTION_END(tools)$
-	const msg = "MCP server initialized in [%s] with [%d] resources, [%d] tools, and [%d] prompts"
-	logger.Debugf(msg, t.EndString(), len(mcp.Resources), len(mcp.Tools), len(mcp.Prompts))
-	return mcp, nil
+	const msg = "MCP server initialized in [%s] with [%d] status resources, [%d] dynamic resources, [%d] tools, and [%d] prompts"
+	logger.Debugf(msg, t.EndString(), len(ret.Resources), len(ret.ResourceTemplates), len(ret.Tools), len(ret.Prompts))
+	return ret, nil
 }
 
 func (s *Server) ServeCLI(ctx context.Context) error {

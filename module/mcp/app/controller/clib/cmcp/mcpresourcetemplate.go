@@ -36,7 +36,7 @@ func MCPResourceTemplateRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		params := mcp.ReadResourceParams{URI: rt.URI, Arguments: frm}
-		u, mt, ret, err := rt.Fn(ps.Context, as, mcp.ReadResourceRequest{Params: params}, frm, ps.Logger)
+		u, mt, ret, err := rt.Fn(ps.Context, as, mcpserver.ResourceReq{Params: params}, frm, ps.Logger)
 		if err != nil {
 			return "", err
 		}
