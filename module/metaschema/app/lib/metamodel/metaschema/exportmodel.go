@@ -4,10 +4,10 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/jsonschema"
+	"{{{ .Package }}}/app/lib/metamodel"
+	"{{{ .Package }}}/app/lib/metamodel/model"
+	"{{{ .Package }}}/app/util"
 )
 
 func ExportModel(x *model.Model, coll *jsonschema.Collection, arg *metamodel.Args) (*jsonschema.Schema, error) {

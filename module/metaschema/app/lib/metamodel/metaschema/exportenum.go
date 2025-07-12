@@ -1,10 +1,10 @@
 package metaschema
 
 import (
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/jsonschema"
+	"{{{ .Package }}}/app/lib/metamodel"
+	"{{{ .Package }}}/app/lib/metamodel/enum"
+	"{{{ .Package }}}/app/util"
 )
 
 func ExportEnum(x *enum.Enum, sch *jsonschema.Collection, args *metamodel.Args) (*jsonschema.Schema, error) {

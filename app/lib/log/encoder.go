@@ -100,6 +100,9 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 		addLine(logIndent + util.ToJSONCompact(data))
 	}
 	caller := entry.Caller.String()
+	if idx := strings.Index(caller, "/app"); idx > 0 {
+		caller = caller[idx+1:]
+	}
 	if entry.Caller.Function != "" {
 		caller += " (" + entry.Caller.Function + ")"
 	}

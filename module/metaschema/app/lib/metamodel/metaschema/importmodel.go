@@ -3,11 +3,11 @@ package metaschema
 import (
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/filter"
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/filter"
+	"{{{ .Package }}}/app/lib/jsonschema"
+	"{{{ .Package }}}/app/lib/metamodel"
+	"{{{ .Package }}}/app/lib/metamodel/model"
+	"{{{ .Package }}}/app/util"
 )
 
 func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*model.Model, error) {

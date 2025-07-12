@@ -1,0 +1,11 @@
+{
+  "name": "Metaschema",
+  "icon": "cog",
+  "description": "Provides transformations between metamodel and jsonschema representations",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/metaschema",
+  "hidden": true,
+  "requires": ["jsonschema", "metamodel"]
+}

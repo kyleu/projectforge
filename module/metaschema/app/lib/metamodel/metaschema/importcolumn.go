@@ -6,10 +6,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
-	"projectforge.dev/projectforge/app/lib/types"
+	"{{{ .Package }}}/app/lib/jsonschema"
+	"{{{ .Package }}}/app/lib/metamodel"
+	"{{{ .Package }}}/app/lib/metamodel/model"
+	"{{{ .Package }}}/app/lib/types"
 )
 
 func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*model.Column, error) {

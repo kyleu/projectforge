@@ -67,7 +67,7 @@ rows, err := readDB.Query("SELECT * FROM users WHERE active = true")
 
 ## Dependencies
 
-- **Required**: [`database`](../database/database.md) - Provides core database functionality
+- **Required**: [`database`](database.md) - Provides core database functionality
 - **Compatible**: Works with all supported database technologies
 
 ## Source Code

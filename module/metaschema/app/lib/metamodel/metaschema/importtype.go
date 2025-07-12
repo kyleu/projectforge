@@ -7,10 +7,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/jsonschema"
+	"{{{ .Package }}}/app/lib/metamodel"
+	"{{{ .Package }}}/app/lib/types"
+	"{{{ .Package }}}/app/util"
 )
 
 func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*types.Wrapped, error) {

@@ -3,10 +3,10 @@ package metaschema
 import (
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/jsonschema"
+	"{{{ .Package }}}/app/lib/metamodel"
+	"{{{ .Package }}}/app/lib/metamodel/enum"
+	"{{{ .Package }}}/app/util"
 )
 
 func ImportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (*enum.Enum, error) {

@@ -98,7 +98,7 @@ The metamodel module integrates with Project Forge's configuration system and su
 
 ## Dependencies
 
-- **Required**: [`types`](../types/types.md) - Basic type system support
+- **Required**: [`types`](types.md) - Basic type system support
 
 ## Source Code
 
