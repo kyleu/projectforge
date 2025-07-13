@@ -6,6 +6,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/types"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Args) (*jsonschema.Schema, error) {
@@ -32,7 +33,7 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 		}
 	case *types.JSON:
 		ret.Type = KeyObject
-		ret.AddMetadata("type", "json")
+		ret.AddMetadata("type", util.KeyJSON)
 	case *types.List:
 		ret.Type = KeyArray
 		if t.V.Scalar() && t.V.EnumKey() == "" {

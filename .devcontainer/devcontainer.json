@@ -1,0 +1,17 @@
+{
+	"name": "Project Forge Dev Container",
+	"image": "mcr.microsoft.com/devcontainers/go:1-1.24-bookworm",
+	"features": {
+		"ghcr.io/devcontainers/features/go:1": {
+			"version": "1.24"
+		},
+		"ghcr.io/guiyomh/features/golangci-lint:0": {
+			"version": "2.2.2"
+		}
+	},
+	"forwardPorts": [
+		40000,
+		40001
+	],
+	"remoteUser": "vscode"
+}

@@ -6,6 +6,7 @@ import (
 	"{{{ .Package }}}/app/lib/jsonschema"
 	"{{{ .Package }}}/app/lib/metamodel"
 	"{{{ .Package }}}/app/lib/metamodel/model"
+	"{{{ .Package }}}/app/util"
 )
 
 func ExportColumn(col *model.Column, coll *jsonschema.Collection, args *metamodel.Args) (*jsonschema.Schema, error) {
@@ -32,7 +33,7 @@ func ExportColumn(col *model.Column, coll *jsonschema.Collection, args *metamode
 		ret.AddMetadata("format", col.Format)
 	}
 	if col.JSON != "" {
-		ret.AddMetadata("json", col.JSON)
+		ret.AddMetadata(util.KeyJSON, col.JSON)
 	}
 	if col.SQLOverride != "" {
 		ret.AddMetadata("sql", col.SQLOverride)
