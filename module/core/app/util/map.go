@@ -96,6 +96,14 @@ func (m ValueMap) Clone() ValueMap {
 	return ret
 }
 
+func (m ValueMap) ReplaceEnvVars(logger Logger) ValueMap {
+	ret := make(ValueMap, len(m))
+	for k := range m {
+		ret[k] = ReplaceEnvVars(m.GetStringOpt(k), logger)
+	}
+	return ret
+}
+
 func (m ValueMap) WithoutKeys(keys ...string) ValueMap {
 	ret := m.Clone()
 	for _, key := range keys {

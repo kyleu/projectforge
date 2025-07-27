@@ -133,7 +133,7 @@ func exportViewDetailBody(m *model.Model, rrs model.Relations, audit bool) (*gol
 	links := m.Links.WithTags(true, "detail")
 	for _, link := range links {
 		paths := lo.Map(m.PKs(), func(pk *model.Column, _ int) string {
-			return "{%%s p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
+			return "{%%u p.Model." + model.ToGoString(pk.Type, pk.Nullable, pk.Proper(), true) + helper.TextTmplEnd
 		})
 		u := link.URL
 		u = strings.ReplaceAll(u, "{}", util.StringJoin(paths, "/"))
