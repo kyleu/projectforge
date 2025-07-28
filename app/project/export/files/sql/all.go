@@ -19,7 +19,7 @@ func MigrationAll(models model.Models, enums enum.Enums, audit bool, linebreak s
 func sqlDropAll(models model.Models, enums enum.Enums, audit bool) *golang.Block {
 	ret := golang.NewBlock("SQLDropAll", "sql")
 	ret.W(sqlFunc("DropAll"))
-	for i := len(models) - 1; i >= 0; i-- {
+	for i := len(models.WithoutTag("external")) - 1; i >= 0; i-- {
 		ret.W(sqlCall(models[i].Proper() + helper.TextDrop))
 	}
 	if audit {
@@ -41,7 +41,7 @@ func sqlCreateAll(models model.Models, enums enum.Enums, audit bool) *golang.Blo
 	if audit {
 		ret.W(sqlCall("AuditCreate"))
 	}
-	lo.ForEach(models, func(m *model.Model, _ int) {
+	lo.ForEach(models.WithoutTag("external"), func(m *model.Model, _ int) {
 		ret.WF(helper.TextSQLComment+"{%%%%= %sCreate() %%%%}", m.Proper())
 	})
 	ret.W(sqlEnd())

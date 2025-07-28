@@ -20,10 +20,6 @@ func (m *Model) SkipDatabase() bool {
 	return m.HasTag("no-database") || m.SkipGolang()
 }
 
-func (m *Model) SkipMigration() bool {
-	return m.HasTag("no-migration") || m.SkipGolang()
-}
-
 func (m *Model) SkipGolang() bool {
 	return m.HasTag("no-golang")
 }

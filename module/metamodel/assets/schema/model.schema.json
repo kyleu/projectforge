@@ -56,7 +56,7 @@
       "description": "flags for this model that control generated code",
       "type": "array",
       "items": {
-        "enum": ["audit", "big", "count", "events", "external", "menu-hidden", "menu-items", "no-golang", "no-database", "no-migration", "no-service", "no-controller", "no-routes", "public", "search", "softDelete", "typescript"]
+        "enum": ["audit", "big", "count", "events", "external", "menu-hidden", "menu-items", "no-golang", "no-database", "no-service", "no-controller", "no-routes", "public", "search", "softDelete", "typescript"]
       }
     },
     "title": {
