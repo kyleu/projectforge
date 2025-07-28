@@ -25,7 +25,7 @@ func ModelAll(m *model.Model, p *project.Project, linebreak string) (file.Files,
 	}
 	calls = append(calls, fs...)
 
-	if !m.SkipDatabase() {
+	if !m.SkipDatabase() && !m.SkipMigration() {
 		if args.HasModule("migration") {
 			f, err = sql.Migration(m, args, linebreak)
 			if err != nil {
