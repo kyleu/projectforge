@@ -10,7 +10,13 @@ function debounce(callback: (...args: unknown[]) => void, wait: number) {
   };
 }
 
-function autocomplete(el: HTMLInputElement, url: string, field: string, title: (x: unknown) => string, val: (x: unknown) => string) {
+function autocomplete(
+  el: HTMLInputElement,
+  url: string,
+  field: string,
+  title: (x: unknown) => string,
+  val: (x: unknown) => string
+) {
   if (!el) {
     return;
   }
@@ -34,7 +40,7 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
       complete: boolean;
       data: unknown[];
       frag: DocumentFragment;
-    }
+    };
   } = {};
   let lastQuery = "";
 
@@ -76,27 +82,29 @@ function autocomplete(el: HTMLInputElement, url: string, field: string, title: (
       return;
     }
 
-    fetch(dest, {credentials: "include"}).then((res) => res.json()).then((data) => {
-      if (!data) {
-        return;
-      }
-      const arr = Array.isArray(data) ? data : [data];
-      const frag = document.createDocumentFragment();
-      let optMax = 10;
-      for (let d = 0; d < arr.length && optMax > 0; d++) {
-        const v = val(arr[d]);
-        const t = title(arr[d]);
-        if (v) {
-          const option = document.createElement("option");
-          option.value = v;
-          option.innerText = t;
-          frag.appendChild(option);
-          optMax--;
+    fetch(dest, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data) {
+          return;
         }
-      }
-      cache[q] = {url: dest, data: arr, frag: frag, complete: false};
-      datalistUpdate(q);
-    });
+        const arr = Array.isArray(data) ? data : [data];
+        const frag = document.createDocumentFragment();
+        let optMax = 10;
+        for (let d = 0; d < arr.length && optMax > 0; d++) {
+          const v = val(arr[d]);
+          const t = title(arr[d]);
+          if (v) {
+            const option = document.createElement("option");
+            option.value = v;
+            option.innerText = t;
+            frag.appendChild(option);
+            optMax--;
+          }
+        }
+        cache[q] = { url: dest, data: arr, frag: frag, complete: false };
+        datalistUpdate(q);
+      });
   }
 
   el.oninput = debounce(f, 250);

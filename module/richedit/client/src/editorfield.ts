@@ -1,4 +1,4 @@
-import {type Column, typeKey} from "./editortypes";
+import { type Column, typeKey } from "./editortypes";
 
 function stringInput(id: string, col: Column, x: { [p: string]: unknown }, onChange?: () => void) {
   const input = document.createElement("input");

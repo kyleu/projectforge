@@ -4,7 +4,7 @@ export type Message = {
   readonly channel: string;
   readonly cmd: string;
   readonly param: { [key: string]: unknown };
-}
+};
 
 function socketUrl(u?: string) {
   if (!u) {
@@ -37,7 +37,13 @@ export class Socket {
   closed?: boolean;
   sock?: WebSocket;
 
-  constructor(debug: boolean, o: () => void, r: (m: Message) => void, e: (svc: string, err: string) => void, url?: string) {
+  constructor(
+    debug: boolean,
+    o: () => void,
+    r: (m: Message) => void,
+    e: (svc: string, err: string) => void,
+    url?: string
+  ) {
     this.debug = debug;
     this.open = o;
     this.recv = r;

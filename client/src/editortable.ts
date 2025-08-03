@@ -1,5 +1,5 @@
-import {rowEditHandler} from "./editorobject";
-import {type Column, type Editor, type Type, typeToString} from "./editortypes";
+import { rowEditHandler } from "./editorobject";
+import { type Column, type Editor, type Type, typeToString } from "./editortypes";
 
 function createTableHead(cols: Column[]): HTMLElement {
   const thead = document.createElement("thead");
@@ -40,7 +40,7 @@ function createTableCell(col: Column, v: unknown): HTMLElement {
   return c;
 }
 
-function createTableRow(e: Editor, idx: number, x: { [key: string]: unknown; }): HTMLElement {
+function createTableRow(e: Editor, idx: number, x: { [key: string]: unknown }): HTMLElement {
   const r = document.createElement("tr");
   r.dataset.index = idx.toString();
   e.columns.forEach((col) => {

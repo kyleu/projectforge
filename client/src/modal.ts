@@ -1,4 +1,4 @@
-import {els} from "./dom";
+import { els } from "./dom";
 
 export function modalInit() {
   document.addEventListener("keydown", (event) => {

@@ -1,5 +1,5 @@
-import {Numeric} from "./numeric";
-import {Settings} from "./notation";
+import { Numeric } from "./numeric";
+import { Settings } from "./notation";
 
 export class Pool<T> {
   private pool = new Map<number | string, T>();
@@ -27,7 +27,10 @@ function commaSection(v: string, index: number): string {
 }
 
 function addCommas(v: string): string {
-  return Array.from(Array(Math.ceil(v.length / 3))).map((_, i) => commaSection(v, i)).reverse().join(",");
+  return Array.from(Array(Math.ceil(v.length / 3)))
+    .map((_, i) => commaSection(v, i))
+    .reverse()
+    .join(",");
 }
 
 export function formatWithCommas(v: number | string): string {
@@ -68,22 +71,28 @@ export function toFixedLongScale(v: Numeric, places: number): Numeric {
 const SUBSCRIPT_NUMBERS = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉"];
 
 export function toSubscript(v: number): string {
-  return v.toFixed(0).split("").map((x) => {
-    return x === "-" ? "₋" : SUBSCRIPT_NUMBERS[parseInt(x, 10)];
-  }).join("");
+  return v
+    .toFixed(0)
+    .split("")
+    .map((x) => {
+      return x === "-" ? "₋" : SUBSCRIPT_NUMBERS[parseInt(x, 10)];
+    })
+    .join("");
 }
 
 const SUPERSCRIPT_NUMBERS = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
 
 export function toSuperscript(v: number): string {
-  return v.toFixed(0).split("").map((x) => {
-    return x === "-" ? "⁻" : SUPERSCRIPT_NUMBERS[parseInt(x, 10)];
-  }).join("");
+  return v
+    .toFixed(0)
+    .split("")
+    .map((x) => {
+      return x === "-" ? "⁻" : SUPERSCRIPT_NUMBERS[parseInt(x, 10)];
+    })
+    .join("");
 }
 
-const STANDARD_ABBREVIATIONS = [
-  "K", "M", "B", "T", "Qa", "Qt", "Sx", "Sp", "Oc", "No"
-];
+const STANDARD_ABBREVIATIONS = ["K", "M", "B", "T", "Qa", "Qt", "Sx", "Sp", "Oc", "No"];
 
 const STANDARD_PREFIXES = [
   ["", "U", "D", "T", "Qa", "Qt", "Sx", "Sp", "O", "N"],
@@ -114,7 +123,10 @@ export function abbreviateStandard(rawExp: number): string {
   for (let i = prefix.length / 3 - 1; i >= 0; i--) {
     abbreviation += prefix.slice(i * 3, i * 3 + 3).join("") + STANDARD_PREFIXES_2[i];
   }
-  return abbreviation.replace(/-[A-Z]{2}-/gu, "-").replace(/U([A-Z]{2}-)/gu, "$1").replace(/-$/u, "");
+  return abbreviation
+    .replace(/-[A-Z]{2}-/gu, "-")
+    .replace(/U([A-Z]{2}-)/gu, "$1")
+    .replace(/-$/u, "");
 }
 
 export function noSpecialFormatting(exponent: number): boolean {
@@ -129,15 +141,16 @@ export function isExponentFullyShown(exponent: number): boolean {
   return noSpecialFormatting(exponent) || showCommas(exponent);
 }
 
-// eslint-disable-next-line max-params
 export function formatMantissaWithExponent(
   mantissaFormatting: (n: number, precision: number) => string,
-  exponentFormatting: (n: number, precision: number) => string, base: number, steps: number,
+  exponentFormatting: (n: number, precision: number) => string,
+  base: number,
+  steps: number,
   mantissaFormattingIfExponentIsFormatted?: (n: number, precision: number) => string,
-  separator: string = "e", forcePositiveExponent: boolean = false
-):
-    ((n: Numeric, precision: number, precisionExponent: number) => string) {
-  return function(n: Numeric, precision: number, precisionExponent: number): string {
+  separator: string = "e",
+  forcePositiveExponent: boolean = false
+): (n: Numeric, precision: number, precisionExponent: number) => string {
+  return function (n: Numeric, precision: number, precisionExponent: number): string {
     const realBase = base ** steps;
     let exponent = Math.floor(n.log(realBase)) * steps;
     if (forcePositiveExponent) {
@@ -173,8 +186,8 @@ export function formatMantissaBaseTenZero(n: number): string {
   return formatMantissaBaseTen(n, 0);
 }
 
-export function formatMantissa(base: number, digits: string): ((n: number, precision: number) => string) {
-  return function(n: number, precision: number): string {
+export function formatMantissa(base: number, digits: string): (n: number, precision: number) => string {
+  return function (n: number, precision: number): string {
     let value = Math.round(n * base ** Math.max(0, precision));
     const d = [];
     while (value > 0 || d.length === 0) {

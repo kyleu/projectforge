@@ -55,13 +55,15 @@
   }
 }
 
-.search input:not(:placeholder-shown), .search input:focus {
+.search input:not(:placeholder-shown),
+.search input:focus {
   width: 160px;
   padding: 0 4px;
   cursor: text;
 }
 
-.search input:not(:placeholder-shown) + div svg, .search input:focus + div svg {
+.search input:not(:placeholder-shown) + div svg,
+.search input:focus + div svg {
   stroke-dasharray: 150 212.908;
   stroke-dashoffset: 300;
 }

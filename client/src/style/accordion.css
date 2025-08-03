@@ -46,14 +46,14 @@
   padding: var(--padding-small);
 }
 
-.accordion input[type=checkbox]:checked ~ .bd-no-animation {
+.accordion input[type="checkbox"]:checked ~ .bd-no-animation {
   display: block;
 }
 
-.accordion input[type=checkbox]:checked ~ .bd {
+.accordion input[type="checkbox"]:checked ~ .bd {
   grid-template-rows: 1fr;
 }
 
-.accordion input[type=checkbox]:checked ~ label .expand-collapse {
+.accordion input[type="checkbox"]:checked ~ label .expand-collapse {
   transform: rotate(90deg);
 }

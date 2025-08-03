@@ -12,7 +12,7 @@ export function svgRef(key: string, size?: number, cls?: string): string {
 }
 
 export function svg(key: string, size?: number, cls?: string) {
-  return {"__html": svgRef(key, size, cls)};
+  return { __html: svgRef(key, size, cls) };
 }
 
 export function expandCollapse(extra?: string) {
@@ -20,7 +20,7 @@ export function expandCollapse(extra?: string) {
     extra = "";
   }
   const e = svgRef("right", 15, "expand-collapse");
-  return {"__html": e + extra};
+  return { __html: e + extra };
 }
 
 export function focusDelay(el: HTMLInputElement | HTMLTextAreaElement) {

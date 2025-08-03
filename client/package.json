@@ -3,21 +3,25 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
+    "@eslint/js": "^9.32.0",
     "@types/eslint__js": "^9.14.0",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.13.8",
-    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
     "cross-spawn": "^7.0.6",
-    "esbuild": "^0.25.0",
-    "eslint": "^9.21.0",
+    "esbuild": "^0.25.8",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.6",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.25.0"
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
   },
   "scripts": {
     "build": "node build.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "test": "jest"
   }

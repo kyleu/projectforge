@@ -2,7 +2,9 @@
   margin: 0 0 var(--padding) 0;
 }
 
-.markdown h2, .markdown h3, .markdown h4 {
+.markdown h2,
+.markdown h3,
+.markdown h4 {
   margin: calc(var(--padding) * 2) 0 var(--padding) 0;
 }
 

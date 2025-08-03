@@ -1,46 +1,153 @@
-import {Numeric} from "../numeric";
-import {toFixedEngineering} from "../utils";
-import {EngineeringNotation} from "./engineering";
+import { Numeric } from "../numeric";
+import { toFixedEngineering } from "../utils";
+import { EngineeringNotation } from "./engineering";
 
 const units = [
-  "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-  "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen"
 ];
 
-const tens = [
-  "", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty",
-  "ninety"
-];
+const tens = ["", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
 
 const prefixes = [
   ["", "un", "duo", "tre", "quattuor", "quin", "se", "septe", "octo", "nove"],
   [
-    "", "deci", "viginti", "triginta", "quadraginta", "quinquaginta", "sexaginta",
-    "septuaginta", "octoginta", "nonaginta"
+    "",
+    "deci",
+    "viginti",
+    "triginta",
+    "quadraginta",
+    "quinquaginta",
+    "sexaginta",
+    "septuaginta",
+    "octoginta",
+    "nonaginta"
   ],
   ["", "centi", "ducenti", "trecenti", "quadringenti", "quingenti", "sescenti", "septingenti", "octingenti", "nongenti"]
 ];
 
 const prefixes2 = [
-  "", "milli-", "micro-", "nano-", "pico-", "femto-", "atto-", "zepto-", "yocto-", "xono-",
-  "veco-", "meco-", "dueco-", "treco-", "tetreco-", "penteco-", "hexeco-", "hepteco-", "octeco-", "enneco-",
-  "icoso-", "meicoso-", "dueicoso-", "trioicoso-", "tetreicoso-",
-  "penteicoso-", "hexeicoso-", "hepteicoso-", "octeicoso-", "enneicoso-",
-  "triaconto-", "metriaconto-", "duetriaconto-", "triotriaconto-", "tetretriaconto-",
-  "pentetriaconto-", "hexetriaconto-", "heptetriaconto-", "octtriaconto-", "ennetriaconto-",
-  "tetraconto-", "metetraconto-", "duetetraconto-", "triotetraconto-", "tetretetraconto-",
-  "pentetetraconto-", "hexetetraconto-", "heptetetraconto-", "octetetraconto-", "ennetetraconto-",
-  "pentaconto-", "mepentaconto-", "duepentaconto-", "triopentaconto-", "tetrepentaconto-",
-  "pentepentaconto-", "hexepentaconto-", "heptepentaconto-", "octepentaconto-", "ennepentaconto-",
-  "hexaconto-", "mehexaconto-", "duehexaconto-", "triohexaconto-", "tetrehexaconto-",
-  "pentehexaconto-", "hexehexaconto-", "heptehexaconto-", "octehexaconto-", "ennehexaconto-",
-  "heptaconto-", "meheptaconto-", "dueheptaconto-", "trioheptaconto-", "tetreheptaconto-",
-  "penteheptaconto-", "hexeheptaconto-", "hepteheptaconto-", "octeheptaconto-", "enneheptaconto-",
-  "octaconto-", "meoctaconto-", "dueoctaconto-", "triooctaconto-", "tetreoctaconto-",
-  "penteoctaconto-", "hexeoctaconto-", "hepteoctaconto-", "octeoctaconto-", "enneoctaconto-",
-  "ennaconto-", "meennaconto-", "dueeennaconto-", "trioennaconto-", "tetreennaconto-",
-  "penteennaconto-", "hexeennaconto-", "hepteennaconto-", "octeennaconto-", "enneennaconto-",
-  "hecto-", "mehecto-", "duehecto-"
+  "",
+  "milli-",
+  "micro-",
+  "nano-",
+  "pico-",
+  "femto-",
+  "atto-",
+  "zepto-",
+  "yocto-",
+  "xono-",
+  "veco-",
+  "meco-",
+  "dueco-",
+  "treco-",
+  "tetreco-",
+  "penteco-",
+  "hexeco-",
+  "hepteco-",
+  "octeco-",
+  "enneco-",
+  "icoso-",
+  "meicoso-",
+  "dueicoso-",
+  "trioicoso-",
+  "tetreicoso-",
+  "penteicoso-",
+  "hexeicoso-",
+  "hepteicoso-",
+  "octeicoso-",
+  "enneicoso-",
+  "triaconto-",
+  "metriaconto-",
+  "duetriaconto-",
+  "triotriaconto-",
+  "tetretriaconto-",
+  "pentetriaconto-",
+  "hexetriaconto-",
+  "heptetriaconto-",
+  "octtriaconto-",
+  "ennetriaconto-",
+  "tetraconto-",
+  "metetraconto-",
+  "duetetraconto-",
+  "triotetraconto-",
+  "tetretetraconto-",
+  "pentetetraconto-",
+  "hexetetraconto-",
+  "heptetetraconto-",
+  "octetetraconto-",
+  "ennetetraconto-",
+  "pentaconto-",
+  "mepentaconto-",
+  "duepentaconto-",
+  "triopentaconto-",
+  "tetrepentaconto-",
+  "pentepentaconto-",
+  "hexepentaconto-",
+  "heptepentaconto-",
+  "octepentaconto-",
+  "ennepentaconto-",
+  "hexaconto-",
+  "mehexaconto-",
+  "duehexaconto-",
+  "triohexaconto-",
+  "tetrehexaconto-",
+  "pentehexaconto-",
+  "hexehexaconto-",
+  "heptehexaconto-",
+  "octehexaconto-",
+  "ennehexaconto-",
+  "heptaconto-",
+  "meheptaconto-",
+  "dueheptaconto-",
+  "trioheptaconto-",
+  "tetreheptaconto-",
+  "penteheptaconto-",
+  "hexeheptaconto-",
+  "hepteheptaconto-",
+  "octeheptaconto-",
+  "enneheptaconto-",
+  "octaconto-",
+  "meoctaconto-",
+  "dueoctaconto-",
+  "triooctaconto-",
+  "tetreoctaconto-",
+  "penteoctaconto-",
+  "hexeoctaconto-",
+  "hepteoctaconto-",
+  "octeoctaconto-",
+  "enneoctaconto-",
+  "ennaconto-",
+  "meennaconto-",
+  "dueeennaconto-",
+  "trioennaconto-",
+  "tetreennaconto-",
+  "penteennaconto-",
+  "hexeennaconto-",
+  "hepteennaconto-",
+  "octeennaconto-",
+  "enneennaconto-",
+  "hecto-",
+  "mehecto-",
+  "duehecto-"
 ];
 
 export class EnglishNotation extends EngineeringNotation {
@@ -172,8 +279,12 @@ export class EnglishNotation extends EngineeringNotation {
     }
     let abbreviation = "";
     while (index2 >= 0) {
-      if (prefix[index2 * 3] !== "un" || prefix[index2 * 3 + 1] !== "" ||
-          prefix[index2 * 3 + 2] !== "" || index2 === 0) {
+      if (
+        prefix[index2 * 3] !== "un" ||
+        prefix[index2 * 3 + 1] !== "" ||
+        prefix[index2 * 3 + 2] !== "" ||
+        index2 === 0
+      ) {
         let abb2 = prefix[index2 * 3 + 1] + prefix[index2 * 3 + 2];
         // Special cases.
         if (["tre", "se"].includes(prefix[index2 * 3]) && ["v", "t", "q"].includes(abb2.substring(0, 1))) {
@@ -185,7 +296,10 @@ export class EnglishNotation extends EngineeringNotation {
         if (["septe", "nove"].includes(prefix[index2 * 3]) && ["v", "o"].includes(abb2.substring(0, 1))) {
           abb2 = `m${abb2}`;
         }
-        if (["septe", "nove"].includes(prefix[index2 * 3]) && ["d", "c", "t", "q", "s"].includes(abb2.substring(0, 1))) {
+        if (
+          ["septe", "nove"].includes(prefix[index2 * 3]) &&
+          ["d", "c", "t", "q", "s"].includes(abb2.substring(0, 1))
+        ) {
           abb2 = `n${abb2}`;
         }
         abbreviation += prefix[index2 * 3] + abb2;

@@ -1,6 +1,6 @@
-import {Notation} from "../notation";
-import {Numeric} from "../numeric";
-import {abbreviateStandard, formatMantissaBaseTen, formatMantissaWithExponent} from "../utils";
+import { Notation } from "../notation";
+import { Numeric } from "../numeric";
+import { abbreviateStandard, formatMantissaBaseTen, formatMantissaWithExponent } from "../utils";
 
 export class StandardNotation extends Notation {
   public override readonly name = "Standard";

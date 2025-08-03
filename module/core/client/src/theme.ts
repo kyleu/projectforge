@@ -1,4 +1,4 @@
-import {els} from "./dom";
+import { els } from "./dom";
 
 const keys: string[] = [];
 

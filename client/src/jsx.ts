@@ -1,15 +1,17 @@
-import {setHTML} from "./dom";
+import { setHTML } from "./dom";
 
 declare global {
-  namespace JSX { // eslint-disable-line @typescript-eslint/no-namespace, no-shadow
+  // eslint-disable-line @typescript-eslint/no-namespace, no-shadow
+  namespace JSX {
     type IntrinsicElements = {
       [elemName: string]: unknown;
-    }
+    };
   }
 }
 
 // noinspection JSUnusedGlobalSymbols
-export function JSX(tag: string, attrs: any[], ...args: Node[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
+// eslint-disable-line @typescript-eslint/no-explicit-any
+export function JSX(tag: string, attrs: any[], ...args: Node[]) {
   const e = document.createElement(tag);
   for (let name in attrs) {
     if (name === "for") {
@@ -18,10 +20,12 @@ export function JSX(tag: string, attrs: any[], ...args: Node[]) { // eslint-disa
     if (name === "className") {
       name = "class";
     }
-    if (name && attrs.hasOwnProperty(name)) { // eslint-disable-line no-prototype-builtins
+    // eslint-disable-line no-prototype-builtins
+    if (name && attrs.hasOwnProperty(name)) {
       const v = attrs[name];
       if (name === "dangerouslySetInnerHTML") {
-        setHTML(e, v.__html); // eslint-disable-line no-underscore-dangle
+        // eslint-disable-line no-underscore-dangle
+        setHTML(e, v.__html);
       } else if (v === true) {
         e.setAttribute(name, name);
       } else if (v !== false && v !== null && v !== undefined) {

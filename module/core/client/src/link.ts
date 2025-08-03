@@ -1,4 +1,4 @@
-import {els} from "./dom";
+import { els } from "./dom";
 
 export function linkInit() {
   for (const el of els(".link-confirm")) {

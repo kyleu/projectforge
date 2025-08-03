@@ -26,10 +26,6 @@
     "strict": true,
     "target": "ES6"
   },
-  "include": [
-    "**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*"],
+  "exclude": ["node_modules"]
 }

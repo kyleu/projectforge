@@ -15,7 +15,8 @@ table th label {
   display: block;
 }
 
-table td, table th {
+table td,
+table th {
   padding: var(--padding-small);
   border-bottom: var(--border);
   margin: 0;
@@ -23,7 +24,8 @@ table td, table th {
   vertical-align: top;
 }
 
-table tbody tr:last-child td, table tbody tr:last-child th {
+table tbody tr:last-child td,
+table tbody tr:last-child th {
   border-bottom: none;
 }
 
@@ -42,7 +44,12 @@ table .shrink {
   white-space: nowrap;
 }
 
-.min-200 > tr > th:first-child, .min-200 > thead > tr > th:first-child, .min-200 > tbody > tr > th:first-child, .min-200 > tr > td:first-child, .min-200 > thead > tr > td:first-child, .min-200 > tbody > tr > td:first-child {
+.min-200 > tr > th:first-child,
+.min-200 > thead > tr > th:first-child,
+.min-200 > tbody > tr > th:first-child,
+.min-200 > tr > td:first-child,
+.min-200 > thead > tr > td:first-child,
+.min-200 > tbody > tr > td:first-child {
   min-width: 200px;
 }
 
@@ -57,7 +64,7 @@ table .noresize {
   padding: var(--padding-small);
 }
 
-@supports (-moz-appearance:none) {
+@supports (-moz-appearance: none) {
   table .resize {
     min-width: 100%;
   }
@@ -68,11 +75,13 @@ table .tfill {
   border-bottom: none;
 }
 
-table.centered th, table.centered td {
+table.centered th,
+table.centered td {
   text-align: center;
 }
 
-table.centered th.left-align, table.centered td.left-align {
+table.centered th.left-align,
+table.centered td.left-align {
   text-align: left;
 }
 

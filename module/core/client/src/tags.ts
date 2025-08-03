@@ -1,5 +1,5 @@
-import {els, opt, req, setDisplay} from "./dom";
-import {svgRef} from "./util";
+import { els, opt, req, setDisplay } from "./dom";
+import { svgRef } from "./util";
 
 function compareOrder(elem1: HTMLElement, elem2: HTMLElement) {
   if (elem1.parentElement !== elem2.parentElement) {
@@ -125,7 +125,10 @@ export function tagsWire(el: HTMLElement) {
     return;
   }
   const tagContainer = req<HTMLDivElement>(".tags", el);
-  const vals = input.value.split(",").map((x) => x.trim()).filter((k) => k !== "");
+  const vals = input.value
+    .split(",")
+    .map((x) => x.trim())
+    .filter((k) => k !== "");
 
   setDisplay(input, false);
   tagContainer.innerHTML = "";

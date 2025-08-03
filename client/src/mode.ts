@@ -1,4 +1,4 @@
-import {els} from "./dom";
+import { els } from "./dom";
 
 const l = "mode-light";
 const d = "mode-dark";

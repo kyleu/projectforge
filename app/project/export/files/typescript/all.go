@@ -53,9 +53,9 @@ func tsModelImports(allEnums enum.Enums, allModels model.Models, extraTypes mode
 		if e, _ := model.AsEnum(col.Type); e != nil {
 			if en := allEnums.Get(e.Ref); en != nil {
 				if en.PackageWithGroup("") != m.PackageWithGroup("") {
-					add(`import type {%s} from "../%s/%s";`, en.Proper(), en.Camel(), en.Camel())
+					add(`import type { %s } from "../%s/%s";`, en.Proper(), en.Camel(), en.Camel())
 				} else {
-					add(`import type {%s} from "./%s";`, en.Proper(), en.Camel())
+					add(`import type { %s } from "./%s";`, en.Proper(), en.Camel())
 				}
 			}
 		}
@@ -63,21 +63,21 @@ func tsModelImports(allEnums enum.Enums, allModels model.Models, extraTypes mode
 		if rm == nil {
 			if col.Metadata != nil {
 				if tsImport := col.Metadata.GetStringOpt("tsImport"); tsImport != "" {
-					add(`import type {%s} from "%s";`, r.K, tsImport)
+					add(`import type { %s } from "%s";`, r.K, tsImport)
 				}
 			}
 		} else {
 			if tsImport := rm.Config.GetStringOpt("tsImport"); tsImport != "" {
-				add(`import type {%s} from "%s";`, r.K, tsImport)
+				add(`import type { %s } from "%s";`, r.K, tsImport)
 			} else if rm.PackageWithGroup("") != m.PackageWithGroup("") {
-				add(`import type {%s} from "../%s/%s";`, r.K, rm.Camel(), rm.Camel())
+				add(`import type { %s } from "../%s/%s";`, r.K, rm.Camel(), rm.Camel())
 			} else {
-				add(`import type {%s} from "./%s";`, r.K, rm.Camel())
+				add(`import type { %s } from "./%s";`, r.K, rm.Camel())
 			}
 		}
 		if col.Type.Key() == types.KeyNumeric {
 			relPath := util.StringRepeat("../", len(m.Group)+1)
-			add(`import type {Numeric} from "%snumeric/numeric";`, relPath)
+			add(`import type { Numeric } from "%snumeric/numeric";`, relPath)
 		}
 	}
 	return ret, nil

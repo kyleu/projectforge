@@ -3,11 +3,39 @@
   display: inline-block;
 }
 
-input[type='date'], input[type='datetime'], input[type='datetime-local'], input[type='email'], input[type='month'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], input[type='week'], input:not([type]), textarea, select {
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="url"],
+input[type="week"],
+input:not([type]),
+textarea,
+select {
   padding: var(--padding-small) var(--padding);
 }
 
-.expanded input[type='date'], .expanded input[type='datetime'], .expanded input[type='datetime-local'], .expanded input[type='email'], .expanded input[type='month'], .expanded input[type='number'], .expanded input[type='password'], .expanded input[type='search'], .expanded input[type='tel'], .expanded input[type='text'], .expanded input[type='url'], .expanded input[type='week'], .expanded input:not([type]), .expanded textarea, .expanded select {
+.expanded input[type="date"],
+.expanded input[type="datetime"],
+.expanded input[type="datetime-local"],
+.expanded input[type="email"],
+.expanded input[type="month"],
+.expanded input[type="number"],
+.expanded input[type="password"],
+.expanded input[type="search"],
+.expanded input[type="tel"],
+.expanded input[type="text"],
+.expanded input[type="url"],
+.expanded input[type="week"],
+.expanded input:not([type]),
+.expanded textarea,
+.expanded select {
   width: 100%;
 }
 

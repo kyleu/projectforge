@@ -39,7 +39,7 @@ func tsModelContent(imps []string, m *model.Model, enums enum.Enums) golang.Bloc
 }
 
 func tsEnum(e *enum.Enum) *golang.Block {
-	ret := golang.NewBlock("tsenum-"+e.Name, "ts")
+	ret := golang.NewBlock("ts-enum-"+e.Name, "ts")
 	// ret.W("// eslint-disable-next-line no-shadow")
 	ret.WF("export enum %s {", e.Proper())
 	lo.ForEach(e.Values, func(v *enum.Value, idx int) {
@@ -51,16 +51,32 @@ func tsEnum(e *enum.Enum) *golang.Block {
 }
 
 func tsModel(m *model.Model, enums enum.Enums) *golang.Block {
-	ret := golang.NewBlock("tsmodel-"+m.Name, "ts")
+	ret := golang.NewBlock("ts-model-"+m.Name, "ts")
 	ret.WF("export class %s {", m.Proper())
 	for _, col := range m.Columns {
-		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), "?", "")
-		ret.WF("  %s%s: %s;", col.Camel(), optional, tsType(col.Type, enums))
+		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
+		ret.WF("  %s: %s%s;", col.Camel(), tsType(col.Type, enums), optional)
 	}
+	ret.WB()
+	tsModelConstructor(m, enums, ret)
 	ret.W("}")
 	ret.WB()
 	ret.WF("export type %s = Array<%s>;", m.ProperPlural(), m.Proper())
 	return ret
+}
+
+func tsModelConstructor(m *model.Model, enums enum.Enums, ret *golang.Block) {
+	ret.WF("  constructor(")
+	for idx, col := range m.Columns {
+		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
+		comma := util.Choose(idx+1 < len(m.Columns), ",", "")
+		ret.WF("    %s: %s%s%s", col.Camel(), tsType(col.Type, enums), optional, comma)
+	}
+	ret.W("  ) {")
+	for _, col := range m.Columns {
+		ret.WF("    this.%s = %s;", col.Camel(), col.Camel())
+	}
+	ret.W("  }")
 }
 
 func tsType(t *types.Wrapped, enums enum.Enums) string {

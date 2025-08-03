@@ -68,6 +68,7 @@ var (
 	buildSize          = &Build{Key: "size", Title: "Binary Size", Description: "Visualizes the file size of the binary", Run: onSize}
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy", false)
 	buildFormat        = simpleBuild("format", "Format", util.StringFilePath("bin", "format."+build.ScriptExtension), false)
+	buildFormatClient  = simpleBuild("format-client", "Format Client", util.StringFilePath("bin", "format-client."+build.ScriptExtension), false)
 	buildLint          = simpleBuild("lint", "Lint", util.StringFilePath("bin", "check."+build.ScriptExtension), true)
 	buildLintClient    = simpleBuild("lint-client", "Lint Client", util.StringFilePath("bin", "check-client."+build.ScriptExtension), false)
 	buildTemplates     = simpleBuild("templates", "Templates", util.StringFilePath("bin", "templates."+build.ScriptExtension), false)
@@ -82,7 +83,8 @@ var (
 
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
-	buildTidy, buildFormat, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild, buildDeployments, buildTest, buildCoverage,
+	buildTidy, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild,
+	buildDeployments, buildTest, buildCoverage,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

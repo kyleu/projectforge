@@ -1,7 +1,7 @@
-import {createEditorInput} from "./editorfield";
-import type {Editor} from "./editortypes";
-import {modalGetBody, modalGetOrCreate, modalSetTitle} from "./modal";
-import {createTable} from "./editortable";
+import { createEditorInput } from "./editorfield";
+import type { Editor } from "./editortypes";
+import { modalGetBody, modalGetOrCreate, modalSetTitle } from "./modal";
+import { createTable } from "./editortable";
 
 function createEditorButtons() {
   const btns = document.createElement("div");
@@ -29,7 +29,7 @@ function createEditorButtons() {
 }
 
 function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: { [p: string]: unknown }) => void) {
-  const editCopy: {[p: string]: unknown} = JSON.parse(JSON.stringify(x));
+  const editCopy: { [p: string]: unknown } = JSON.parse(JSON.stringify(x));
 
   const div = document.createElement("div");
   div.classList.add("overflow", "full-width");

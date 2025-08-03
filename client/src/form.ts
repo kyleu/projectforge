@@ -1,4 +1,4 @@
-import {els} from "./dom";
+import { els } from "./dom";
 
 const selected = "--selected";
 
@@ -12,8 +12,8 @@ export function setSiblingToNull(el: HTMLElement) {
 
 export function initForm(frm: HTMLFormElement) {
   frm.onreset = () => initForm(frm);
-  const editorCache: { [key: string]: string; } = {};
-  const selectedCache: { [key: string]: HTMLInputElement; } = {};
+  const editorCache: { [key: string]: string } = {};
+  const selectedCache: { [key: string]: HTMLInputElement } = {};
   for (const el of frm.elements) {
     const input = el as HTMLInputElement;
     if (input.name.length > 0) {

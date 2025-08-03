@@ -1,7 +1,14 @@
-import {els} from "./dom";
+import { els } from "./dom";
 
 export function utc(date: Date) {
-  const u = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+  const u = Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  );
   return new Date(u).toISOString().substring(0, 19).replace("T", " ");
 }
 
@@ -34,7 +41,13 @@ export function relativeTime(el: HTMLElement): string {
   const day = date.getDate();
 
   if (isNaN(dayDiff) || dayDiff < 0 || dayDiff >= 31) {
-    return year.toString() + "-" + (month < 10 ? "0" + month.toString() : month.toString()) + "-" + (day < 10 ? "0" + day.toString() : day.toString());
+    return (
+      year.toString() +
+      "-" +
+      (month < 10 ? "0" + month.toString() : month.toString()) +
+      "-" +
+      (day < 10 ? "0" + day.toString() : day.toString())
+    );
   }
 
   let ret: string;

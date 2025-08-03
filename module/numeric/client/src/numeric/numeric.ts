@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import {Pool} from "./utils";
+import { Pool } from "./utils";
 
 const EXP_LIMIT = 9e15;
 const NUMBER_EXP_MAX = 308;
@@ -19,7 +19,7 @@ export function powerOf10(power: number): number {
 export type MantissaExponent = {
   m: number;
   e: number;
-}
+};
 
 export type NumericSource = MantissaExponent | number | string;
 
@@ -101,7 +101,7 @@ export class Numeric {
   }
 
   public log(base: number): number {
-    return Math.LN10 / Math.log(base) * this.log10();
+    return (Math.LN10 / Math.log(base)) * this.log10();
   }
 
   public log10(): number {
@@ -225,7 +225,7 @@ export class Numeric {
       return this;
     }
     const tempExponent = Math.floor(Math.log10(Math.abs(this.m)));
-    this.m = tempExponent === NUMBER_EXP_MIN ? this.m * 10 / 1e-323 : this.m / powerOf10(tempExponent);
+    this.m = tempExponent === NUMBER_EXP_MIN ? (this.m * 10) / 1e-323 : this.m / powerOf10(tempExponent);
     this.e += tempExponent;
     return this;
   }
@@ -291,7 +291,7 @@ export class Numeric {
     }
 
     this.e = Math.floor(Math.log10(Math.abs(v)));
-    this.m = this.e === NUMBER_EXP_MIN ? v * 10 / 1e-323 : v / powerOf10(this.e);
+    this.m = this.e === NUMBER_EXP_MIN ? (v * 10) / 1e-323 : v / powerOf10(this.e);
     this.normalize();
     return this;
   }

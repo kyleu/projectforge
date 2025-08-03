@@ -1,5 +1,5 @@
-import {Notation} from "../notation";
-import {Numeric} from "../numeric";
+import { Notation } from "../notation";
+import { Numeric } from "../numeric";
 
 const ROMAN_NUMBERS: [number, string][] = [
   [1000000, "M̄"],

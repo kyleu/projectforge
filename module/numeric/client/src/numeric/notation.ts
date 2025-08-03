@@ -1,5 +1,5 @@
-import {Numeric, NumericSource} from "./numeric";
-import {formatWithCommas, noSpecialFormatting, showCommas} from "./utils";
+import { Numeric, NumericSource } from "./numeric";
+import { formatWithCommas, noSpecialFormatting, showCommas } from "./utils";
 
 export const Settings = {
   exponentCommas: {
@@ -28,13 +28,19 @@ export abstract class Notation {
       return n.sign() < 0 ? this.negativeInfinite : this.infinite;
     }
     if (n.e < -300) {
-      return n.sign() < 0 ? this.formatVerySmallNegativeNumeric(n.abs(), placesUnder1000) : this.formatVerySmallNumeric(n, placesUnder1000);
+      return n.sign() < 0
+        ? this.formatVerySmallNegativeNumeric(n.abs(), placesUnder1000)
+        : this.formatVerySmallNumeric(n, placesUnder1000);
     }
     if (n.e < 3) {
       const number = n.toNumber();
-      return number < 0 ? this.formatNegativeUnder1000(Math.abs(number), placesUnder1000) : this.formatUnder1000(number, placesUnder1000);
+      return number < 0
+        ? this.formatNegativeUnder1000(Math.abs(number), placesUnder1000)
+        : this.formatUnder1000(number, placesUnder1000);
     }
-    return n.sign() < 0 ? this.formatNegativeNumeric(n.abs(), places, placesExponent) : this.formatNumeric(n, places, placesExponent);
+    return n.sign() < 0
+      ? this.formatNegativeNumeric(n.abs(), places, placesExponent)
+      : this.formatNumeric(n, places, placesExponent);
   }
 
   public get negativeInfinite(): string {
@@ -71,7 +77,8 @@ export abstract class Notation {
   }
 
   protected formatExponent(
-    exponent: number, precision: number = Settings.exponentDefaultPlaces,
+    exponent: number,
+    precision: number = Settings.exponentDefaultPlaces,
     specialFormat: (n: number, p: number) => string = (n) => n.toString(),
     largeExponentPrecision: number = Math.max(2, precision)
   ): string {

@@ -1,10 +1,12 @@
-.tag-editor .tags, .tag-view .tags {
+.tag-editor .tags,
+.tag-view .tags {
   touch-action: none;
   display: flex;
   flex-wrap: wrap;
 }
 
-.tag-editor .tags .item, .tag-view .tags .item {
+.tag-editor .tags .item,
+.tag-view .tags .item {
   background-color: var(--color-background-muted);
   margin-right: var(--padding-small);
 
@@ -20,11 +22,13 @@
   align-items: center;
 }
 
-.tag-editor .tags .item:last-child, .tag-view .tags .item:last-child {
+.tag-editor .tags .item:last-child,
+.tag-view .tags .item:last-child {
   margin-right: 0;
 }
 
-.tag-editor .value, .tag-view .value {
+.tag-editor .value,
+.tag-view .value {
   padding: 0 4px;
 }
 

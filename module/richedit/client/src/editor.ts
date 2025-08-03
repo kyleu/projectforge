@@ -1,6 +1,6 @@
-import {els, req} from "./dom";
-import {createTable} from "./editortable";
-import type {Column, Editor} from "./editortypes";
+import { els, req } from "./dom";
+import { createTable } from "./editortable";
+import type { Column, Editor } from "./editortypes";
 
 const rawLabel = "Raw JSON";
 
@@ -8,10 +8,10 @@ function extractEditor(el: HTMLElement) {
   const key = el.dataset.key ?? "editor";
   const title = el.dataset.title ?? "Object";
   const columnsStr = el.dataset.columns ?? "[]";
-  const columns: Column[] = JSON.parse(columnsStr.replace(/\\"/gu, "\""));
+  const columns: Column[] = JSON.parse(columnsStr.replace(/\\"/gu, '"'));
 
   const inp: HTMLTextAreaElement = req<HTMLTextAreaElement>("textarea", el);
-  let curr: { [key: string]: unknown; }[] = JSON.parse(inp.value);
+  let curr: { [key: string]: unknown }[] = JSON.parse(inp.value);
   if (curr === undefined || curr === null) {
     curr = [];
   }
@@ -20,7 +20,7 @@ function extractEditor(el: HTMLElement) {
   }
   inp.hidden = true;
 
-  const e: Editor = {key: key, title: title, columns: columns, textarea: inp, rows: curr};
+  const e: Editor = { key: key, title: title, columns: columns, textarea: inp, rows: curr };
 
   const tbl = createTable(e);
   el.appendChild(tbl);

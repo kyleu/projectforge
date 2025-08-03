@@ -2,7 +2,8 @@
   box-sizing: inherit;
 }
 
-*:before, *:after {
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -364,11 +365,11 @@ svg.link.padded {
   display: none;
 }
 
-.toggle input[type=checkbox]:checked ~ label {
+.toggle input[type="checkbox"]:checked ~ label {
   display: none;
 }
 
-.toggle input[type=checkbox]:checked ~ .x {
+.toggle input[type="checkbox"]:checked ~ .x {
   display: block;
 }
 
@@ -385,10 +386,12 @@ svg.link.padded {
   text-decoration: underline;
 }
 
-ul.padded > li, menu.padded > li {
+ul.padded > li,
+menu.padded > li {
   padding-top: var(--padding-small);
 }
-ul.padded > li:first-child, menu.padded > li:first-child {
+ul.padded > li:first-child,
+menu.padded > li:first-child {
   padding-top: 0;
 }
 
