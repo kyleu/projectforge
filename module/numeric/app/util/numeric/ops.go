@@ -79,7 +79,7 @@ func (n Numeric) Pow(other Numeric) Numeric {
 		}
 	}
 
-	// Same speed and usually more accurate. (An arbitrary-precision version of this calculation is used in break_break_infinity.js, sacrificing performance for utter accuracy.)
+	// Same speed and usually more accurate.
 	newExponent := math.Trunc(temp)
 	residue := temp - newExponent
 	newMantissa := math.Pow(10, other.ToFloat()*math.Log10(n.mantissa)+residue)
@@ -87,7 +87,7 @@ func (n Numeric) Pow(other Numeric) Numeric {
 		return normalize(newMantissa, int64(newExponent))
 	}
 
-	// UN-SAFETY: This should return NaN when mantissa is negative and value is noninteger.
+	// UN-SAFETY: This should return NaN when mantissa is negative and value is non-integer.
 	result := other.Multiply(FromFloat(n.AbsLog10())).Pow10() // this is 2x faster and gives same values AFAIK
 	if n.Sign() == -1 && FromFloat(math.Mod(other.ToFloat(), 2)).Equals(One) {
 		return result.Negate()

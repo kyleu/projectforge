@@ -8,6 +8,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+//nolint:lll
 var prefixes = []string{
 	"", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion",
 	"decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sedecillion|sexdecillion", "septendecillion", "octodecillion", "novemdecillion",

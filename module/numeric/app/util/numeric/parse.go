@@ -27,16 +27,18 @@ func FromInt64(value int64) Numeric {
 }
 
 func FromFloat(value float64) Numeric {
-	if math.IsNaN(value) {
+	switch {
+	case math.IsNaN(value):
 		return NaN
-	} else if math.IsInf(value, 1) {
+	case math.IsInf(value, 1):
 		return PositiveInfinity
-	} else if math.IsInf(value, -1) {
+	case math.IsInf(value, -1):
 		return NegativeInfinity
-	} else if isZero(value) {
+	case isZero(value):
 		return Zero
+	default:
+		return normalize(value, 0)
 	}
-	return normalize(value, 0)
 }
 
 func FromString(s string) (Numeric, error) {

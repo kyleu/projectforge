@@ -55,9 +55,6 @@ func (n *Numeric) UnmarshalJSON(data []byte) error {
 			return errors.Wrapf(err, "invalid float value [%s]", string(data))
 		}
 		ret := FromFloat(s)
-		if err != nil {
-			return errors.Wrapf(err, "invalid numeric float [%s]", string(data))
-		}
 		*n = ret
 	default:
 		return errors.Errorf("invalid numeric content [%s]", string(data))

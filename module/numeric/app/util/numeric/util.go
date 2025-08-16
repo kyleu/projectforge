@@ -53,7 +53,7 @@ func normalize(mantissa float64, exponent int64) Numeric {
 	if tempExponent == FloatExpMin {
 		mantissa = mantissa * 10 / 1e-323
 	} else {
-		mantissa = mantissa / powerOf10(tempExponent)
+		mantissa /= powerOf10(tempExponent)
 	}
 
 	return from(mantissa, exponent+tempExponent)
