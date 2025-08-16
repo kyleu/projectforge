@@ -85,3 +85,36 @@ func FloatArray(value []any) string {
 	return qs422016
 //line views/components/view/Float.html:9
 }
+
+//line views/components/view/Float.html:11
+func StreamPercent(qw422016 *qt422016.Writer, f float64) {
+//line views/components/view/Float.html:12
+	qw422016.E().S(util.Percent(f))
+//line views/components/view/Float.html:13
+}
+
+//line views/components/view/Float.html:13
+func WritePercent(qq422016 qtio422016.Writer, f float64) {
+//line views/components/view/Float.html:13
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Float.html:13
+	StreamPercent(qw422016, f)
+//line views/components/view/Float.html:13
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Float.html:13
+}
+
+//line views/components/view/Float.html:13
+func Percent(f float64) string {
+//line views/components/view/Float.html:13
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Float.html:13
+	WritePercent(qb422016, f)
+//line views/components/view/Float.html:13
+	qs422016 := string(qb422016.B)
+//line views/components/view/Float.html:13
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Float.html:13
+	return qs422016
+//line views/components/view/Float.html:13
+}

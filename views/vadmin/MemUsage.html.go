@@ -10,72 +10,184 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/components/view"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vadmin/MemUsage.html:10
+//line views/vadmin/MemUsage.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vadmin/MemUsage.html:10
+//line views/vadmin/MemUsage.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vadmin/MemUsage.html:10
+//line views/vadmin/MemUsage.html:12
 type MemUsage struct {
 	layout.Basic
 	Mem *runtime.MemStats
 }
 
-//line views/vadmin/MemUsage.html:15
+//line views/vadmin/MemUsage.html:17
 func (p *MemUsage) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/MemUsage.html:15
+//line views/vadmin/MemUsage.html:17
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vadmin/MemUsage.html:17
+//line views/vadmin/MemUsage.html:19
 	components.StreamSVGIcon(qw422016, `desktop`, ps)
-//line views/vadmin/MemUsage.html:17
+//line views/vadmin/MemUsage.html:19
 	qw422016.N().S(` Memory Usage</h3>
-    <em>Better formatting is coming soon</em>
-    `)
-//line views/vadmin/MemUsage.html:19
-	qw422016.N().S(components.JSON(p.Mem))
-//line views/vadmin/MemUsage.html:19
-	qw422016.N().S(`
+    <table class="mt min-200 expanded">
+      <tbody>
+        <tr>
+          <th class="shrink">Total Allocations</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:24
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.TotalAlloc)))
+//line views/vadmin/MemUsage.html:24
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">System Memory</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:28
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.Sys)))
+//line views/vadmin/MemUsage.html:28
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Allocated</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:32
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.HeapAlloc)))
+//line views/vadmin/MemUsage.html:32
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap System</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:36
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.HeapSys)))
+//line views/vadmin/MemUsage.html:36
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Idle</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:40
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.HeapIdle)))
+//line views/vadmin/MemUsage.html:40
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap In Use</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:44
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.HeapInuse)))
+//line views/vadmin/MemUsage.html:44
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Released</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:48
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.HeapReleased)))
+//line views/vadmin/MemUsage.html:48
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Objects</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:52
+	view.StreamInt(qw422016, p.Mem.HeapObjects)
+//line views/vadmin/MemUsage.html:52
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Stack In Use</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:56
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.StackInuse)))
+//line views/vadmin/MemUsage.html:56
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Stack System</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:60
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.StackSys)))
+//line views/vadmin/MemUsage.html:60
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">GC Count</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:64
+	view.StreamInt(qw422016, p.Mem.NumGC)
+//line views/vadmin/MemUsage.html:64
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">GC CPU Percentage</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:68
+	view.StreamPercent(qw422016, p.Mem.GCCPUFraction*100)
+//line views/vadmin/MemUsage.html:68
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Next GC Target Heap Size</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:72
+	view.StreamString(qw422016, util.ByteSizeSI(int64(p.Mem.NextGC)))
+//line views/vadmin/MemUsage.html:72
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink">Last GC (ns)</th>
+          <td>`)
+//line views/vadmin/MemUsage.html:76
+	view.StreamInt(qw422016, p.Mem.LastGC)
+//line views/vadmin/MemUsage.html:76
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 `)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 }
 
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 func (p *MemUsage) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 }
 
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	qs422016 := string(qb422016.B)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 	return qs422016
-//line views/vadmin/MemUsage.html:21
+//line views/vadmin/MemUsage.html:81
 }

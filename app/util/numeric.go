@@ -20,3 +20,7 @@ func MicrosToMillis(i int) string {
 
 	return fmt.Sprintf("%.3f", x) + "ms"
 }
+
+func Percent(f float64) string {
+	return fmt.Sprintf("%.3f", f) + "%"
+}

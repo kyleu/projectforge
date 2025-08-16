@@ -3,7 +3,9 @@
 
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -15,7 +17,65 @@
 {% func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`desktop`, ps) %} Memory Usage</h3>
-    <em>Better formatting is coming soon</em>
-    {%s= components.JSON(p.Mem) %}
+    <table class="mt min-200 expanded">
+      <tbody>
+        <tr>
+          <th class="shrink">Total Allocations</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.TotalAlloc))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">System Memory</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.Sys))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Allocated</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.HeapAlloc))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap System</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.HeapSys))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Idle</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.HeapIdle))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap In Use</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.HeapInuse))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Released</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.HeapReleased))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Heap Objects</th>
+          <td>{%= view.Int(p.Mem.HeapObjects) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Stack In Use</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.StackInuse))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Stack System</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.StackSys))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">GC Count</th>
+          <td>{%= view.Int(p.Mem.NumGC) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">GC CPU Percentage</th>
+          <td>{%= view.Percent(p.Mem.GCCPUFraction*100) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Next GC Target Heap Size</th>
+          <td>{%= view.String(util.ByteSizeSI(int64(p.Mem.NextGC))) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink">Last GC (ns)</th>
+          <td>{%= view.Int(p.Mem.LastGC) %}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 {% endfunc %}

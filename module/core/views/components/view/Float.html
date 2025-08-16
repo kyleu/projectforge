@@ -7,3 +7,7 @@
 {% func FloatArray(value []any) %}{% stripspace %}
   {%= StringArray(util.ArrayToStringArray(value)) %}
 {% endstripspace %}{% endfunc %}
+
+{% func Percent(f float64) %}{% stripspace %}
+  {%s util.Percent(f) %}
+{% endstripspace %}{% endfunc %}
