@@ -78,7 +78,7 @@ The Android build process follows these steps:
 ## Requirements
 
 ### Development Dependencies
-- **Go 1.24+** with gomobile support
+- **Go 1.25+** with gomobile support
 - **Android SDK** with API level 21+
 - **Gradle** build system
 - **Java Development Kit (JDK) 8+**

@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const golangVersion = "v1.24.4"
+const golangVersion = "v1.25.0"
 
 var Golang = &doctor.Check{
 	Key:     "golang",

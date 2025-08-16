@@ -79,7 +79,7 @@ When the `sandbox` module is enabled, a complete testbed environment is created 
 ## Configuration
 
 The module works with standard Project Forge configuration and requires:
-- Go 1.24+ with WebAssembly support
+- Go 1.25+ with WebAssembly support
 - Modern web browser with WASM support
 - `sandbox` module (optional, for testbed environment)
 
