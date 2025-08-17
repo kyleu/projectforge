@@ -1,0 +1,21 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type CSSPlayground struct {
+  layout.Basic
+} %}
+
+{% func (p *CSSPlayground) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`theme`, ps) %} CSS Playground</h3>
+    <div class="mt">
+      <div class="css-test">
+        This space intentionally left blank.
+      </div>
+    </div>
+  </div>
+{% endfunc %}

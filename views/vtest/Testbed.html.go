@@ -51,7 +51,7 @@ func (p *Testbed) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.E().S(util.AppName)
 //line views/vtest/Testbed.html:21
 	qw422016.N().S(` Testbed</h3>
-    <form action="" method="post">
+    <form action="" method="get">
       <div class="overflow full-width">
         <table class="mt expanded min-200">
           <tbody>
