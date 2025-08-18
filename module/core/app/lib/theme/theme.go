@@ -14,6 +14,7 @@ import (
 
 type Theme struct {
 	Key   string  `json:"-"`
+	Base  string  `json:"base"`
 	Light *Colors `json:"light"`
 	Dark  *Colors `json:"dark"`
 	css   string
@@ -37,11 +38,11 @@ func (t *Theme) CSS(indent int) string {
 }
 
 func (t *Theme) Clone(key string) *Theme {
-	return &Theme{Key: key, Light: t.Light.Clone(), Dark: t.Dark.Clone()}
+	return &Theme{Key: key, Base: t.Base, Light: t.Light.Clone(), Dark: t.Dark.Clone()}
 }
 
 func (t *Theme) Equals(x *Theme) bool {
-	return t.Light.Equals(x.Light) && t.Dark.Equals(x.Dark)
+	return t.Base == x.Base && t.Light.Equals(x.Light) && t.Dark.Equals(x.Dark)
 }
 
 func (t *Theme) Matches(x *Theme) bool {
@@ -65,6 +66,7 @@ func (t *Theme) ToGo() string {
 	}
 	add(0, "&Theme{")
 	add(1, "Key: %q,", t.Key)
+	add(1, "BaseColor: %q,", t.Base)
 	add(1, "Light: &Colors{")
 	addColors(t.Light)
 	add(1, "},")

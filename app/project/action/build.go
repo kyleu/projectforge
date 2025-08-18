@@ -74,17 +74,18 @@ var (
 	buildTemplates     = simpleBuild("templates", "Templates", util.StringFilePath("bin", "templates."+build.ScriptExtension), false)
 	buildClientInstall = &Build{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: onClientInstall}
 	buildClientBuild   = simpleBuild("clientBuild", "Client Build", util.StringFilePath("bin", "build", "client."+build.ScriptExtension), false)
+	buildThemeRebuild  = &Build{Key: "themeRebuild", Title: "Theme Rebuild", Description: "Rebuilds the theme", Run: onThemeRebuild}
 	buildDeployments   = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
+	buildCoverage      = &Build{Key: "coverage", Title: "Code Coverage", Description: "Runs unit tests, displaying a coverage report", Run: onCoverage, Expensive: true}
 	buildTest          = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 		return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
 	}, Expensive: true}
-	buildCoverage = &Build{Key: "coverage", Title: "Code Coverage", Description: "Runs unit tests, displaying a coverage report", Run: onCoverage, Expensive: true}
 )
 
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
 	buildTidy, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild,
-	buildDeployments, buildTest, buildCoverage,
+	buildThemeRebuild, buildDeployments, buildTest, buildCoverage,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

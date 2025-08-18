@@ -83,7 +83,7 @@ func ThemeSave(w http.ResponseWriter, r *http.Request) {
 		l := orig.Light.Clone().ApplyMap(frm, "light-")
 		d := orig.Dark.Clone().ApplyMap(frm, "dark-")
 
-		t := &theme.Theme{Key: newKey, Light: l, Dark: d}
+		t := &theme.Theme{Key: newKey, Base: orig.Base, Light: l, Dark: d}
 
 		err = as.Themes.Save(t, frm.GetStringOpt("originalKey"), ps.Logger)
 		if err != nil {

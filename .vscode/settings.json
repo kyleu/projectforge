@@ -3,9 +3,9 @@
     "module/": true
   },
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#72a0c1",
+    "titleBar.activeBackground": "#83a2b9",
     "titleBar.activeForeground": "#000000",
-    "titleBar.inactiveBackground": "#acc5da",
+    "titleBar.inactiveBackground": "#cdd9e3",
     "titleBar.inactiveForeground": "#000000aa"
   }
 }

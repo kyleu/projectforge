@@ -98,5 +98,5 @@ func ApplyMap(frm util.ValueMap) *Theme {
 	l := orig.Light.Clone().ApplyMap(frm, "light-")
 	d := orig.Dark.Clone().ApplyMap(frm, "dark-")
 
-	return &Theme{Light: l, Dark: d}
+	return &Theme{Base: orig.Base, Light: l, Dark: d}
 }

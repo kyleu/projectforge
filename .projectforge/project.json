@@ -63,6 +63,47 @@
       "views/vsite/Index.html"
     ]
   },
+  "theme": {
+    "base": "#72a0c1",
+    "light": {
+      "brd": "1px solid #dddddd",
+      "ld": "none",
+      "fg": "#000000",
+      "fgm": "#263642",
+      "bg": "#ffffff",
+      "bgm": "#e6ecf1",
+      "lf": "#0c202e",
+      "lvf": "#0c202e",
+      "nf": "#2a2a2a",
+      "nb": "#83a2b9",
+      "mf": "#000000",
+      "msf": "#000000",
+      "mb": "#cdd9e3",
+      "msb": "#9cb4c7",
+      "mbd": "rgba(77, 77, 77, .7)",
+      "ok": "#008000",
+      "err": "#ff0000"
+    },
+    "dark": {
+      "brd": "1px solid #666666",
+      "ld": "none",
+      "fg": "#dddddd",
+      "fgm": "#93a1af",
+      "bg": "#121212",
+      "bgm": "#0d1a24",
+      "lf": "#cdd9e3",
+      "lvf": "#83a2b9",
+      "nf": "#f8f9fa",
+      "nb": "#0a2638",
+      "mf": "#eeeeee",
+      "msf": "#dddddd",
+      "mb": "#0c202e",
+      "msb": "#50677d",
+      "mbd": "rgba(33, 33, 33, .7)",
+      "ok": "#008000",
+      "err": "#ff0000"
+    }
+  },
   "build": {
     "changelog": true,
     "desktop": true,

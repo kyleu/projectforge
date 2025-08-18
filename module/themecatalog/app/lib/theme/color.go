@@ -8,44 +8,71 @@ import (
 
 func ColorTheme(name string, c color.Color) *Theme {
 	light, dark := themeColors(c)
-	return &Theme{Key: name, Light: light, Dark: dark}
+	return &Theme{Key: name, Base: hex(c), Light: light, Dark: dark}
 }
 
 func themeColors(c color.Color) (*Colors, *Colors) {
-	light, dark := c, c
-
 	r, g, b, _ := c.RGBA()
-	if total := r + g + b; total < threshold {
-		light = gamut.Lighter(c, 0.4)
+	isLightColor := (r + g + b) > threshold
+
+	var primary, primaryDark color.Color
+	if isLightColor {
+		primary = gamut.Darker(c, 0.2)
+		primaryDark = gamut.Darker(c, 0.7)
 	} else {
-		dark = gamut.Darker(c, 0.6)
+		primary = gamut.Lighter(c, 0.3)
+		primaryDark = c
 	}
 
-	lightTints := gamut.Tints(light, 4)
-	lightShades := gamut.Shades(light, 4)
+	primaryTints := gamut.Tints(primary, 6)
+	primaryShades := gamut.Shades(primary, 6)
+	// complement := gamut.Complementary(primary)
+	// complementShades := gamut.Shades(complement, 4)
 
-	darkTints := gamut.Tints(dark, 4)
-	darkShades := gamut.Shades(dark, 4)
+	darkTints := gamut.Tints(primaryDark, 6)
+	darkShades := gamut.Shades(primaryDark, 6)
+	// darkComplement := gamut.Complementary(primaryDark)
+	// darkComplementTints := gamut.Tints(darkComplement, 4)
 
 	x := Default.Clone("")
+	x.Base = hex(c)
 
 	l := x.Light
-	l.NavBackground = hex(light)
-	l.MenuBackground = hex(lightTints[1])
-	l.MenuSelectedBackground = hex(light)
-	l.LinkForeground = hex(lightShades[1])
-	l.LinkVisitedForeground = hex(lightShades[2])
-	l.BackgroundMuted = hex(lightTints[3])
-	// l.ForegroundMuted = hex(lightShades[3])
+	l.NavBackground = hex(primaryTints[1])
+	l.MenuBackground = hex(primaryTints[4])
+	l.MenuSelectedBackground = hex(primaryTints[2])
+	l.LinkForeground = hex(darkShades[2])
+	l.LinkVisitedForeground = hex(darkShades[2])
+	l.BackgroundMuted = hex(primaryTints[5])
+	// d.ForegroundMuted = hex(primaryTints[3])
+	// l.Border = "1px solid " + hex(primaryTints[2])
+
+	if isLightColor {
+		l.NavForeground = "#2a2a2a"
+		l.ForegroundMuted = hex(primaryShades[3])
+	} else {
+		l.NavForeground = "#f8f9fa"
+		l.ForegroundMuted = hex(primaryShades[1])
+	}
 
 	d := x.Dark
-	d.NavBackground = hex(dark)
-	d.MenuBackground = hex(darkShades[1])
-	d.MenuSelectedBackground = hex(dark)
-	d.LinkForeground = hex(darkTints[1])
-	d.LinkVisitedForeground = hex(darkTints[2])
-	d.BackgroundMuted = hex(darkShades[1])
+	d.NavBackground = hex(darkShades[1])
+	d.MenuBackground = hex(darkShades[2])
+	d.MenuSelectedBackground = hex(darkTints[1])
+
+	// d.LinkForeground = hex(primaryShades[0])
+	// d.LinkForeground = "#dddddd"
+	d.LinkForeground = hex(primaryTints[4])
+	// d.LinkVisitedForeground = hex(primaryShades[1])
+	// d.LinkVisitedForeground = "#aaaaaa"
+	d.LinkVisitedForeground = hex(primaryTints[1])
+
+	d.BackgroundMuted = hex(darkShades[3])
 	// d.ForegroundMuted = hex(darkTints[3])
+	// d.Border = "1px solid " + hex(darkTints[1])
+
+	d.NavForeground = "#f8f9fa"
+	d.ForegroundMuted = hex(darkTints[3])
 
 	return l, d
 }

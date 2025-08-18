@@ -164,3 +164,14 @@ func onCoverage(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	r.Data = ret
 	return r
 }
+
+func onThemeRebuild(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	t := util.TimerStart()
+	ret, err := build.ThemeRebuild(ctx, pm.Prj, pm.PSvc, pm.Logger)
+	r.Data = ret
+	r.Modules = append(r.Modules, &module.Result{Keys: []string{"theme"}, Status: util.OK, Duration: t.End()})
+	if err != nil {
+		return r.WithError(err)
+	}
+	return r
+}
