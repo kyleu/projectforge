@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ThemeRebuild(ctx context.Context, prj *project.Project, pSvc *project.Service, logger util.Logger) (any, error) {
+func ThemeRebuild(ctx context.Context, prj *project.Project, pSvc *project.Service, logger util.Logger) (*theme.Theme, error) {
 	color := prj.Theme.Base
 	if color == "" {
 		color = prj.Theme.Light.NavBackground

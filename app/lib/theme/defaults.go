@@ -27,7 +27,7 @@ var Default = func() *Theme {
 	return &Theme{
 		Key: "default",
 		Light: &Colors{
-			Border: "1px solid #dddddd", LinkDecoration: "none",
+			Border: "1px solid #cccccc", LinkDecoration: "none",
 			Foreground: "#000000", ForegroundMuted: "#263642",
 			Background: "#ffffff", BackgroundMuted: "#e6ecf1",
 			LinkForeground: "#0c202e", LinkVisitedForeground: "#0c202e",
@@ -37,7 +37,7 @@ var Default = func() *Theme {
 			ModalBackdrop: "rgba(77, 77, 77, .7)", Success: "#008000", Error: "#ff0000",
 		},
 		Dark: &Colors{
-			Border: "1px solid #666666", LinkDecoration: "none",
+			Border: "1px solid #444444", LinkDecoration: "none",
 			Foreground: "#dddddd", ForegroundMuted: "#93a1af",
 			Background: "#121212", BackgroundMuted: "#0d1a24",
 			LinkForeground: "#cdd9e3", LinkVisitedForeground: "#83a2b9",

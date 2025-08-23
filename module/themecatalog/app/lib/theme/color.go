@@ -46,6 +46,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	l.BackgroundMuted = hex(primaryTints[5])
 	// d.ForegroundMuted = hex(primaryTints[3])
 	// l.Border = "1px solid " + hex(primaryTints[2])
+	l.Border = "1px solid #cccccc"
 
 	if isLightColor {
 		l.NavForeground = "#2a2a2a"
@@ -70,6 +71,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	d.BackgroundMuted = hex(darkShades[3])
 	// d.ForegroundMuted = hex(darkTints[3])
 	// d.Border = "1px solid " + hex(darkTints[1])
+	d.Border = "1px solid #444444"
 
 	d.NavForeground = "#f8f9fa"
 	d.ForegroundMuted = hex(darkTints[3])
