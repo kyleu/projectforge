@@ -6,7 +6,6 @@
     "alwaysStrict": true,
     "declaration": true,
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
     "jsx": "react",
     "jsxFactory": "JSX",
     "listFiles": false,

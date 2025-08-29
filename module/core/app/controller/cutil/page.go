@@ -19,6 +19,7 @@ import (
 	"{{{ .Package }}}/app/lib/user"{{{ if .HasUser }}}
 	dbuser "{{{ .Package }}}/app/user"{{{ end }}}
 	"{{{ .Package }}}/app/util"
+	"{{{ .Package }}}/assets"
 )
 
 const ({{{ if .HasModule "search" }}}
@@ -222,4 +223,12 @@ func (p *PageState) MainClasses() string {
 		ret = append(ret, "nomenu")
 	}
 	return util.StringJoin(ret, " ")
+}
+
+func (p *PageState) AddHeaderScript(path string, deferFlag bool) {
+	p.HeaderContent += "\n  " + assets.ScriptElement(path, deferFlag)
+}
+
+func (p *PageState) AddHeaderStylesheet(path string) {
+	p.HeaderContent += "\n  " + assets.StylesheetElement(path)
 }

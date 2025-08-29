@@ -36,8 +36,12 @@
       {%= IntTable(arg.Key, "", arg.TitleSafe(), values.GetIntOpt(arg.Key), 3, arg.Description) %}
     {%- case "float" -%}
       {%= FloatTable(arg.Key, "", arg.TitleSafe(), values.GetFloatOpt(arg.Key), 3, arg.Description) %}
+    {%- case "select" -%}
+      {%= SelectTable(arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description) %}
+    {%- case "radio" -%}
+      {%= RadioTable(arg.Key, arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description) %}
     {%- default -%}
-      {%= DatalistTable(arg.Key, "", arg.TitleSafe(), values.GetStringOpt(arg.Key), arg.Choices, nil, 3, arg.Description) %}
+      {%= DatalistTable(arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description) %}
     {%- endswitch -%}
   {%- endfor -%}
 {% endstripspace %}{% endfunc %}

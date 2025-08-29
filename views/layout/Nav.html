@@ -10,6 +10,7 @@
 ) %}
 
 {% func Nav(as *app.State, ps *cutil.PageState) %}{%- if !ps.HideHeader -%}
+
 <nav id="navbar">
   <a class="logo" href="{%s ps.RootPath %}" title="{%s util.AppName %} {%s as.BuildInfo.String() %}">{%= components.SVGSimple(ps.RootIcon, 32, ps) %}</a>
   <div class="breadcrumbs">

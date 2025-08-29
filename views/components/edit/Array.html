@@ -123,7 +123,7 @@
 {% func RadioTable(key string, title string, value string, opts []string, titles []string, indent int, help ...string) %}{% stripspace %}
   <tr>
     {%= components.Indent(true, indent + 1) %}
-    <th class="shrink"><label>{%= components.TitleFor(help) %}{% space %}{%s title %}</label></th>
+    <th class="shrink"><label {%= components.TitleFor(help) %}>{% space %}{%s title %}</label></th>
     {%= components.Indent(true, indent + 1) %}
     <td>
       {%= Radio(key, value, opts, titles, indent + 2) %}

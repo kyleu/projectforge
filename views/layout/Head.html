@@ -20,8 +20,10 @@
   <link rel="icon" href="{%s assets.URL(`logo.svg`) %}" type="image/svg+xml">
   <style>
     {%s= thm.CSS(2) %}  </style>{%- if ps.HideHeader && ps.HideMenu -%}{%= inlineResources() %}{%- else -%}
+
   {%s= assets.StylesheetElement(`client.css`) %}{% if !ps.NoScript %}
-  {%s= assets.ScriptElement(`client.js`, false) %}{% endif %}{%- endif -%}
+  {%s= assets.ScriptElement(`client.js`, false) %}{% endif %}
+{%- endif -%}
 {% endfunc %}
 
 {% func inlineResources() %}{% stripspace %}
@@ -38,4 +40,3 @@
   <style>{%s= string(csv.Bytes) %}</style>
   <script>{%s= string(js.Bytes) %}</script>
 {% endstripspace %}{% endfunc %}
-

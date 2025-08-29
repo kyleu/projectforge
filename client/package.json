@@ -2,6 +2,13 @@
   "name": "client",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "jest"
+  },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@types/eslint__js": "^9.14.0",
@@ -17,12 +24,5 @@
     "ts-jest": "^29.4.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0"
-  },
-  "scripts": {
-    "build": "node build.js",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint .",
-    "test": "jest"
   }
 }
