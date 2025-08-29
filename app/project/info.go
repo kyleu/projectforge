@@ -54,6 +54,7 @@ type Info struct {
 	Deployments     []string          `json:"deployments,omitempty"`
 	EnvVars         []string          `json:"envVars,omitempty"`
 	DockerPackages  []string          `json:"dockerPackages,omitempty"`
+	Dependencies    map[string]string `json:"dependencies,omitempty"`
 	Docs            Docs              `json:"docs,omitempty"`
 	Acronyms        []string          `json:"acronyms,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`

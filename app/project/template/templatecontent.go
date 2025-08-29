@@ -87,18 +87,39 @@ func (t *Context) TypeScriptProjectContent() string {
 		return strings.HasPrefix(x, "ts:")
 	}), func(x string, _ int) string {
 		x = strings.TrimPrefix(x, "ts:")
+		key := x
+		if idx := strings.LastIndex(x, "/"); idx != -1 {
+			key = x[idx+1:]
+		}
 		ss := util.NewStringSlice([]string{"", ""})
 		ss.Push("esbuild.build({")
-		ss.Pushf(`  entryPoints: ["src/%s/%s.ts"],`, x, x)
+		ss.Pushf(`  entryPoints: ["src/%s/%s.ts"],`, x, key)
 		ss.Push("  bundle: true,")
 		ss.Push("  minify: true,")
 		ss.Push("  sourcemap: true,")
-		ss.Pushf(`  outfile: "../assets/%s.js",`, x)
+		ss.Pushf(`  outfile: "../assets/%s.js",`, key)
 		ss.Push(`  logLevel: "info"`)
 		ss.Push("});")
 		return ss.Join("\n")
 	}), "\n")
 	return ret
+}
+
+func (t *Context) NPMDependencies() string {
+	if t.Info == nil || len(t.Info.Dependencies) == 0 {
+		return ""
+	}
+	ss := util.NewStringSlice([]string{"", `  "dependencies": {`})
+	keys := lo.Keys(t.Info.Dependencies)
+	lo.ForEach(lo.Filter(keys, func(x string, _ int) bool {
+		return strings.HasPrefix(x, "npm:")
+	}), func(x string, idx int) {
+		v := t.Info.Dependencies[x]
+		x = strings.TrimPrefix(x, "npm:")
+		ss.Pushf("    %q: %q%s", x, v, util.Choose(idx == len(keys)-1, "", ","))
+	})
+	ss.Push("  },")
+	return ss.Join("\n")
 }
 
 func (t *Context) HasModules(keys ...string) bool {
