@@ -99,25 +99,29 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 	if !slices.IsSorted(selfs) {
 		err = errors.New("this app's imports are not sorted")
 	}
-	return imps, makeResult(first, third, self), err
+	mr := makeResult(first, third, self)
+	if err == nil && len(orig) != len(mr) {
+		err = errors.Errorf("invalid whitespace; found [%d] lines, expected [%d]", len(orig), len(mr))
+	}
+	return imps, mr, err
 }
 
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {
 	ret := util.NewStringSlice(make([]string, 0, len(first)+len(third)+len(self)))
 	lo.ForEach(first.Keys(), func(k string, _ int) {
-		ret.Push(util.CastOK[string](first[k]))
+		ret.Push(first.GetStringOpt(k))
 	})
 	if len(first) > 0 && (len(third) > 0 || len(self) > 0) {
 		ret.Push("")
 	}
 	lo.ForEach(third.Keys(), func(k string, _ int) {
-		ret.Push(util.CastOK[string](third[k]))
+		ret.Push(third.GetStringOpt(k))
 	})
 	if len(third) > 0 && len(self) > 0 {
 		ret.Push("")
 	}
 	lo.ForEach(self.Keys(), func(k string, _ int) {
-		ret.Push(util.CastOK[string](self[k]))
+		ret.Push(self.GetStringOpt(k))
 	})
 	return ret.Slice
 }

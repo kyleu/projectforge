@@ -27,7 +27,7 @@ func (rv *Value[T]) Get() T {
 	return rv.value
 }
 
-func (rv *Value[T]) Set(value T) {
+func (rv *Value[T]) Set(value T) error {
 	rv.mu.Lock()
 	rv.value = value
 	observers := make([]*observer[T], len(rv.observers))
@@ -35,8 +35,11 @@ func (rv *Value[T]) Set(value T) {
 	rv.mu.Unlock()
 
 	for _, ob := range observers {
-		ob.fn(value)
+		if err := ob.fn(value); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func (rv *Value[T]) ObserverKeys() []string {

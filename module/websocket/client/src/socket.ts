@@ -1,6 +1,6 @@
 let appUnloading = false;
 
-export type Message = {
+export type SocketMessage = {
   readonly channel: string;
   readonly cmd: string;
   readonly param: { [key: string]: unknown };
@@ -27,12 +27,12 @@ function socketUrl(u?: string) {
 export class Socket {
   readonly debug: boolean;
   private readonly open: () => void;
-  private readonly recv: (m: Message) => void;
+  private readonly recv: (m: SocketMessage) => void;
   private readonly err: (svc: string, err: string) => void;
   readonly url?: string;
   connected: boolean;
   pauseSeconds: number;
-  pendingMessages: Message[];
+  pendingMessages: SocketMessage[];
   connectTime?: number;
   closed?: boolean;
   sock?: WebSocket;
@@ -40,7 +40,7 @@ export class Socket {
   constructor(
     debug: boolean,
     o: () => void,
-    r: (m: Message) => void,
+    r: (m: SocketMessage) => void,
     e: (svc: string, err: string) => void,
     url?: string
   ) {
@@ -73,7 +73,7 @@ export class Socket {
       s.open();
     };
     this.sock.onmessage = (event) => {
-      const msg = JSON.parse(event.data) as Message;
+      const msg = JSON.parse(event.data) as SocketMessage;
       if (s.debug) {
         console.debug("[socket]: receive", msg);
       }
@@ -117,7 +117,7 @@ export class Socket {
     }, 500);
   }
 
-  send(msg: Message) {
+  send(msg: SocketMessage) {
     if (this.debug) {
       console.debug("out", msg);
     }

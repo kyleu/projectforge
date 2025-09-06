@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Numeric } from "../numeric";
 import { toFixedEngineering } from "../utils";
 import { EngineeringNotation } from "./engineering";

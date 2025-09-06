@@ -1,23 +1,23 @@
-import "./client.css";{{{ if .HasModule "jsx" }}}
-import { JSX } from "./jsx";{{{ end }}}
-import { audit } from "./audit";
-import { menuInit } from "./menu";
-import { modeInit } from "./mode";
-import { flashInit } from "./flash";
-import { linkInit } from "./link";
-import { timeInit } from "./time";
-import { autocompleteInit } from "./autocomplete";
-import { modalInit } from "./modal";
-import { tagsInit } from "./tags";{{{ if .HasModule "richedit" }}}
-import { editorInit } from "./editor";{{{ end }}}
-import { formInit } from "./form";
-import { themeInit } from "./theme";{{{ if .HasModule "websocket" }}}
-import { Message, socketInit } from "./socket";{{{ end }}}{{{ if .HasModule "process" }}}
-import { socketLog } from "./socketlog";{{{ end }}}
+import "./client.css";
 import { appInit } from "./app";
+import { audit } from "./audit";
+import { autocompleteInit } from "./autocomplete";{{{ if .HasModule "richedit" }}}
+import { editorInit } from "./editor";{{{ end }}}
+import { flashInit } from "./flash";
+import { formInit } from "./form";{{{ if .HasModule "jsx" }}}
+import { JSX } from "./jsx";{{{ end }}}
+import { linkInit } from "./link";
+import { menuInit } from "./menu";
+import { modalInit } from "./modal";
+import { modeInit } from "./mode";{{{ if .HasModule "websocket" }}}
+import { SocketMessage, socketInit } from "./socket";{{{ if .HasModule "process" }}}
+import { socketLog } from "./socketlog";{{{ end }}}{{{ end }}}
+import { tagsInit } from "./tags";
+import { themeInit } from "./theme";
+import { timeInit } from "./time";
 
 declare global {
-  // eslint-disable-line @typescript-eslint/consistent-type-definitions
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Window {
     {{{ .CleanKey }}}: {
       wireTime: (el: HTMLElement) => void;
@@ -33,16 +33,17 @@ declare global {
       initForm: (frm: HTMLFormElement) => void;
       flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;{{{ if .HasModule "websocket" }}}
-      Socket: unknown;{{{ end }}}{{{ if .HasModule "process" }}}
+      Socket: unknown;{{{ if .HasModule "process" }}}
       socketLog: (
         debug: boolean,
         parentEl: HTMLElement,
         terminal: boolean,
         url: string,
-        extraHandlers: Array<(m: Message) => void>
-      ) => void;{{{ end }}}
+        extraHandlers: Array<(m: SocketMessage) => void>
+      ) => void;{{{ end }}}{{{ end }}}
     };
-    audit: (s: string, ...args: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any{{{ if .HasModule "jsx" }}}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    audit: (s: string, ...args: any) => void;{{{ if .HasModule "jsx" }}}
     JSX: (tag: string, attrs: unknown[]) => HTMLElement;{{{ end }}}
   }
 }

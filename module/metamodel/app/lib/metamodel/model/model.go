@@ -155,7 +155,7 @@ func (m *Model) AllSearches(db string) []string {
 					x = fmt.Sprintf("%q::text", c.SQL())
 				}
 			}
-			ret.Push(fmt.Sprintf("lower(%s)", x))
+			ret.Pushf("lower(%s)", x)
 		}
 	})
 	return ret.Slice

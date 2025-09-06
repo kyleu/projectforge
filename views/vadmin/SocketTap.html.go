@@ -62,8 +62,8 @@ func (p *SocketTap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
     function recv(m) {
       addMessage(m);
     }
-    function err(e) {
-      addMessage({"from": ":tap", "channel": ":tap", "cmd": "error", "param": e});
+    function err(svc, msg) {
+      addMessage({"from": ":tap", "channel": ":tap", "cmd": "error", "param": {svc: svc, msg: msg}});
     }
     function addMessage(m) {
       const t = document.getElementById("tap-logs");

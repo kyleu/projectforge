@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 import { Numeric } from "./numeric";
 import { ScientificNotation } from "./formatter/scientific";
 import { EngineeringNotation } from "./formatter/engineering";

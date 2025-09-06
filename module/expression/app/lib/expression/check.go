@@ -1,7 +1,6 @@
 package expression
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/google/cel-go/cel"
@@ -33,7 +32,7 @@ func (e *Engine) Check(as string, params map[string]any, logger util.Logger) (bo
 
 		err := ex.Compile(e)
 		if err != nil {
-			logger.Error(fmt.Sprintf("error compiling expression [%v]: %+v", as, err))
+			logger.Errorf("error compiling expression [%v]: %+v", as, err)
 			return false, err
 		}
 		expressionMU.Lock()
@@ -43,7 +42,7 @@ func (e *Engine) Check(as string, params map[string]any, logger util.Logger) (bo
 
 	rsp, _, err := ex.Run(params)
 	if err != nil {
-		logger.Debug(fmt.Sprintf("error running expression [%v]: %v", as, err.Error()))
+		logger.Debugf("error running expression [%v]: %v", as, err.Error())
 		return false, err
 	}
 	ret := CheckResult(rsp, logger)
@@ -59,7 +58,7 @@ func (e *Engine) Compile(as string, logger util.Logger) (*Expression, error) {
 
 		err := ex.Compile(e)
 		if err != nil {
-			logger.Error(fmt.Sprintf("error compiling expression [%v]: %+v", as, err))
+			logger.Errorf("error compiling expression [%v]: %+v", as, err)
 			return nil, err
 		}
 		expressionMU.Lock()

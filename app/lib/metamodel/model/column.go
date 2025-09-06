@@ -122,6 +122,9 @@ func (c *Column) Plural() string {
 }
 
 func (c *Column) ProperPlural() string {
+	if len(c.Name) == 1 {
+		return c.Proper() + tSet
+	}
 	return util.StringToPlural(c.Proper())
 }
 

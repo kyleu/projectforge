@@ -1,4 +1,4 @@
-import { Message, Socket } from "./socket";
+import { Socket, SocketMessage } from "./socket";
 import { req } from "./dom";
 
 export function socketLog(
@@ -6,7 +6,7 @@ export function socketLog(
   parentEl: HTMLElement,
   terminal: boolean,
   url: string,
-  extraHandlers: Array<(m: Message) => void>
+  extraHandlers: Array<(m: SocketMessage) => void>
 ) {
   const o = () => {
     if (debug) {
@@ -30,7 +30,7 @@ export function socketLog(
   };
 
   let currRow: HTMLElement | null = null;
-  const r = (m: Message) => {
+  const r = (m: SocketMessage) => {
     if (m.cmd !== "output") {
       if (extraHandlers.length === 0) {
         console.log("unknown command [" + m.cmd + "] received");

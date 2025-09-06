@@ -2,6 +2,7 @@ package module
 
 import (
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/file/diff"
 )
 

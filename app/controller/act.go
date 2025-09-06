@@ -75,7 +75,11 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, w *cutil.WriteC
 	defer ps.Close()
 	w.Header().Set("Server-Timing", fmt.Sprintf("server:dur=%.3f", elapsedMillis))
 	logger = logger.With("elapsed", elapsedMillis)
-	logger.Debugf("processed request in [%.3fms] (render: %.3fms, response: %s)", elapsedMillis, ps.RenderElapsed, util.ByteSizeSI(ps.ResponseBytes))
+	if ps.Transport == "ws" {
+		logger.Debugf("closed websocket request after [%.3fms]", elapsedMillis)
+	} else {
+		logger.Debugf("processed request in [%.3fms] (render: %.3fms, response: %s)", elapsedMillis, ps.RenderElapsed, util.ByteSizeSI(ps.ResponseBytes))
+	}
 }
 
 func safeRun(f func(as *app.State, ps *cutil.PageState) (string, error), as *app.State, ps *cutil.PageState) (s string, e error) {

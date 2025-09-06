@@ -59,6 +59,7 @@ npm run lint
 The client build is integrated with the main Go development workflow:
 
 To build the client application, watching for changes, run:
+
 ```bash
 ./bin/build/client-watch.sh
 ```
@@ -68,11 +69,13 @@ If the main Golang application was started with `./bin/dev.sh`, the server will 
 ## Code Quality
 
 ### Formatting & Linting
+
 - **Prettier**: Consistent code formatting
 - **ESLint**: TypeScript-specific linting rules
 - **TypeScript**: Strict type checking with comprehensive compiler options
 
 ### Configuration Files
+
 - `.prettierrc`: Code formatting rules
 - `eslint.config.js`: Linting configuration
 - `tsconfig.json`: TypeScript compiler settings
@@ -80,6 +83,7 @@ If the main Golang application was started with `./bin/dev.sh`, the server will 
 ## Integration with Go Application
 
 The TypeScript code builds to `../assets/client.js`, which is:
+
 - Embedded in the Go binary
 - Served at `/assets/client.js`
 - Included in HTML templates

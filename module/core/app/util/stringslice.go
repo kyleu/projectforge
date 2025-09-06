@@ -17,6 +17,14 @@ func (s *StringSlice) Empty() bool {
 	return len(s.Slice) == 0
 }
 
+func (s *StringSlice) TotalLength() int {
+	var total int
+	for _, str := range s.Slice {
+		total += len(str)
+	}
+	return total
+}
+
 func (s *StringSlice) Push(strs ...string) {
 	s.Slice = append(s.Slice, strs...)
 }

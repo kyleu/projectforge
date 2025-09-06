@@ -15,9 +15,9 @@ func NewComputed[T any](key string, computeFn func() T) *Computed[T] {
 	return computed
 }
 
-func (cv *Computed[T]) Recompute() {
+func (cv *Computed[T]) Recompute() error {
 	newValue := cv.computeFn()
-	cv.Set(newValue)
+	return cv.Set(newValue)
 }
 
 type ComputedSet[T any] []*Computed[T]

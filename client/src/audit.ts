@@ -15,7 +15,7 @@ function renderAudit(msg: string, ...codes: unknown[]) {
   return li;
 }
 
-// eslint-disable-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function audit(msg: string, ...codes: any) {
   const el = opt("#audit-log");
   if (el) {

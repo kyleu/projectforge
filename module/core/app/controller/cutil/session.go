@@ -59,7 +59,7 @@ func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, 
 
 	return &PageState{
 		Action: key, Method: r.Method, URI: r.URL, Flashes: flashes, Session: session,
-		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
+		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform, Transport: r.URL.Scheme,
 		{{{ if .HasUser }}}User: u, {{{ end }}}Profile: prof, {{{ if .HasAccount }}}Accounts: accts, Authed: isAuthed, Admin: isAdmin, {{{ end }}}Params: params,
 		Icons: util.ArrayCopy(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b, W: w,
 	}

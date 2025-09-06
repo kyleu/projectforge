@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"sync"
 
@@ -75,7 +74,7 @@ func (s *Service) Upgrade(
 	}
 	joined, err := s.Join(cx.ID, channel, logger)
 	if err != nil {
-		logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
+		logger.Errorf("error processing socket join (%v): %+v", joined, err)
 		return uuid.Nil, nil
 	}
 	return cx.ID, nil

@@ -83,15 +83,20 @@ func (t *Context) IgnoredQuoted() string {
 }
 
 func (t *Context) TypeScriptProjectContent() string {
-	ret := util.StringJoin(lo.Map(lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
+	tsDeps := lo.Filter(t.Info.Deployments, func(x string, _ int) bool {
 		return strings.HasPrefix(x, "ts:")
-	}), func(x string, _ int) string {
+	})
+	if len(tsDeps) == 0 {
+		return ""
+	}
+	convert := func(x string, _ int) string {
 		x = strings.TrimPrefix(x, "ts:")
 		key := x
 		if idx := strings.LastIndex(x, "/"); idx != -1 {
 			key = x[idx+1:]
 		}
-		ss := util.NewStringSlice([]string{"", ""})
+		ss := &util.StringSlice{}
+		ss.Push("")
 		ss.Push("esbuild.build({")
 		ss.Pushf(`  entryPoints: ["src/%s/%s.ts"],`, x, key)
 		ss.Push("  bundle: true,")
@@ -101,8 +106,8 @@ func (t *Context) TypeScriptProjectContent() string {
 		ss.Push(`  logLevel: "info"`)
 		ss.Push("});")
 		return ss.Join("\n")
-	}), "\n")
-	return ret
+	}
+	return "\n" + util.StringJoin(lo.Map(tsDeps, convert), "\n")
 }
 
 func (t *Context) NPMDependencies() string {

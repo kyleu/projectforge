@@ -1,7 +1,7 @@
 import { setHTML } from "./dom";
 
 declare global {
-  // eslint-disable-line @typescript-eslint/no-namespace, no-shadow
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type IntrinsicElements = {
       [elemName: string]: unknown;
@@ -10,7 +10,7 @@ declare global {
 }
 
 // noinspection JSUnusedGlobalSymbols
-// eslint-disable-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function JSX(tag: string, attrs: any[], ...args: Node[]) {
   const e = document.createElement(tag);
   for (let name in attrs) {
@@ -20,11 +20,11 @@ export function JSX(tag: string, attrs: any[], ...args: Node[]) {
     if (name === "className") {
       name = "class";
     }
-    // eslint-disable-line no-prototype-builtins
+    // eslint-disable-next-line no-prototype-builtins
     if (name && attrs.hasOwnProperty(name)) {
       const v = attrs[name];
       if (name === "dangerouslySetInnerHTML") {
-        // eslint-disable-line no-underscore-dangle
+        // eslint-disable-next-line no-underscore-dangle
         setHTML(e, v.__html);
       } else if (v === true) {
         e.setAttribute(name, name);

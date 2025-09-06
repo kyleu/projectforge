@@ -13,14 +13,14 @@ import (
 const (
 	localhost = "localhost"
 
-	cfgHost     = "db_host"
+	{{{ if not .SQLiteOnly }}}cfgHost     = "db_host"
 	cfgPort     = "db_port"
-	cfgUser     = "db_user"
-	cfgPassword = "db_password"
-	cfgDatabase = "db_database"
-	cfgSchema   = "db_schema"
-	cfgFile     = "db_file"
-	cfgMaxConns = "db_max_connections"
+	{{{ end }}}cfgUser     = "db_user"
+	cfgPassword = "db_password"{{{ if not .SQLiteOnly }}}
+	cfgDatabase = "db_database"{{{ end }}}
+	cfgSchema   = "db_schema"{{{ if .HasModule "sqlite" }}}
+	cfgFile     = "db_file"{{{ end }}}{{{ if not .SQLiteOnly }}}
+	cfgMaxConns = "db_max_connections"{{{ end }}}
 	cfgDebug    = "db_debug"
 )
 

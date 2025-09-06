@@ -6,6 +6,8 @@ import (
 	"github.com/muesli/gamut"
 )
 
+const dfltNavFG = "#f8f9fa"
+
 func ColorTheme(name string, c color.Color) *Theme {
 	light, dark := themeColors(c)
 	return &Theme{Key: name, Base: hex(c), Light: light, Dark: dark}
@@ -52,7 +54,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 		l.NavForeground = "#2a2a2a"
 		l.ForegroundMuted = hex(primaryShades[3])
 	} else {
-		l.NavForeground = "#f8f9fa"
+		l.NavForeground = dfltNavFG
 		l.ForegroundMuted = hex(primaryShades[1])
 	}
 
@@ -73,7 +75,7 @@ func themeColors(c color.Color) (*Colors, *Colors) {
 	// d.Border = "1px solid " + hex(darkTints[1])
 	d.Border = "1px solid #444444"
 
-	d.NavForeground = "#f8f9fa"
+	d.NavForeground = dfltNavFG
 	d.ForegroundMuted = hex(darkTints[3])
 
 	return l, d

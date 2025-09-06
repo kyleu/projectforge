@@ -10,13 +10,13 @@ tell application "iTerm2"
     write text "cd " & quoted form of scriptDir
     write text "bin/dev.sh"
     split vertically with default profile
-		set columns of lwin to lwidth - 52
+		set columns of lwin to lwidth - 37
 	end tell
 	set rwin to second session of current tab of current window
 	tell rwin
     write text "cd " & quoted form of (scriptDir & "/client")
     write text "clear"
     write text "../bin/build/client-watch.sh"
-    set columns of rwin to 51
+    set columns of rwin to 36
 	end tell
 end tell

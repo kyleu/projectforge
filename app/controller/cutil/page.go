@@ -69,6 +69,7 @@ type PageState struct {
 	OS             string            `json:"os,omitempty"`
 	OSVersion      string            `json:"osVersion,omitempty"`
 	Platform       string            `json:"platform,omitempty"`
+	Transport      string            `json:"transport,omitempty"`
 	Data           any               `json:"data,omitempty"`
 	Started        time.Time         `json:"started,omitempty"`
 	RenderElapsed  float64           `json:"renderElapsed,omitempty"`

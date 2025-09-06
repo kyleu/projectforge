@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"context"
-	"fmt"
 	"slices"
 	"strings"
 	"sync/atomic"
@@ -79,7 +78,7 @@ func (s *Service) WriteChannel(message *Message, logger util.Logger, except ...u
 }
 
 func (s *Service) Broadcast(message *Message, logger util.Logger, except ...uuid.UUID) error {
-	logger.Debug(fmt.Sprintf("broadcasting message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(s.connections)))
+	logger.Debugf("broadcasting message [%v::%v] to [%v] connections", message.Channel, message.Cmd, len(s.connections))
 	for id := range s.connections {
 		if !slices.Contains(except, id) {
 			closureID := id
@@ -118,10 +117,9 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 		if onDisconnect != nil {
 			err := onDisconnect()
 			if err != nil {
-				logger.Warn(fmt.Sprintf("error running onDisconnect for [%v]: %+v", connID, err))
+				logger.Warnf("error running onDisconnect for [%v]: %+v", connID, err)
 			}
 		}
-		logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
 	}()
 
 	for {

@@ -23,7 +23,7 @@ func RequestCtxToMap(r *http.Request, {{{ if .HasModule "help" }}}as{{{ else }}}
 	action := util.ValueMap{
 		"action": ps.Action, "admin": ps.Admin, "authed": ps.Authed,
 		"redirect": ps.ForceRedirect, "flashes": ps.Flashes, "breadcrumbs": ps.Breadcrumbs,
-		"browser": ps.Browser, "browserVersion": ps.BrowserVersion, "os": ps.OS, "osVersion": ps.OSVersion, "platform": ps.Platform,
+		"browser": ps.Browser, "browserVersion": ps.BrowserVersion, "os": ps.OS, "osVersion": ps.OSVersion, "platform": ps.Platform, "transport": ps.Transport,
 		"description": ps.Description, "title": ps.Title, "started": ps.Started,{{{ if .HasModule "help" }}} "help": hasHelp,{{{ end }}}
 	}
 	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req}

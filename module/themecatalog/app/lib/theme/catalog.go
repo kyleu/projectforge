@@ -1,6 +1,5 @@
 package theme
 
-//nolint:lll
 var CatalogThemes = Themes{
 	&Theme{
 		Key:  "Aquamarine",

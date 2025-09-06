@@ -1,8 +1,6 @@
 package expression
 
 import (
-	"fmt"
-
 	"github.com/google/cel-go/cel"
 	"github.com/pkg/errors"
 
@@ -52,7 +50,7 @@ func CheckResult(x any, logger util.Logger) bool {
 	case bool:
 		return t
 	default:
-		logger.Info(fmt.Sprintf("invalid result type [%T]", x))
+		logger.Infof("invalid result type [%T]", x)
 		return false
 	}
 }

@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"cmp"
-	"fmt"
 	"slices"
 
 	"github.com/google/uuid"
@@ -64,7 +63,7 @@ func (s *Service) GetByID(id uuid.UUID, logger util.Logger) *Status {
 	}
 	conn, ok := s.connections[id]
 	if !ok {
-		logger.Error(fmt.Sprintf("error getting connection by id [%v]", id))
+		logger.Errorf("error getting connection by id [%v]", id)
 		return nil
 	}
 	return conn.ToStatus()
