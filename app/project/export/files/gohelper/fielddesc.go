@@ -1,4 +1,4 @@
-package gomodel
+package gohelper
 
 import (
 	"strings"
@@ -7,10 +7,10 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func modelFieldDescs(m *model.Model) (*golang.Block, error) {
-	ret := golang.NewBlock(m.Proper(), "struct")
-	ret.WF("var %sFieldDescs = util.FieldDescs{", m.Proper())
-	for _, c := range m.Columns.NotDerived() {
+func BlockFieldDescs(cols model.Columns, str StringProvider) (*golang.Block, error) {
+	ret := golang.NewBlock(str.Proper(), "struct")
+	ret.WF("var %sFieldDescs = util.FieldDescs{", str.Proper())
+	for _, c := range cols.NotDerived() {
 		t := strings.TrimPrefix(c.Type.String(), "ref:")
 		if idx := strings.LastIndex(t, "/"); idx > -1 {
 			t = t[idx+1:]

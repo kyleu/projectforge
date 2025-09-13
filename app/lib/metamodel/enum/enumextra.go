@@ -1,6 +1,10 @@
 package enum
 
-import "github.com/samber/lo"
+import (
+	"slices"
+
+	"github.com/samber/lo"
+)
 
 func (e *Enum) SkipDatabase() bool {
 	return e.HasTag("no-database") || e.SkipGolang()
@@ -20,4 +24,8 @@ func (e Enums) WithTypeScript() Enums {
 	return lo.Filter(e, func(x *Enum, _ int) bool {
 		return x.HasTag("typescript")
 	})
+}
+
+func (e *Enum) GroupAndPackage() []string {
+	return append(slices.Clone(e.Group), e.Package)
 }

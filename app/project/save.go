@@ -64,13 +64,18 @@ func (s *Service) SaveExportArgs(fs filesystem.FileLoader, args *metamodel.Args)
 			return err
 		}
 	}
-	for _, m := range args.Models {
-		if err := s.SaveExportModel(fs, m); err != nil {
+	for _, e := range args.Enums {
+		if err := s.SaveExportEnum(fs, e); err != nil {
 			return err
 		}
 	}
-	for _, e := range args.Enums {
-		if err := s.SaveExportEnum(fs, e); err != nil {
+	for _, e := range args.Events {
+		if err := s.SaveExportEvent(fs, e); err != nil {
+			return err
+		}
+	}
+	for _, m := range args.Models {
+		if err := s.SaveExportModel(fs, m); err != nil {
 			return err
 		}
 	}
@@ -95,6 +100,43 @@ func (s *Service) SaveExportGroups(fs filesystem.FileLoader, g model.Groups) err
 	return nil
 }
 
+func (s *Service) SaveExportEnum(fs filesystem.FileLoader, e *enum.Enum) error {
+	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e.Name)
+	err := fs.WriteJSONFile(fn, e, filesystem.DefaultMode, true)
+	if err != nil {
+		return errors.Wrapf(err, "unable to write export enum file to [%s]", fn)
+	}
+	return nil
+}
+
+func (s *Service) DeleteExportEnum(fs filesystem.FileLoader, e string, logger util.Logger) error {
+	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e)
+	if err := fs.Remove(fn, logger); err != nil {
+		return errors.Wrapf(err, "unable to delete export enum file [%s]", fn)
+	}
+	return nil
+}
+
+func (s *Service) SaveExportEvent(fs filesystem.FileLoader, e *model.Event) error {
+	if e.HasTag("json") {
+		return nil
+	}
+	fn := fmt.Sprintf("%s/export/events/%s.json", ConfigDir, e.Name)
+	err := fs.WriteJSONFile(fn, e, filesystem.DefaultMode, true)
+	if err != nil {
+		return errors.Wrapf(err, "unable to write export event file to [%s]", fn)
+	}
+	return nil
+}
+
+func (s *Service) DeleteExportEvent(fs filesystem.FileLoader, e string, logger util.Logger) error {
+	fn := fmt.Sprintf("%s/export/events/%s.json", ConfigDir, e)
+	if err := fs.Remove(fn, logger); err != nil {
+		return errors.Wrapf(err, "unable to delete export event file [%s]", fn)
+	}
+	return nil
+}
+
 func (s *Service) SaveExportModel(fs filesystem.FileLoader, mdl *model.Model) error {
 	if mdl.HasTag("json") {
 		return nil
@@ -111,23 +153,6 @@ func (s *Service) DeleteExportModel(fs filesystem.FileLoader, mdl string, logger
 	fn := fmt.Sprintf("%s/export/models/%s.json", ConfigDir, mdl)
 	if err := fs.Remove(fn, logger); err != nil {
 		return errors.Wrapf(err, "unable to delete export model file [%s]", fn)
-	}
-	return nil
-}
-
-func (s *Service) SaveExportEnum(fs filesystem.FileLoader, e *enum.Enum) error {
-	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e.Name)
-	err := fs.WriteJSONFile(fn, e, filesystem.DefaultMode, true)
-	if err != nil {
-		return errors.Wrapf(err, "unable to write export enum file to [%s]", fn)
-	}
-	return nil
-}
-
-func (s *Service) DeleteExportEnum(fs filesystem.FileLoader, e string, logger util.Logger) error {
-	fn := fmt.Sprintf("%s/export/enums/%s.json", ConfigDir, e)
-	if err := fs.Remove(fn, logger); err != nil {
-		return errors.Wrapf(err, "unable to delete export enum file [%s]", fn)
 	}
 	return nil
 }

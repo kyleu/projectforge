@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 )
 
@@ -27,6 +28,14 @@ func (s *StringSlice) TotalLength() int {
 
 func (s *StringSlice) Push(strs ...string) {
 	s.Slice = append(s.Slice, strs...)
+}
+
+func (s *StringSlice) PushUnique(strs ...string) {
+	for _, x := range strs {
+		if !slices.Contains(s.Slice, x) {
+			s.Push(x)
+		}
+	}
 }
 
 func (s *StringSlice) Pushf(msg string, args ...any) {

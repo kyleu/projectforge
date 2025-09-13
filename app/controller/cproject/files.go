@@ -17,7 +17,7 @@ import (
 
 func FileRoot(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.file.root", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -29,7 +29,7 @@ func FileRoot(w http.ResponseWriter, r *http.Request) {
 
 func File(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.file", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -61,7 +61,7 @@ func File(w http.ResponseWriter, r *http.Request) {
 
 func FileStats(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.file.stats", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}

@@ -1,4 +1,4 @@
-package cproject
+package cexport
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/controller/cproject"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/project/export/files/goenum"
@@ -34,7 +35,7 @@ func ProjectExportEnumDetail(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportEnumNew(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.enum.new", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -48,7 +49,7 @@ func ProjectExportEnumNew(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportEnumCreate(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.enum.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

@@ -17,7 +17,10 @@ var (
 	ExampleIndexes = Indexes{
 		{Name: "example_idx", Decl: `"table_name" ("id", "created")`},
 	}
-	Examples = map[string]any{
+	ExampleEvent = map[string]any{
+		"columns": ExampleColumns,
+	}
+	ExampleModel = map[string]any{
 		"columns":   ExampleColumns,
 		"relations": ExampleRelations,
 		"indexes":   ExampleIndexes,

@@ -68,12 +68,11 @@ func basics(m *model.Model, args *metamodel.Args, goVersion string, linebreak st
 		return nil, errors.Wrap(err, "can't render model")
 	}
 	calls = append(calls, f, fd, fm)
-
-	f, err = gomodel.Models(m, args, goVersion, linebreak)
+	fa, err := gomodel.Models(m, args, goVersion, linebreak)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't render models")
 	}
-	calls = append(calls, f)
+	calls = append(calls, fa)
 
 	if !m.SkipDatabase() {
 		f, err = gomodel.Row(m, args, linebreak)

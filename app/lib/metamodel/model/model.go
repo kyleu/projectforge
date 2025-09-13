@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -79,6 +80,10 @@ func (m *Model) CanTraverseRelation() bool {
 	return len(m.PKs()) == 1
 }
 
+func (m *Model) PackageName() string {
+	return m.Package
+}
+
 func (m *Model) PackageWithGroup(prefix string) string {
 	if x := m.Config.GetStringOpt("pkg-" + prefix); x != "" {
 		return x
@@ -93,8 +98,16 @@ func (m *Model) PackageWithGroup(prefix string) string {
 	return util.StringJoin(x, "/")
 }
 
+func (m *Model) GroupAndPackage() []string {
+	return append(slices.Clone(m.Group), m.Package)
+}
+
 func (m *Model) ID() string {
 	return util.StringPath(m.PackageWithGroup(""), m.Name)
+}
+
+func (m *Model) GroupLen() int {
+	return len(m.Group)
 }
 
 func (m *Model) GroupString(prefix string, dflt string) string {

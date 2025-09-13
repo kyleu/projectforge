@@ -5,10 +5,8 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/export/files/controller"
-	"projectforge.dev/projectforge/app/project/export/files/goenum"
 	"projectforge.dev/projectforge/app/project/export/files/gql"
 	"projectforge.dev/projectforge/app/project/export/files/script"
 	"projectforge.dev/projectforge/app/project/export/files/sql"
@@ -24,20 +22,28 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	if err := args.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid export arguments")
 	}
-	ret := make(file.Files, 0, (len(args.Models)*10)+len(args.Enums))
+	ret := make(file.Files, 0, (len(args.Enums) + len(args.Events) + len(args.Models)*10))
 
-	enumRet, err := allEnum(p, linebreak, args.Enums, args.Database)
+	enumFiles, err := EnumAll(p, linebreak, args.Enums, args.Database)
 	if err != nil {
 		return nil, err
 	}
-	ret = append(ret, enumRet...)
+	ret = append(ret, enumFiles...)
 
 	for _, m := range args.Models {
-		calls, e := ModelAll(m, p, linebreak)
+		files, e := ModelAll(m, p, linebreak)
 		if e != nil {
 			return nil, errors.Wrapf(e, "error processing model [%s]", m.Name)
 		}
-		ret = append(ret, calls...)
+		ret = append(ret, files...)
+	}
+
+	for _, evt := range args.Events {
+		files, e := EventAll(p, args.Events, linebreak)
+		if e != nil {
+			return nil, errors.Wrapf(e, "error processing event [%s]", evt.Name)
+		}
+		ret = append(ret, files...)
 	}
 
 	x, err := svc.Services(args, linebreak)
@@ -58,32 +64,12 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	}
 	ret = append(ret, x)
 
-	extraRet, err := extraFiles(p, linebreak, args)
+	extraFiles, err := extraFiles(p, linebreak, args)
 	if err != nil {
 		return nil, err
 	}
-	ret = append(ret, extraRet...)
+	ret = append(ret, extraFiles...)
 
-	return ret, nil
-}
-
-func allEnum(p *project.Project, linebreak string, enums enum.Enums, database string) (file.Files, error) {
-	var ret file.Files
-	for _, e := range enums {
-		call, err := goenum.Enum(e, linebreak)
-		if err != nil {
-			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
-		}
-		ret = append(ret, call)
-	}
-
-	if len(enums.WithDatabase()) > 0 && p.HasModule("migration") {
-		f, err := sql.Types(enums.WithDatabase(), linebreak, database)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render SQL types")
-		}
-		ret = append(ret, f)
-	}
 	return ret, nil
 }
 
@@ -137,8 +123,8 @@ func extraFiles(p *project.Project, linebreak string, args *metamodel.Args) (fil
 		ret = append(ret, f)
 	}
 
-	if m, e := args.Models.WithTypeScript(), args.Enums.WithTypeScript(); len(m) > 0 || len(e) > 0 {
-		files, err := typescript.All(m, e, args.ExtraTypes, linebreak)
+	if en, evt, mdl := args.Enums.WithTypeScript(), args.Events, args.Models.WithTypeScript(); len(en) > 0 || len(evt) > 0 || len(mdl) > 0 {
+		files, err := typescript.All(args, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render TypeScript output")
 		}

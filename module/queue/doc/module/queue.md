@@ -79,7 +79,7 @@ This module provides a simple yet robust message queue built on SQLite, offering
 ### Basic Message Sending
 
 ```go
-import "projectforge.dev/projectforge/app/lib/queue"
+import "{{{ .Package }}}/app/lib/queue"
 
 // Create a new queue instance
 q := queue.New(db, logger)

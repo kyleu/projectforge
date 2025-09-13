@@ -88,16 +88,22 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 }
 
 func exportCheck(pm *PrjAndMods, ret *Result) {
-	lo.ForEach(pm.Prj.ExportArgs.Models, func(m *model.Model, _ int) {
-		names := m.Columns.Names()
-		if uniq := lo.Uniq(names); len(uniq) != len(names) {
-			ret.Errors = append(ret.Errors, fmt.Sprintf("model [%s] contains duplicate column names", m.Name))
-		}
-	})
 	lo.ForEach(pm.Prj.ExportArgs.Enums, func(e *enum.Enum, _ int) {
 		keys := e.Values.Keys()
 		if uniq := lo.Uniq(keys); len(uniq) != len(keys) {
 			ret.Errors = append(ret.Errors, fmt.Sprintf("enum [%s] contains duplicate keys", e.Name))
+		}
+	})
+	lo.ForEach(pm.Prj.ExportArgs.Events, func(e *model.Event, _ int) {
+		names := e.Columns.Names()
+		if uniq := lo.Uniq(names); len(uniq) != len(names) {
+			ret.Errors = append(ret.Errors, fmt.Sprintf("event [%s] contains duplicate column names", e.Name))
+		}
+	})
+	lo.ForEach(pm.Prj.ExportArgs.Models, func(m *model.Model, _ int) {
+		names := m.Columns.Names()
+		if uniq := lo.Uniq(names); len(uniq) != len(names) {
+			ret.Errors = append(ret.Errors, fmt.Sprintf("model [%s] contains duplicate column names", m.Name))
 		}
 	})
 }

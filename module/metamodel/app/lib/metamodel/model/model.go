@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -91,6 +92,10 @@ func (m *Model) PackageWithGroup(prefix string) string {
 	})
 	x = append(x, prefix+m.Package)
 	return util.StringJoin(x, "/")
+}
+
+func (m *Model) GroupAndPackage() []string {
+	return append(slices.Clone(m.Group), m.Package)
 }
 
 func (m *Model) ID() string {

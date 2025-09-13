@@ -1,4 +1,4 @@
-package cproject
+package cexport
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/controller/cproject"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vexport"
@@ -13,7 +14,7 @@ import (
 
 func ProjectExportConfigForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.config.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProjectWithArgs(r, as, ps.Logger)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -29,7 +30,7 @@ func ProjectExportConfigSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		prj, err := getProjectWithArgs(r, as, ps.Logger)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

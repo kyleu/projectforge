@@ -12,7 +12,7 @@ import (
 
 func Migrations(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.migrations", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}

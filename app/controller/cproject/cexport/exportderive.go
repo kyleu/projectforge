@@ -1,4 +1,4 @@
-package cproject
+package cexport
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/controller/cproject"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/derive"
@@ -16,7 +17,7 @@ import (
 
 func ProjectExportDeriveForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.derive.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -29,7 +30,7 @@ func ProjectExportDeriveForm(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportDerive(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.derive", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

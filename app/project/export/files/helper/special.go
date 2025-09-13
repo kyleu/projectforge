@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -15,7 +16,8 @@ func SimpleJSON(database string) bool {
 	return database == util.DatabaseSQLite || database == util.DatabaseSQLServer
 }
 
-func SpecialImports(cols model.Columns, pkg string, models model.Models, enums enum.Enums, extraTypes model.Models) (model.Imports, error) {
+func SpecialImports(cols model.Columns, pkg string, args *metamodel.Args) (model.Imports, error) {
+	enums, models, extraTypes := args.Enums, args.Models, args.ExtraTypes
 	var ret model.Imports
 	for _, col := range cols {
 		switch col.Type.Key() {

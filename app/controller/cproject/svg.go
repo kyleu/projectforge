@@ -21,7 +21,7 @@ const appString, svgLink, svgPath = "app", "SVG||/svg/", "/svg/"
 
 func SVGList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("svg.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -61,7 +61,7 @@ func svgBC(prj *project.Project) string {
 
 func SVGBuild(w http.ResponseWriter, r *http.Request) {
 	controller.Act("svg.build", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -84,7 +84,7 @@ func SVGAddContent(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -116,7 +116,7 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 			return controller.ERsp("must provide [src]")
 		}
 		tgt := util.OrDefault(qa.Get("tgt"), strings.TrimSuffix(src, "-solid"))
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -170,7 +170,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 
 func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 	controller.Act("svg.refresh.app", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -212,7 +212,7 @@ func SVGRemove(w http.ResponseWriter, r *http.Request) {
 }
 
 func prjAndIcon(r *http.Request, as *app.State) (*project.Project, filesystem.FileLoader, string, error) {
-	prj, err := getProject(r, as)
+	prj, err := GetProject(r, as)
 	if err != nil {
 		return nil, nil, "", err
 	}

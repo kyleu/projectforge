@@ -1,4 +1,4 @@
-package cproject
+package cexport
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/controller/cproject"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/util"
@@ -14,7 +15,7 @@ import (
 
 func ProjectExportGroupsEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.groups.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProjectWithArgs(r, as, ps.Logger)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -28,7 +29,7 @@ func ProjectExportGroupsEdit(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportGroupsSave(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.groups.save", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

@@ -29,7 +29,7 @@ func ServiceGet(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 		g.AddImport(helper.ImpFmt)
 	}
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpErrors, helper.ImpSQLx, helper.ImpFilter, helper.ImpAppDatabase, helper.ImpLo)
-	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
+	imps, err := helper.SpecialImports(m.IndexedColumns(true), m.PackageWithGroup(""), args)
 	if err != nil {
 		return nil, err
 	}

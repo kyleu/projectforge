@@ -2,6 +2,7 @@ package load
 
 import (
 	"cmp"
+	"maps"
 	"slices"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -27,12 +28,19 @@ func ExportArgs(fs filesystem.FileLoader, cfgDir string, acronyms []string, logg
 		return nil, err
 	}
 
-	enumFiles, enums, err := Enums(exportPath, fs, logger)
+	enumFiles, enums, err := LoadEnums(exportPath, fs, logger)
 	if err != nil {
 		return nil, err
 	}
 	args.EnumFiles = enumFiles
 	args.Enums = enums
+
+	eventFiles, events, err := LoadEvents(exportPath, fs, logger)
+	if err != nil {
+		return nil, err
+	}
+	args.EventFiles = eventFiles
+	args.Events = events
 
 	explicitModelFiles, explicitModels, err := LoadModels(exportPath, fs, logger)
 	if err != nil {
@@ -45,9 +53,7 @@ func ExportArgs(fs filesystem.FileLoader, cfgDir string, acronyms []string, logg
 	if err != nil {
 		return nil, err
 	}
-	for k, v := range jsonModelFiles {
-		args.ModelFiles[k] = v
-	}
+	maps.Copy(args.ModelFiles, jsonModelFiles)
 	args.Models = append(args.Models, jsonModels...)
 	if len(args.Models) > 0 {
 		slices.SortFunc(args.Models, func(l *model.Model, r *model.Model) int {

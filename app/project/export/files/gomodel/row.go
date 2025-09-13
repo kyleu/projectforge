@@ -24,7 +24,7 @@ func Row(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, er
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpAppUtil, helper.ImpFmt)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args.Models, args.Enums, args.ExtraTypes)
+	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func Row(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, er
 		return nil, err
 	}
 	g.AddBlocks(mrow)
-	mrm, err := modelRowToModel(m, args.Models, args.Enums, args.ExtraTypes, args.Database)
+	mrm, err := modelRowToModel(m, args, args.Database)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func modelRow(m *model.Model, enums enum.Enums, database string) (*golang.Block,
 }
 
 //nolint:gocognit
-func modelRowToModel(m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, database string) (*golang.Block, error) {
+func modelRowToModel(m *model.Model, args *metamodel.Args, database string) (*golang.Block, error) {
 	ba := func(decoder string) string {
 		return "[]byte(" + decoder + ")"
 	}
@@ -161,7 +161,7 @@ func modelRowToModel(m *model.Model, models model.Models, enums enum.Enums, extr
 					decoder = ba(decoder)
 				}
 			case types.KeyEnum:
-				if e, _ := model.AsEnumInstance(c.Type.ListType(), enums); e != nil {
+				if e, _ := model.AsEnumInstance(c.Type.ListType(), args.Enums); e != nil {
 					t = e.ProperPlural()
 					if e.PackageWithGroup("") != m.PackageWithGroup("") {
 						t = e.Package + "." + t
@@ -184,7 +184,7 @@ func modelRowToModel(m *model.Model, models model.Models, enums enum.Enums, extr
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
-			ref, _, err := helper.LoadRef(c, models, extraTypes)
+			ref, _, err := helper.LoadRef(c, args.Models, args.ExtraTypes)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}

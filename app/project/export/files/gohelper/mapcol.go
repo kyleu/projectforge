@@ -1,11 +1,11 @@
-package gomodel
+package gohelper
 
 import (
 	"fmt"
 
 	"github.com/pkg/errors"
 
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -14,9 +14,7 @@ import (
 )
 
 //nolint:gocognit
-func forMapCol(
-	g *golang.File, ret *golang.Block, indent int, m *model.Model, models model.Models, enums enum.Enums, extraTypes model.Models, col *model.Column,
-) error {
+func forMapCol(g *golang.File, ret *golang.Block, indent int, m StringProvider, args *metamodel.Args, col *model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")
@@ -39,16 +37,16 @@ func forMapCol(
 	case col.Type.Key() == types.KeyReference:
 		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 		catchErr("err")
-		ref, _, err := helper.LoadRef(col, models, extraTypes)
+		ref, _, err := helper.LoadRef(col, args.Models, args.ExtraTypes)
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}
-		ret.WF(ind+"%sArg := %s{}", col.Camel(), ref.LastAddr(ref.Pkg.Last() != m.Package))
+		ret.WF(ind+"%sArg := %s{}", col.Camel(), ref.LastAddr(ref.Pkg.Last() != m.PackageName()))
 		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
 		catchErr("err")
 		ret.WF(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
 	case col.Type.Key() == types.KeyEnum:
-		e, err := model.AsEnumInstance(col.Type, enums)
+		e, err := model.AsEnumInstance(col.Type, args.Enums)
 		if err != nil {
 			return err
 		}
@@ -72,7 +70,7 @@ func forMapCol(
 			return err
 		}
 	case col.Type.Key() == types.KeyList:
-		if e, _ := model.AsEnumInstance(col.Type.ListType(), enums); e != nil {
+		if e, _ := model.AsEnumInstance(col.Type.ListType(), args.Enums); e != nil {
 			if err := colMP(ind + parseCall); err != nil {
 				return err
 			}

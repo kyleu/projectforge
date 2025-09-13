@@ -15,8 +15,31 @@ func tsEnum(e *enum.Enum) *golang.Block {
 	ret.WF("export enum %s {", e.Proper())
 	lo.ForEach(e.Values, func(v *enum.Value, idx int) {
 		suffix := util.Choose(idx == len(e.Values)-1, "", ",")
-		ret.WF("  %s = %q%s", v.Name, v.Key, suffix)
+		ret.WF("  %s = %q%s", v.Proper(), v.Key, suffix)
 	})
+	ret.W("}")
+	return ret
+}
+
+func tsEnumParse(e *enum.Enum) *golang.Block {
+	ret := golang.NewBlock("parseEnum", "ts")
+	ret.WF("export function parse%s(value: string): %s | undefined {", e.Proper(), e.Proper())
+	ret.WF("  if (Object.values(%s).includes(value as %s)) {", e.Proper(), e.Proper())
+	ret.WF("    return value as %s;", e.Proper())
+	ret.W("  }")
+	ret.W("  return undefined;")
+	ret.W("}")
+	return ret
+}
+
+func tsEnumGet(e *enum.Enum) *golang.Block {
+	ret := golang.NewBlock("getEnum", "ts")
+	ret.WF("export function get%s(value: string): %s {", e.Proper(), e.Proper())
+	ret.WF("  const x = parse%s(value);", e.Proper())
+	ret.W("  if (x === undefined) {")
+	ret.WF("    throw new Error(`invalid [%s]: ${value}`);", e.Proper())
+	ret.W("  }")
+	ret.W("  return x;")
 	ret.W("}")
 	return ret
 }
@@ -30,7 +53,7 @@ func tsEnumContent(imps []string, e *enum.Enum) golang.Blocks {
 		}
 		ret = append(ret, b)
 	}
-	ret = append(ret, tsEnum(e))
+	ret = append(ret, tsEnum(e), tsEnumParse(e), tsEnumGet(e))
 	return ret
 }
 

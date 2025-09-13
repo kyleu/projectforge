@@ -1,4 +1,4 @@
-package cproject
+package cexport
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
+	"projectforge.dev/projectforge/app/controller/cproject"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
@@ -16,7 +17,7 @@ import (
 
 func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.json.schema", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProjectWithArgs(r, as, ps.Logger)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -36,7 +37,7 @@ func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
 
 func ProjectExportWriteJSONSchema(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.export.write.json.schema", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProjectWithArgs(r, as, ps.Logger)
+		prj, err := cproject.GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}

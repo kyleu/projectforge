@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Enums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, enum.Enums, error) {
+func LoadEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, enum.Enums, error) {
 	enumsPath := util.StringFilePath(exportPath, "enums")
 	if !fs.IsDir(enumsPath) {
 		return nil, nil, nil

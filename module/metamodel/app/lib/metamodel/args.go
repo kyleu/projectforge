@@ -16,6 +16,8 @@ type Args struct {
 	ConfigFile     json.RawMessage            `json:"-"`
 	Enums          enum.Enums                 `json:"enums,omitempty"`
 	EnumFiles      map[string]json.RawMessage `json:"-"`
+	Events         model.Events               `json:"events,omitempty"`
+	EventFiles     map[string]json.RawMessage `json:"-"`
 	Models         model.Models               `json:"models,omitempty"`
 	ModelFiles     map[string]json.RawMessage `json:"-"`
 	Groups         model.Groups               `json:"groups,omitempty"`
@@ -50,7 +52,7 @@ func (a *Args) DatabaseNow() string {
 }
 
 func (a *Args) Validate() error {
-	packages := make(map[string]struct{}, len(a.Models))
+	packages := make(map[string]struct{}, len(a.Enums)+len(a.Events)+len(a.Models))
 	err := a.Models.Validate(a.Modules, a.Groups)
 	if err != nil {
 		return err
@@ -81,14 +83,17 @@ func (a *Args) Audit(m *model.Model) bool {
 
 func (a *Args) ApplyAcronyms(acronyms ...string) {
 	a.Acronyms = acronyms
-	for _, x := range a.Models {
-		x.SetAcronyms(acronyms...)
-	}
 	for _, x := range a.Enums {
 		x.Acronyms = acronyms
+	}
+	for _, x := range a.Events {
+		x.SetAcronyms(acronyms...)
+	}
+	for _, x := range a.Models {
+		x.SetAcronyms(acronyms...)
 	}
 }
 
 func (a *Args) Empty() bool {
-	return a == nil || (len(a.Models) == 0 && len(a.Enums) == 0)
+	return a == nil || (len(a.Enums) == 0 && len(a.Events) == 0 && len(a.Models) == 0)
 }

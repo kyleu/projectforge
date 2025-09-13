@@ -1,0 +1,130 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/file"
+  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type EventDetail struct {
+  layout.Basic
+  BaseURL string
+  Event *model.Event
+  Files file.Files
+} %}
+
+{% func (p *EventDetail) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code m := p.Event -%}
+  <div class="card">
+    <div class="right">
+      <a href="{%s p.BaseURL %}/{%s p.Event.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
+      <a href="{%s p.BaseURL %}/{%s p.Event.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+    </div>
+    <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
+    <em>export event</em>
+    {%= eventSummary(p.BaseURL, m, as, ps) %}
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
+    {%= eventColumns(m, as, ps) %}
+  </div>{%- if len(p.Files) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
+    {%= eventFiles(m, p.Files, as, ps) %}
+  </div>{%- endif -%}
+{% endfunc %}
+
+{% func eventSummary(baseURL string, evt *model.Event, as *app.State, ps *cutil.PageState) %}
+  <div class="overflow full-width">
+    <table class="mt min-200 expanded">
+      <tbody>
+        <tr><th class="shrink">Name</th><td>{%s evt.Name %}</td></tr>
+        <tr><th>Package</th><td>{%s evt.Package %}</td></tr>
+        {%- if len(evt.Group) > 0 -%}
+        <tr><th>Group</th><td>{%s util.StringJoin(evt.Group, "/") %}</td></tr>
+        {%- endif -%}
+        {%- if evt.Schema != "" -%}
+        <tr><th>Schema</th><td>{%s evt.Schema %}</td></tr>
+        {%- endif -%}
+        <tr><th>Description</th><td>{%s evt.Description %}</td></tr>
+        {%- if evt.TitleOverride != "" -%}
+        <tr><th>Title Override</th><td>{%s evt.TitleOverride %}</td></tr>
+        {%- endif -%}
+        {%- if evt.PluralOverride != "" -%}
+        <tr><th>Plural Override</th><td>{%s evt.PluralOverride %}</td></tr>
+        {%- endif -%}
+        {%- if evt.ProperOverride != "" -%}
+        <tr><th>Proper Override</th><td>{%s evt.ProperOverride %}</td></tr>
+        {%- endif -%}
+        {%- if len(evt.Tags) > 0 -%}
+        <tr><th>Tags</th><td>{%s util.StringJoin(evt.Tags, ", ") %}</td></tr>
+        {%- endif -%}
+        {%- if len(evt.Config) > 0 -%}
+        <tr><th>Config</th><td>{%= view.Map(true, evt.Config, ps) %}</td></tr>
+        {%- endif -%}
+        {%- if len(evt.Imports) > 0 -%}
+        <tr><th>Imports</th><td>{%= components.JSON(evt.Imports) %}</td></tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}
+
+{% func eventColumns(evt *model.Event, as *app.State, ps *cutil.PageState) %}
+  {%- if len(evt.Columns) == 0 -%}
+  <p><em>no columns</em></p>
+  {%- else -%}
+  <div class="overflow full-width">
+    <table class="mt min-200 expanded">
+      <thead>
+        <tr>
+          <th class="shrink">Name</th>
+          <th>Type</th>
+          <th>Format</th>
+          <th>Example</th>
+          <th>JSON</th>
+          <th>Validation</th>
+          <th>Unique</th>
+          <th>Tags</th>
+          <th>Metadata</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, col := range evt.Columns -%}
+        <tr>
+          <td>{%s col.Name %}</td>
+          <td>{%s col.Type.String() %}</td>
+          <td>{%s col.Format %}</td>
+          <td>{%s col.Example %}</td>
+          <td>{%s col.JSON %}</td>
+          <td>{%s col.Validation %}</td>
+          <td>{%= view.BoolIcon(col.HasTag("unique"), 15, "icon", ps) %}</td>
+          <td>{%s util.StringJoin(col.Tags, ", ") %}</td>
+          <td>{%= view.Map(false, col.Metadata, ps) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
+{% endfunc %}
+
+{% func eventFiles(evt *model.Event, fls file.Files, as *app.State, ps *cutil.PageState) %}
+  <div class="mt">
+    <ul class="accordion">
+      {%- for _, f := range fls -%}
+      <li>
+        <input id="accordion-{%s f.FullPath() %}" type="checkbox" hidden />
+        <label for="accordion-{%s f.FullPath() %}">{%= components.ExpandCollapse(3, ps) %} {%s f.FullPath() %}</label>
+        <div class="bd"><div><div>
+          {%- code out, err := cutil.FormatLang(f.Content, f.Ext()) -%}
+          {% if err == nil %}{%s= out %}{% else %}{%s err.Error() %}{% endif %}
+        </div></div></div>
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endfunc %}

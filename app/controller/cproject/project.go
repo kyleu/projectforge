@@ -15,7 +15,7 @@ import (
 
 func ProjectDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProjectWithArgs(r, as, ps.Logger)
+		prj, err := GetProjectWithArgs(r, as, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -77,7 +77,7 @@ func ProjectCreate(w http.ResponseWriter, r *http.Request) {
 
 func ProjectEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}
@@ -92,7 +92,7 @@ func ProjectSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		prj, err := getProject(r, as)
+		prj, err := GetProject(r, as)
 		if err != nil {
 			return "", err
 		}

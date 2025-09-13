@@ -4,14 +4,13 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/file"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
-	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 )
 
-func All(models model.Models, enums enum.Enums, extraTypes model.Models, linebreak string) (file.Files, error) {
+func All(args *metamodel.Args, linebreak string) (file.Files, error) {
 	var ret file.Files
 
-	for _, e := range enums {
+	for _, e := range args.Enums.WithTypeScript() {
 		x, err := EnumContent(e, nil, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing enum [%s]", e.Name)
@@ -19,12 +18,24 @@ func All(models model.Models, enums enum.Enums, extraTypes model.Models, linebre
 		ret = append(ret, x)
 	}
 
-	for _, m := range models {
-		imps, err := tsModelImports(enums, models, extraTypes, m)
+	for _, evt := range args.Events {
+		imps, err := tsModelImports(args, evt.Columns, evt)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error processing imports for model [%s]", evt.Name)
+		}
+		x, err := EventContent(evt, args.Enums, imps, linebreak)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error processing model [%s]", evt.Name)
+		}
+		ret = append(ret, x)
+	}
+
+	for _, m := range args.Models.WithTypeScript() {
+		imps, err := tsModelImports(args, m.Columns, m)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing imports for model [%s]", m.Name)
 		}
-		x, err := ModelContent(m, enums, imps, linebreak)
+		x, err := ModelContent(m, args.Enums, imps, linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing model [%s]", m.Name)
 		}

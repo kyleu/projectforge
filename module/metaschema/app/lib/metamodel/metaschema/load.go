@@ -25,6 +25,15 @@ func LoadSchemas(
 			return nil, err
 		}
 	}
+	for _, x := range args.Events {
+		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
+			continue
+		}
+		_, err := ExportEvent(x, ret, args)
+		if err != nil {
+			return nil, err
+		}
+	}
 	for _, x := range args.Models {
 		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
 			continue

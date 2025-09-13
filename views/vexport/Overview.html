@@ -44,11 +44,26 @@
       <a href="/p/{%s p.Project.Key %}/export/enums/create/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
-    {%- if len(p.Args.Enums) == 0 -%}
-    <em>no enums defined</em>
-    {%- else -%}
-    {%= EnumList(p.Args.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps) %}
-    {%- endif -%}
+    <div class="mt">
+      {%- if len(p.Args.Enums) == 0 -%}
+      <em>no enums defined</em>
+      {%- else -%}
+      {%= EnumList(p.Args.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps) %}
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="card">
+    <div class="right">
+      <a href="/p/{%s p.Project.Key %}/export/events/create/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
+    </div>
+    <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Events), "Event") %}</h3>
+    <div class="mt">
+      {%- if len(p.Args.Events) == 0 -%}
+      <em>no events defined</em>
+      {%- else -%}
+      {%= EventList(p.Args.Events, fmt.Sprintf("/p/%s/export/events", p.Project.Key), as, ps) %}
+      {%- endif -%}
+    </div>
   </div>
   <div class="card">
     <div class="right">
@@ -56,7 +71,13 @@
       <a href="/p/{%s p.Project.Key %}/export/models/create/new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
-    {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
+    <div class="mt">
+      {%- if len(p.Args.Models) == 0 -%}
+      <em>no models defined</em>
+      {%- else -%}
+      {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
+      {%- endif -%}
+    </div>
   </div>
 {% endfunc %}
 
@@ -86,7 +107,7 @@
 
 {% func EnumList(enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 expanded">
+    <table class="min-200 expanded">
       <tbody>
         {%- for _, e := range enums -%}
         {%- code
@@ -106,9 +127,31 @@
   </div>
 {% endfunc %}
 
+{% func EventList(events model.Events, urlPrefix string, as *app.State, ps *cutil.PageState) %}
+  <div class="overflow full-width">
+    <table class="min-200 expanded">
+      <tbody>
+        {%- for _, e := range events -%}
+        {%- code
+          u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
+          var prefix string
+          if len(e.Group) > 0 {
+            prefix += util.StringJoin(e.Group, "/")+", "
+          }
+        -%}
+        <tr>
+          <td class="shrink"><a href="{%s u %}">{%= components.SVGIcon(e.IconSafe(), ps) %}</a> <a href="{%s u %}">{%s e.Title() %}</a></td>
+          <td>{%s e.Description %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}
+
 {% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 expanded">
+    <table class="min-200 expanded">
       <tbody>
         {%- for _, m := range models -%}
         {%- code

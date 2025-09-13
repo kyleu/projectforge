@@ -1,4 +1,4 @@
-package gomodel
+package gohelper
 
 import (
 	"fmt"
@@ -16,14 +16,14 @@ import (
 
 const nilKey = "nil"
 
-func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock(m.Proper()+"Random", "struct")
-	ret.WF("func Random%s() *%s {", m.Proper(), m.Proper())
-	ret.WF("\treturn &%s{", m.Proper())
-	cols := m.Columns.NotDerived()
-	maxColLength := cols.MaxCamelLength() + 1
-	for _, col := range cols {
-		rnd, err := randForCol(col, m.PackageWithGroup(""), enums)
+func BlockRandom(cols model.Columns, str StringProvider, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock(str.Proper()+"Random", "struct")
+	ret.WF("func Random%s() *%s {", str.Proper(), str.Proper())
+	ret.WF("\treturn &%s{", str.Proper())
+	nd := cols.NotDerived()
+	maxColLength := nd.MaxCamelLength() + 1
+	for _, col := range nd {
+		rnd, err := randForCol(col, str.PackageWithGroup(""), enums)
 		if err != nil {
 			return nil, err
 		}
@@ -32,6 +32,14 @@ func modelRandom(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret.W("\t}")
 	ret.W("}")
 	return ret, nil
+}
+
+func BlockArrayRandom(str StringProvider) *golang.Block {
+	ret := golang.NewBlock(str.Proper()+"ArrayRandom", "func")
+	ret.WF("func (%s %s) Random() *%s {", str.FirstLetter(), str.ProperPlural(), str.Proper())
+	ret.WF("\treturn util.RandomElement(%s)", str.FirstLetter())
+	ret.W("}")
+	return ret
 }
 
 func randForCol(col *model.Column, pkg string, enums enum.Enums) (string, error) {
