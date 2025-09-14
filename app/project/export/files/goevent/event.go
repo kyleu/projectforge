@@ -44,70 +44,37 @@ func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File
 
 	g.AddBlocks(gohelper.BlockClone(g, evt.Columns, evt), gohelper.BlockString(g, evt.Columns, evt), gohelper.BlockTitle(g, evt.Columns, evt))
 
+	err = eventMap(g, evt, args, linebreak)
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := eventDiff(g, evt, args, linebreak)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(db)
+
+	g.AddBlocks(gohelper.BlockStrings(g, evt.Columns, evt), gohelper.BlockToCSV(evt))
+
 	rnd, err := gohelper.BlockRandom(evt.Columns, evt, args.Enums)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(rnd, gohelper.BlockStrings(g, evt.Columns, evt), gohelper.BlockToCSV(evt))
-
 	fd, err := gohelper.BlockFieldDescs(evt.Columns, evt)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(eventToData(evt, evt.Columns.NotDerived(), "", args.Database), fd)
+
+	g.AddBlocks(eventToData(evt, evt.Columns.NotDerived(), "", args.Database), rnd, fd)
+
 	return g.Render(linebreak)
 }
 
-func typeAssert(m *model.Event) *golang.Block {
+func typeAssert(evt *model.Event) *golang.Block {
 	ret := golang.NewBlock("assert", "type")
-	ret.WF("var _ svc.Model = (*%s)(nil)", m.Proper())
+	ret.WF("var _ svc.Model = (*%s)(nil)", evt.Proper())
 	return ret
-}
-
-func eventStruct(evt *model.Event, args *metamodel.Args) (*golang.Block, error) {
-	ret := golang.NewBlock(evt.Proper(), "struct")
-	ret.WF("type %s struct {", evt.Proper())
-	cols := evt.Columns.NotDerived()
-	maxColLength := cols.MaxCamelLength()
-	maxTypeLength := cols.MaxGoTypeLength(evt.Package, args.Enums)
-
-	gts := lo.Map(cols, func(c *model.Column, _ int) string {
-		gt, err := c.ToGoType(evt.Package, args.Enums)
-		if err != nil {
-			return err.Error()
-		}
-		if ref, mdl, _ := helper.LoadRef(c, args.Models, args.ExtraTypes); ref != nil && !strings.Contains(gt, ".") {
-			if mdl != nil && mdl.Package != evt.Package {
-				gt = mdl.Package + "." + gt
-				if x := len(gt); maxTypeLength < x {
-					maxTypeLength = x
-				}
-			}
-		}
-		if gt == "*"+types.KeyAny {
-			gt = types.KeyAny
-		}
-		return gt
-	})
-
-	for idx, c := range cols {
-		goType := util.StringPad(gts[idx], maxTypeLength)
-		var tag string
-		if c.JSON == "" {
-			tag = fmt.Sprintf("json:%q", c.CamelNoReplace()+gohelper.JSONSuffix(c))
-		} else {
-			tag = fmt.Sprintf("json:%q", c.JSON+gohelper.JSONSuffix(c))
-		}
-		if c.Validation != "" {
-			tag += fmt.Sprintf(",validate:%q", c.Validation)
-		}
-		if c.Example != "" {
-			tag += fmt.Sprintf(",fake:%q", c.Example)
-		}
-		ret.WF("\t%s %s `%s`", util.StringPad(c.Proper(), maxColLength), goType, tag)
-	}
-	ret.W("}")
-	return ret, nil
 }
 
 func eventToData(evt *model.Event, cols model.Columns, suffix string, database string) *golang.Block {
@@ -134,4 +101,10 @@ func eventToData(evt *model.Event, cols model.Columns, suffix string, database s
 	}
 	ret.W("}")
 	return ret
+}
+
+func eventDiff(g *golang.File, evt *model.Event, args *metamodel.Args, linebreak string) (*golang.Block, error) {
+	g.AddImport(helper.ImpAppUtil)
+	g.AddImport(evt.Imports.Supporting("diff")...)
+	return gohelper.DiffBlock(g, evt.Columns, evt, args.Enums)
 }

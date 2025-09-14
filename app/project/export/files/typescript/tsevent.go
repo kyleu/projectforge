@@ -10,9 +10,9 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func tsEventConstructor(m *model.Event, enums enum.Enums, ret *golang.Block) {
+func tsEventConstructor(evt *model.Event, enums enum.Enums, ret *golang.Block) {
 	s := &util.StringSlice{}
-	for _, col := range m.Columns {
+	for _, col := range evt.Columns {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
 		s.Pushf("%s: %s%s", col.Camel(), tsType(col.Type, enums), optional)
 	}
@@ -27,32 +27,32 @@ func tsEventConstructor(m *model.Event, enums enum.Enums, ret *golang.Block) {
 		}
 		ret.W("  ) {")
 	}
-	for _, col := range m.Columns {
+	for _, col := range evt.Columns {
 		ret.WF("    this.%s = %s;", col.Camel(), col.Camel())
 	}
 	ret.W("  }")
 }
 
-func tsEvent(m *model.Event, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock("ts-event-"+m.Name, "ts")
-	ret.WF("export class %s {", m.Proper())
-	for _, col := range m.Columns {
+func tsEvent(evt *model.Event, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock("ts-event-"+evt.Name, "ts")
+	ret.WF("export class %s {", evt.Proper())
+	for _, col := range evt.Columns {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
 		ret.WF("  %s: %s%s;", col.Camel(), tsType(col.Type, enums), optional)
 	}
 	ret.WB()
-	tsEventConstructor(m, enums, ret)
-	err := tsFromObject(m.Columns, m, enums, ret)
+	tsEventConstructor(evt, enums, ret)
+	err := tsFromObject(evt.Columns, evt, enums, ret)
 	if err != nil {
 		return nil, err
 	}
 	ret.W("}")
 	ret.WB()
-	ret.WF("export type %s = Array<%s>;", m.ProperPlural(), m.Proper())
+	ret.WF("export type %s = Array<%s>;", evt.ProperPlural(), evt.Proper())
 	return ret, nil
 }
 
-func tsEventContent(imps []string, m *model.Event, enums enum.Enums) (golang.Blocks, error) {
+func tsEventContent(imps []string, evt *model.Event, enums enum.Enums) (golang.Blocks, error) {
 	var ret golang.Blocks
 	if len(imps) > 0 {
 		b := golang.NewBlock("imports", "ts")
@@ -61,7 +61,7 @@ func tsEventContent(imps []string, m *model.Event, enums enum.Enums) (golang.Blo
 		}
 		ret = append(ret, b)
 	}
-	n, err := tsEvent(m, enums)
+	n, err := tsEvent(evt, enums)
 	if err != nil {
 		return nil, err
 	}
@@ -69,12 +69,12 @@ func tsEventContent(imps []string, m *model.Event, enums enum.Enums) (golang.Blo
 	return ret, nil
 }
 
-func EventContent(m *model.Event, allEnums enum.Enums, imps []string, linebreak string) (*file.File, error) {
+func EventContent(evt *model.Event, allEnums enum.Enums, imps []string, linebreak string) (*file.File, error) {
 	dir := []string{"client", "src"}
-	dir = append(dir, m.PackageWithGroup(""))
-	filename := m.Camel()
+	dir = append(dir, evt.PackageWithGroup(""))
+	filename := evt.Camel()
 	g := golang.NewGoTemplate(dir, filename+".ts")
-	b, err := tsEventContent(imps, m, allEnums)
+	b, err := tsEventContent(imps, evt, allEnums)
 	if err != nil {
 		return nil, err
 	}

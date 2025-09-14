@@ -43,6 +43,10 @@ func (e *Event) RemoveTag(t string) {
 	})
 }
 
+func (e *Event) PackageName() string {
+	return e.Package
+}
+
 func (e *Event) PackageWithGroup(prefix string) string {
 	if x := e.Config.GetStringOpt("pkg-" + prefix); x != "" {
 		return x
@@ -63,6 +67,10 @@ func (e *Event) GroupAndPackage() []string {
 
 func (e *Event) ID() string {
 	return util.StringPath(e.PackageWithGroup(""), e.Name)
+}
+
+func (e *Event) GroupLen() int {
+	return len(e.Group)
 }
 
 func (e *Event) GroupString(prefix string, dflt string) string {

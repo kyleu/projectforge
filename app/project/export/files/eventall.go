@@ -15,19 +15,7 @@ func EventAll(p *project.Project, events model.Events, linebreak string) (file.F
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing event [%s]", evt.Name)
 		}
-		fd, err := goevent.EventDiff(evt, p.ExportArgs, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render model")
-		}
-		fm, err := goevent.EventMap(evt, p.ExportArgs, linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render model")
-		}
-		fa, err := goevent.Events(evt, p.ExportArgs, p.GoVersion(), linebreak)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't render models")
-		}
-		ret = append(ret, f, fd, fm, fa)
+		ret = append(ret, f)
 	}
 	return ret, nil
 }

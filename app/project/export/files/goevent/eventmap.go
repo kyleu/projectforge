@@ -1,9 +1,6 @@
 package goevent
 
 import (
-	"strings"
-
-	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/gohelper"
@@ -11,26 +8,26 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func EventMap(m *model.Event, args *metamodel.Args, linebreak string) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
+func eventMap(g *golang.File, evt *model.Event, args *metamodel.Args, linebreak string) error {
 	g.AddImport(helper.ImpAppUtil)
-	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args)
+	imps, err := helper.SpecialImports(evt.Columns, evt.PackageWithGroup(""), args)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	g.AddImport(imps...)
-	imps, err = helper.EnumImports(m.Columns.Types(), m.PackageWithGroup(""), args.Enums)
+	imps, err = helper.EnumImports(evt.Columns.Types(), evt.PackageWithGroup(""), args.Enums)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	g.AddImport(imps...)
-	g.AddImport(m.Imports.Supporting("map")...)
-	g.AddBlocks(gohelper.ToMap(m, m.Columns))
-	if b, e := gohelper.FromMap(g, m, m.Columns, args); e == nil {
+	g.AddImport(evt.Imports.Supporting("map")...)
+	g.AddBlocks(gohelper.ToMap(evt, evt.Columns))
+	if b, e := gohelper.FromMap(g, evt, evt.Columns, args); e == nil {
 		g.AddBlocks(b)
 	} else {
-		return nil, e
+		return e
 	}
-	g.AddBlocks(gohelper.ToOrderedMap(m, m.Columns))
-	return g.Render(linebreak)
+	b := gohelper.ToOrderedMap(evt, evt.Columns)
+	g.AddBlocks(b)
+	return nil
 }
