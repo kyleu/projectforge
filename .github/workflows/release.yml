@@ -59,6 +59,7 @@ jobs:
           version: "latest"
           args: "-f ./tools/release/.goreleaser.yml release --clean"
         env:
+          GOEXPERIMENT: "jsonv2"
           GOPRIVATE: "github.com/${{ github.repository_owner }}"
           GITHUB_TOKEN: "${{ secrets.CR_PAT }}"
           HOMEBREW_GITHUB_API_TOKEN: "${{ secrets.CR_PAT }}"

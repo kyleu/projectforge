@@ -41,6 +41,8 @@ jobs:
           TOKEN: "${{ secrets.CR_PAT }}"
       - name: "Lint"
         uses: golangci/golangci-lint-action@v7
+        env:
+          GOEXPERIMENT: "jsonv2"
         with:
           version: "latest"
           skip-go-installation: true

@@ -45,6 +45,8 @@ jobs:
         run: "bin/bootstrap.sh"
 
       - name: "Build App"
+        env:
+          GOEXPERIMENT: "jsonv2"
         run: "make build-release"
 
       - name: "Run Playwright tests"

@@ -60,6 +60,7 @@ jobs:
           fi
           go test -json ./app/... > test.json
         env:
+          GOEXPERIMENT: "jsonv2"
           GOPRIVATE: "github.com/${{ github.repository_owner }}"
           GITHUB_TOKEN: "${{ secrets.CR_PAT }}"
           OWNER: "${{ github.repository_owner }}"
