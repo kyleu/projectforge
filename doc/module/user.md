@@ -84,7 +84,7 @@ For database-backed users, create an export model at `./.projectforge/export/mod
 ```json
 {
   "name": "user",
-  "package": "user", 
+  "package": "user",
   "description": "A user of the system",
   "icon": "profile",
   "columns": [
@@ -95,7 +95,7 @@ For database-backed users, create an export model at `./.projectforge/export/mod
       "search": true
     },
     {
-      "name": "name", 
+      "name": "name",
       "type": "string",
       "search": true,
       "tags": ["title"]
@@ -108,7 +108,7 @@ For database-backed users, create an export model at `./.projectforge/export/mod
     },
     {
       "name": "created",
-      "type": "timestamp", 
+      "type": "timestamp",
       "sqlDefault": "now()",
       "tags": ["created"]
     },
@@ -145,7 +145,7 @@ For database-backed users, create an export model at `./.projectforge/export/mod
 user := &user.User{
     ID:      uuid.New(),
     Name:    "John Doe",
-    Created: time.Now(),
+    Created: util.TimeCurrent(),
 }
 
 // Save user (implementation depends on storage backend)

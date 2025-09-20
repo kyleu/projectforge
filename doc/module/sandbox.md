@@ -66,7 +66,7 @@ Add a new sandbox by creating a `Sandbox` struct, and registering it in the `All
 ```go
 var mySandbox = &Sandbox{
     Key:   "my-test",
-    Title: "My Test Environment", 
+    Title: "My Test Environment",
     Icon:  "beaker",
     Args: util.FieldDescs{
         {Key: "message", Title: "Message", Type: "string", Default: "Hello"},
@@ -78,13 +78,13 @@ var mySandbox = &Sandbox{
 func onMyTest(ctx context.Context, st *app.State, args util.ValueMap, logger util.Logger) (any, error) {
     message := args.GetStringOr("message", "default")
     count := args.GetIntOr("count", 1)
-    
+
     result := util.ValueMap{
         "message": message,
         "repeated": strings.Repeat(message+" ", count),
-        "timestamp": time.Now(),
+        "timestamp": util.TimeCurrent(),
     }
-    
+
     return result, nil
 }
 ```
@@ -108,7 +108,7 @@ Sandboxes are accessible through the admin web interface:
 
 ### Menu System
 The sandbox module automatically registers with the admin menu:
-- Main menu item: "Sandboxes" 
+- Main menu item: "Sandboxes"
 - Submenu items: Individual sandboxes
 - Dynamic menu generation based on available sandboxes
 
@@ -134,7 +134,7 @@ Specific sandboxes can have custom result templates:
 ### Parameter Types
 Supports various parameter types through field descriptors:
 - **string**: Text input
-- **int**: Numeric input  
+- **int**: Numeric input
 - **bool**: Checkbox input
 - **select**: Dropdown selection
 - **textarea**: Multi-line text input

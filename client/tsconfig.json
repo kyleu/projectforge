@@ -4,6 +4,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "alwaysStrict": true,
+    "baseUrl": "./src",
     "declaration": true,
     "esModuleInterop": true,
     "jsx": "react",

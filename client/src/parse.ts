@@ -57,7 +57,7 @@ export const Parse = {
       return x;
     }
     if (typeof x === "string") {
-      return parseInt(x);
+      return parseInt(x, 10);
     }
     return undefined;
   },

@@ -14,7 +14,7 @@ func ToGoRowType(t types.Type, nullable bool, pkg string, enums enum.Enums, data
 		if database == util.DatabaseSQLite || database == util.DatabaseSQLServer {
 			return types.KeyString, nil
 		}
-		return "json.RawMessage", nil
+		return "[]byte", nil
 	case types.KeyJSON:
 		return "util.NilJSON", nil
 	default:

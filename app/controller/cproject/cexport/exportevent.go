@@ -24,7 +24,7 @@ func ProjectExportEventDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		fls, err := files.EventAll(prj, prj.ExportArgs.Events, util.StringDefaultLinebreak)
 		if err != nil {
-			ps.Logger.Warnf("unable to generate files for event [%s]", evt.Name)
+			ps.Logger.Warnf("unable to generate [%s] files for event [%s]", prj.Key, evt.Name)
 		}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), evt.Title()}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, evt.Name), evt)

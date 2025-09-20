@@ -1,7 +1,7 @@
 package load
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
 
 	"github.com/pkg/errors"
 
@@ -10,14 +10,14 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func LoadEvents(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, model.Events, error) {
+func LoadEvents(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]jsontext.Value, model.Events, error) {
 	eventsPath := util.StringFilePath(exportPath, "events")
 	if !fs.IsDir(eventsPath) {
 		return nil, nil, nil
 	}
 	eventNames := fs.ListJSON(eventsPath, nil, false, logger)
 	events := make(model.Events, 0, len(eventNames))
-	eventFiles := make(map[string]json.RawMessage, len(eventNames))
+	eventFiles := make(map[string]jsontext.Value, len(eventNames))
 	for _, eventName := range eventNames {
 		fn := util.StringFilePath(eventsPath, eventName)
 		content, err := fs.ReadFile(fn)

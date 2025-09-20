@@ -1,7 +1,7 @@
 package websocket
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
 
 	"github.com/google/uuid"
 
@@ -9,10 +9,10 @@ import (
 )
 
 type Message struct {
-	From    *uuid.UUID      `json:"from,omitempty"`
-	Channel string          `json:"channel,omitempty"`
-	Cmd     string          `json:"cmd"`
-	Param   json.RawMessage `json:"param"`
+	From    *uuid.UUID     `json:"from,omitempty"`
+	Channel string         `json:"channel,omitempty"`
+	Cmd     string         `json:"cmd"`
+	Param   jsontext.Value `json:"param"`
 }
 
 func NewMessage(userID *uuid.UUID, ch string, cmd string, param any) *Message {

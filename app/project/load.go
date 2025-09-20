@@ -1,7 +1,6 @@
 package project
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -15,7 +14,7 @@ import (
 
 const rootKey = "root"
 
-func (s *Service) load(path string) (json.RawMessage, *Project, error) {
+func (s *Service) load(path string) ([]byte, *Project, error) {
 	cfgPath := util.StringFilePath(path, ConfigDir, "project.json")
 
 	rootfs, _ := filesystem.NewFileSystem(".", false, "")

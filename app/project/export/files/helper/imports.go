@@ -103,7 +103,7 @@ func importsForTypeCtxRow(t types.Type, database string) model.Imports {
 		if SimpleJSON(database) {
 			return model.Imports{ImpAppUtil}
 		}
-		return model.Imports{ImpJSON, ImpAppUtil}
+		return model.Imports{ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
 	case types.KeyNumeric:

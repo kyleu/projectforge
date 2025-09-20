@@ -4,6 +4,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "alwaysStrict": true,
+    "baseUrl": "./src",
     "declaration": true,
     "esModuleInterop": true,{{{ if .HasModule "jsx" }}}
     "jsx": "react",
@@ -16,7 +17,7 @@
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outFile": "../assets/client.js",
+    "outFile": "../assets/client.js",{{{ .TypeScriptPaths }}}
     "removeComments": true,
     "preserveConstEnums": true,
     "preserveWatchOutput": true,

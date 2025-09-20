@@ -11,6 +11,8 @@ WORKDIR /src
 ADD "./go.mod" "/src/go.mod"
 ADD "./go.sum" "/src/go.sum"
 
+ENV GOEXPERIMENT=jsonv2
+
 RUN go mod download
 
 ADD . /src/

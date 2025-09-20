@@ -2,7 +2,6 @@ package action
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/pkg/errors"
 
@@ -19,7 +18,7 @@ type PrjAndMods struct {
 	Cfg    util.ValueMap
 	Prj    *project.Project
 	FS     filesystem.FileLoader
-	File   json.RawMessage
+	File   []byte
 	Mods   module.Modules
 	MSvc   *module.Service
 	PSvc   *project.Service

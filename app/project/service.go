@@ -1,7 +1,6 @@
 package project
 
 import (
-	"encoding/json"
 	"os"
 	"strings"
 	"sync"
@@ -17,7 +16,7 @@ const ConfigDir = "." + util.AppKey
 
 type Service struct {
 	cache       map[string]*Project
-	fileContent map[string]json.RawMessage
+	fileContent map[string][]byte
 	cacheLock   sync.RWMutex
 	filesystems map[string]filesystem.FileLoader
 	fsLock      sync.RWMutex
@@ -28,7 +27,7 @@ func NewService() *Service {
 	hd, _ := os.UserHomeDir()
 	return &Service{
 		cache:       map[string]*Project{},
-		fileContent: map[string]json.RawMessage{},
+		fileContent: map[string][]byte{},
 		filesystems: map[string]filesystem.FileLoader{},
 		additional:  hd + "/.pfconfig/additional-projects.json",
 	}
@@ -78,7 +77,7 @@ func (s *Service) Get(key string) (*Project, error) {
 	return nil, errors.Errorf("no project with key [%s] found among %d candidates [%s]", key, len(s.cache), util.StringJoin(s.Keys(), ", "))
 }
 
-func (s *Service) GetFile(key string) json.RawMessage {
+func (s *Service) GetFile(key string) []byte {
 	return s.fileContent[key]
 }
 

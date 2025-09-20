@@ -2,7 +2,8 @@ package util
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"io"
 )
 
@@ -19,12 +20,11 @@ func ToJSONCompact(x any) string {
 func ToJSONBytes(x any, indent bool) []byte {
 	if indent {
 		bts := &bytes.Buffer{}
-		enc := json.NewEncoder(bts)
+		opts := []json.Options{jsontext.EscapeForHTML(false), json.Deterministic(true)}
 		if indent {
-			enc.SetIndent("", "  ")
+			opts = append(opts, jsontext.WithIndent("  "))
 		}
-		enc.SetEscapeHTML(false)
-		jsonHandleError(x, enc.Encode(x))
+		jsonHandleError(x, json.MarshalWrite(bts, x, opts...))
 		return bytes.TrimSuffix(bts.Bytes(), trailingNewline)
 	}
 	b, err := json.Marshal(x)
@@ -32,29 +32,29 @@ func ToJSONBytes(x any, indent bool) []byte {
 	return bytes.TrimSuffix(b, trailingNewline)
 }
 
-func FromJSON(msg json.RawMessage, tgt any) error {
-	return json.NewDecoder(bytes.NewReader(msg)).Decode(tgt)
+func FromJSON(msg []byte, tgt any) error {
+	return FromJSONReader(bytes.NewReader(msg), tgt)
 }
 
-func FromJSONString(msg json.RawMessage) (string, error) {
+func FromJSONString(msg []byte) (string, error) {
 	var tgt string
-	err := json.NewDecoder(bytes.NewReader(msg)).Decode(&tgt)
+	err := FromJSON(msg, &tgt)
 	return tgt, err
 }
 
-func FromJSONMap(msg json.RawMessage) (ValueMap, error) {
+func FromJSONMap(msg []byte) (ValueMap, error) {
 	var tgt ValueMap
-	err := json.NewDecoder(bytes.NewReader(msg)).Decode(&tgt)
+	err := FromJSON(msg, &tgt)
 	return tgt, err
 }
 
-func FromJSONOrderedMap[V any](msg json.RawMessage) (*OrderedMap[V], error) {
+func FromJSONOrderedMap[V any](msg []byte) (*OrderedMap[V], error) {
 	var tgt *OrderedMap[V]
-	err := json.NewDecoder(bytes.NewReader(msg)).Decode(tgt)
+	err := FromJSON(msg, &tgt)
 	return tgt, err
 }
 
-func FromJSONAny(msg json.RawMessage) (any, error) {
+func FromJSONAny(msg []byte) (any, error) {
 	if bytes.HasPrefix(msg, []byte("\"{")) {
 		if str, err := FromJSONString(msg); err == nil {
 			var tgt any
@@ -68,25 +68,23 @@ func FromJSONAny(msg json.RawMessage) (any, error) {
 	return tgt, err
 }
 
-func FromJSONAnyOK(msg json.RawMessage) any {
+func FromJSONAnyOK(msg []byte) any {
 	ret, _ := FromJSONAny(msg)
 	return ret
 }
 
-func FromJSONObj[T any](msg json.RawMessage) (T, error) {
+func FromJSONObj[T any](msg []byte) (T, error) {
 	var tgt T
 	err := FromJSON(msg, &tgt)
 	return tgt, err
 }
 
-func FromJSONReader(r io.Reader, tgt any) error {
-	return json.NewDecoder(r).Decode(tgt)
+func FromJSONStrict(msg []byte, tgt any) error {
+	return FromJSONReader(bytes.NewReader(msg), tgt, json.RejectUnknownMembers(true))
 }
 
-func FromJSONStrict(msg json.RawMessage, tgt any) error {
-	dec := json.NewDecoder(bytes.NewReader(msg))
-	dec.DisallowUnknownFields()
-	return dec.Decode(tgt)
+func FromJSONReader(r io.Reader, tgt any, opts ...json.Options) error {
+	return json.UnmarshalRead(r, tgt, opts...)
 }
 
 func CycleJSON(src any, tgt any) error {

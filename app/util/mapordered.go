@@ -2,7 +2,6 @@ package util
 
 import (
 	"bytes"
-	"encoding/json"
 	"encoding/xml"
 	"maps"
 	"slices"
@@ -140,7 +139,7 @@ func (o *OrderedMap[V]) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		var value V
-		if err := json.Unmarshal(valueData, &value); err != nil {
+		if err := FromJSON(valueData, &value); err != nil {
 			return err
 		}
 		o.Set(key, value)

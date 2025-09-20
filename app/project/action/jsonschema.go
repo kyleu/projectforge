@@ -2,7 +2,6 @@ package action
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"strings"
 
@@ -56,7 +55,7 @@ func schemaCheck(pm *PrjAndMods) ([]string, error) {
 	return ret.Slice, nil
 }
 
-func schemaProject(sch *jsonschema.Schema, f json.RawMessage) ([]string, error) {
+func schemaProject(sch *jsonschema.Schema, f []byte) ([]string, error) {
 	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {
@@ -65,7 +64,7 @@ func schemaProject(sch *jsonschema.Schema, f json.RawMessage) ([]string, error) 
 	return ret.Slice, nil
 }
 
-func schemaConfig(sch *jsonschema.Schema, f json.RawMessage) ([]string, error) {
+func schemaConfig(sch *jsonschema.Schema, f []byte) ([]string, error) {
 	if len(f) == 0 {
 		return nil, nil
 	}
@@ -77,7 +76,7 @@ func schemaConfig(sch *jsonschema.Schema, f json.RawMessage) ([]string, error) {
 	return ret.Slice, nil
 }
 
-func schemaEnum(sch *jsonschema.Schema, k string, f json.RawMessage) ([]string, error) {
+func schemaEnum(sch *jsonschema.Schema, k string, f []byte) ([]string, error) {
 	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {
@@ -86,7 +85,7 @@ func schemaEnum(sch *jsonschema.Schema, k string, f json.RawMessage) ([]string, 
 	return ret.Slice, nil
 }
 
-func schemaModel(sch *jsonschema.Schema, k string, f json.RawMessage) ([]string, error) {
+func schemaModel(sch *jsonschema.Schema, k string, f []byte) ([]string, error) {
 	ret := &util.StringSlice{}
 	err := sch.Validate(bytes.NewReader(f))
 	if err != nil {

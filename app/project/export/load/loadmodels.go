@@ -1,7 +1,7 @@
 package load
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
 	"fmt"
 	"strings"
 
@@ -13,14 +13,14 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func LoadModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, model.Models, error) {
+func LoadModels(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]jsontext.Value, model.Models, error) {
 	modelsPath := util.StringFilePath(exportPath, "models")
 	if !fs.IsDir(modelsPath) {
 		return nil, nil, nil
 	}
 	modelNames := fs.ListJSON(modelsPath, nil, false, logger)
 	models := make(model.Models, 0, len(modelNames))
-	modelFiles := make(map[string]json.RawMessage, len(modelNames))
+	modelFiles := make(map[string]jsontext.Value, len(modelNames))
 	for _, modelName := range modelNames {
 		fn := util.StringFilePath(modelsPath, modelName)
 		content, err := fs.ReadFile(fn)
@@ -37,7 +37,7 @@ func LoadModels(exportPath string, fs filesystem.FileLoader, logger util.Logger)
 	return modelFiles, models, nil
 }
 
-func LoadJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, model.Models, error) {
+func LoadJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLoader, logger util.Logger) (map[string]jsontext.Value, model.Models, error) {
 	if cfg == nil {
 		return nil, nil, nil
 	}
@@ -50,7 +50,7 @@ func LoadJSONModels(cfg util.ValueMap, groups model.Groups, fs filesystem.FileLo
 		return nil, nil, nil
 	}
 	jsonFiles := fs.ListJSON(pth, nil, false, logger)
-	jsonModelFiles := make(map[string]json.RawMessage, len(jsonFiles))
+	jsonModelFiles := make(map[string]jsontext.Value, len(jsonFiles))
 	jsonModels := make(model.Models, 0, len(jsonFiles))
 	for idx, jsonFile := range jsonFiles {
 		if !strings.HasSuffix(jsonFile, util.ExtJSON) {

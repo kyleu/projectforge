@@ -44,7 +44,7 @@ func New(ctx context.Context, name string, limit int, timeout time.Duration, tab
 	logger.Infof("queue [%s] created; [%d] pending messages", name, count)
 	return &Queue{
 		db: db, logger: logger, name: name, limit: limit, timeout: timeout, table: table,
-		started: time.Now(), sent: map[string]int{}, received: map[string]int{},
+		started: util.TimeCurrent(), sent: map[string]int{}, received: map[string]int{},
 	}, nil
 }
 
@@ -63,7 +63,7 @@ func (q *Queue) Receive(ctx context.Context, tx *sqlx.Tx, topic string, logger u
 			return nil, err
 		}
 	}
-	now := time.Now()
+	now := util.TimeCurrent()
 	nowStr := util.TimeToRFC3339(&now)
 	timeout := now.Add(q.timeout)
 	timeoutStr := util.TimeToRFC3339(&timeout)

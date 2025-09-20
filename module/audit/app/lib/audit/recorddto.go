@@ -1,7 +1,7 @@
 package audit
 
 import (
-	{{{ if .PostgreSQL }}}"encoding/json"
+	{{{ if .PostgreSQL }}}"encoding/json/jsontext"
 	{{{ end }}}"fmt"
 	"time"
 
@@ -20,13 +20,13 @@ var (
 )
 
 {{{ if .PostgreSQL }}}type recordRow struct {
-	ID       uuid.UUID       `db:"id"`
-	AuditID  uuid.UUID       `db:"audit_id"`
-	T        string          `db:"t"`
-	PK       string          `db:"pk"`
-	Changes  json.RawMessage `db:"changes"`
-	Metadata json.RawMessage `db:"metadata"`
-	Occurred time.Time       `db:"occurred"`
+	ID       uuid.UUID      `db:"id"`
+	AuditID  uuid.UUID      `db:"audit_id"`
+	T        string         `db:"t"`
+	PK       string         `db:"pk"`
+	Changes  jsontext.Value `db:"changes"`
+	Metadata jsontext.Value `db:"metadata"`
+	Occurred time.Time      `db:"occurred"`
 }{{{ else }}}{{{ if .SQLite }}}type recordRow struct {
 	ID       uuid.UUID `db:"id"`
 	AuditID  uuid.UUID `db:"audit_id"`

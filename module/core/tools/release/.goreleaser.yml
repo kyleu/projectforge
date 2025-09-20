@@ -62,6 +62,9 @@ dockers:
     dockerfile: ./tools/release/Dockerfile.debug{{{ end }}}{{{ .ExtraFilesContent }}}
 
 dist: "build/dist"
+
+env:
+  - GOEXPERIMENT=jsonv2
 {{{ if .Build.NFPMS }}}
 nfpms:
   -

@@ -5,7 +5,7 @@ This module provides a comprehensive WebSocket service for [Project Forge](https
 ## Features
 
 - **Connection Management**: Automatic connection registration, heartbeat, and cleanup
-- **Channel System**: Multi-channel communication with join/leave functionality  
+- **Channel System**: Multi-channel communication with join/leave functionality
 - **Message Routing**: Type-safe message handling with custom commands
 - **User Integration**: Seamless integration with user authentication and profiles
 - **Admin Interface**: Built-in WebSocket status and debugging tools
@@ -21,17 +21,6 @@ This module provides a comprehensive WebSocket service for [Project Forge](https
 - **Channel**: Named communication channels for grouping connections
 - **Message**: Structured message format with commands and parameters
 - **Handler**: Custom message processing logic
-
-### Message Format
-
-```go
-type Message struct {
-    From    *uuid.UUID      `json:"from,omitempty"`    // Sender ID
-    Channel string          `json:"channel,omitempty"` // Target channel
-    Cmd     string          `json:"cmd"`               // Command type
-    Param   json.RawMessage `json:"param"`             // Command data
-}
-```
 
 ## Usage
 
@@ -56,10 +45,10 @@ func ExampleSocket(w http.ResponseWriter, r *http.Request) {
         if channel == "" {
             channel = "example-" + util.RandomString(8)
         }
-        
+
         // Create custom message handler
         handler := &ExampleHandler{}
-        
+
         // Upgrade connection
         connID, err := as.Services.Socket.Upgrade(
             ps.Context, ps.W, ps.R, channel,
@@ -68,7 +57,7 @@ func ExampleSocket(w http.ResponseWriter, r *http.Request) {
         if err != nil {
             return "", err
         }
-        
+
         // Start read loop (blocks until connection closes)
         return "", as.Services.Socket.ReadLoop(ps.Context, connID, ps.Logger)
     })
@@ -80,12 +69,12 @@ func ExampleSocket(w http.ResponseWriter, r *http.Request) {
 ```go
 type ExampleHandler struct{}
 
-func (h *ExampleHandler) On(s *websocket.Service, c *websocket.Connection, cmd string, param json.RawMessage, logger util.Logger) error {
+func (h *ExampleHandler) On(s *websocket.Service, c *websocket.Connection, cmd string, param []byte, logger util.Logger) error {
     switch cmd {
     case "ping":
         // Echo back a pong
         return s.WriteChannel("pong", util.ValueMap{"timestamp": util.TimeCurrentMillis()}, c.Channel, logger)
-        
+
     case "chat":
         var msg util.ValueMap
         if err := util.FromJSON(param, &msg); err != nil {
@@ -97,7 +86,7 @@ func (h *ExampleHandler) On(s *websocket.Service, c *websocket.Connection, cmd s
             "text": msg["text"],
             "time": util.TimeCurrentMillis(),
         }, c.Channel, logger)
-        
+
     case "join-room":
         var data util.ValueMap
         if err := util.FromJSON(param, &data); err != nil {
@@ -106,7 +95,7 @@ func (h *ExampleHandler) On(s *websocket.Service, c *websocket.Connection, cmd s
         room := fmt.Sprint(data["room"])
         _, err := s.Join(c.ID, room, logger)
         return err
-        
+
     default:
         logger.Warnf("unhandled websocket command [%s]", cmd)
         return nil
@@ -132,64 +121,64 @@ import { Socket, Message } from "./socket";
 class ExampleClient {
     private socket: Socket;
     private channel: string;
-    
+
     constructor(channel: string = "example") {
         this.channel = channel;
-        
+
         this.socket = new Socket(
             true,                    // debug mode
             this.onOpen.bind(this),  // connection opened
-            this.onMessage.bind(this), // message received  
+            this.onMessage.bind(this), // message received
             this.onError.bind(this), // error occurred
             `/example/socket?ch=${channel}` // WebSocket URL
         );
     }
-    
+
     private onOpen(): void {
         console.log("Connected to WebSocket");
         this.sendPing();
     }
-    
+
     private onMessage(msg: Message): void {
         switch (msg.cmd) {
             case "pong":
                 console.log("Received pong:", msg.param);
                 break;
-                
+
             case "chat":
                 this.displayChatMessage(msg.param);
                 break;
-                
+
             case "user-joined":
                 this.showUserJoined(msg.param);
                 break;
-                
+
             default:
                 console.log("Unknown message:", msg);
         }
     }
-    
+
     private onError(service: string, error: string): void {
         console.error(`WebSocket error in ${service}:`, error);
     }
-    
+
     // Public methods
     sendPing(): void {
         this.socket.send({ channel: this.channel, cmd: "ping", param: {} });
     }
-    
+
     sendChatMessage(text: string): void {
-        this.socket.send({ 
-            channel: this.channel, 
-            cmd: "chat", 
-            param: { text } 
+        this.socket.send({
+            channel: this.channel,
+            cmd: "chat",
+            param: { text }
         });
     }
-    
+
     joinRoom(room: string): void {
         this.socket.send({
             channel: this.channel,
-            cmd: "join-room", 
+            cmd: "join-room",
             param: { room }
         });
     }
@@ -198,11 +187,11 @@ class ExampleClient {
 // Initialize when page loads
 document.addEventListener("DOMContentLoaded", () => {
     const client = new ExampleClient("my-channel");
-    
+
     // Wire up UI events
     const chatForm = document.getElementById("chat-form") as HTMLFormElement;
     const chatInput = document.getElementById("chat-input") as HTMLInputElement;
-    
+
     chatForm?.addEventListener("submit", (e) => {
         e.preventDefault();
         const text = chatInput.value.trim();
@@ -240,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (svc, err) => console.error(`${svc}: ${err}`),
         "/example/socket"
     );
-    
+
     function sendMessage(cmd, param) {
         sock.send({ channel: "example", cmd, param });
     }
@@ -253,13 +242,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ```go
 // Upgrade HTTP connection to WebSocket
-func (s *Service) Upgrade(ctx context.Context, w http.ResponseWriter, r *http.Request, 
+func (s *Service) Upgrade(ctx context.Context, w http.ResponseWriter, r *http.Request,
     channel string, profile *user.Profile, handler Handler, logger util.Logger) (uuid.UUID, error)
 
 // Join a channel
 func (s *Service) Join(connID uuid.UUID, channel string, logger util.Logger) (bool, error)
 
-// Leave a channel  
+// Leave a channel
 func (s *Service) Leave(connID uuid.UUID, channel string, logger util.Logger) (bool, error)
 
 // Send message to specific connection
@@ -291,13 +280,13 @@ The module includes built-in admin pages accessible at:
 
 - `/admin/websocket` - WebSocket service status and active connections
 - Real-time connection monitoring
-- Channel membership display  
+- Channel membership display
 - Message broadcasting tools
 
 ## Best Practices
 
 1. **Error Handling**: Always handle WebSocket errors gracefully with reconnection logic
-2. **Message Validation**: Validate all incoming message parameters 
+2. **Message Validation**: Validate all incoming message parameters
 3. **Rate Limiting**: Implement rate limiting for message-heavy applications
 4. **Channel Management**: Use meaningful channel names and clean up unused channels
 5. **Security**: Validate user permissions before joining channels or processing commands
@@ -310,7 +299,7 @@ The module includes built-in admin pages accessible at:
 - Broadcast messages to channel members
 - Handle user join/leave events
 
-### Real-time Updates  
+### Real-time Updates
 - Subscribe clients to data channels
 - Push updates when server data changes
 - Use different message types for different data

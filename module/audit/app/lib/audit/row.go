@@ -1,7 +1,7 @@
 package audit
 
 import (
-	{{{ if .SQLServerOnly }}}{{{ else }}}{{{ if .PostgreSQL }}}"encoding/json"
+	{{{ if .SQLServerOnly }}}{{{ else }}}{{{ if .PostgreSQL }}}"encoding/json/jsontext"
 	{{{ end }}}{{{ end }}}"fmt"
 	"time"
 
@@ -21,16 +21,16 @@ var (
 )
 
 {{{ if .PostgreSQL }}}type row struct {
-	ID        uuid.UUID       `db:"id"`
-	App       string          `db:"app"`
-	Act       string          `db:"act"`
-	Client    string          `db:"client"`
-	Server    string          `db:"server"`
-	User      string          `db:"user"`
-	Metadata  json.RawMessage `db:"metadata"`
-	Message   string          `db:"message"`
-	Started   time.Time       `db:"started"`
-	Completed time.Time       `db:"completed"`
+	ID        uuid.UUID      `db:"id"`
+	App       string         `db:"app"`
+	Act       string         `db:"act"`
+	Client    string         `db:"client"`
+	Server    string         `db:"server"`
+	User      string         `db:"user"`
+	Metadata  jsontext.Value `db:"metadata"`
+	Message   string         `db:"message"`
+	Started   time.Time      `db:"started"`
+	Completed time.Time      `db:"completed"`
 }{{{ else }}}{{{ if .SQLite }}}type row struct {
 	ID        uuid.UUID `db:"id"`
 	App       string    `db:"app"`

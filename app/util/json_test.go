@@ -1,7 +1,6 @@
 package util_test
 
 import (
-	"encoding/json"
 	"reflect"
 	"testing"
 
@@ -67,10 +66,10 @@ func TestFromJSON(t *testing.T) {
 
 	tests := []struct {
 		name  string
-		input json.RawMessage
+		input []byte
 		want  testStruct
 	}{
-		{"Valid", json.RawMessage(`{"A":1,"B":"test"}`), testStruct{1, "test"}},
+		{"Valid", []byte(`{"A":1,"B":"test"}`), testStruct{1, "test"}},
 	}
 
 	for _, tt := range tests {
@@ -92,10 +91,10 @@ func TestFromJSONString(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name  string
-		input json.RawMessage
+		input []byte
 		want  string
 	}{
-		{"Valid", json.RawMessage(`"test"`), "test"},
+		{"Valid", []byte(`"test"`), "test"},
 	}
 
 	for _, tt := range tests {

@@ -75,7 +75,7 @@ func TestParseInt64(t *testing.T) {
 
 func TestParseTime(t *testing.T) {
 	t.Parallel()
-	now := time.Now()
+	now := util.TimeCurrent()
 	tests := []parseTest[*time.Time]{
 		{"valid time", now, "test", false, &now, false},
 		{"valid pointer", &now, "test", false, &now, false},

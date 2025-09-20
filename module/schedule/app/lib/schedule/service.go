@@ -29,7 +29,7 @@ func NewService() *Service {
 	if engine != nil {
 		engine.Start()
 	}
-	return &Service{Engine: engine, Started: time.Now(), ExecCounts: map[uuid.UUID]int{}, Results: map[uuid.UUID]*Result{}}
+	return &Service{Engine: engine, Started: util.TimeCurrent(), ExecCounts: map[uuid.UUID]int{}, Results: map[uuid.UUID]*Result{}}
 }
 
 func (s *Service) NewJob(
@@ -55,7 +55,7 @@ func (s *Service) NewJob(
 		if !s.loggingOff {
 			logger.Debugf("running scheduled job [%s]", id.String())
 		}
-		res := &Result{Job: id, Occurred: time.Now()}
+		res := &Result{Job: id, Occurred: util.TimeCurrent()}
 		s.ExecCounts[id] += 1
 		ret, err := f(ctx, logger)
 		res.DurationMicro = timer.End()

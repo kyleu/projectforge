@@ -24,7 +24,7 @@ func ProjectExportModelDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		fls, err := files.ModelAll(mdl, prj, util.StringDefaultLinebreak)
 		if err != nil {
-			ps.Logger.Warnf("unable to generate files for model [%s]", mdl.Name)
+			ps.Logger.Warnf("unable to generate [%s] files for model [%s]", prj.Key, mdl.Name)
 		}
 		bc := []string{"projects", prj.Key, fmt.Sprintf("Export||/p/%s/export", prj.Key), mdl.Title()}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)

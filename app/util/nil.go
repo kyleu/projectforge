@@ -2,7 +2,7 @@ package util
 
 import (
 	"database/sql"
-	"encoding/json"
+	"encoding/json/jsontext"
 	"time"
 )
 
@@ -113,7 +113,7 @@ func (n *NilInt64) UnmarshalJSON(data []byte) error {
 }
 
 type NilJSON struct {
-	sql.Null[json.RawMessage]
+	sql.Null[jsontext.Value]
 }
 
 func (n NilJSON) MarshalJSON() ([]byte, error) {

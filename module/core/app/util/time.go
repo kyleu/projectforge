@@ -49,6 +49,14 @@ func TimeRelative(t *time.Time) string {
 	return humanize.Time(*t)
 }
 
+func TimeRounded(t *time.Time, d time.Duration) *time.Time {
+	if t == nil {
+		return nil
+	}
+	ret := t.Round(d)
+	return &ret
+}
+
 func TimeToMap(t time.Time) map[string]any {
 	return map[string]any{"epoch": t.UnixMilli(), "iso8601": t.Format("2006-01-02T15:04:05-0700")}
 }

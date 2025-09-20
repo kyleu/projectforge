@@ -13,7 +13,7 @@ func LoggerFor(logger util.Logger, span *Span) util.Logger {
 	if span == nil {
 		return logger
 	}
-	return logger.With("trace", span.TraceID(), "span", span.SpanID())
+	return logger // .With("trace", span.TraceID(), "span", span.SpanID())
 }
 
 type ErrHandler struct {

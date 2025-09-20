@@ -3,16 +3,16 @@ package msfix
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 
 	"github.com/markbates/going/defaults"
 	"github.com/markbates/goth"
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
+
+	"{{{ .Package }}}/app/util"
 )
 
 const (
@@ -154,12 +154,11 @@ func userFromReader(r io.Reader, user *goth.User) error {
 		UserPrincipalName string `json:"userPrincipalName"`
 	}{}
 
-	if err := json.NewDecoder(tee).Decode(&u); err != nil {
+	if err := util.FromJSONReader(tee, &u); err != nil {
 		return err
 	}
-
 	raw := map[string]any{}
-	if err := json.NewDecoder(buf).Decode(&raw); err != nil {
+	if err := util.FromJSONReader(buf, &raw); err != nil {
 		return err
 	}
 
@@ -179,7 +178,5 @@ func authorizationHeader(session *Session) (string, string) {
 }
 
 func (p *Provider) UnmarshalSession(data string) (goth.Session, error) {
-	session := &Session{}
-	err := json.NewDecoder(strings.NewReader(data)).Decode(session)
-	return session, err
+	return util.FromJSONObj[*Session]([]byte(data))
 }

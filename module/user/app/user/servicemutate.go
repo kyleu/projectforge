@@ -3,7 +3,6 @@ package user
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -17,7 +16,7 @@ func (s *Service) Create(ctx context.Context, logger util.Logger, _ any, models 
 
 func (s *Service) CreateIfNeeded(ctx context.Context, userID uuid.UUID, username string, _ any, logger util.Logger) error {
 	if curr, _ := s.Get(ctx, nil, userID, logger); curr == nil {
-		err := s.Create(ctx, logger, &User{ID: userID, Name: username, Created: time.Now()})
+		err := s.Create(ctx, logger, &User{ID: userID, Name: username, Created: util.TimeCurrent()})
 		if err != nil {
 			return err
 		}

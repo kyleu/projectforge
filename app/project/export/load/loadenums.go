@@ -1,7 +1,7 @@
 package load
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
 
 	"github.com/pkg/errors"
 
@@ -10,14 +10,14 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func LoadEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]json.RawMessage, enum.Enums, error) {
+func LoadEnums(exportPath string, fs filesystem.FileLoader, logger util.Logger) (map[string]jsontext.Value, enum.Enums, error) {
 	enumsPath := util.StringFilePath(exportPath, "enums")
 	if !fs.IsDir(enumsPath) {
 		return nil, nil, nil
 	}
 	enumNames := fs.ListJSON(enumsPath, nil, false, logger)
 	enums := make(enum.Enums, 0, len(enumNames))
-	enumFiles := make(map[string]json.RawMessage, len(enumNames))
+	enumFiles := make(map[string]jsontext.Value, len(enumNames))
 	for _, enumName := range enumNames {
 		fn := util.StringFilePath(enumsPath, enumName)
 		content, err := fs.ReadFile(fn)

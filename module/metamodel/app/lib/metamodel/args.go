@@ -1,7 +1,7 @@
 package metamodel
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -12,21 +12,21 @@ import (
 )
 
 type Args struct {
-	Config         util.ValueMap              `json:"config,omitempty"`
-	ConfigFile     json.RawMessage            `json:"-"`
-	Enums          enum.Enums                 `json:"enums,omitempty"`
-	EnumFiles      map[string]json.RawMessage `json:"-"`
-	Events         model.Events               `json:"events,omitempty"`
-	EventFiles     map[string]json.RawMessage `json:"-"`
-	Models         model.Models               `json:"models,omitempty"`
-	ModelFiles     map[string]json.RawMessage `json:"-"`
-	Groups         model.Groups               `json:"groups,omitempty"`
-	GroupsFile     json.RawMessage            `json:"-"`
-	Acronyms       []string                   `json:"acronyms,omitempty"`
-	ExtraTypes     model.Models               `json:"extraTypes,omitempty"`
-	ExtraTypesFile json.RawMessage            `json:"-"`
-	Modules        []string                   `json:"-"`
-	Database       string                     `json:"-"`
+	Config         util.ValueMap             `json:"config,omitempty"`
+	ConfigFile     jsontext.Value            `json:"-"`
+	Enums          enum.Enums                `json:"enums,omitempty"`
+	EnumFiles      map[string]jsontext.Value `json:"-"`
+	Events         model.Events              `json:"events,omitempty"`
+	EventFiles     map[string]jsontext.Value `json:"-"`
+	Models         model.Models              `json:"models,omitempty"`
+	ModelFiles     map[string]jsontext.Value `json:"-"`
+	Groups         model.Groups              `json:"groups,omitempty"`
+	GroupsFile     jsontext.Value            `json:"-"`
+	Acronyms       []string                  `json:"acronyms,omitempty"`
+	ExtraTypes     model.Models              `json:"extraTypes,omitempty"`
+	ExtraTypesFile jsontext.Value            `json:"-"`
+	Modules        []string                  `json:"-"`
+	Database       string                    `json:"-"`
 }
 
 func (a *Args) HasModule(key string) bool {

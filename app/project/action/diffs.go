@@ -49,16 +49,14 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	}
 	settingsJSON, err := parseSettings(pm.FS, pm.Prj.Theme)
 	if err != nil {
-		// return nil, nil, errors.Wrapf(err, "unable to generate [" + vscodeSettingsPath + "]")
-		pm.Logger.Warnf("unable to generate ["+vscodeSettingsPath+"]: %+v", err)
+		pm.Logger.Warnf("unable to generate [%s] for project [%s]: %+v", vscodeSettingsPath, pm.Prj.Key, err)
 	}
 	if settingsJSON != nil {
 		srcFiles = append(srcFiles, settingsJSON)
 	}
 	launchJSON, err := parseLaunch(pm.FS, pm.Prj.Name, pm.Prj.ExecSafe(), pm.Prj.HasModule("upgrade"))
 	if err != nil {
-		// return nil, nil, errors.Wrapf(err, "unable to generate [" + vscodeLaunchPath + "]")
-		pm.Logger.Warnf("unable to generate ["+vscodeLaunchPath+"]: %+v", err)
+		pm.Logger.Warnf("unable to generate [%s] for project [%s]: %+v", vscodeLaunchPath, pm.Prj.Key, err)
 	}
 	if launchJSON != nil {
 		srcFiles = append(srcFiles, launchJSON)

@@ -23,7 +23,7 @@ type WriteCounter struct {
 func NewWriteCounter(w http.ResponseWriter) *WriteCounter {
 	return &WriteCounter{
 		ResponseWriter: w,
-		started:        time.Now(),
+		started:        util.TimeCurrent(),
 	}
 }
 

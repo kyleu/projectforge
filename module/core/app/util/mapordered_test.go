@@ -1,7 +1,6 @@
 package util_test
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"reflect"
 	"testing"
@@ -145,11 +144,7 @@ func TestOrderedMap_MarshalJSON(t *testing.T) {
 	om.Set("b", 2)
 	om.Set("a", 1)
 
-	b, err := json.Marshal(om)
-	if err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
-
+	b := util.ToJSONBytes(om, false)
 	if string(b) != expectedJSON {
 		t.Errorf("unexpected JSON: %s", string(b))
 	}
@@ -159,7 +154,7 @@ func TestOrderedMap_UnmarshalJSON(t *testing.T) {
 	t.Parallel()
 	om := util.NewOMap[int]()
 
-	err := json.Unmarshal([]byte(expectedJSON), om)
+	err := util.FromJSON([]byte(expectedJSON), om)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
