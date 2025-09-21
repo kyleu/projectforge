@@ -14,9 +14,9 @@ import (
 type runFn func(ctx context.Context, st *app.State, args util.ValueMap, logger util.Logger) (any, error)
 
 type Sandbox struct {
-	Key   string          `json:"key,omitempty"`
-	Title string          `json:"title,omitempty"`
-	Icon  string          `json:"icon,omitempty"`
+	Key   string          `json:"key,omitzero"`
+	Title string          `json:"title,omitzero"`
+	Icon  string          `json:"icon,omitzero"`
 	Args  util.FieldDescs `json:"args,omitempty"`
 	Run   runFn           `json:"-"`
 }

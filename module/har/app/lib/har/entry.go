@@ -14,16 +14,16 @@ import (
 )
 
 type Entry struct {
-	PageRef         string       `json:"pageref,omitempty"`
+	PageRef         string       `json:"pageref,omitzero"`
 	StartedDateTime string       `json:"startedDateTime"`
 	Time            float32      `json:"time"`
 	Request         *Request     `json:"request"`
 	Response        *Response    `json:"response"`
 	Cache           *Cache       `json:"cache"`
 	PageTimings     *PageTimings `json:"timings"`
-	ServerIPAddress string       `json:"serverIPAddress,omitempty"`
-	Connection      string       `json:"connection,omitempty"`
-	Comment         string       `json:"comment,omitempty"`
+	ServerIPAddress string       `json:"serverIPAddress,omitzero"`
+	Connection      string       `json:"connection,omitzero"`
+	Comment         string       `json:"comment,omitzero"`
 	Selector        *Selector    `json:"-"`
 }
 

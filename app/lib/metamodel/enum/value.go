@@ -19,11 +19,11 @@ var ValueFieldDescs = util.FieldDescs{
 
 type valueMarshal struct {
 	Key         string                `json:"key"`
-	Name        string                `json:"name,omitempty"`
-	Description string                `json:"description,omitempty"`
-	Icon        string                `json:"icon,omitempty"`
-	Default     bool                  `json:"default,omitempty"`
-	Extra       *util.OrderedMap[any] `json:"extra,omitempty"`
+	Name        string                `json:"name,omitzero"`
+	Description string                `json:"description,omitzero"`
+	Icon        string                `json:"icon,omitzero"`
+	Default     bool                  `json:"default,omitzero"`
+	Extra       *util.OrderedMap[any] `json:"extra,omitzero"`
 }
 
 type Value struct {

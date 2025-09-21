@@ -9,10 +9,10 @@ import (
 
 type SQLiteParams struct {
 	File     string `json:"file"`
-	User     string `json:"user,omitempty"`
-	Password string `json:"password,omitempty"`
-	Schema   string `json:"schema,omitempty"`
-	Debug    bool   `json:"debug,omitempty"`
+	User     string `json:"user,omitzero"`
+	Password string `json:"password,omitzero"`
+	Schema   string `json:"schema,omitzero"`
+	Debug    bool   `json:"debug,omitzero"`
 }
 
 func OpenSQLite(ctx context.Context, key string, prefix string, logger util.Logger) (*Service, error) {

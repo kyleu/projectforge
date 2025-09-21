@@ -19,12 +19,12 @@ type Check struct {
 	Key       string   `json:"key"`
 	Section   string   `json:"section"`
 	Title     string   `json:"title"`
-	Summary   string   `json:"summary,omitempty"`
-	URL       string   `json:"url,omitempty"`
-	UsedBy    string   `json:"usedBy,omitempty"`
+	Summary   string   `json:"summary,omitzero"`
+	URL       string   `json:"url,omitzero"`
+	UsedBy    string   `json:"usedBy,omitzero"`
 	Modules   []string `json:"modules,omitempty"`
 	Platforms []string `json:"platforms,omitempty"`
-	Core      bool     `json:"core,omitempty"`
+	Core      bool     `json:"core,omitzero"`
 	Fn        CheckFn  `json:"-"`
 	Solve     SolveFn  `json:"-"`
 }

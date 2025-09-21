@@ -14,7 +14,7 @@ import (
 
 type Service struct {
 	FS   filesystem.FileLoader `json:"-"`
-	Path string                `json:"path,omitempty"`
+	Path string                `json:"path,omitzero"`
 }
 
 func NewService(fs filesystem.FileLoader, pth string) *Service {

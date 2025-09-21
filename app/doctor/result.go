@@ -14,10 +14,10 @@ type Result struct {
 	Check     *Check   `json:"-"`
 	Key       string   `json:"key"`
 	Title     string   `json:"title"`
-	Status    string   `json:"status,omitempty"`
-	Summary   string   `json:"summary,omitempty"`
+	Status    string   `json:"status,omitzero"`
+	Summary   string   `json:"summary,omitzero"`
 	Errors    Errors   `json:"errors,omitempty"`
-	Duration  int      `json:"duration,omitempty"`
+	Duration  int      `json:"duration,omitzero"`
 	Solutions []string `json:"solution,omitempty"`
 	Logs      []string `json:"logs,omitempty"`
 }

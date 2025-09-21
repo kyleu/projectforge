@@ -10,8 +10,8 @@ import (
 const KeyInt = "int"
 
 type Int struct {
-	Bits     int  `json:"bits,omitempty"`
-	Unsigned bool `json:"unsigned,omitempty"`
+	Bits     int  `json:"bits,omitzero"`
+	Unsigned bool `json:"unsigned,omitzero"`
 }
 
 var _ Type = (*Int)(nil)

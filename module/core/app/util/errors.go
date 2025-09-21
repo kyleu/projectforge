@@ -26,7 +26,7 @@ type ErrorDetail struct {
 	Message    string            `json:"message" xml:"message"`
 	Stack      []ErrorFrame      `json:"stack,omitempty" xml:"stack,omitempty"`
 	StackTrace errors.StackTrace `json:"-" xml:"-"`
-	Cause      *ErrorDetail      `json:"cause,omitempty" xml:"cause,omitempty"`
+	Cause      *ErrorDetail      `json:"cause,omitzero" xml:"cause,omitempty"`
 }
 
 func GetErrorDetail(e error, includeStack bool) *ErrorDetail {

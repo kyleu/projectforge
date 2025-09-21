@@ -18,8 +18,8 @@ import (
 type Service struct {
 	Engine     gocron.Scheduler      `json:"-"`
 	Started    time.Time             `json:"started"`
-	ExecCounts map[uuid.UUID]int     `json:"execCounts,omitempty"`
-	Results    map[uuid.UUID]*Result `json:"results,omitempty"`
+	ExecCounts map[uuid.UUID]int     `json:"execCounts,omitzero"`
+	Results    map[uuid.UUID]*Result `json:"results,omitzero"`
 	resultMu   sync.Mutex
 	loggingOff bool
 }

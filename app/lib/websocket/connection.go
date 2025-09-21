@@ -15,11 +15,11 @@ import (
 
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`
-	Profile  *user.Profile `json:"profile,omitempty"`
-	Svc      string        `json:"svc,omitempty"`
-	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
+	Profile  *user.Profile `json:"profile,omitzero"`
+	Svc      string        `json:"svc,omitzero"`
+	ModelID  *uuid.UUID    `json:"modelID,omitzero"`
 	Channels []string      `json:"channels,omitempty"`
-	Started  time.Time     `json:"started,omitempty"`
+	Started  time.Time     `json:"started,omitzero"`
 	handler  Handler
 	socket   *websocket.Conn
 	mu       sync.Mutex

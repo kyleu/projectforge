@@ -27,8 +27,8 @@ var (
 type Params struct {
 	Key       string    `json:"key"`
 	Orderings Orderings `json:"orderings,omitempty"`
-	Limit     int       `json:"limit,omitempty"`
-	Offset    int       `json:"offset,omitempty"`
+	Limit     int       `json:"limit,omitzero"`
+	Offset    int       `json:"offset,omitzero"`
 }
 
 func ParamsWithDefaultOrdering(key string, params *Params, orderings ...*Ordering) *Params {

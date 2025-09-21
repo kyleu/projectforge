@@ -15,10 +15,10 @@ var LinkFieldDescs = util.FieldDescs{
 }
 
 type Link struct {
-	Title     string   `json:"title,omitempty"`
+	Title     string   `json:"title,omitzero"`
 	URL       string   `json:"url"`
-	Icon      string   `json:"icon,omitempty"`
-	Dangerous bool     `json:"dangerous,omitempty"`
+	Icon      string   `json:"icon,omitzero"`
+	Dangerous bool     `json:"dangerous,omitzero"`
 	Tags      []string `json:"tags,omitempty"`
 }
 

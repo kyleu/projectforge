@@ -6,7 +6,7 @@ const (
 
 type Service struct {
 	Key  string `json:"key"`
-	Path string `json:"path,omitempty"`
+	Path string `json:"path,omitzero"`
 }
 
 func NewService(key string, path string) *Service {

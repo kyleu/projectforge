@@ -11,9 +11,9 @@ import (
 
 type Node struct {
 	Name     string   `json:"name"`
-	Dir      bool     `json:"dir,omitempty"`
-	Size     int      `json:"size,omitempty"`
-	Children Nodes    `json:"children,omitempty"`
+	Dir      bool     `json:"dir,omitzero"`
+	Size     int      `json:"size,omitzero"`
+	Children Nodes    `json:"children,omitzero"`
 	Tags     []string `json:"tags,omitempty"`
 }
 
@@ -81,7 +81,7 @@ func (n Nodes) Merge(x Nodes) Nodes {
 
 type Tree struct {
 	Nodes  Nodes         `json:"nodes,omitempty"`
-	Config util.ValueMap `json:"config,omitempty"`
+	Config util.ValueMap `json:"config,omitzero"`
 }
 
 func (t Tree) Flatten() []string {

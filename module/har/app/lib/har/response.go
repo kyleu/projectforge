@@ -25,7 +25,7 @@ type Response struct {
 	RedirectURL string   `json:"redirectURL"`
 	HeadersSize int      `json:"headersSize"`
 	BodySize    int      `json:"bodySize"`
-	Comment     string   `json:"comment,omitempty"`
+	Comment     string   `json:"comment,omitzero"`
 }
 
 func ResponseFromHTTP(r *http.Response) (*Response, error) {

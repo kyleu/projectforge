@@ -7,13 +7,13 @@ import (
 )
 
 type Result struct {
-	Type    string  `json:"type,omitempty"`
-	ID      string  `json:"id,omitempty"`
-	Title   string  `json:"title,omitempty"`
-	Icon    string  `json:"icon,omitempty"`
-	URL     string  `json:"url,omitempty"`
+	Type    string  `json:"type,omitzero"`
+	ID      string  `json:"id,omitzero"`
+	Title   string  `json:"title,omitzero"`
+	Icon    string  `json:"icon,omitzero"`
+	URL     string  `json:"url,omitzero"`
 	Matches Matches `json:"matches,omitempty"`
-	Data    any     `json:"data,omitempty"`
+	Data    any     `json:"data,omitzero"`
 	HTML    string  `json:"-"`
 }
 

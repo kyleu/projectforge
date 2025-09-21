@@ -17,18 +17,18 @@ type ResultLogFn func(key string, data any)
 type Result struct {
 	ID       uuid.UUID     `json:"id"`
 	Task     *Task         `json:"task"`
-	Run      string        `json:"run,omitempty"`
-	Args     util.ValueMap `json:"args,omitempty"`
-	Started  time.Time     `json:"started,omitempty"`
-	Elapsed  int           `json:"elapsed,omitempty"`
-	Status   string        `json:"status,omitempty"`
-	Summary  string        `json:"summary,omitempty"`
+	Run      string        `json:"run,omitzero"`
+	Args     util.ValueMap `json:"args,omitzero"`
+	Started  time.Time     `json:"started,omitzero"`
+	Elapsed  int           `json:"elapsed,omitzero"`
+	Status   string        `json:"status,omitzero"`
+	Summary  string        `json:"summary,omitzero"`
 	Logs     []string      `json:"logs,omitempty"`
-	Data     any           `json:"data,omitempty"`
+	Data     any           `json:"data,omitzero"`
 	Tags     []string      `json:"tags,omitempty"`
-	Metadata util.ValueMap `json:"metadata,omitempty"`
+	Metadata util.ValueMap `json:"metadata,omitzero"`
 	Success  bool          `json:"success"`
-	Error    string        `json:"error,omitempty"`
+	Error    string        `json:"error,omitzero"`
 	syncMu   *sync.Mutex
 	fns      []ResultLogFn
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Section struct {
-	Models model.Models `json:"models,omitempty"`
+	Models model.Models `json:"models,omitzero"`
 	Logs   []string     `json:"logs,omitempty"`
 	Errors []string     `json:"errors,omitempty"`
 }

@@ -32,24 +32,24 @@ var ColumnFieldDescs = util.FieldDescs{
 type Column struct {
 	Name           string         `json:"name"`
 	Type           *types.Wrapped `json:"type"`
-	PK             bool           `json:"pk,omitempty"`
-	Nullable       bool           `json:"nullable,omitempty"`
-	Search         bool           `json:"search,omitempty"`
-	SQLDefault     string         `json:"sqlDefault,omitempty"`
-	Indexed        bool           `json:"indexed,omitempty"`
-	Display        string         `json:"display,omitempty"`
-	Format         string         `json:"format,omitempty"`
-	JSON           string         `json:"json,omitempty"`
-	SQLOverride    string         `json:"sql,omitempty"`
-	TitleOverride  string         `json:"title,omitempty"`
-	PluralOverride string         `json:"plural,omitempty"`
-	ProperOverride string         `json:"proper,omitempty"`
-	Example        string         `json:"example,omitempty"`
-	Validation     string         `json:"validation,omitempty"`
+	PK             bool           `json:"pk,omitzero"`
+	Nullable       bool           `json:"nullable,omitzero"`
+	Search         bool           `json:"search,omitzero"`
+	SQLDefault     string         `json:"sqlDefault,omitzero"`
+	Indexed        bool           `json:"indexed,omitzero"`
+	Display        string         `json:"display,omitzero"`
+	Format         string         `json:"format,omitzero"`
+	JSON           string         `json:"json,omitzero"`
+	SQLOverride    string         `json:"sql,omitzero"`
+	TitleOverride  string         `json:"title,omitzero"`
+	PluralOverride string         `json:"plural,omitzero"`
+	ProperOverride string         `json:"proper,omitzero"`
+	Example        string         `json:"example,omitzero"`
+	Validation     string         `json:"validation,omitzero"`
 	Values         []string       `json:"values,omitempty"`
 	Tags           []string       `json:"tags,omitempty"`
-	HelpString     string         `json:"helpString,omitempty"`
-	Metadata       util.ValueMap  `json:"metadata,omitempty"`
+	HelpString     string         `json:"helpString,omitzero"`
+	Metadata       util.ValueMap  `json:"metadata,omitzero"`
 	acronyms       []string
 }
 

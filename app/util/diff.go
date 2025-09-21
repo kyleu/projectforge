@@ -11,7 +11,7 @@ import (
 
 type Diff struct {
 	Path string `json:"path"`
-	Old  string `json:"o,omitempty"`
+	Old  string `json:"o,omitzero"`
 	New  string `json:"n"`
 }
 

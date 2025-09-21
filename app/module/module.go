@@ -12,19 +12,19 @@ import (
 
 type Module struct {
 	Key         string                `json:"-"`
-	Name        string                `json:"name,omitempty"`
-	Icon        string                `json:"icon,omitempty"`
-	Description string                `json:"description,omitempty"`
-	Hidden      bool                  `json:"hidden,omitempty"`
-	AuthorName  string                `json:"authorName,omitempty"`
-	AuthorEmail string                `json:"authorEmail,omitempty"`
-	License     string                `json:"license,omitempty"`
-	Sourcecode  string                `json:"sourcecode,omitempty"`
-	ConfigVars  util.KeyTypeDescs     `json:"configVars,omitempty"`
-	PortOffsets map[string]int        `json:"portOffsets,omitempty"`
-	Dangerous   bool                  `json:"dangerous,omitempty"`
+	Name        string                `json:"name,omitzero"`
+	Icon        string                `json:"icon,omitzero"`
+	Description string                `json:"description,omitzero"`
+	Hidden      bool                  `json:"hidden,omitzero"`
+	AuthorName  string                `json:"authorName,omitzero"`
+	AuthorEmail string                `json:"authorEmail,omitzero"`
+	License     string                `json:"license,omitzero"`
+	Sourcecode  string                `json:"sourcecode,omitzero"`
+	ConfigVars  util.KeyTypeDescs     `json:"configVars,omitzero"`
+	PortOffsets map[string]int        `json:"portOffsets,omitzero"`
+	Dangerous   bool                  `json:"dangerous,omitzero"`
 	Requires    []string              `json:"requires,omitempty"`
-	Priority    int                   `json:"priority,omitempty"`
+	Priority    int                   `json:"priority,omitzero"`
 	Technology  []string              `json:"technology,omitempty"`
 	Files       filesystem.FileLoader `json:"-"`
 	URL         string                `json:"-"`

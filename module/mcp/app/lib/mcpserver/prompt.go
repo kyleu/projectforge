@@ -15,9 +15,9 @@ type PromptHandler func(ctx context.Context, as *app.State, req mcp.GetPromptReq
 
 type Prompt struct {
 	Name        string `json:"name"`
-	Description string `json:"description,omitempty"`
-	Icon        string `json:"icon,omitempty"`
-	Content     string `json:"content,omitempty"`
+	Description string `json:"description,omitzero"`
+	Icon        string `json:"icon,omitzero"`
+	Content     string `json:"content,omitzero"`
 }
 
 func NewStaticPrompt(name string, description string, content string) *Prompt {

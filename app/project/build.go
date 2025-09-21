@@ -7,41 +7,41 @@ import (
 )
 
 type Build struct {
-	Private   bool `json:"private,omitempty"`
-	Changelog bool `json:"changelog,omitempty"`
-	TestsFail bool `json:"testsFail,omitempty"`
-	NoScript  bool `json:"noScript,omitempty"`
-	Simple    bool `json:"simple,omitempty"`
+	Private   bool `json:"private,omitzero"`
+	Changelog bool `json:"changelog,omitzero"`
+	TestsFail bool `json:"testsFail,omitzero"`
+	NoScript  bool `json:"noScript,omitzero"`
+	Simple    bool `json:"simple,omitzero"`
 
-	Desktop    bool `json:"desktop,omitempty"`
-	Notarize   bool `json:"notarize,omitempty"`
-	Signing    bool `json:"signing,omitempty"`
-	SkipDocker bool `json:"skipDocker,omitempty"`
-	SafeMode   bool `json:"safeMode,omitempty"`
+	Desktop    bool `json:"desktop,omitzero"`
+	Notarize   bool `json:"notarize,omitzero"`
+	Signing    bool `json:"signing,omitzero"`
+	SkipDocker bool `json:"skipDocker,omitzero"`
+	SafeMode   bool `json:"safeMode,omitzero"`
 
-	Android bool `json:"android,omitempty"`
-	IOS     bool `json:"iOS,omitempty"`
-	WASM    bool `json:"wasm,omitempty"`
-	X86     bool `json:"x86,omitempty"`
+	Android bool `json:"android,omitzero"`
+	IOS     bool `json:"iOS,omitzero"`
+	WASM    bool `json:"wasm,omitzero"`
+	X86     bool `json:"x86,omitzero"`
 
-	WindowsARM bool `json:"windowsARM,omitempty"`
-	LinuxARM   bool `json:"linuxARM,omitempty"`
-	LinuxMIPS  bool `json:"linuxMIPS,omitempty"`
-	LinuxOdd   bool `json:"linuxOdd,omitempty"`
+	WindowsARM bool `json:"windowsARM,omitzero"`
+	LinuxARM   bool `json:"linuxARM,omitzero"`
+	LinuxMIPS  bool `json:"linuxMIPS,omitzero"`
+	LinuxOdd   bool `json:"linuxOdd,omitzero"`
 
-	AIX       bool `json:"aix,omitempty"`
-	Dragonfly bool `json:"dragonfly,omitempty"`
-	Illumos   bool `json:"illumos,omitempty"`
-	FreeBSD   bool `json:"freeBSD,omitempty"`
-	NetBSD    bool `json:"netBSD,omitempty"`
-	OpenBSD   bool `json:"openBSD,omitempty"`
-	Plan9     bool `json:"plan9,omitempty"`
-	Solaris   bool `json:"solaris,omitempty"`
+	AIX       bool `json:"aix,omitzero"`
+	Dragonfly bool `json:"dragonfly,omitzero"`
+	Illumos   bool `json:"illumos,omitzero"`
+	FreeBSD   bool `json:"freeBSD,omitzero"`
+	NetBSD    bool `json:"netBSD,omitzero"`
+	OpenBSD   bool `json:"openBSD,omitzero"`
+	Plan9     bool `json:"plan9,omitzero"`
+	Solaris   bool `json:"solaris,omitzero"`
 
-	Homebrew  bool `json:"homebrew,omitempty"`
-	NFPMS     bool `json:"nfpms,omitempty"`
-	BOM       bool `json:"bom,omitempty"`
-	Snapcraft bool `json:"snapcraft,omitempty"`
+	Homebrew  bool `json:"homebrew,omitzero"`
+	NFPMS     bool `json:"nfpms,omitzero"`
+	BOM       bool `json:"bom,omitzero"`
+	Snapcraft bool `json:"snapcraft,omitzero"`
 }
 
 func (b *Build) Mobile() bool {

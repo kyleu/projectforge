@@ -10,11 +10,11 @@ import (
 )
 
 type User struct {
-	ID      uuid.UUID  `json:"id,omitempty"`
-	Name    string     `json:"name,omitempty"`
-	Picture string     `json:"picture,omitempty"`
-	Created time.Time  `json:"created,omitempty"`
-	Updated *time.Time `json:"updated,omitempty"`
+	ID      uuid.UUID  `json:"id,omitzero"`
+	Name    string     `json:"name,omitzero"`
+	Picture string     `json:"picture,omitzero"`
+	Created time.Time  `json:"created,omitzero"`
+	Updated *time.Time `json:"updated,omitzero"`
 }
 
 func New(id uuid.UUID) *User {

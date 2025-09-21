@@ -16,7 +16,7 @@ var IndexFieldDescs = util.FieldDescs{
 type Index struct {
 	Name   string `json:"name"`
 	Decl   string `json:"decl"`
-	Unique bool   `json:"unique,omitempty"`
+	Unique bool   `json:"unique,omitzero"`
 }
 
 func (i *Index) SQL() string {

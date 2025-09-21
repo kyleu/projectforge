@@ -3,9 +3,9 @@ package util
 import "fmt"
 
 type Progress struct {
-	Key       string `json:"key,omitempty"`
-	Total     int    `json:"total,omitempty"`
-	Completed int    `json:"completed,omitempty"`
+	Key       string `json:"key,omitzero"`
+	Total     int    `json:"total,omitzero"`
+	Completed int    `json:"completed,omitzero"`
 	fns       []func(p *Progress, delta int)
 }
 

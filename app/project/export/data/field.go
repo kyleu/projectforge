@@ -9,18 +9,18 @@ const unknownKey = "Unknown"
 
 type Field struct {
 	Name        string `json:"name"`
-	RowID       int    `json:"rowID,omitempty"`
+	RowID       int    `json:"rowID,omitzero"`
 	Type        string `json:"type"`
-	Key         string `json:"key,omitempty"`
-	KeyID       string `json:"key_id,omitempty"`
-	KeyOffset   int    `json:"key_offset,omitempty"`
-	Enum        any    `json:"enum,omitempty"`
-	Unique      bool   `json:"unique,omitempty"`
-	FilePath    bool   `json:"file_path,omitempty"`
-	FileExt     any    `json:"file_ext,omitempty"`
-	Display     any    `json:"display,omitempty"`
-	DisplayType string `json:"display_type,omitempty"`
-	Description string `json:"description,omitempty"`
+	Key         string `json:"key,omitzero"`
+	KeyID       string `json:"key_id,omitzero"`
+	KeyOffset   int    `json:"key_offset,omitzero"`
+	Enum        any    `json:"enum,omitzero"`
+	Unique      bool   `json:"unique,omitzero"`
+	FilePath    bool   `json:"file_path,omitzero"`
+	FileExt     any    `json:"file_ext,omitzero"`
+	Display     any    `json:"display,omitzero"`
+	DisplayType string `json:"display_type,omitzero"`
+	Description string `json:"description,omitzero"`
 }
 
 func (f *Field) IsUnknown() bool {

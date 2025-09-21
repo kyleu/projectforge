@@ -16,27 +16,27 @@ var DefaultIcon = "code"
 
 type Project struct {
 	Key     string   `json:"key"`
-	Name    string   `json:"name,omitempty"`
-	Icon    string   `json:"icon,omitempty"`
-	Exec    string   `json:"exec,omitempty"`
+	Name    string   `json:"name,omitzero"`
+	Icon    string   `json:"icon,omitzero"`
+	Exec    string   `json:"exec,omitzero"`
 	Version string   `json:"version"`
-	Package string   `json:"package,omitempty"`
-	Args    string   `json:"args,omitempty"`
-	Port    int      `json:"port,omitempty"`
+	Package string   `json:"package,omitzero"`
+	Args    string   `json:"args,omitzero"`
+	Port    int      `json:"port,omitzero"`
 	Modules []string `json:"modules"`
 	Ignore  []string `json:"ignore,omitempty"`
 	Tags    []string `json:"tags"`
 
-	Info  *Info        `json:"info,omitempty"`
-	Theme *theme.Theme `json:"theme,omitempty"`
-	Build *Build       `json:"build,omitempty"`
+	Info  *Info        `json:"info,omitzero"`
+	Theme *theme.Theme `json:"theme,omitzero"`
+	Build *Build       `json:"build,omitzero"`
 	Files []string     `json:"files,omitempty"`
 
 	ExportArgs *metamodel.Args `json:"-"`
 	Config     util.ValueMap   `json:"-"`
 	Path       string          `json:"-"`
 	Parent     string          `json:"-"`
-	Error      string          `json:"error,omitempty"`
+	Error      string          `json:"error,omitzero"`
 }
 
 func NewProject(key string, path string) *Project {

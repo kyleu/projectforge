@@ -9,18 +9,18 @@ import (
 )
 
 type HistoryArgs struct {
-	Path    string     `json:"path,omitempty"`
-	Since   *time.Time `json:"since,omitempty"`
+	Path    string     `json:"path,omitzero"`
+	Since   *time.Time `json:"since,omitzero"`
 	Authors []string   `json:"authors,omitempty"`
-	Limit   int        `json:"limit,omitempty"`
-	Commit  string     `json:"commit,omitempty"`
-	Debug   bool       `json:"debug,omitempty"`
+	Limit   int        `json:"limit,omitzero"`
+	Commit  string     `json:"commit,omitzero"`
+	Debug   bool       `json:"debug,omitzero"`
 }
 
 type HistoryResult struct {
 	Args    *HistoryArgs   `json:"args,omitempty"`
 	Entries HistoryEntries `json:"entries"`
-	Debug   any            `json:"debug,omitempty"`
+	Debug   any            `json:"debug,omitzero"`
 }
 
 type HistoryAuthor struct {

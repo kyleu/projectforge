@@ -14,8 +14,8 @@ type Matches []*Match
 
 type Response struct {
 	Matches       Matches  `json:"matches"`
-	Request       *Request `json:"request,omitempty"`
-	BytesSearched int      `json:"bytesSearched,omitempty"`
+	Request       *Request `json:"request,omitzero"`
+	BytesSearched int      `json:"bytesSearched,omitzero"`
 	ElapsedNanos  int      `json:"elapsedNanos"`
-	Debug         any      `json:"debug,omitempty"`
+	Debug         any      `json:"debug,omitzero"`
 }

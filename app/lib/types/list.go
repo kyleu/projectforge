@@ -12,7 +12,7 @@ var _ Type = (*List)(nil)
 
 type List struct {
 	V    *Wrapped `json:"v"`
-	Size int      `json:"size,omitempty"`
+	Size int      `json:"size,omitzero"`
 }
 
 func (x *List) Key() string {

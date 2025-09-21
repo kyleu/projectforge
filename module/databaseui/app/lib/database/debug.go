@@ -32,10 +32,10 @@ type DebugStatement struct {
 	SQL     string          `json:"sql"`
 	Values  []any           `json:"values,omitempty"`
 	Extra   []util.ValueMap `json:"extra,omitempty"`
-	Timing  int             `json:"timing,omitempty"`
+	Timing  int             `json:"timing,omitzero"`
 	Error   string          `json:"error"`
-	Message string          `json:"message,omitempty"`
-	Count   int             `json:"count,omitempty"`
+	Message string          `json:"message,omitzero"`
+	Count   int             `json:"count,omitzero"`
 	Out     []any           `json:"out,omitempty"`
 }
 

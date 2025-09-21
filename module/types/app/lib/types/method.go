@@ -23,7 +23,7 @@ const KeyMethod = "method"
 
 type Method struct {
 	Args Arguments `json:"args,omitempty"`
-	Ret  *Wrapped  `json:"ret,omitempty"`
+	Ret  *Wrapped  `json:"ret,omitzero"`
 }
 
 var _ Type = (*Method)(nil)

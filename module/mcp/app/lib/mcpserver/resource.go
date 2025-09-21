@@ -14,12 +14,12 @@ import (
 
 type Resource struct {
 	Name        string `json:"name"`
-	Description string `json:"description,omitempty"`
-	Icon        string `json:"icon,omitempty"`
+	Description string `json:"description,omitzero"`
+	Icon        string `json:"icon,omitzero"`
 	URI         string `json:"uri"`
 	MIMEType    string `json:"mimeType"`
 	Content     string `json:"content"`
-	Binary      bool   `json:"binary,omitempty"`
+	Binary      bool   `json:"binary,omitzero"`
 }
 
 func NewTextResource(name string, description string, uri string, mimeType string, content string) *Resource {

@@ -15,7 +15,7 @@ type Record struct {
 	T        string        `json:"t"`
 	PK       string        `json:"pk"`
 	Changes  util.Diffs    `json:"changes"`
-	Metadata util.ValueMap `json:"metadata,omitempty"`
+	Metadata util.ValueMap `json:"metadata,omitzero"`
 	Occurred time.Time     `json:"occurred"`
 }
 

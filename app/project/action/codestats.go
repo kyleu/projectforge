@@ -63,9 +63,9 @@ func runCodeStats(pth string, recursive bool) (*CodeStats, error) {
 
 type CodeType struct {
 	Name     string    `json:"name"`
-	Code     int       `json:"code,omitempty"`
-	Comments int       `json:"comments,omitempty"`
-	Blanks   int       `json:"blanks,omitempty"`
+	Code     int       `json:"code,omitzero"`
+	Comments int       `json:"comments,omitzero"`
+	Blanks   int       `json:"blanks,omitzero"`
 	Files    CodeTypes `json:"files,omitempty"`
 }
 

@@ -12,7 +12,7 @@ import (
 )
 
 type Args struct {
-	Config         util.ValueMap             `json:"config,omitempty"`
+	Config         util.ValueMap             `json:"config,omitzero"`
 	ConfigFile     jsontext.Value            `json:"-"`
 	Enums          enum.Enums                `json:"enums,omitempty"`
 	EnumFiles      map[string]jsontext.Value `json:"-"`

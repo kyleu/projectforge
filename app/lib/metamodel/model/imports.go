@@ -22,7 +22,7 @@ const (
 type Import struct {
 	Type      ImportType `json:"type"`
 	Value     string     `json:"value"`
-	Alias     string     `json:"alias,omitempty"`
+	Alias     string     `json:"alias,omitzero"`
 	Supported []string   `json:"supported,omitempty"`
 }
 

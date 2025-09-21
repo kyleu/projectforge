@@ -5,8 +5,8 @@ import "{{{ .Package }}}/app/util"
 const KeyJSON, objStr = util.KeyJSON, "{}"
 
 type JSON struct {
-	IsObject bool `json:"obj,omitempty"`
-	IsArray  bool `json:"arr,omitempty"`
+	IsObject bool `json:"obj,omitzero"`
+	IsArray  bool `json:"arr,omitzero"`
 }
 
 var _ Type = (*JSON)(nil)

@@ -11,8 +11,8 @@ const textArrow = " -> "
 
 type Dependency struct {
 	Key        string   `json:"key"`
-	Version    string   `json:"version,omitempty"`
-	Available  string   `json:"available,omitempty"`
+	Version    string   `json:"version,omitzero"`
+	Available  string   `json:"available,omitzero"`
 	References []string `json:"references,omitempty"`
 }
 

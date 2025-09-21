@@ -12,7 +12,7 @@ import (
 
 type NumericJSON struct {
 	M float64 `json:"m"`
-	E int64   `json:"e,omitempty"`
+	E int64   `json:"e,omitzero"`
 }
 
 func (n *NumericJSON) ToNumeric() Numeric {

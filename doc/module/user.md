@@ -73,7 +73,7 @@ type User struct {
     ID      uuid.UUID  `json:"id"`
     Name    string     `json:"name"`
     Created time.Time  `json:"created"`
-    Updated *time.Time `json:"updated,omitempty"`
+    Updated *time.Time `json:"updated,omitzero"`
 }
 ```
 

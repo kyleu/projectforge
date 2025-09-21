@@ -10,9 +10,9 @@ import (
 )
 
 type TSImport struct {
-	Ref    string `json:"ref,omitempty"`
-	Path   string `json:"path,omitempty"`
-	Prefix string `json:"prefix,omitempty"`
+	Ref    string `json:"ref,omitzero"`
+	Path   string `json:"path,omitzero"`
+	Prefix string `json:"prefix,omitzero"`
 }
 
 func (t *TSImport) RefString() string {

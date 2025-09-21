@@ -20,13 +20,13 @@ var TypeSQLServer = &DBType{Key: "sqlserver", Title: "SQL Server", Quote: `"`, P
 
 type SQLServerParams struct {
 	Host     string `json:"host"`
-	Port     int    `json:"port,omitempty"`
+	Port     int    `json:"port,omitzero"`
 	Username string `json:"username"`
-	Password string `json:"password,omitempty"`
-	Database string `json:"database,omitempty"`
-	Schema   string `json:"schema,omitempty"`
-	MaxConns int    `json:"maxConns,omitempty"`
-	Debug    bool   `json:"debug,omitempty"`
+	Password string `json:"password,omitzero"`
+	Database string `json:"database,omitzero"`
+	Schema   string `json:"schema,omitzero"`
+	MaxConns int    `json:"maxConns,omitzero"`
+	Debug    bool   `json:"debug,omitzero"`
 }
 
 func SQLServerParamsFromEnv(key string, defaultUser string, prefix string) *SQLServerParams {

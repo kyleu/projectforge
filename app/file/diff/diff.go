@@ -16,7 +16,7 @@ import (
 type Diff struct {
 	Path    string  `json:"path"`
 	Status  *Status `json:"status"`
-	Patch   string  `json:"patch,omitempty"`
+	Patch   string  `json:"patch,omitzero"`
 	Changes Changes `json:"changes,omitempty"`
 }
 

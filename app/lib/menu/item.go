@@ -10,13 +10,13 @@ var Separator = &Item{}
 
 type Item struct {
 	Key         string `json:"key"`
-	Title       string `json:"title,omitempty"`
-	Description string `json:"description,omitempty"`
-	Badge       string `json:"badge,omitempty"`
-	Icon        string `json:"icon,omitempty"`
-	Route       string `json:"route,omitempty"`
+	Title       string `json:"title,omitzero"`
+	Description string `json:"description,omitzero"`
+	Badge       string `json:"badge,omitzero"`
+	Icon        string `json:"icon,omitzero"`
+	Route       string `json:"route,omitzero"`
 	Hidden      bool   `json:"hidden"`
-	Warning     string `json:"warning,omitempty"`
+	Warning     string `json:"warning,omitzero"`
 	Children    Items  `json:"children,omitempty"`
 }
 

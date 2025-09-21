@@ -11,11 +11,11 @@ import (
 )
 
 type Selector struct {
-	Har     string `json:"har,omitempty"`
-	URL     string `json:"url,omitempty"`
-	Mime    string `json:"mime,omitempty"`
-	Idx     int    `json:"idx,omitempty"`
-	Comment string `json:"comment,omitempty"`
+	Har     string `json:"har,omitzero"`
+	URL     string `json:"url,omitzero"`
+	Mime    string `json:"mime,omitzero"`
+	Idx     int    `json:"idx,omitzero"`
+	Comment string `json:"comment,omitzero"`
 }
 
 func (s Selector) Matches(x *Selector) bool {

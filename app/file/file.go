@@ -9,7 +9,7 @@ type File struct {
 	Type    Type                `json:"type"`
 	Path    []string            `json:"path,omitempty"`
 	Name    string              `json:"name"`
-	Mode    filesystem.FileMode `json:"mode,omitempty"`
+	Mode    filesystem.FileMode `json:"mode,omitzero"`
 	Content string              `json:"-"`
 }
 

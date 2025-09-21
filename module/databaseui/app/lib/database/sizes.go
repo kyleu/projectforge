@@ -10,18 +10,18 @@ import (
 )
 
 type NumAndString struct {
-	Num    int64  `json:"num,omitempty"`
-	String string `json:"string,omitempty"`
+	Num    int64  `json:"num,omitzero"`
+	String string `json:"string,omitzero"`
 }
 
 type TableSize struct {
 	Schema string        `json:"schema"`
 	Name   string        `json:"name"`
-	Rows   string        `json:"rows,omitempty"`
-	Total  *NumAndString `json:"total,omitempty"`
-	Index  *NumAndString `json:"index,omitempty"`
-	Toast  *NumAndString `json:"toast,omitempty"`
-	Table  *NumAndString `json:"table,omitempty"`
+	Rows   string        `json:"rows,omitzero"`
+	Total  *NumAndString `json:"total,omitzero"`
+	Index  *NumAndString `json:"index,omitzero"`
+	Toast  *NumAndString `json:"toast,omitzero"`
+	Table  *NumAndString `json:"table,omitzero"`
 }
 
 type TableSizes []*TableSize

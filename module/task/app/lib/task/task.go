@@ -13,16 +13,16 @@ type Fn func(ctx context.Context, res *Result, logger util.Logger) *Result
 
 type Task struct {
 	Key           string          `json:"key"`
-	Title         string          `json:"title,omitempty"`
-	Category      string          `json:"category,omitempty"`
-	Icon          string          `json:"icon,omitempty"`
-	Description   string          `json:"description,omitempty"`
+	Title         string          `json:"title,omitzero"`
+	Category      string          `json:"category,omitzero"`
+	Icon          string          `json:"icon,omitzero"`
+	Description   string          `json:"description,omitzero"`
 	Tags          []string        `json:"tags,omitempty"`
 	Fields        util.FieldDescs `json:"fields,omitempty"`
-	Dangerous     string          `json:"dangerous,omitempty"`
-	Expensive     bool            `json:"expensive,omitempty"`
-	WebURL        string          `json:"webURL,omitempty"`
-	MaxConcurrent int             `json:"maxConcurrent,omitempty"`
+	Dangerous     string          `json:"dangerous,omitzero"`
+	Expensive     bool            `json:"expensive,omitzero"`
+	WebURL        string          `json:"webURL,omitzero"`
+	MaxConcurrent int             `json:"maxConcurrent,omitzero"`
 	fns           []Fn
 }
 

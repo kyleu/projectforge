@@ -58,7 +58,7 @@ resultHTML := cutil.FormatLangIgnoreErrors(content, "javascript")
 type User struct {
     ID    int    `json:"id"`
     Name  string `json:"name"`
-    Email string `json:"email,omitempty"`
+    Email string `json:"email,omitzero"`
 }
 
 user := User{ID: 1, Name: "John Doe", Email: "john@example.com"}

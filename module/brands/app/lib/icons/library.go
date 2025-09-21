@@ -12,7 +12,7 @@ import (
 
 type Library struct {
 	Icons map[string]*Icon  `json:"icons"`
-	Keys  map[string]string `json:"keys,omitempty"`
+	Keys  map[string]string `json:"keys,omitzero"`
 }
 
 func NewLibrary(icons ...*Icon) *Library {

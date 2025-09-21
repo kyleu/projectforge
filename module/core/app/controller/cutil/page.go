@@ -39,44 +39,44 @@ var (
 )
 
 type PageState struct {
-	Action         string            `json:"action,omitempty"`
-	Title          string            `json:"title,omitempty"`
-	Description    string            `json:"description,omitempty"`
-	Method         string            `json:"method,omitempty"`
+	Action         string            `json:"action,omitzero"`
+	Title          string            `json:"title,omitzero"`
+	Description    string            `json:"description,omitzero"`
+	Method         string            `json:"method,omitzero"`
 	URI            *url.URL          `json:"-"`
 	Menu           menu.Items        `json:"menu,omitempty"`
 	Breadcrumbs    cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
 	Flashes        []string          `json:"flashes,omitempty"`
 	Session        util.ValueMap     `json:"-"`{{{ if .HasUser }}}
-	User           *dbuser.User      `json:"user,omitempty"`{{{ end }}}
-	Profile        *user.Profile     `json:"profile,omitempty"`{{{ if .HasAccount }}}
+	User           *dbuser.User      `json:"user,omitzero"`{{{ end }}}
+	Profile        *user.Profile     `json:"profile,omitzero"`{{{ if .HasAccount }}}
 	Accounts       user.Accounts     `json:"accounts,omitempty"`{{{ end }}}
-	Authed         bool              `json:"authed,omitempty"`
-	Admin          bool              `json:"admin,omitempty"`
+	Authed         bool              `json:"authed,omitzero"`
+	Admin          bool              `json:"admin,omitzero"`
 	Params         filter.ParamSet   `json:"params,omitempty"`
 	Icons          []string          `json:"icons,omitempty"`
-	DefaultNavIcon string            `json:"defaultNavIcon,omitempty"`
-	RootIcon       string            `json:"rootIcon,omitempty"`
-	RootPath       string            `json:"rootPath,omitempty"`
-	RootTitle      string            `json:"rootTitle,omitempty"`{{{ if .HasModule "search" }}}
-	SearchPath     string            `json:"searchPath,omitempty"`{{{ end }}}
-	ProfilePath    string            `json:"profilePath,omitempty"`
-	HideHeader     bool              `json:"hideHeader,omitempty"`
-	HideMenu       bool              `json:"hideMenu,omitempty"`
-	NoScript       bool              `json:"noScript,omitempty"`
-	ForceRedirect  string            `json:"forceRedirect,omitempty"`
-	DefaultFormat  string            `json:"defaultFormat,omitempty"`
-	HeaderContent  string            `json:"headerContent,omitempty"`
-	Browser        string            `json:"browser,omitempty"`
-	BrowserVersion string            `json:"browserVersion,omitempty"`
-	OS             string            `json:"os,omitempty"`
-	OSVersion      string            `json:"osVersion,omitempty"`
-	Platform       string            `json:"platform,omitempty"`
-	Transport      string            `json:"transport,omitempty"`
-	Data           any               `json:"data,omitempty"`
-	Started        time.Time         `json:"started,omitempty"`
-	RenderElapsed  float64           `json:"renderElapsed,omitempty"`
-	ResponseBytes  int64             `json:"responseBytes,omitempty"`
+	DefaultNavIcon string            `json:"defaultNavIcon,omitzero"`
+	RootIcon       string            `json:"rootIcon,omitzero"`
+	RootPath       string            `json:"rootPath,omitzero"`
+	RootTitle      string            `json:"rootTitle,omitzero"`{{{ if .HasModule "search" }}}
+	SearchPath     string            `json:"searchPath,omitzero"`{{{ end }}}
+	ProfilePath    string            `json:"profilePath,omitzero"`
+	HideHeader     bool              `json:"hideHeader,omitzero"`
+	HideMenu       bool              `json:"hideMenu,omitzero"`
+	NoScript       bool              `json:"noScript,omitzero"`
+	ForceRedirect  string            `json:"forceRedirect,omitzero"`
+	DefaultFormat  string            `json:"defaultFormat,omitzero"`
+	HeaderContent  string            `json:"headerContent,omitzero"`
+	Browser        string            `json:"browser,omitzero"`
+	BrowserVersion string            `json:"browserVersion,omitzero"`
+	OS             string            `json:"os,omitzero"`
+	OSVersion      string            `json:"osVersion,omitzero"`
+	Platform       string            `json:"platform,omitzero"`
+	Transport      string            `json:"transport,omitzero"`
+	Data           any               `json:"data,omitzero"`
+	Started        time.Time         `json:"started,omitzero"`
+	RenderElapsed  float64           `json:"renderElapsed,omitzero"`
+	ResponseBytes  int64             `json:"responseBytes,omitzero"`
 	RequestBody    []byte            `json:"-"`
 	W              *WriteCounter     `json:"-"`
 	Logger         util.Logger       `json:"-"`

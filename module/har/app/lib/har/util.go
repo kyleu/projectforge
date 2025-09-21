@@ -15,7 +15,7 @@ type Wrapper struct {
 type NVP struct {
 	Name    string `json:"name"`
 	Value   string `json:"value"`
-	Comment string `json:"comment,omitempty"`
+	Comment string `json:"comment,omitzero"`
 }
 
 type NVPs []*NVP
@@ -38,11 +38,11 @@ func (p NVPs) WithReplacements(repl func(s string) string) NVPs {
 
 type Content struct {
 	Size        int    `json:"size"`
-	Compression int    `json:"compression,omitempty"`
+	Compression int    `json:"compression,omitzero"`
 	MimeType    string `json:"mimeType"`
-	Text        string `json:"text,omitempty"`
-	JSON        any    `json:"json,omitempty"`
-	Encoding    string `json:"encoding,omitempty"`
-	Comment     string `json:"comment,omitempty"`
-	File        string `json:"_file,omitempty"`
+	Text        string `json:"text,omitzero"`
+	JSON        any    `json:"json,omitzero"`
+	Encoding    string `json:"encoding,omitzero"`
+	Comment     string `json:"comment,omitzero"`
+	File        string `json:"_file,omitzero"`
 }

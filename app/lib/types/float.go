@@ -9,7 +9,7 @@ import (
 const KeyFloat = "float"
 
 type Float struct {
-	Bits int `json:"bits,omitempty"`
+	Bits int `json:"bits,omitzero"`
 }
 
 var _ Type = (*Float)(nil)

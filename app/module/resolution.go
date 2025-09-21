@@ -11,7 +11,7 @@ type Resolution struct {
 	Title   string            `json:"title"`
 	Project string            `json:"project"`
 	Action  string            `json:"action"`
-	Args    map[string]string `json:"args,omitempty"`
+	Args    map[string]string `json:"args,omitzero"`
 }
 
 func (r *Resolution) URL() string {

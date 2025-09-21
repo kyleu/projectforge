@@ -12,7 +12,7 @@ const DefaultGoVersion = "1.25.0"
 
 type Doc struct {
 	Name     string `json:"name"`
-	Provider string `json:"provider,omitempty"`
+	Provider string `json:"provider,omitzero"`
 	URL      string `json:"url"`
 }
 
@@ -27,34 +27,34 @@ type ModuleDef struct {
 type ModuleDefs []*ModuleDef
 
 type Info struct {
-	Org             string            `json:"org,omitempty"`
-	AuthorID        string            `json:"authorID,omitempty"`
-	AuthorName      string            `json:"authorName,omitempty"`
-	AuthorEmail     string            `json:"authorEmail,omitempty"`
-	Team            string            `json:"team,omitempty"`
-	License         string            `json:"license,omitempty"`
-	Homepage        string            `json:"homepage,omitempty"`
-	Sourcecode      string            `json:"sourcecode,omitempty"`
-	Summary         string            `json:"summary,omitempty"`
-	Description     string            `json:"description,omitempty"`
-	CI              string            `json:"ci,omitempty"`
-	Homebrew        string            `json:"homebrew,omitempty"`
-	Bundle          string            `json:"bundle,omitempty"`
-	SigningIdentity string            `json:"signingIdentity,omitempty"`
-	NotarizeEmail   string            `json:"notarizeEmail,omitempty"`
-	DatabaseEngine  string            `json:"databaseEngine,omitempty"`
-	Slack           string            `json:"slack,omitempty"`
+	Org             string            `json:"org,omitzero"`
+	AuthorID        string            `json:"authorID,omitzero"`
+	AuthorName      string            `json:"authorName,omitzero"`
+	AuthorEmail     string            `json:"authorEmail,omitzero"`
+	Team            string            `json:"team,omitzero"`
+	License         string            `json:"license,omitzero"`
+	Homepage        string            `json:"homepage,omitzero"`
+	Sourcecode      string            `json:"sourcecode,omitzero"`
+	Summary         string            `json:"summary,omitzero"`
+	Description     string            `json:"description,omitzero"`
+	CI              string            `json:"ci,omitzero"`
+	Homebrew        string            `json:"homebrew,omitzero"`
+	Bundle          string            `json:"bundle,omitzero"`
+	SigningIdentity string            `json:"signingIdentity,omitzero"`
+	NotarizeEmail   string            `json:"notarizeEmail,omitzero"`
+	DatabaseEngine  string            `json:"databaseEngine,omitzero"`
+	Slack           string            `json:"slack,omitzero"`
 	Channels        []string          `json:"channels,omitempty"`
-	JavaPackage     string            `json:"javaPackage,omitempty"`
-	GoVersion       string            `json:"goVersion,omitempty"`
-	GoBinary        string            `json:"goBinary,omitempty"`
-	ConfigVars      util.KeyTypeDescs `json:"configVars,omitempty"`
+	JavaPackage     string            `json:"javaPackage,omitzero"`
+	GoVersion       string            `json:"goVersion,omitzero"`
+	GoBinary        string            `json:"goBinary,omitzero"`
+	ConfigVars      util.KeyTypeDescs `json:"configVars,omitzero"`
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
 	IgnoredFiles    []string          `json:"ignoredFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`
 	EnvVars         []string          `json:"envVars,omitempty"`
 	DockerPackages  []string          `json:"dockerPackages,omitempty"`
-	Dependencies    map[string]string `json:"dependencies,omitempty"`
+	Dependencies    map[string]string `json:"dependencies,omitzero"`
 	Docs            Docs              `json:"docs,omitempty"`
 	Acronyms        []string          `json:"acronyms,omitempty"`
 	ModuleDefs      ModuleDefs        `json:"moduleDefs,omitempty"`

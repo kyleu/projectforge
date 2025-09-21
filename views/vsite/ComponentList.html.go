@@ -30,8 +30,8 @@ var (
 type Component struct {
 	Key         string `json:"key"`
 	Title       string `json:"title"`
-	Description string `json:"description,omitempty"`
-	Icon        string `json:"icon,omitempty"`
+	Description string `json:"description,omitzero"`
+	Icon        string `json:"icon,omitzero"`
 	HTML        string `json:"-"`
 }
 

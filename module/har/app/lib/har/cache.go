@@ -1,15 +1,15 @@
 package har
 
 type Cache struct {
-	BeforeRequest CacheObject `json:"beforeRequest,omitempty"`
-	AfterRequest  CacheObject `json:"afterRequest,omitempty"`
-	Comment       string      `json:"comment,omitempty"`
+	BeforeRequest CacheObject `json:"beforeRequest,omitzero"`
+	AfterRequest  CacheObject `json:"afterRequest,omitzero"`
+	Comment       string      `json:"comment,omitzero"`
 }
 
 type CacheObject struct {
-	Expires    string `json:"expires,omitempty"`
+	Expires    string `json:"expires,omitzero"`
 	LastAccess string `json:"lastAccess"`
 	ETag       string `json:"eTag"`
 	HitCount   int    `json:"hitCount"`
-	Comment    string `json:"comment,omitempty"`
+	Comment    string `json:"comment,omitzero"`
 }

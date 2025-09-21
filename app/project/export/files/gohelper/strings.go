@@ -111,5 +111,11 @@ func JSONSuffix(col *model.Column) string {
 	if col.HasTag("force-json") {
 		return ""
 	}
-	return ",omitempty"
+	if types.IsList(col.Type) {
+		return ",omitempty"
+	}
+	if col.Type.Key() == types.KeyReference && util.StringToPlural(col.Name) == col.Name {
+		return ",omitempty"
+	}
+	return ",omitzero"
 }

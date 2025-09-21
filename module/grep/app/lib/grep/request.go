@@ -11,7 +11,7 @@ import (
 type Request struct {
 	Path          string   `json:"path"`
 	Query         string   `json:"query"`
-	CaseSensitive bool     `json:"caseSensitive,omitempty"`
+	CaseSensitive bool     `json:"caseSensitive,omitzero"`
 	Ignore        []string `json:"ignore,omitempty"`
 }
 

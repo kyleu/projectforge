@@ -10,7 +10,7 @@ import (
 
 type wrappedUnmarshal struct {
 	K string         `json:"k"`
-	T jsontext.Value `json:"t,omitempty"`
+	T jsontext.Value `json:"t,omitzero"`
 }
 
 func (x *Wrapped) MarshalJSON() ([]byte, error) {

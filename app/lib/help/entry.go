@@ -8,9 +8,9 @@ import (
 
 type Entry struct {
 	Key      string `json:"key"`
-	Title    string `json:"title,omitempty"`
-	Markdown string `json:"markdown,omitempty"`
-	HTML     string `json:"html,omitempty"`
+	Title    string `json:"title,omitzero"`
+	Markdown string `json:"markdown,omitzero"`
+	HTML     string `json:"html,omitzero"`
 }
 
 type Entries []*Entry

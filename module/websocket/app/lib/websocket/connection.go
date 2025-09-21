@@ -16,13 +16,13 @@ import (
 
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`{{{ if .HasUser }}}
-	User     *dbuser.User  `json:"user,omitempty"`{{{ end }}}
-	Profile  *user.Profile `json:"profile,omitempty"`{{{ if .HasAccount }}}
+	User     *dbuser.User  `json:"user,omitzero"`{{{ end }}}
+	Profile  *user.Profile `json:"profile,omitzero"`{{{ if .HasAccount }}}
 	Accounts user.Accounts `json:"accounts,omitempty"`{{{ end }}}
-	Svc      string        `json:"svc,omitempty"`
-	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
+	Svc      string        `json:"svc,omitzero"`
+	ModelID  *uuid.UUID    `json:"modelID,omitzero"`
 	Channels []string      `json:"channels,omitempty"`
-	Started  time.Time     `json:"started,omitempty"`
+	Started  time.Time     `json:"started,omitzero"`
 	handler  Handler
 	socket   *websocket.Conn
 	mu       sync.Mutex

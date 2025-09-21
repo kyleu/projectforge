@@ -10,10 +10,10 @@ import (
 
 type PostParam struct {
 	Name        string `json:"name"`
-	Value       string `json:"value,omitempty"`
-	FileName    string `json:"fileName,omitempty"`
-	ContentType string `json:"contentType,omitempty"`
-	Comment     string `json:"comment,omitempty"`
+	Value       string `json:"value,omitzero"`
+	FileName    string `json:"fileName,omitzero"`
+	ContentType string `json:"contentType,omitzero"`
+	Comment     string `json:"comment,omitzero"`
 }
 
 type PostParams []*PostParam
@@ -22,7 +22,7 @@ type PostData struct {
 	MimeType string     `json:"mimeType"`
 	Params   PostParams `json:"params"`
 	Text     string     `json:"text"`
-	Comment  string     `json:"comment,omitempty"`
+	Comment  string     `json:"comment,omitzero"`
 }
 
 func (p *PostData) String() string {

@@ -11,7 +11,7 @@ import (
 
 type SizeResult struct {
 	Name string `json:"name"`
-	Type string `json:"type,omitempty"`
+	Type string `json:"type,omitzero"`
 	Size int    `json:"size"`
 }
 

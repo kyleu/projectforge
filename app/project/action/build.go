@@ -14,9 +14,9 @@ import (
 
 type Build struct {
 	Key         string `json:"key"`
-	Title       string `json:"title,omitempty"`
-	Description string `json:"description,omitempty"`
-	Expensive   bool   `json:"expensive,omitempty"`
+	Title       string `json:"title,omitzero"`
+	Description string `json:"description,omitzero"`
+	Expensive   bool   `json:"expensive,omitzero"`
 
 	Run func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result `json:"-"`
 }

@@ -16,15 +16,15 @@ type Enum struct {
 	Name           string        `json:"name"`
 	Package        string        `json:"package"`
 	Group          []string      `json:"group,omitempty"`
-	Schema         string        `json:"schema,omitempty"`
-	Description    string        `json:"description,omitempty"`
-	Icon           string        `json:"icon,omitempty"`
+	Schema         string        `json:"schema,omitzero"`
+	Description    string        `json:"description,omitzero"`
+	Icon           string        `json:"icon,omitzero"`
 	Values         Values        `json:"values,omitempty"`
 	Tags           []string      `json:"tags,omitempty"`
-	TitleOverride  string        `json:"title,omitempty"`
-	ProperOverride string        `json:"proper,omitempty"`
-	RouteOverride  string        `json:"route,omitempty"`
-	Config         util.ValueMap `json:"config,omitempty"`
+	TitleOverride  string        `json:"title,omitzero"`
+	ProperOverride string        `json:"proper,omitzero"`
+	RouteOverride  string        `json:"route,omitzero"`
+	Config         util.ValueMap `json:"config,omitzero"`
 	Acronyms       []string      `json:"-"`
 }
 

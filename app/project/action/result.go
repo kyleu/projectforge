@@ -16,12 +16,12 @@ type Result struct {
 	Project  *project.Project `json:"project"`
 	Action   Type             `json:"action"`
 	Status   string           `json:"status"`
-	Args     util.ValueMap    `json:"args,omitempty"`
-	Data     any              `json:"data,omitempty"`
+	Args     util.ValueMap    `json:"args,omitzero"`
+	Data     any              `json:"data,omitzero"`
 	Modules  module.Results   `json:"modules,omitempty"`
 	Logs     []string         `json:"logs,omitempty"`
 	Errors   []string         `json:"errors,omitempty"`
-	Duration int              `json:"duration,omitempty"`
+	Duration int              `json:"duration,omitzero"`
 	logger   util.Logger
 }
 
@@ -112,9 +112,9 @@ func (r *Result) StatusLog() string {
 }
 
 type ResultContext struct {
-	Prj *project.Project `json:"prj,omitempty"`
-	Cfg util.ValueMap    `json:"cfg,omitempty"`
-	Res *Result          `json:"res,omitempty"`
+	Prj *project.Project `json:"prj,omitzero"`
+	Cfg util.ValueMap    `json:"cfg,omitzero"`
+	Res *Result          `json:"res,omitzero"`
 }
 
 func (c *ResultContext) Status() string {

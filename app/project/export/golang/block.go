@@ -17,7 +17,7 @@ type Block struct {
 	Key      string   `json:"key"`
 	Type     string   `json:"type"`
 	Lines    []string `json:"lines"`
-	SkipDecl bool     `json:"skipDecl,omitempty"`
+	SkipDecl bool     `json:"skipDecl,omitzero"`
 	Lints    []string `json:"lints,omitempty"`
 }
 

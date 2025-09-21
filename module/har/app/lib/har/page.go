@@ -11,7 +11,7 @@ type Page struct {
 	ID              string      `json:"id"`
 	Title           string      `json:"title"`
 	PageTiming      *PageTiming `json:"pageTiming"`
-	Comment         string      `json:"comment,omitempty"`
+	Comment         string      `json:"comment,omitzero"`
 }
 
 type Pages []*Page
@@ -23,16 +23,16 @@ type PageTiming struct {
 }
 
 type PageTimings struct {
-	IsMicros bool    `json:"isMicros,omitempty"`
-	Total    float64 `json:"total,omitempty"`
-	Blocked  float64 `json:"blocked,omitempty"`
-	DNS      float64 `json:"dns,omitempty"`
-	Connect  float64 `json:"connect,omitempty"`
-	Send     float64 `json:"send,omitempty"`
-	Wait     float64 `json:"wait,omitempty"`
-	Receive  float64 `json:"receive,omitempty"`
-	SSL      float64 `json:"ssl,omitempty"`
-	Comment  string  `json:"comment,omitempty"`
+	IsMicros bool    `json:"isMicros,omitzero"`
+	Total    float64 `json:"total,omitzero"`
+	Blocked  float64 `json:"blocked,omitzero"`
+	DNS      float64 `json:"dns,omitzero"`
+	Connect  float64 `json:"connect,omitzero"`
+	Send     float64 `json:"send,omitzero"`
+	Wait     float64 `json:"wait,omitzero"`
+	Receive  float64 `json:"receive,omitzero"`
+	SSL      float64 `json:"ssl,omitzero"`
+	Comment  string  `json:"comment,omitzero"`
 }
 
 func (p *PageTimings) Elapsed() int {

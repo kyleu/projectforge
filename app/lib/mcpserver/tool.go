@@ -17,8 +17,8 @@ type ToolHandler func(ctx context.Context, as *app.State, req mcp.CallToolReques
 
 type Tool struct {
 	Name        string          `json:"name"`
-	Description string          `json:"description,omitempty"`
-	Icon        string          `json:"icon,omitempty"`
+	Description string          `json:"description,omitzero"`
+	Icon        string          `json:"icon,omitzero"`
 	Args        util.FieldDescs `json:"args,omitempty"`
 	Fn          ToolHandler     `json:"-"`
 }

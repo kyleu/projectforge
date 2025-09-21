@@ -14,14 +14,14 @@ type Event struct {
 	Name           string        `json:"name"`
 	Package        string        `json:"package"`
 	Group          []string      `json:"group,omitempty"`
-	Schema         string        `json:"schema,omitempty"`
-	Description    string        `json:"description,omitempty"`
-	Icon           string        `json:"icon,omitempty"`
+	Schema         string        `json:"schema,omitzero"`
+	Description    string        `json:"description,omitzero"`
+	Icon           string        `json:"icon,omitzero"`
 	Tags           []string      `json:"tags,omitempty"`
-	TitleOverride  string        `json:"title,omitempty"`
-	PluralOverride string        `json:"plural,omitempty"`
-	ProperOverride string        `json:"proper,omitempty"`
-	Config         util.ValueMap `json:"config,omitempty"`
+	TitleOverride  string        `json:"title,omitzero"`
+	PluralOverride string        `json:"plural,omitzero"`
+	ProperOverride string        `json:"proper,omitzero"`
+	Config         util.ValueMap `json:"config,omitzero"`
 	Columns        Columns       `json:"columns"`
 	Imports        Imports       `json:"imports,omitempty"`
 	acronyms       []string

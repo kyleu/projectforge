@@ -16,20 +16,20 @@ type Model struct {
 	Name           string           `json:"name"`
 	Package        string           `json:"package"`
 	Group          []string         `json:"group,omitempty"`
-	Schema         string           `json:"schema,omitempty"`
-	Description    string           `json:"description,omitempty"`
-	Icon           string           `json:"icon,omitempty"`
+	Schema         string           `json:"schema,omitzero"`
+	Description    string           `json:"description,omitzero"`
+	Icon           string           `json:"icon,omitzero"`
 	Ordering       filter.Orderings `json:"ordering,omitempty"`
-	SortIndex      int              `json:"sortIndex,omitempty"`
-	View           string           `json:"view,omitempty"`
+	SortIndex      int              `json:"sortIndex,omitzero"`
+	View           string           `json:"view,omitzero"`
 	Search         []string         `json:"search,omitempty"`
 	Tags           []string         `json:"tags,omitempty"`
-	TitleOverride  string           `json:"title,omitempty"`
-	PluralOverride string           `json:"plural,omitempty"`
-	ProperOverride string           `json:"proper,omitempty"`
-	TableOverride  string           `json:"table,omitempty"`
-	RouteOverride  string           `json:"route,omitempty"`
-	Config         util.ValueMap    `json:"config,omitempty"`
+	TitleOverride  string           `json:"title,omitzero"`
+	PluralOverride string           `json:"plural,omitzero"`
+	ProperOverride string           `json:"proper,omitzero"`
+	TableOverride  string           `json:"table,omitzero"`
+	RouteOverride  string           `json:"route,omitzero"`
+	Config         util.ValueMap    `json:"config,omitzero"`
 	Columns        Columns          `json:"columns"`
 	Relations      Relations        `json:"relations,omitempty"`
 	Indexes        Indexes          `json:"indexes,omitempty"`

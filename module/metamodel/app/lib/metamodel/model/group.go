@@ -10,13 +10,13 @@ const defaultIcon = "star"
 
 type Group struct {
 	Key         string   `json:"key"`
-	Title       string   `json:"title,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Route       string   `json:"route,omitempty"`
-	Icon        string   `json:"icon,omitempty"`
+	Title       string   `json:"title,omitzero"`
+	Description string   `json:"description,omitzero"`
+	Route       string   `json:"route,omitzero"`
+	Icon        string   `json:"icon,omitzero"`
 	Tags        []string `json:"tags,omitempty"`
 	Children    Groups   `json:"children,omitempty"`
-	Provided    bool     `json:"provided,omitempty"`
+	Provided    bool     `json:"provided,omitzero"`
 }
 
 func (g *Group) HasTag(t string) bool {

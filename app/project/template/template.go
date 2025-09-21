@@ -14,26 +14,26 @@ import (
 
 type Context struct {
 	Key         string            `json:"key"`
-	Name        string            `json:"name,omitempty"`
-	Exec        string            `json:"exec,omitempty"`
+	Name        string            `json:"name,omitzero"`
+	Exec        string            `json:"exec,omitzero"`
 	Version     string            `json:"version"`
-	Package     string            `json:"package,omitempty"`
+	Package     string            `json:"package,omitzero"`
 	Args        []string          `json:"args,omitempty"`
-	Port        int               `json:"port,omitempty"`
-	ConfigVars  util.KeyTypeDescs `json:"configVars,omitempty"`
-	PortOffsets map[string]int    `json:"portOffsets,omitempty"`
+	Port        int               `json:"port,omitzero"`
+	ConfigVars  util.KeyTypeDescs `json:"configVars,omitzero"`
+	PortOffsets map[string]int    `json:"portOffsets,omitzero"`
 
 	Ignore     []string `json:"ignore,omitempty"`
-	IgnoreGrep string   `json:"ignoreGrep,omitempty"`
+	IgnoreGrep string   `json:"ignoreGrep,omitzero"`
 	Modules    []string `json:"modules,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 
-	ExportArgs     *metamodel.Args `json:"exportArgs,omitempty"`
-	Config         util.ValueMap   `json:"config,omitempty"`
-	Info           *project.Info   `json:"info,omitempty"`
-	Build          *project.Build  `json:"build,omitempty"`
-	Theme          *theme.Theme    `json:"theme,omitempty"`
-	DatabaseEngine string          `json:"databaseEngine,omitempty"`
+	ExportArgs     *metamodel.Args `json:"exportArgs,omitzero"`
+	Config         util.ValueMap   `json:"config,omitzero"`
+	Info           *project.Info   `json:"info,omitzero"`
+	Build          *project.Build  `json:"build,omitzero"`
+	Theme          *theme.Theme    `json:"theme,omitzero"`
+	DatabaseEngine string          `json:"databaseEngine,omitzero"`
 	Linebreak      string          `json:"-"`
 }
 

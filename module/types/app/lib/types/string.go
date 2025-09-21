@@ -9,9 +9,9 @@ import (
 const KeyString = "string"
 
 type String struct {
-	MinLength int    `json:"minLength,omitempty"`
-	MaxLength int    `json:"maxLength,omitempty"`
-	Pattern   string `json:"pattern,omitempty"`
+	MinLength int    `json:"minLength,omitzero"`
+	MaxLength int    `json:"maxLength,omitzero"`
+	Pattern   string `json:"pattern,omitzero"`
 }
 
 var _ Type = (*String)(nil)

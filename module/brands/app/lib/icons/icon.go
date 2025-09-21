@@ -18,12 +18,12 @@ const (
 type Icon struct {
 	Key        string   `json:"key"`
 	Title      string   `json:"title"`
-	Color      string   `json:"color,omitempty"`
-	Source     string   `json:"source,omitempty"`
+	Color      string   `json:"color,omitzero"`
+	Source     string   `json:"source,omitzero"`
 	Aliases    []string `json:"aliases,omitempty"`
-	Guidelines string   `json:"guidelines,omitempty"`
-	License    string   `json:"license,omitempty"`
-	Path       string   `json:"path,omitempty"`
+	Guidelines string   `json:"guidelines,omitzero"`
+	License    string   `json:"license,omitzero"`
+	Path       string   `json:"path,omitzero"`
 }
 
 func (i *Icon) SetContent(s string) error {

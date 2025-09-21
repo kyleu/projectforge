@@ -13,7 +13,7 @@ import (
 
 type Coverage struct {
 	Packages util.ValueMap `json:"packages"`
-	SVG      string        `json:"svg,omitempty"`
+	SVG      string        `json:"svg,omitzero"`
 }
 
 func runCoverage(ctx context.Context, fs filesystem.FileLoader, scope string, logger util.Logger) (*Coverage, []string, error) {

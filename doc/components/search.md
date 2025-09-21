@@ -77,9 +77,9 @@ type SearchResult struct {
 type SearchParams struct {
     Query    string   `json:"query"`
     Types    []string `json:"types,omitempty"`
-    Limit    int      `json:"limit,omitempty"`
-    Offset   int      `json:"offset,omitempty"`
-    Filters  map[string]interface{} `json:"filters,omitempty"`
+    Limit    int      `json:"limit,omitzero"`
+    Offset   int      `json:"offset,omitzero"`
+    Filters  map[string]interface{} `json:"filters,omitzero"`
 }
 ```
 

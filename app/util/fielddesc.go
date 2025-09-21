@@ -10,9 +10,9 @@ import (
 type FieldDesc struct {
 	Key         string   `json:"key"`
 	Title       string   `json:"title"`
-	Description string   `json:"description,omitempty"`
-	Type        string   `json:"type,omitempty"`
-	Default     string   `json:"default,omitempty"`
+	Description string   `json:"description,omitzero"`
+	Type        string   `json:"type,omitzero"`
+	Default     string   `json:"default,omitzero"`
 	Choices     []string `json:"choices,omitempty"`
 }
 

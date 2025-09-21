@@ -11,7 +11,7 @@ import (
 )
 
 type File struct {
-	Package string        `json:"package,omitempty"`
+	Package string        `json:"package,omitzero"`
 	Path    []string      `json:"path,omitempty"`
 	Name    string        `json:"name"`
 	Imports model.Imports `json:"imports"`

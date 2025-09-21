@@ -9,8 +9,8 @@ import (
 )
 
 type Message struct {
-	From    *uuid.UUID     `json:"from,omitempty"`
-	Channel string         `json:"channel,omitempty"`
+	From    *uuid.UUID     `json:"from,omitzero"`
+	Channel string         `json:"channel,omitzero"`
 	Cmd     string         `json:"cmd"`
 	Param   jsontext.Value `json:"param"`
 }

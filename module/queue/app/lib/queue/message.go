@@ -10,7 +10,7 @@ type Message struct {
 	ID      uuid.UUID `json:"id"`
 	Topic   string    `json:"topic"`
 	Param   any       `json:"param"`
-	Retries int       `json:"retries,omitempty"`
+	Retries int       `json:"retries,omitzero"`
 }
 
 func NewMessage(topic string, param any) *Message {

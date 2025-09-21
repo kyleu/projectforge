@@ -19,12 +19,12 @@ import (
 
 type Service struct {
 	Key          string  `json:"key"`
-	DatabaseName string  `json:"database,omitempty"`
-	SchemaName   string  `json:"schema,omitempty"`
-	Username     string  `json:"username,omitempty"`
-	Debug        bool    `json:"debug,omitempty"`
+	DatabaseName string  `json:"database,omitzero"`
+	SchemaName   string  `json:"schema,omitzero"`
+	Username     string  `json:"username,omitzero"`
+	Debug        bool    `json:"debug,omitzero"`
 	Type         *DBType `json:"type"`
-	ReadOnly     bool    `json:"readonly,omitempty"`{{{ if .HasModule "databaseui" }}}
+	ReadOnly     bool    `json:"readonly,omitzero"`{{{ if .HasModule "databaseui" }}}
 	tracing      string{{{ end }}}
 	db           *sqlx.DB
 	metrics      *dbmetrics.Metrics

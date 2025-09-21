@@ -8,12 +8,12 @@ import (
 
 type Status struct {
 	Name     string         `json:"name"`
-	Limit    int            `json:"limit,omitempty"`
-	Timeout  string         `json:"timeout,omitempty"`
-	Table    string         `json:"table,omitempty"`
+	Limit    int            `json:"limit,omitzero"`
+	Timeout  string         `json:"timeout,omitzero"`
+	Table    string         `json:"table,omitzero"`
 	Started  string         `json:"started"`
-	Sent     map[string]int `json:"sent,omitempty"`
-	Received map[string]int `json:"received,omitempty"`
+	Sent     map[string]int `json:"sent,omitzero"`
+	Received map[string]int `json:"received,omitzero"`
 }
 
 func (q *Queue) Status() *Status {

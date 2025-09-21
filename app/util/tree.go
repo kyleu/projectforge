@@ -75,7 +75,7 @@ func (n Nodes[T]) Merge(x Nodes[T]) Nodes[T] {
 
 type Tree[T any] struct {
 	Nodes  Nodes[T] `json:"nodes,omitempty"`
-	Config ValueMap `json:"config,omitempty"`
+	Config ValueMap `json:"config,omitzero"`
 }
 
 func (t Tree[T]) Flatten() []string {

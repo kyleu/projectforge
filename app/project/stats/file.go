@@ -12,9 +12,9 @@ import (
 
 type FileStat struct {
 	Name      string    `json:"name"`
-	IsDir     bool      `json:"isDir,omitempty"`
+	IsDir     bool      `json:"isDir,omitzero"`
 	Kids      FileStats `json:"kids,omitempty"`
-	Size      int64     `json:"size,omitempty"`
+	Size      int64     `json:"size,omitzero"`
 	fullPath  string
 	extension string
 }

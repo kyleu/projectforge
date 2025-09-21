@@ -4,7 +4,7 @@ import "projectforge.dev/projectforge/app/util"
 
 type Wrapped struct {
 	K string `json:"k"`
-	T Type   `json:"t,omitempty"`
+	T Type   `json:"t,omitzero"`
 }
 
 var _ Type = (*Wrapped)(nil)

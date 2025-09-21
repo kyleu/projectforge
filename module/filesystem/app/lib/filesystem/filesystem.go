@@ -28,8 +28,8 @@ func OSFS() afero.Fs {
 }
 
 type FileSystem struct {
-	Mode     string `json:"mode,omitempty"`
-	ReadOnly bool   `json:"readOnly,omitempty"`
+	Mode     string `json:"mode,omitzero"`
+	ReadOnly bool   `json:"readOnly,omitzero"`
 	root     string
 	f        afero.Fs
 }

@@ -4,12 +4,12 @@ import "github.com/google/uuid"
 {{{ end }}}
 type Profile struct {
 {{{ if .HasUser }}}	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name,omitempty"`
-	Mode  string    `json:"mode,omitempty"`
-	Theme string    `json:"theme,omitempty"`
-{{{ else }}}	Name  string `json:"name,omitempty"`
-	Mode  string `json:"mode,omitempty"`
-	Theme string `json:"theme,omitempty"`
+	Name  string    `json:"name,omitzero"`
+	Mode  string    `json:"mode,omitzero"`
+	Theme string    `json:"theme,omitzero"`
+{{{ else }}}	Name  string `json:"name,omitzero"`
+	Mode  string `json:"mode,omitzero"`
+	Theme string `json:"theme,omitzero"`
 {{{ end }}}}
 
 var DefaultProfile = &Profile{Name: "Guest"}

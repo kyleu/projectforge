@@ -44,16 +44,16 @@ func (w *writer) Write(p []byte) (int, error) {
 
 type Exec struct {
 	Key       string        `json:"key"`
-	Idx       int           `json:"idx,omitempty"`
-	Cmd       string        `json:"cmd,omitempty"`
+	Idx       int           `json:"idx,omitzero"`
+	Cmd       string        `json:"cmd,omitzero"`
 	Env       []string      `json:"env,omitempty"`
-	Path      string        `json:"path,omitempty"`
-	Debug     bool          `json:"debug,omitempty"`
-	Started   *time.Time    `json:"started,omitempty"`
-	PID       int           `json:"pid,omitempty"`
-	Completed *time.Time    `json:"completed,omitempty"`
-	ExitCode  int           `json:"exitCode,omitempty"`
-	Link      string        `json:"link,omitempty"`
+	Path      string        `json:"path,omitzero"`
+	Debug     bool          `json:"debug,omitzero"`
+	Started   *time.Time    `json:"started,omitzero"`
+	PID       int           `json:"pid,omitzero"`
+	Completed *time.Time    `json:"completed,omitzero"`
+	ExitCode  int           `json:"exitCode,omitzero"`
+	Link      string        `json:"link,omitzero"`
 	Buffer    *bytes.Buffer `json:"-"`
 	execCmd   *exec.Cmd
 	writer    io.Writer

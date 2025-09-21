@@ -11,7 +11,7 @@ type Result struct {
 	Status   string      `json:"status"`
 	Diffs    diff.Diffs  `json:"diffs,omitempty"`
 	Actions  Resolutions `json:"actions,omitempty"`
-	Duration int         `json:"duration,omitempty"`
+	Duration int         `json:"duration,omitzero"`
 }
 
 func (r *Result) DiffsFiltered(includeSkipped bool) diff.Diffs {
