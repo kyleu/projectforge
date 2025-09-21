@@ -25,7 +25,8 @@ var Default = func() *Theme {
 	}
 
 	return &Theme{
-		Key: "default",
+		Key:  "default",
+		Base: "{{{ .Theme.Base }}}",
 		Light: &Colors{
 			Border: "{{{ .Theme.Light.Border }}}", LinkDecoration: "{{{ .Theme.Light.LinkDecoration }}}",
 			Foreground: "{{{ .Theme.Light.Foreground }}}", ForegroundMuted: "{{{ .Theme.Light.ForegroundMuted }}}",

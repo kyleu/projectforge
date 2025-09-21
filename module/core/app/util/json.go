@@ -7,7 +7,11 @@ import (
 	"io"
 )
 
-var trailingNewline = []byte{'\n'}
+var (
+	jsonDefaultOpts = []json.Options{jsontext.EscapeForHTML(false), json.Deterministic(true)}
+	jsonIndentOpts  = []json.Options{jsontext.EscapeForHTML(false), json.Deterministic(true), jsontext.WithIndent("  ")}
+	trailingNewline = []byte{'\n'}
+)
 
 func ToJSON(x any) string {
 	return string(ToJSONBytes(x, true))
@@ -18,16 +22,8 @@ func ToJSONCompact(x any) string {
 }
 
 func ToJSONBytes(x any, indent bool) []byte {
-	if indent {
-		bts := &bytes.Buffer{}
-		opts := []json.Options{jsontext.EscapeForHTML(false), json.Deterministic(true)}
-		if indent {
-			opts = append(opts, jsontext.WithIndent("  "))
-		}
-		jsonHandleError(x, json.MarshalWrite(bts, x, opts...))
-		return bytes.TrimSuffix(bts.Bytes(), trailingNewline)
-	}
-	b, err := json.Marshal(x)
+	opts := Choose(indent, jsonIndentOpts, jsonDefaultOpts)
+	b, err := json.Marshal(x, opts...)
 	jsonHandleError(x, err)
 	return bytes.TrimSuffix(b, trailingNewline)
 }

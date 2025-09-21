@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/gohelper"
@@ -21,7 +22,7 @@ func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File
 	lo.ForEach(helper.ImportsForTypes("go", "", evt.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
+	g.AddImport(helper.ImpAppUtil)
 	imps, err := helper.SpecialImports(evt.Columns, evt.PackageWithGroup(""), args)
 	if err != nil {
 		return nil, err
@@ -34,16 +35,22 @@ func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File
 	g.AddImport(imps...)
 	g.AddImport(evt.Imports.Supporting("event")...)
 
-	g.AddBlocks(typeAssert(evt))
-
 	str, err := eventStruct(evt, args)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(str)
 
-	g.AddBlocks(gohelper.BlockClone(g, evt.Columns, evt), gohelper.BlockString(g, evt.Columns, evt), gohelper.BlockTitle(g, evt.Columns, evt))
+	cn, err := eventConstructor(evt, args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddBlocks(cn)
 
+	g.AddBlocks(gohelper.BlockClone(g, evt.Columns, evt))
+	if len(evt.Columns.PKs()) > 0 {
+		g.AddBlocks(gohelper.BlockString(g, evt.Columns, evt), gohelper.BlockTitle(g, evt.Columns, evt))
+	}
 	err = eventMap(g, evt, args, linebreak)
 	if err != nil {
 		return nil, err
@@ -71,10 +78,16 @@ func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File
 	return g.Render(linebreak)
 }
 
-func typeAssert(evt *model.Event) *golang.Block {
-	ret := golang.NewBlock("assert", "type")
-	ret.WF("var _ svc.Model = (*%s)(nil)", evt.Proper())
-	return ret
+func eventConstructor(m *model.Event, enums enum.Enums) (*golang.Block, error) {
+	ret := golang.NewBlock("New"+m.Proper(), "func")
+	args, err := m.Columns.Args(m.Package, enums)
+	if err != nil {
+		return nil, err
+	}
+	ret.WF("func New%s(%s) *%s {", m.Proper(), args, m.Proper())
+	ret.WF("\treturn &%s{%s}", m.Proper(), m.Columns.Refs())
+	ret.W("}")
+	return ret, nil
 }
 
 func eventToData(evt *model.Event, cols model.Columns, suffix string, database string) *golang.Block {

@@ -66,7 +66,7 @@ func (t *Theme) ToGo() string {
 	}
 	add(0, "&Theme{")
 	add(1, "Key: %q,", t.Key)
-	add(1, "BaseColor: %q,", t.Base)
+	add(1, "Base: %q,", t.Base)
 	add(1, "Light: &Colors{")
 	addColors(t.Light)
 	add(1, "},")

@@ -1,7 +1,7 @@
 package types
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
 
 	"github.com/pkg/errors"
 
@@ -9,8 +9,8 @@ import (
 )
 
 type wrappedUnmarshal struct {
-	K string          `json:"k"`
-	T json.RawMessage `json:"t,omitempty"`
+	K string         `json:"k"`
+	T jsontext.Value `json:"t,omitempty"`
 }
 
 func (x *Wrapped) MarshalJSON() ([]byte, error) {

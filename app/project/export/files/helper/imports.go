@@ -29,7 +29,6 @@ var (
 	ImpHTTP           = model.NewImport(model.ImportTypeInternal, "net/http")
 	ImpFilter         = AppImport("lib/filter")
 	ImpFmt            = model.NewImport(model.ImportTypeInternal, "fmt")
-	ImpJSON           = model.NewImport(model.ImportTypeInternal, "encoding/json")
 	ImpLayout         = ViewImport("layout")
 	ImpLo             = model.NewImport(model.ImportTypeExternal, "github.com/samber/lo")
 	ImpMSSQL          = model.NewImport(model.ImportTypeExternal, "github.com/denisenkom/go-mssqldb").WithAlias("mssql")
@@ -95,14 +94,8 @@ func importsForTypeCtxGo(t types.Type) model.Imports {
 func importsForTypeCtxRow(t types.Type, database string) model.Imports {
 	switch t.Key() {
 	case types.KeyAny:
-		if SimpleJSON(database) {
-			return nil
-		}
-		return model.Imports{ImpJSON}
+		return nil
 	case types.KeyList, types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference:
-		if SimpleJSON(database) {
-			return model.Imports{ImpAppUtil}
-		}
 		return model.Imports{ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}

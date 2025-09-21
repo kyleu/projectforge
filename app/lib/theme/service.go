@@ -92,11 +92,8 @@ func (s *Service) FileExists(key string) bool {
 	return s.files.Exists(util.StringFilePath(s.root, key+util.ExtJSON))
 }
 
-func ApplyMap(frm util.ValueMap) *Theme {
-	orig := Default
-
+func ApplyMap(orig *Theme, frm util.ValueMap) *Theme {
 	l := orig.Light.Clone().ApplyMap(frm, "light-")
 	d := orig.Dark.Clone().ApplyMap(frm, "dark-")
-
-	return &Theme{Base: orig.Base, Light: l, Dark: d}
+	return &Theme{Base: util.OrDefault(frm.GetStringOpt("base"), orig.Base), Light: l, Dark: d}
 }
