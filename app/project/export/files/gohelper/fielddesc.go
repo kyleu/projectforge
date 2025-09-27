@@ -7,7 +7,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func BlockFieldDescs(cols model.Columns, str StringProvider) (*golang.Block, error) {
+func BlockFieldDescs(cols model.Columns, str model.StringProvider) (*golang.Block, error) {
 	ret := golang.NewBlock(str.Proper(), "struct")
 	ret.WF("var %sFieldDescs = util.FieldDescs{", str.Proper())
 	for _, c := range cols.NotDerived() {
@@ -15,7 +15,11 @@ func BlockFieldDescs(cols model.Columns, str StringProvider) (*golang.Block, err
 		if idx := strings.LastIndex(t, "/"); idx > -1 {
 			t = t[idx+1:]
 		}
-		ret.WF("\t{Key: %q, Title: %q, Description: %q, Type: %q},", c.CamelNoReplace(), c.Title(), c.HelpString, t)
+		if c.Example == "" {
+			ret.WF("\t{Key: %q, Title: %q, Description: %q, Type: %q},", c.CamelNoReplace(), c.Title(), c.HelpString, t)
+		} else {
+			ret.WF("\t{Key: %q, Title: %q, Description: %q, Type: %q, Default: %q},", c.CamelNoReplace(), c.Title(), c.HelpString, t, c.Example)
+		}
 	}
 	ret.W("}")
 	return ret, nil

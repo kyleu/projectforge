@@ -14,7 +14,7 @@ import (
 )
 
 //nolint:gocognit
-func forMapCol(g *golang.File, ret *golang.Block, indent int, m StringProvider, args *metamodel.Args, col *model.Column) error {
+func forMapCol(g *golang.File, ret *golang.Block, indent int, m model.StringProvider, args *metamodel.Args, col *model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")
@@ -37,7 +37,7 @@ func forMapCol(g *golang.File, ret *golang.Block, indent int, m StringProvider, 
 	case col.Type.Key() == types.KeyReference:
 		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
 		catchErr("err")
-		ref, _, err := helper.LoadRef(col, args.Models, args.ExtraTypes)
+		ref, _, err := helper.LoadRef(col, args.Models, args.Events, args.ExtraTypes)
 		if err != nil {
 			return errors.Wrap(err, "invalid ref")
 		}

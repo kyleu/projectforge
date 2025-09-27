@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -81,8 +82,8 @@ func ToGoType(t types.Type, nullable bool, pkg string, enums enum.Enums) (string
 	default:
 		return "", errors.Errorf("ERROR:Unhandled[%s]", t.Key())
 	}
-	if nullable && !t.Scalar() {
-		return "*" + ret, nil
+	if nullable && !t.Scalar() && t.Key() != types.KeyReference {
+		return "*" + strings.TrimPrefix(ret, "*"), nil
 	}
 	return ret, nil
 }

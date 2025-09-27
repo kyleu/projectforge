@@ -98,5 +98,8 @@ func parseConfig(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 			portOffsets[k] = v
 		}
 	})
+	for k, v := range pm.Prj.Info.AdditionalPorts {
+		portOffsets[k] = v - pm.Prj.Port
+	}
 	return configVars.Sort(), portOffsets
 }

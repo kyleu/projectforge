@@ -12,7 +12,7 @@ import (
 func EventAll(p *project.Project, events model.Events, linebreak string) (file.Files, error) {
 	var ret file.Files
 	for _, evt := range events {
-		f, err := goevent.Event(evt, p.ExportArgs, linebreak)
+		f, err := goevent.Event(evt, p.ExportArgs, p.GoVersion(), linebreak)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing event [%s]", evt.Name)
 		}

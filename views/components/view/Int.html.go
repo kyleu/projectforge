@@ -5,83 +5,139 @@
 package view
 
 //line views/components/view/Int.html:1
-import "projectforge.dev/projectforge/app/util"
+import (
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+)
 
-//line views/components/view/Int.html:3
+//line views/components/view/Int.html:6
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/Int.html:3
+//line views/components/view/Int.html:6
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/Int.html:3
+//line views/components/view/Int.html:6
 func StreamInt(qw422016 *qt422016.Writer, i any) {
-//line views/components/view/Int.html:4
-	qw422016.E().V(i)
-//line views/components/view/Int.html:5
-}
-
-//line views/components/view/Int.html:5
-func WriteInt(qq422016 qtio422016.Writer, i any) {
-//line views/components/view/Int.html:5
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Int.html:5
-	StreamInt(qw422016, i)
-//line views/components/view/Int.html:5
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Int.html:5
-}
-
-//line views/components/view/Int.html:5
-func Int(i any) string {
-//line views/components/view/Int.html:5
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Int.html:5
-	WriteInt(qb422016, i)
-//line views/components/view/Int.html:5
-	qs422016 := string(qb422016.B)
-//line views/components/view/Int.html:5
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Int.html:5
-	return qs422016
-//line views/components/view/Int.html:5
-}
-
 //line views/components/view/Int.html:7
-func StreamIntArray(qw422016 *qt422016.Writer, value []any) {
+	qw422016.E().V(i)
 //line views/components/view/Int.html:8
-	StreamStringArray(qw422016, util.ArrayToStringArray(value))
-//line views/components/view/Int.html:9
 }
 
-//line views/components/view/Int.html:9
-func WriteIntArray(qq422016 qtio422016.Writer, value []any) {
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
+func WriteInt(qq422016 qtio422016.Writer, i any) {
+//line views/components/view/Int.html:8
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Int.html:9
-	StreamIntArray(qw422016, value)
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
+	StreamInt(qw422016, i)
+//line views/components/view/Int.html:8
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
 }
 
-//line views/components/view/Int.html:9
-func IntArray(value []any) string {
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
+func Int(i any) string {
+//line views/components/view/Int.html:8
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Int.html:9
-	WriteIntArray(qb422016, value)
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
+	WriteInt(qb422016, i)
+//line views/components/view/Int.html:8
 	qs422016 := string(qb422016.B)
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
 	return qs422016
-//line views/components/view/Int.html:9
+//line views/components/view/Int.html:8
+}
+
+//line views/components/view/Int.html:10
+func StreamIntTable(qw422016 *qt422016.Writer, title string, value any, indent int) {
+//line views/components/view/Int.html:10
+	qw422016.N().S(`<tr>`)
+//line views/components/view/Int.html:12
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Int.html:12
+	qw422016.N().S(`<th class="shrink">`)
+//line views/components/view/Int.html:13
+	qw422016.E().S(title)
+//line views/components/view/Int.html:13
+	qw422016.N().S(`</th>`)
+//line views/components/view/Int.html:14
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Int.html:14
+	qw422016.N().S(`<td>`)
+//line views/components/view/Int.html:15
+	StreamInt(qw422016, value)
+//line views/components/view/Int.html:15
+	qw422016.N().S(`</td>`)
+//line views/components/view/Int.html:16
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/Int.html:16
+	qw422016.N().S(`</tr>`)
+//line views/components/view/Int.html:18
+}
+
+//line views/components/view/Int.html:18
+func WriteIntTable(qq422016 qtio422016.Writer, title string, value any, indent int) {
+//line views/components/view/Int.html:18
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Int.html:18
+	StreamIntTable(qw422016, title, value, indent)
+//line views/components/view/Int.html:18
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Int.html:18
+}
+
+//line views/components/view/Int.html:18
+func IntTable(title string, value any, indent int) string {
+//line views/components/view/Int.html:18
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Int.html:18
+	WriteIntTable(qb422016, title, value, indent)
+//line views/components/view/Int.html:18
+	qs422016 := string(qb422016.B)
+//line views/components/view/Int.html:18
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Int.html:18
+	return qs422016
+//line views/components/view/Int.html:18
+}
+
+//line views/components/view/Int.html:20
+func StreamIntArray(qw422016 *qt422016.Writer, value []any) {
+//line views/components/view/Int.html:21
+	StreamStringArray(qw422016, util.ArrayToStringArray(value))
+//line views/components/view/Int.html:22
+}
+
+//line views/components/view/Int.html:22
+func WriteIntArray(qq422016 qtio422016.Writer, value []any) {
+//line views/components/view/Int.html:22
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Int.html:22
+	StreamIntArray(qw422016, value)
+//line views/components/view/Int.html:22
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Int.html:22
+}
+
+//line views/components/view/Int.html:22
+func IntArray(value []any) string {
+//line views/components/view/Int.html:22
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Int.html:22
+	WriteIntArray(qb422016, value)
+//line views/components/view/Int.html:22
+	qs422016 := string(qb422016.B)
+//line views/components/view/Int.html:22
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Int.html:22
+	return qs422016
+//line views/components/view/Int.html:22
 }

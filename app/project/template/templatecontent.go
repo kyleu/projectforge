@@ -36,6 +36,17 @@ func (t *Context) ConfigVarsContent() string {
 	return ret
 }
 
+func (t *Context) SettingsPageCall() string {
+	args := []string{"BuildInfo: as.BuildInfo"}
+	if t.HasAccount() {
+		args = append(args, "Perms: user.GetPermissions()")
+	}
+	if t.HasModule("settings") {
+		args = append(args, "CurrentSettings: st")
+	}
+	return fmt.Sprintf("&vadmin.Settings{%s}", util.StringJoin(args, ", "))
+}
+
 func (t *Context) ExtraFilesContent() string {
 	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
 		return ""

@@ -5,60 +5,116 @@
 package view
 
 //line views/components/view/Package.html:1
-import "projectforge.dev/projectforge/app/util"
+import (
+	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
+)
 
-//line views/components/view/Package.html:3
+//line views/components/view/Package.html:6
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/Package.html:3
+//line views/components/view/Package.html:6
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/Package.html:3
-func StreamPackage(qw422016 *qt422016.Writer, v util.Pkg) {
-//line views/components/view/Package.html:4
-	for idx, x := range v {
-//line views/components/view/Package.html:5
-		qw422016.E().S(x)
-//line views/components/view/Package.html:5
-		if len(v) < idx {
-//line views/components/view/Package.html:5
-			qw422016.N().S(`/`)
-//line views/components/view/Package.html:5
-		}
 //line views/components/view/Package.html:6
+func StreamPackage(qw422016 *qt422016.Writer, v util.Pkg) {
+//line views/components/view/Package.html:7
+	for idx, x := range v {
+//line views/components/view/Package.html:8
+		qw422016.E().S(x)
+//line views/components/view/Package.html:8
+		if len(v) < idx {
+//line views/components/view/Package.html:8
+			qw422016.N().S(`/`)
+//line views/components/view/Package.html:8
+		}
+//line views/components/view/Package.html:9
 	}
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 }
 
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 func WritePackage(qq422016 qtio422016.Writer, v util.Pkg) {
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	StreamPackage(qw422016, v)
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 }
 
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 func Package(v util.Pkg) string {
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	WritePackage(qb422016, v)
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	qs422016 := string(qb422016.B)
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
 	return qs422016
-//line views/components/view/Package.html:7
+//line views/components/view/Package.html:10
+}
+
+//line views/components/view/Package.html:12
+func StreamPackageTable(qw422016 *qt422016.Writer, title string, value util.Pkg, indent int) {
+//line views/components/view/Package.html:12
+	qw422016.N().S(`<tr>`)
+//line views/components/view/Package.html:14
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Package.html:14
+	qw422016.N().S(`<th class="shrink">`)
+//line views/components/view/Package.html:15
+	qw422016.E().S(title)
+//line views/components/view/Package.html:15
+	qw422016.N().S(`</th>`)
+//line views/components/view/Package.html:16
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Package.html:16
+	qw422016.N().S(`<td>`)
+//line views/components/view/Package.html:17
+	StreamPackage(qw422016, value)
+//line views/components/view/Package.html:17
+	qw422016.N().S(`</td>`)
+//line views/components/view/Package.html:18
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/Package.html:18
+	qw422016.N().S(`</tr>`)
+//line views/components/view/Package.html:20
+}
+
+//line views/components/view/Package.html:20
+func WritePackageTable(qq422016 qtio422016.Writer, title string, value util.Pkg, indent int) {
+//line views/components/view/Package.html:20
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Package.html:20
+	StreamPackageTable(qw422016, title, value, indent)
+//line views/components/view/Package.html:20
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Package.html:20
+}
+
+//line views/components/view/Package.html:20
+func PackageTable(title string, value util.Pkg, indent int) string {
+//line views/components/view/Package.html:20
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Package.html:20
+	WritePackageTable(qb422016, title, value, indent)
+//line views/components/view/Package.html:20
+	qs422016 := string(qb422016.B)
+//line views/components/view/Package.html:20
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Package.html:20
+	return qs422016
+//line views/components/view/Package.html:20
 }

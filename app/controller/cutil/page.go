@@ -60,6 +60,7 @@ type PageState struct {
 	ProfilePath    string            `json:"profilePath,omitzero"`
 	HideHeader     bool              `json:"hideHeader,omitzero"`
 	HideMenu       bool              `json:"hideMenu,omitzero"`
+	NoStyle        bool              `json:"noStyle,omitzero"`
 	NoScript       bool              `json:"noScript,omitzero"`
 	ForceRedirect  string            `json:"forceRedirect,omitzero"`
 	DefaultFormat  string            `json:"defaultFormat,omitzero"`

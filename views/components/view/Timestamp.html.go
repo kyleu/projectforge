@@ -9,240 +9,294 @@ import (
 	"time"
 
 	"projectforge.dev/projectforge/app/util"
+	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/components/view/Timestamp.html:7
+//line views/components/view/Timestamp.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/Timestamp.html:7
+//line views/components/view/Timestamp.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/Timestamp.html:7
+//line views/components/view/Timestamp.html:8
 func StreamTimestamp(qw422016 *qt422016.Writer, value *time.Time) {
-//line views/components/view/Timestamp.html:7
+//line views/components/view/Timestamp.html:8
 	qw422016.N().S(`<span class="timestamp nowrap" title="`)
-//line views/components/view/Timestamp.html:8
+//line views/components/view/Timestamp.html:9
 	qw422016.E().S(util.TimeToVerbose(value))
-//line views/components/view/Timestamp.html:8
+//line views/components/view/Timestamp.html:9
 	qw422016.N().S(`" data-timestamp="`)
-//line views/components/view/Timestamp.html:8
+//line views/components/view/Timestamp.html:9
 	qw422016.E().S(util.TimeToJSFull(value))
-//line views/components/view/Timestamp.html:8
-	qw422016.N().S(`">`)
-//line views/components/view/Timestamp.html:8
-	qw422016.E().S(util.TimeToFull(value))
-//line views/components/view/Timestamp.html:8
-	qw422016.N().S(`</span>`)
 //line views/components/view/Timestamp.html:9
+	qw422016.N().S(`">`)
+//line views/components/view/Timestamp.html:9
+	qw422016.E().S(util.TimeToFull(value))
+//line views/components/view/Timestamp.html:9
+	qw422016.N().S(`</span>`)
+//line views/components/view/Timestamp.html:10
 }
 
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 func WriteTimestamp(qq422016 qtio422016.Writer, value *time.Time) {
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	StreamTimestamp(qw422016, value)
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 }
 
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 func Timestamp(value *time.Time) string {
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	WriteTimestamp(qb422016, value)
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	qs422016 := string(qb422016.B)
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 	return qs422016
-//line views/components/view/Timestamp.html:9
+//line views/components/view/Timestamp.html:10
 }
 
-//line views/components/view/Timestamp.html:11
-func StreamTimestampMillis(qw422016 *qt422016.Writer, value *time.Time) {
-//line views/components/view/Timestamp.html:11
-	qw422016.N().S(`<span class="timestamp millis nowrap" title="`)
 //line views/components/view/Timestamp.html:12
-	qw422016.E().S(util.TimeToVerbose(value))
+func StreamTimestampTable(qw422016 *qt422016.Writer, title string, value *time.Time, indent int) {
 //line views/components/view/Timestamp.html:12
-	qw422016.N().S(`" data-timestamp="`)
-//line views/components/view/Timestamp.html:12
-	qw422016.E().S(util.TimeToRFC3339(value))
-//line views/components/view/Timestamp.html:12
-	qw422016.N().S(`">`)
-//line views/components/view/Timestamp.html:12
-	qw422016.E().S(util.TimeToFullMS(value))
-//line views/components/view/Timestamp.html:12
-	qw422016.N().S(`</span>`)
-//line views/components/view/Timestamp.html:13
-}
-
-//line views/components/view/Timestamp.html:13
-func WriteTimestampMillis(qq422016 qtio422016.Writer, value *time.Time) {
-//line views/components/view/Timestamp.html:13
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Timestamp.html:13
-	StreamTimestampMillis(qw422016, value)
-//line views/components/view/Timestamp.html:13
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Timestamp.html:13
-}
-
-//line views/components/view/Timestamp.html:13
-func TimestampMillis(value *time.Time) string {
-//line views/components/view/Timestamp.html:13
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Timestamp.html:13
-	WriteTimestampMillis(qb422016, value)
-//line views/components/view/Timestamp.html:13
-	qs422016 := string(qb422016.B)
-//line views/components/view/Timestamp.html:13
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Timestamp.html:13
-	return qs422016
-//line views/components/view/Timestamp.html:13
-}
-
+	qw422016.N().S(`<tr>`)
+//line views/components/view/Timestamp.html:14
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Timestamp.html:14
+	qw422016.N().S(`<th class="shrink">`)
 //line views/components/view/Timestamp.html:15
-func StreamTimestampRelative(qw422016 *qt422016.Writer, value *time.Time, static bool) {
+	qw422016.E().S(title)
 //line views/components/view/Timestamp.html:15
-	qw422016.N().S(`<span class="`)
+	qw422016.N().S(`</th>`)
 //line views/components/view/Timestamp.html:16
-	if !static {
+	components.StreamIndent(qw422016, true, indent+1)
 //line views/components/view/Timestamp.html:16
-		qw422016.N().S(`reltime`)
-//line views/components/view/Timestamp.html:16
-		qw422016.N().S(` `)
-//line views/components/view/Timestamp.html:16
-	}
-//line views/components/view/Timestamp.html:16
-	qw422016.N().S(`nowrap" title="`)
-//line views/components/view/Timestamp.html:16
-	qw422016.E().S(util.TimeToVerbose(value))
-//line views/components/view/Timestamp.html:16
-	qw422016.N().S(`" data-timestamp="`)
-//line views/components/view/Timestamp.html:16
-	qw422016.E().S(util.TimeToFull(value))
-//line views/components/view/Timestamp.html:16
-	qw422016.N().S(`">`)
-//line views/components/view/Timestamp.html:16
-	qw422016.E().S(util.TimeRelative(value))
-//line views/components/view/Timestamp.html:16
-	qw422016.N().S(`</span>`)
+	qw422016.N().S(`<td>`)
 //line views/components/view/Timestamp.html:17
-}
-
+	StreamTimestamp(qw422016, value)
 //line views/components/view/Timestamp.html:17
-func WriteTimestampRelative(qq422016 qtio422016.Writer, value *time.Time, static bool) {
-//line views/components/view/Timestamp.html:17
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Timestamp.html:17
-	StreamTimestampRelative(qw422016, value, static)
-//line views/components/view/Timestamp.html:17
-	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Timestamp.html:17
-}
-
-//line views/components/view/Timestamp.html:17
-func TimestampRelative(value *time.Time, static bool) string {
-//line views/components/view/Timestamp.html:17
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Timestamp.html:17
-	WriteTimestampRelative(qb422016, value, static)
-//line views/components/view/Timestamp.html:17
-	qs422016 := string(qb422016.B)
-//line views/components/view/Timestamp.html:17
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Timestamp.html:17
-	return qs422016
-//line views/components/view/Timestamp.html:17
-}
-
-//line views/components/view/Timestamp.html:19
-func StreamTimestampDay(qw422016 *qt422016.Writer, value *time.Time) {
+	qw422016.N().S(`</td>`)
+//line views/components/view/Timestamp.html:18
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/Timestamp.html:18
+	qw422016.N().S(`</tr>`)
 //line views/components/view/Timestamp.html:20
-	qw422016.E().S(util.TimeToYMD(value))
-//line views/components/view/Timestamp.html:21
 }
 
-//line views/components/view/Timestamp.html:21
-func WriteTimestampDay(qq422016 qtio422016.Writer, value *time.Time) {
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
+func WriteTimestampTable(qq422016 qtio422016.Writer, title string, value *time.Time, indent int) {
+//line views/components/view/Timestamp.html:20
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Timestamp.html:21
-	StreamTimestampDay(qw422016, value)
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
+	StreamTimestampTable(qw422016, title, value, indent)
+//line views/components/view/Timestamp.html:20
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
 }
 
-//line views/components/view/Timestamp.html:21
-func TimestampDay(value *time.Time) string {
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
+func TimestampTable(title string, value *time.Time, indent int) string {
+//line views/components/view/Timestamp.html:20
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Timestamp.html:21
-	WriteTimestampDay(qb422016, value)
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
+	WriteTimestampTable(qb422016, title, value, indent)
+//line views/components/view/Timestamp.html:20
 	qs422016 := string(qb422016.B)
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
 	return qs422016
-//line views/components/view/Timestamp.html:21
+//line views/components/view/Timestamp.html:20
 }
 
+//line views/components/view/Timestamp.html:22
+func StreamTimestampMillis(qw422016 *qt422016.Writer, value *time.Time) {
+//line views/components/view/Timestamp.html:22
+	qw422016.N().S(`<span class="timestamp millis nowrap" title="`)
 //line views/components/view/Timestamp.html:23
-func StreamDurationSeconds(qw422016 *qt422016.Writer, seconds float64) {
+	qw422016.E().S(util.TimeToVerbose(value))
 //line views/components/view/Timestamp.html:23
-	qw422016.N().S(`<span class="duration" data-seconds="`)
-//line views/components/view/Timestamp.html:24
-	qw422016.N().F(seconds)
-//line views/components/view/Timestamp.html:24
-	qw422016.N().S(`" title="`)
-//line views/components/view/Timestamp.html:24
-	qw422016.E().S(util.FormatSecondsFull(seconds))
-//line views/components/view/Timestamp.html:24
+	qw422016.N().S(`" data-timestamp="`)
+//line views/components/view/Timestamp.html:23
+	qw422016.E().S(util.TimeToRFC3339(value))
+//line views/components/view/Timestamp.html:23
 	qw422016.N().S(`">`)
-//line views/components/view/Timestamp.html:24
-	qw422016.E().S(util.FormatSeconds(seconds))
-//line views/components/view/Timestamp.html:24
+//line views/components/view/Timestamp.html:23
+	qw422016.E().S(util.TimeToFullMS(value))
+//line views/components/view/Timestamp.html:23
 	qw422016.N().S(`</span>`)
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
 }
 
-//line views/components/view/Timestamp.html:25
-func WriteDurationSeconds(qq422016 qtio422016.Writer, seconds float64) {
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
+func WriteTimestampMillis(qq422016 qtio422016.Writer, value *time.Time) {
+//line views/components/view/Timestamp.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Timestamp.html:25
-	StreamDurationSeconds(qw422016, seconds)
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
+	StreamTimestampMillis(qw422016, value)
+//line views/components/view/Timestamp.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
 }
 
-//line views/components/view/Timestamp.html:25
-func DurationSeconds(seconds float64) string {
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
+func TimestampMillis(value *time.Time) string {
+//line views/components/view/Timestamp.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Timestamp.html:25
-	WriteDurationSeconds(qb422016, seconds)
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
+	WriteTimestampMillis(qb422016, value)
+//line views/components/view/Timestamp.html:24
 	qs422016 := string(qb422016.B)
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
 	return qs422016
-//line views/components/view/Timestamp.html:25
+//line views/components/view/Timestamp.html:24
+}
+
+//line views/components/view/Timestamp.html:26
+func StreamTimestampRelative(qw422016 *qt422016.Writer, value *time.Time, static bool) {
+//line views/components/view/Timestamp.html:26
+	qw422016.N().S(`<span class="`)
+//line views/components/view/Timestamp.html:27
+	if !static {
+//line views/components/view/Timestamp.html:27
+		qw422016.N().S(`reltime`)
+//line views/components/view/Timestamp.html:27
+		qw422016.N().S(` `)
+//line views/components/view/Timestamp.html:27
+	}
+//line views/components/view/Timestamp.html:27
+	qw422016.N().S(`nowrap" title="`)
+//line views/components/view/Timestamp.html:27
+	qw422016.E().S(util.TimeToVerbose(value))
+//line views/components/view/Timestamp.html:27
+	qw422016.N().S(`" data-timestamp="`)
+//line views/components/view/Timestamp.html:27
+	qw422016.E().S(util.TimeToFull(value))
+//line views/components/view/Timestamp.html:27
+	qw422016.N().S(`">`)
+//line views/components/view/Timestamp.html:27
+	qw422016.E().S(util.TimeRelative(value))
+//line views/components/view/Timestamp.html:27
+	qw422016.N().S(`</span>`)
+//line views/components/view/Timestamp.html:28
+}
+
+//line views/components/view/Timestamp.html:28
+func WriteTimestampRelative(qq422016 qtio422016.Writer, value *time.Time, static bool) {
+//line views/components/view/Timestamp.html:28
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Timestamp.html:28
+	StreamTimestampRelative(qw422016, value, static)
+//line views/components/view/Timestamp.html:28
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Timestamp.html:28
+}
+
+//line views/components/view/Timestamp.html:28
+func TimestampRelative(value *time.Time, static bool) string {
+//line views/components/view/Timestamp.html:28
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Timestamp.html:28
+	WriteTimestampRelative(qb422016, value, static)
+//line views/components/view/Timestamp.html:28
+	qs422016 := string(qb422016.B)
+//line views/components/view/Timestamp.html:28
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Timestamp.html:28
+	return qs422016
+//line views/components/view/Timestamp.html:28
+}
+
+//line views/components/view/Timestamp.html:30
+func StreamTimestampDay(qw422016 *qt422016.Writer, value *time.Time) {
+//line views/components/view/Timestamp.html:31
+	qw422016.E().S(util.TimeToYMD(value))
+//line views/components/view/Timestamp.html:32
+}
+
+//line views/components/view/Timestamp.html:32
+func WriteTimestampDay(qq422016 qtio422016.Writer, value *time.Time) {
+//line views/components/view/Timestamp.html:32
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Timestamp.html:32
+	StreamTimestampDay(qw422016, value)
+//line views/components/view/Timestamp.html:32
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Timestamp.html:32
+}
+
+//line views/components/view/Timestamp.html:32
+func TimestampDay(value *time.Time) string {
+//line views/components/view/Timestamp.html:32
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Timestamp.html:32
+	WriteTimestampDay(qb422016, value)
+//line views/components/view/Timestamp.html:32
+	qs422016 := string(qb422016.B)
+//line views/components/view/Timestamp.html:32
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Timestamp.html:32
+	return qs422016
+//line views/components/view/Timestamp.html:32
+}
+
+//line views/components/view/Timestamp.html:34
+func StreamDurationSeconds(qw422016 *qt422016.Writer, seconds float64) {
+//line views/components/view/Timestamp.html:34
+	qw422016.N().S(`<span class="duration" data-seconds="`)
+//line views/components/view/Timestamp.html:35
+	qw422016.N().F(seconds)
+//line views/components/view/Timestamp.html:35
+	qw422016.N().S(`" title="`)
+//line views/components/view/Timestamp.html:35
+	qw422016.E().S(util.FormatSecondsFull(seconds))
+//line views/components/view/Timestamp.html:35
+	qw422016.N().S(`">`)
+//line views/components/view/Timestamp.html:35
+	qw422016.E().S(util.FormatSeconds(seconds))
+//line views/components/view/Timestamp.html:35
+	qw422016.N().S(`</span>`)
+//line views/components/view/Timestamp.html:36
+}
+
+//line views/components/view/Timestamp.html:36
+func WriteDurationSeconds(qq422016 qtio422016.Writer, seconds float64) {
+//line views/components/view/Timestamp.html:36
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Timestamp.html:36
+	StreamDurationSeconds(qw422016, seconds)
+//line views/components/view/Timestamp.html:36
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Timestamp.html:36
+}
+
+//line views/components/view/Timestamp.html:36
+func DurationSeconds(seconds float64) string {
+//line views/components/view/Timestamp.html:36
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Timestamp.html:36
+	WriteDurationSeconds(qb422016, seconds)
+//line views/components/view/Timestamp.html:36
+	qs422016 := string(qb422016.B)
+//line views/components/view/Timestamp.html:36
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Timestamp.html:36
+	return qs422016
+//line views/components/view/Timestamp.html:36
 }

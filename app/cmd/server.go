@@ -34,6 +34,9 @@ func startServer(ctx context.Context, flags *Flags) error {
 		return err
 	}
 
+	// $PF_SECTION_START(extraserver)$
+	// $PF_SECTION_END(extraserver)$
+
 	_, err = listenAndServe(flags.Address, flags.Port, r)
 	if err != nil {
 		return err

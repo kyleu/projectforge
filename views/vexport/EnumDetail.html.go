@@ -289,179 +289,185 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
         <tr>
           <th class="shrink">Key</th>
           <th>Name</th>
+          <th>Icon</th>
           <th>Description</th>
 `)
-//line views/vexport/EnumDetail.html:79
+//line views/vexport/EnumDetail.html:80
 		for _, x := range ef.Order {
-//line views/vexport/EnumDetail.html:79
+//line views/vexport/EnumDetail.html:80
 			qw422016.N().S(`          <th>`)
-//line views/vexport/EnumDetail.html:80
+//line views/vexport/EnumDetail.html:81
 			qw422016.E().S(x)
-//line views/vexport/EnumDetail.html:80
+//line views/vexport/EnumDetail.html:81
 			qw422016.N().S(`</th>
 `)
-//line views/vexport/EnumDetail.html:81
+//line views/vexport/EnumDetail.html:82
 		}
-//line views/vexport/EnumDetail.html:81
+//line views/vexport/EnumDetail.html:82
 		qw422016.N().S(`        </tr>
       </thead>
       <tbody>
 `)
-//line views/vexport/EnumDetail.html:85
+//line views/vexport/EnumDetail.html:86
 		for _, v := range enum.Values {
-//line views/vexport/EnumDetail.html:85
+//line views/vexport/EnumDetail.html:86
 			qw422016.N().S(`        <tr>
           <td>`)
-//line views/vexport/EnumDetail.html:87
+//line views/vexport/EnumDetail.html:88
 			qw422016.E().S(v.Key)
-//line views/vexport/EnumDetail.html:87
+//line views/vexport/EnumDetail.html:88
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EnumDetail.html:88
+//line views/vexport/EnumDetail.html:89
 			qw422016.E().S(v.Name)
-//line views/vexport/EnumDetail.html:88
+//line views/vexport/EnumDetail.html:89
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EnumDetail.html:89
+//line views/vexport/EnumDetail.html:90
+			components.StreamSVGIcon(qw422016, v.IconSafe(), ps)
+//line views/vexport/EnumDetail.html:90
+			qw422016.N().S(`</td>
+          <td>`)
+//line views/vexport/EnumDetail.html:91
 			qw422016.E().S(v.Description)
-//line views/vexport/EnumDetail.html:89
+//line views/vexport/EnumDetail.html:91
 			qw422016.N().S(`</td>
 `)
-//line views/vexport/EnumDetail.html:90
+//line views/vexport/EnumDetail.html:92
 			for _, x := range ef.Order {
-//line views/vexport/EnumDetail.html:91
+//line views/vexport/EnumDetail.html:93
 				if v.Extra == nil {
-//line views/vexport/EnumDetail.html:91
+//line views/vexport/EnumDetail.html:93
 					qw422016.N().S(`          <td></td>
 `)
-//line views/vexport/EnumDetail.html:93
+//line views/vexport/EnumDetail.html:95
 				} else {
-//line views/vexport/EnumDetail.html:93
+//line views/vexport/EnumDetail.html:95
 					qw422016.N().S(`          <td>`)
-//line views/vexport/EnumDetail.html:94
+//line views/vexport/EnumDetail.html:96
 					qw422016.E().V(v.Extra.GetSimple(x))
-//line views/vexport/EnumDetail.html:94
+//line views/vexport/EnumDetail.html:96
 					qw422016.N().S(`</td>
 `)
-//line views/vexport/EnumDetail.html:95
+//line views/vexport/EnumDetail.html:97
 				}
-//line views/vexport/EnumDetail.html:96
+//line views/vexport/EnumDetail.html:98
 			}
-//line views/vexport/EnumDetail.html:96
+//line views/vexport/EnumDetail.html:98
 			qw422016.N().S(`        </tr>
 `)
-//line views/vexport/EnumDetail.html:98
+//line views/vexport/EnumDetail.html:100
 		}
-//line views/vexport/EnumDetail.html:98
+//line views/vexport/EnumDetail.html:100
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vexport/EnumDetail.html:102
+//line views/vexport/EnumDetail.html:104
 	}
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 }
 
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 func writeenumValues(qq422016 qtio422016.Writer, enum *enum.Enum, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	streamenumValues(qw422016, enum, as, ps)
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 }
 
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 func enumValues(enum *enum.Enum, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	writeenumValues(qb422016, enum, as, ps)
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 	return qs422016
-//line views/vexport/EnumDetail.html:103
+//line views/vexport/EnumDetail.html:105
 }
 
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:107
 func streamenumFiles(qw422016 *qt422016.Writer, enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:107
 	qw422016.N().S(`
   <div class="mt">
     <ul class="accordion">
       <li>
         <input id="accordion-`)
-//line views/vexport/EnumDetail.html:109
+//line views/vexport/EnumDetail.html:111
 	qw422016.E().S(f.FullPath())
-//line views/vexport/EnumDetail.html:109
+//line views/vexport/EnumDetail.html:111
 	qw422016.N().S(`" type="checkbox" hidden />
         <label for="accordion-`)
-//line views/vexport/EnumDetail.html:110
+//line views/vexport/EnumDetail.html:112
 	qw422016.E().S(f.FullPath())
-//line views/vexport/EnumDetail.html:110
+//line views/vexport/EnumDetail.html:112
 	qw422016.N().S(`">`)
-//line views/vexport/EnumDetail.html:110
+//line views/vexport/EnumDetail.html:112
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/EnumDetail.html:110
+//line views/vexport/EnumDetail.html:112
 	qw422016.N().S(` `)
-//line views/vexport/EnumDetail.html:110
+//line views/vexport/EnumDetail.html:112
 	qw422016.E().S(f.FullPath())
-//line views/vexport/EnumDetail.html:110
+//line views/vexport/EnumDetail.html:112
 	qw422016.N().S(`</label>
         <div class="bd"><div><div>
 `)
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:114
 	out, err := cutil.FormatLang(f.Content, f.Ext())
 
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:114
 	qw422016.N().S(`          `)
-//line views/vexport/EnumDetail.html:113
+//line views/vexport/EnumDetail.html:115
 	if err == nil {
-//line views/vexport/EnumDetail.html:113
+//line views/vexport/EnumDetail.html:115
 		qw422016.N().S(out)
-//line views/vexport/EnumDetail.html:113
+//line views/vexport/EnumDetail.html:115
 	} else {
-//line views/vexport/EnumDetail.html:113
+//line views/vexport/EnumDetail.html:115
 		qw422016.E().S(err.Error())
-//line views/vexport/EnumDetail.html:113
+//line views/vexport/EnumDetail.html:115
 	}
-//line views/vexport/EnumDetail.html:113
+//line views/vexport/EnumDetail.html:115
 	qw422016.N().S(`
         </div></div></div>
       </li>
     </ul>
   </div>
 `)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 }
 
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 func writeenumFiles(qq422016 qtio422016.Writer, enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	streamenumFiles(qw422016, enum, f, as, ps)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 }
 
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 func enumFiles(enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) string {
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	writeenumFiles(qb422016, enum, f, as, ps)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 	return qs422016
-//line views/vexport/EnumDetail.html:118
+//line views/vexport/EnumDetail.html:120
 }

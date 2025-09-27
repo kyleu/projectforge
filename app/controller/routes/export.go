@@ -45,4 +45,6 @@ func exportRoutes(r *mux.Router) {
 	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}/edit", cexport.ProjectExportModelForm)
 	makeRoute(r, http.MethodPost, "/p/{key}/export/models/{model}/edit", cexport.ProjectExportModelSave)
 	makeRoute(r, http.MethodGet, "/p/{key}/export/models/{model}/delete", cexport.ProjectExportModelDelete)
+
+	makeRoute(r, http.MethodGet, "/p/{key}/export/extra/{t}", cexport.ProjectExportExtraTypeDetail)
 }

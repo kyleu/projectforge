@@ -43,6 +43,12 @@ func (d Diffs) Sorted() Diffs {
 	return ret
 }
 
+func (d Diffs) Without(paths ...string) Diffs {
+	return lo.Filter(d, func(x *Diff, _ int) bool {
+		return !lo.Contains(paths, x.Path)
+	})
+}
+
 func (d Diffs) StringVerbose() string {
 	return StringJoin(lo.Map(d, func(x *Diff, _ int) string {
 		return x.StringVerbose()

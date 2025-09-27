@@ -56,7 +56,8 @@ The `PageState` struct contains numerous properties that influence request proce
 - `Breadcrumbs`: Navigation breadcrumbs
 - `HideHeader`: Hides page header
 - `HideMenu`: Hides navigation menu
-- `NoScript`: Disables JavaScript
+- `NoStyle`: Disables standard CSS
+- `NoScript`: Disables standard JavaScript
 - `Icons`: CSS/UI icons to include
 - `RootIcon`, `RootPath`, `RootTitle`: Root navigation configuration
 

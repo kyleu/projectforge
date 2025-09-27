@@ -89,6 +89,9 @@ func (m ValueMap) KeysAndValues() ([]string, []any) {
 }
 
 func (m ValueMap) Clone() ValueMap {
+	if m == nil {
+		return nil
+	}
 	ret := make(ValueMap, len(m))
 	for k, v := range m {
 		ret[k] = v

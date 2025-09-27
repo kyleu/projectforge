@@ -12,7 +12,8 @@ import (
 
 func tsEventConstructor(evt *model.Event, enums enum.Enums, ret *golang.Block) {
 	s := &util.StringSlice{}
-	for _, col := range evt.Columns {
+	cols := evt.Columns.NotDerived()
+	for _, col := range cols {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
 		s.Pushf("%s: %s%s", col.Camel(), tsType(col.Type, enums), optional)
 	}
@@ -27,7 +28,7 @@ func tsEventConstructor(evt *model.Event, enums enum.Enums, ret *golang.Block) {
 		}
 		ret.W("  ) {")
 	}
-	for _, col := range evt.Columns {
+	for _, col := range cols {
 		ret.WF("    this.%s = %s;", col.Camel(), col.Camel())
 	}
 	ret.W("  }")
@@ -36,13 +37,14 @@ func tsEventConstructor(evt *model.Event, enums enum.Enums, ret *golang.Block) {
 func tsEvent(evt *model.Event, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("ts-event-"+evt.Name, "ts")
 	ret.WF("export class %s {", evt.Proper())
-	for _, col := range evt.Columns {
+	cols := evt.Columns.NotDerived()
+	for _, col := range cols {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
 		ret.WF("  %s: %s%s;", col.Camel(), tsType(col.Type, enums), optional)
 	}
 	ret.WB()
 	tsEventConstructor(evt, enums, ret)
-	err := tsFromObject(evt.Columns, evt, enums, ret)
+	err := tsFromObject(cols, evt, enums, ret)
 	if err != nil {
 		return nil, err
 	}

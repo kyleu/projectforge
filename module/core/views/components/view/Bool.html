@@ -10,6 +10,16 @@
   {% if b %}true{% else %}false{% endif %}
 {% endstripspace %}{% endfunc %}
 
+{% func BoolTable(title string, value bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Bool(value) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func BoolIcon(b bool, size int, cls string, ps *cutil.PageState, titles ...string) %}{% stripspace %}
   {% code
     if cls == "" {

@@ -2,10 +2,21 @@
   "time"
 
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func Timestamp(value *time.Time) %}{% stripspace %}
   <span class="timestamp nowrap" title="{%s util.TimeToVerbose(value) %}" data-timestamp="{%s util.TimeToJSFull(value) %}">{%s util.TimeToFull(value) %}</span>
+{% endstripspace %}{% endfunc %}
+
+{% func TimestampTable(title string, value *time.Time, indent int) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Timestamp(value) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}
 
 {% func TimestampMillis(value *time.Time) %}{% stripspace %}

@@ -49,6 +49,7 @@ type Info struct {
 	GoVersion       string            `json:"goVersion,omitzero"`
 	GoBinary        string            `json:"goBinary,omitzero"`
 	ConfigVars      util.KeyTypeDescs `json:"configVars,omitzero"`
+	AdditionalPorts map[string]int    `json:"additionalPorts,omitzero"`
 	ExtraFiles      []string          `json:"extraFiles,omitempty"`
 	IgnoredFiles    []string          `json:"ignoredFiles,omitempty"`
 	Deployments     []string          `json:"deployments,omitempty"`

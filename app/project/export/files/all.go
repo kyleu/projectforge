@@ -38,13 +38,11 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 		ret = append(ret, files...)
 	}
 
-	for _, evt := range args.Events {
-		files, e := EventAll(p, args.Events, linebreak)
-		if e != nil {
-			return nil, errors.Wrapf(e, "error processing event [%s]", evt.Name)
-		}
-		ret = append(ret, files...)
+	files, err := EventAll(p, args.Events, linebreak)
+	if err != nil {
+		return nil, err
 	}
+	ret = append(ret, files...)
 
 	x, err := svc.Services(args, linebreak)
 	if err != nil {

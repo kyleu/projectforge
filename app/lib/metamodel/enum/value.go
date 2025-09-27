@@ -44,6 +44,10 @@ func (x *Value) Title() string {
 	return util.StringToTitle(x.Key)
 }
 
+func (x *Value) IconSafe() string {
+	return util.Choose(x.Icon == "", "star", x.Icon)
+}
+
 func (x *Value) ToOrderedMap(includeKey bool) *util.OrderedMap[any] {
 	ret := util.NewOrderedMap[any](false, 6)
 	if includeKey {

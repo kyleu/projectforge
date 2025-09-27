@@ -1,6 +1,7 @@
 {% import (
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func String(value string, classes ...string) %}{% stripspace %}
@@ -9,6 +10,16 @@
   {% else %}
     <span class="{%s util.StringJoin(classes, ` `) %}">{%s value %}</span>
   {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func StringTable(title string, value string, indent int, classes ...string) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= String(value, classes...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}
 
 {% func StringRich(value string, code bool, maxLength int, classes ...string) %}{% stripspace %}

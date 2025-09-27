@@ -33,6 +33,16 @@
   {%- endif -%}
 {% endstripspace %}{% endfunc %}
 
+{% func DiffsTable(title string, value util.Diffs, indent int) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Diffs(value) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func DiffsSet(key string, value util.DiffsSet, limit int, ps *cutil.PageState) %}{% stripspace %}
   {%- if len(value) == 0 -%}
   <em>no changes</em>

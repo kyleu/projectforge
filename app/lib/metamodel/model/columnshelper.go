@@ -1,8 +1,6 @@
 package model
 
 import (
-	"fmt"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
@@ -23,30 +21,6 @@ func (c Columns) ZeroVals() []string {
 	return lo.Map(c, func(x *Column, _ int) string {
 		return x.ZeroVal()
 	})
-}
-
-func (c Columns) Args(pkg string, enums enum.Enums) (string, error) {
-	args := make([]string, 0, len(c))
-	for _, col := range c {
-		gt, err := col.ToGoType(pkg, enums)
-		if err != nil {
-			return "", err
-		}
-		args = append(args, fmt.Sprintf("%s %s", col.Camel(), gt))
-	}
-	return util.StringJoin(args, ", "), nil
-}
-
-func (c Columns) GoTypeKeys(pkg string, enums enum.Enums) ([]string, error) {
-	ret := util.NewStringSlice(make([]string, 0, len(c)))
-	for _, x := range c {
-		gt, err := x.ToGoType(pkg, enums)
-		if err != nil {
-			return nil, err
-		}
-		ret.Push(gt)
-	}
-	return ret.Slice, nil
 }
 
 func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {

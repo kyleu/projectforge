@@ -21,7 +21,7 @@ func modelPK(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 			return nil, err
 		}
 		goType := util.StringPad(gt, maxTypeLength)
-		ret.WF("\t%s %s `json:%q`", util.StringPad(c.Proper(), maxColLength), goType, c.Camel()+gohelper.JSONSuffix(c))
+		ret.WF("\t%s %s %s", util.StringPad(c.Proper(), maxColLength), goType, gohelper.ColumnTag(c))
 	}
 	ret.W("}")
 	return ret, nil

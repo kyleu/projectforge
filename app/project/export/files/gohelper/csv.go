@@ -1,10 +1,11 @@
 package gohelper
 
 import (
+	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func BlockToCSV(str StringProvider) *golang.Block {
+func BlockToCSV(str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock("ToCSV", "func")
 	ret.WF("func (%s *%s) ToCSV() ([]string, [][]string) {", str.FirstLetter(), str.Proper())
 	ret.WF("\treturn %sFieldDescs.Keys(), [][]string{%s.Strings()}", str.Proper(), str.FirstLetter())
@@ -12,7 +13,7 @@ func BlockToCSV(str StringProvider) *golang.Block {
 	return ret
 }
 
-func BlockArrayToCSV(str StringProvider) *golang.Block {
+func BlockArrayToCSV(str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock("ToCSV", "func")
 	ret.WF("func (%s %s) ToCSV() ([]string, [][]string) {", str.FirstLetter(), str.ProperPlural())
 	ret.WF("\treturn %sFieldDescs.Keys(), lo.Map(%s, func(x *%s, _ int) []string {", str.Proper(), str.FirstLetter(), str.Proper())

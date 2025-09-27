@@ -184,7 +184,7 @@ func modelRowToModel(m *model.Model, args *metamodel.Args, database string) (*go
 			if helper.SimpleJSON(database) {
 				decoder = ba(decoder)
 			}
-			ref, _, err := helper.LoadRef(c, args.Models, args.ExtraTypes)
+			ref, _, err := helper.LoadRef(c, args.Models, args.Events, args.ExtraTypes)
 			if err != nil {
 				return nil, errors.Wrap(err, "invalid ref")
 			}

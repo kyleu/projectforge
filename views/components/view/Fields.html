@@ -1,0 +1,19 @@
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+) %}
+
+{% func Fields(fields util.FieldDescs, values util.ValueMap, ps *cutil.PageState) %}{% stripspace %}
+  {%- for _, arg := range fields -%}
+    {%- switch arg.Type -%}
+    {%- case "bool" -%}
+      {%= BoolTable(arg.TitleSafe(), values.GetBoolOr(arg.Key, arg.DefaultBool(), true), 3, ps) %}
+    {%- case "number", "int" -%}
+      {%= IntTable(arg.TitleSafe(), values.GetIntOr(arg.Key, arg.DefaultInt(), true), 3) %}
+    {%- case "float" -%}
+      {%= FloatTable(arg.TitleSafe(), values.GetFloatOr(arg.Key, arg.DefaultFloat(), true), 3) %}
+    {%- default -%}
+      {%= StringTable(arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), 3) %}
+    {%- endswitch -%}
+  {%- endfor -%}
+{% endstripspace %}{% endfunc %}

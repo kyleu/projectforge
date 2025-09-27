@@ -18,8 +18,8 @@ func All(args *metamodel.Args, linebreak string) (file.Files, error) {
 		ret = append(ret, x)
 	}
 
-	for _, evt := range args.Events {
-		imps, err := tsModelImports(args, evt.Columns, evt)
+	for _, evt := range args.Events.WithTypeScript() {
+		imps, err := tsModelImports(args, evt.Columns.NotDerived(), evt)
 		if err != nil {
 			return nil, errors.Wrapf(err, "error processing imports for model [%s]", evt.Name)
 		}

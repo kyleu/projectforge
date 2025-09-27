@@ -5,101 +5,158 @@
 package view
 
 //line views/components/view/Tags.html:1
-import "strings"
+import (
+	"strings"
 
-//line views/components/view/Tags.html:3
+	"projectforge.dev/projectforge/views/components"
+)
+
+//line views/components/view/Tags.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/Tags.html:3
+//line views/components/view/Tags.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/Tags.html:3
+//line views/components/view/Tags.html:7
 func StreamTags(qw422016 *qt422016.Writer, values []string, titles []string, url ...string) {
-//line views/components/view/Tags.html:3
+//line views/components/view/Tags.html:7
 	qw422016.N().S(`<div class="tag-view"><div class="tags">`)
-//line views/components/view/Tags.html:6
+//line views/components/view/Tags.html:10
 	for idx, x := range values {
-//line views/components/view/Tags.html:8
+//line views/components/view/Tags.html:12
 		title := x
 		if len(titles) > idx {
 			title = titles[idx]
 		}
 
-//line views/components/view/Tags.html:12
-		qw422016.N().S(`<span class="item"`)
-//line views/components/view/Tags.html:13
-		if title != `` {
-//line views/components/view/Tags.html:13
-			qw422016.N().S(` `)
-//line views/components/view/Tags.html:13
-			qw422016.N().S(`title="`)
-//line views/components/view/Tags.html:13
-			qw422016.E().S(title)
-//line views/components/view/Tags.html:13
-			qw422016.N().S(`"`)
-//line views/components/view/Tags.html:13
-		}
-//line views/components/view/Tags.html:13
-		qw422016.N().S(`>`)
-//line views/components/view/Tags.html:14
-		if len(url) == 0 {
-//line views/components/view/Tags.html:15
-			qw422016.E().S(x)
 //line views/components/view/Tags.html:16
-		} else {
+		qw422016.N().S(`<span class="item"`)
 //line views/components/view/Tags.html:17
+		if title != `` {
+//line views/components/view/Tags.html:17
+			qw422016.N().S(` `)
+//line views/components/view/Tags.html:17
+			qw422016.N().S(`title="`)
+//line views/components/view/Tags.html:17
+			qw422016.E().S(title)
+//line views/components/view/Tags.html:17
+			qw422016.N().S(`"`)
+//line views/components/view/Tags.html:17
+		}
+//line views/components/view/Tags.html:17
+		qw422016.N().S(`>`)
+//line views/components/view/Tags.html:18
+		if len(url) == 0 {
+//line views/components/view/Tags.html:19
+			qw422016.E().S(x)
+//line views/components/view/Tags.html:20
+		} else {
+//line views/components/view/Tags.html:21
 			u := strings.ReplaceAll(url[0], "{}", x)
 
-//line views/components/view/Tags.html:17
+//line views/components/view/Tags.html:21
 			qw422016.N().S(`<a href="`)
-//line views/components/view/Tags.html:18
+//line views/components/view/Tags.html:22
 			qw422016.E().S(u)
-//line views/components/view/Tags.html:18
+//line views/components/view/Tags.html:22
 			qw422016.N().S(`">`)
-//line views/components/view/Tags.html:18
+//line views/components/view/Tags.html:22
 			qw422016.E().S(x)
-//line views/components/view/Tags.html:18
+//line views/components/view/Tags.html:22
 			qw422016.N().S(`</a>`)
-//line views/components/view/Tags.html:19
+//line views/components/view/Tags.html:23
 		}
-//line views/components/view/Tags.html:19
+//line views/components/view/Tags.html:23
 		qw422016.N().S(`</span>`)
-//line views/components/view/Tags.html:21
+//line views/components/view/Tags.html:25
 	}
-//line views/components/view/Tags.html:21
+//line views/components/view/Tags.html:25
 	qw422016.N().S(`</div></div>`)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 }
 
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 func WriteTags(qq422016 qtio422016.Writer, values []string, titles []string, url ...string) {
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	StreamTags(qw422016, values, titles, url...)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 }
 
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 func Tags(values []string, titles []string, url ...string) string {
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	WriteTags(qb422016, values, titles, url...)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	qs422016 := string(qb422016.B)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
 	return qs422016
-//line views/components/view/Tags.html:24
+//line views/components/view/Tags.html:28
+}
+
+//line views/components/view/Tags.html:30
+func StreamTagsTable(qw422016 *qt422016.Writer, title string, values []string, titles []string, indent int, url ...string) {
+//line views/components/view/Tags.html:30
+	qw422016.N().S(`<tr>`)
+//line views/components/view/Tags.html:32
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Tags.html:32
+	qw422016.N().S(`<th class="shrink">`)
+//line views/components/view/Tags.html:33
+	qw422016.E().S(title)
+//line views/components/view/Tags.html:33
+	qw422016.N().S(`</th>`)
+//line views/components/view/Tags.html:34
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Tags.html:34
+	qw422016.N().S(`<td>`)
+//line views/components/view/Tags.html:35
+	StreamTags(qw422016, values, titles, url...)
+//line views/components/view/Tags.html:35
+	qw422016.N().S(`</td>`)
+//line views/components/view/Tags.html:36
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/Tags.html:36
+	qw422016.N().S(`</tr>`)
+//line views/components/view/Tags.html:38
+}
+
+//line views/components/view/Tags.html:38
+func WriteTagsTable(qq422016 qtio422016.Writer, title string, values []string, titles []string, indent int, url ...string) {
+//line views/components/view/Tags.html:38
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Tags.html:38
+	StreamTagsTable(qw422016, title, values, titles, indent, url...)
+//line views/components/view/Tags.html:38
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Tags.html:38
+}
+
+//line views/components/view/Tags.html:38
+func TagsTable(title string, values []string, titles []string, indent int, url ...string) string {
+//line views/components/view/Tags.html:38
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Tags.html:38
+	WriteTagsTable(qb422016, title, values, titles, indent, url...)
+//line views/components/view/Tags.html:38
+	qs422016 := string(qb422016.B)
+//line views/components/view/Tags.html:38
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Tags.html:38
+	return qs422016
+//line views/components/view/Tags.html:38
 }

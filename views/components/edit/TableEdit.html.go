@@ -5,212 +5,217 @@
 package edit
 
 //line views/components/edit/TableEdit.html:1
-import (
-	"projectforge.dev/projectforge/app/util"
-)
+import "projectforge.dev/projectforge/app/util"
 
-//line views/components/edit/TableEdit.html:5
+//line views/components/edit/TableEdit.html:3
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/edit/TableEdit.html:5
+//line views/components/edit/TableEdit.html:3
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/edit/TableEdit.html:5
+//line views/components/edit/TableEdit.html:3
 func StreamTableEditor(qw422016 *qt422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) {
-//line views/components/edit/TableEdit.html:5
+//line views/components/edit/TableEdit.html:3
 	qw422016.N().S(`
   <form action="`)
-//line views/components/edit/TableEdit.html:6
+//line views/components/edit/TableEdit.html:4
 	qw422016.E().S(action)
-//line views/components/edit/TableEdit.html:6
+//line views/components/edit/TableEdit.html:4
 	qw422016.N().S(`" method="`)
-//line views/components/edit/TableEdit.html:6
+//line views/components/edit/TableEdit.html:4
 	qw422016.E().S(method)
-//line views/components/edit/TableEdit.html:6
+//line views/components/edit/TableEdit.html:4
 	qw422016.N().S(`">
     `)
-//line views/components/edit/TableEdit.html:7
+//line views/components/edit/TableEdit.html:5
 	StreamTableEditorNoForm(qw422016, key, columns, values, "", "", title)
-//line views/components/edit/TableEdit.html:7
+//line views/components/edit/TableEdit.html:5
 	qw422016.N().S(`
   </form>
 `)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 }
 
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 func WriteTableEditor(qq422016 qtio422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) {
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	StreamTableEditor(qw422016, key, columns, values, action, method, title)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 }
 
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 func TableEditor(key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) string {
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	WriteTableEditor(qb422016, key, columns, values, action, method, title)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	qs422016 := string(qb422016.B)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 	return qs422016
-//line views/components/edit/TableEdit.html:9
+//line views/components/edit/TableEdit.html:7
 }
 
-//line views/components/edit/TableEdit.html:11
+//line views/components/edit/TableEdit.html:9
 func StreamTableEditorNoForm(qw422016 *qt422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) {
-//line views/components/edit/TableEdit.html:11
+//line views/components/edit/TableEdit.html:9
 	qw422016.N().S(`
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <tbody>
         `)
-//line views/components/edit/TableEdit.html:15
+//line views/components/edit/TableEdit.html:13
 	StreamTableEditorNoTable(qw422016, key, columns, values)
-//line views/components/edit/TableEdit.html:15
+//line views/components/edit/TableEdit.html:13
 	qw422016.N().S(`
         <tr>
 `)
-//line views/components/edit/TableEdit.html:17
+//line views/components/edit/TableEdit.html:15
 	if name == "" {
-//line views/components/edit/TableEdit.html:17
+//line views/components/edit/TableEdit.html:15
 		qw422016.N().S(`          <td colspan="2"><button type="submit">`)
-//line views/components/edit/TableEdit.html:18
+//line views/components/edit/TableEdit.html:16
 		qw422016.E().S(title)
-//line views/components/edit/TableEdit.html:18
+//line views/components/edit/TableEdit.html:16
 		qw422016.N().S(`</button></td>
 `)
-//line views/components/edit/TableEdit.html:19
+//line views/components/edit/TableEdit.html:17
 	} else {
-//line views/components/edit/TableEdit.html:19
+//line views/components/edit/TableEdit.html:17
 		qw422016.N().S(`          <td colspan="2"><button name="`)
-//line views/components/edit/TableEdit.html:20
+//line views/components/edit/TableEdit.html:18
 		qw422016.E().S(name)
-//line views/components/edit/TableEdit.html:20
+//line views/components/edit/TableEdit.html:18
 		qw422016.N().S(`" value="`)
-//line views/components/edit/TableEdit.html:20
+//line views/components/edit/TableEdit.html:18
 		qw422016.E().S(value)
-//line views/components/edit/TableEdit.html:20
+//line views/components/edit/TableEdit.html:18
 		qw422016.N().S(`" type="submit">`)
-//line views/components/edit/TableEdit.html:20
+//line views/components/edit/TableEdit.html:18
 		qw422016.E().S(title)
-//line views/components/edit/TableEdit.html:20
+//line views/components/edit/TableEdit.html:18
 		qw422016.N().S(`</button></td>
 `)
-//line views/components/edit/TableEdit.html:21
+//line views/components/edit/TableEdit.html:19
 	}
-//line views/components/edit/TableEdit.html:21
+//line views/components/edit/TableEdit.html:19
 	qw422016.N().S(`        </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 }
 
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 func WriteTableEditorNoForm(qq422016 qtio422016.Writer, key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) {
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	StreamTableEditorNoForm(qw422016, key, columns, values, name, value, title)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 }
 
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 func TableEditorNoForm(key string, columns util.FieldDescs, values util.ValueMap, name string, value string, title string) string {
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	WriteTableEditorNoForm(qb422016, key, columns, values, name, value, title)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	qs422016 := string(qb422016.B)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 	return qs422016
-//line views/components/edit/TableEdit.html:26
+//line views/components/edit/TableEdit.html:24
 }
 
-//line views/components/edit/TableEdit.html:28
+//line views/components/edit/TableEdit.html:26
 func StreamTableEditorNoTable(qw422016 *qt422016.Writer, key string, columns util.FieldDescs, values util.ValueMap) {
-//line views/components/edit/TableEdit.html:29
+//line views/components/edit/TableEdit.html:27
 	for _, arg := range columns {
-//line views/components/edit/TableEdit.html:30
+//line views/components/edit/TableEdit.html:28
 		switch arg.Type {
-//line views/components/edit/TableEdit.html:31
+//line views/components/edit/TableEdit.html:29
 		case "bool":
-//line views/components/edit/TableEdit.html:32
-			StreamBoolTable(qw422016, arg.Key, arg.TitleSafe(), values.GetBoolOpt(arg.Key), 3, arg.Description)
-//line views/components/edit/TableEdit.html:33
+//line views/components/edit/TableEdit.html:30
+			StreamBoolTable(qw422016, arg.Key, arg.TitleSafe(), values.GetBoolOr(arg.Key, arg.DefaultBool(), true), 3, arg.Description)
+//line views/components/edit/TableEdit.html:31
 		case "textarea":
-//line views/components/edit/TableEdit.html:34
-			StreamTextareaTable(qw422016, arg.Key, "", arg.TitleSafe(), 12, values.GetStringOpt(arg.Key), 3, arg.Description)
-//line views/components/edit/TableEdit.html:35
+//line views/components/edit/TableEdit.html:32
+			StreamTextareaTable(qw422016, arg.Key, "", arg.TitleSafe(), 12, values.GetStringOr(arg.Key, arg.Default, true), 3, arg.Description)
+//line views/components/edit/TableEdit.html:33
 		case "number", "int":
-//line views/components/edit/TableEdit.html:36
-			StreamIntTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetIntOpt(arg.Key), 3, arg.Description)
-//line views/components/edit/TableEdit.html:37
+//line views/components/edit/TableEdit.html:34
+			StreamIntTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetIntOr(arg.Key, arg.DefaultInt(), true), 3, arg.Description)
+//line views/components/edit/TableEdit.html:35
 		case "float":
+//line views/components/edit/TableEdit.html:36
+			StreamFloatTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetFloatOr(arg.Key, arg.DefaultFloat(), true), 3, arg.Description)
+//line views/components/edit/TableEdit.html:37
+		case "uuid":
 //line views/components/edit/TableEdit.html:38
-			StreamFloatTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetFloatOpt(arg.Key), 3, arg.Description)
+			u, _ := values.ParseUUID(arg.Key, true, true)
+
 //line views/components/edit/TableEdit.html:39
-		case "select":
+			StreamUUIDTable(qw422016, arg.Key, "", arg.TitleSafe(), u, 3, arg.Description)
 //line views/components/edit/TableEdit.html:40
-			StreamSelectTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description)
+		case "select":
 //line views/components/edit/TableEdit.html:41
-		case "radio":
+			StreamSelectTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), arg.Choices, nil, 3, arg.Description)
 //line views/components/edit/TableEdit.html:42
-			StreamRadioTable(qw422016, arg.Key, arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description)
+		case "radio":
 //line views/components/edit/TableEdit.html:43
-		default:
+			StreamRadioTable(qw422016, arg.Key, arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), arg.Choices, nil, 3, arg.Description)
 //line views/components/edit/TableEdit.html:44
-			StreamDatalistTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description)
+		default:
 //line views/components/edit/TableEdit.html:45
-		}
+			StreamDatalistTable(qw422016, arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), arg.Choices, nil, 3, arg.Description)
 //line views/components/edit/TableEdit.html:46
+		}
+//line views/components/edit/TableEdit.html:47
 	}
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 }
 
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 func WriteTableEditorNoTable(qq422016 qtio422016.Writer, key string, columns util.FieldDescs, values util.ValueMap) {
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	StreamTableEditorNoTable(qw422016, key, columns, values)
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 }
 
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 func TableEditorNoTable(key string, columns util.FieldDescs, values util.ValueMap) string {
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	WriteTableEditorNoTable(qb422016, key, columns, values)
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	qs422016 := string(qb422016.B)
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 	return qs422016
-//line views/components/edit/TableEdit.html:47
+//line views/components/edit/TableEdit.html:48
 }

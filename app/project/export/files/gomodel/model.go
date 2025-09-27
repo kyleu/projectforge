@@ -57,13 +57,13 @@ func Model(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 	if err != nil {
 		return nil, err
 	}
-	c, err := modelConstructor(m, args.Enums)
+	c, err := modelConstructor(m, args)
 	if err != nil {
 		return nil, err
 	}
 	g.AddBlocks(str, c)
 
-	g.AddBlocks(gohelper.BlockClone(g, m.Columns, m), gohelper.BlockString(g, m.Columns, m), gohelper.BlockTitle(g, m.Columns, m))
+	g.AddBlocks(gohelper.BlockClone(g, m.Columns.NotDerived(), m), gohelper.BlockString(g, m.Columns, m), gohelper.BlockTitle(g, m.Columns, m))
 	if len(m.PKs()) > 1 {
 		if pk, e := modelToPK(m, args.Enums); e == nil {
 			g.AddBlocks(pk)

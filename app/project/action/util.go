@@ -103,6 +103,11 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		_ = util.FromJSON([]byte(x), &docs)
 	}
 
+	additionalPorts := i.AdditionalPorts
+	if x := cfg.GetStringOpt("additionalPorts"); x != "" {
+		_ = util.FromJSON([]byte(x), &additionalPorts)
+	}
+
 	return &project.Info{
 		Org:             str("org", i.Org),
 		AuthorID:        str("author_id", i.AuthorID),
@@ -123,9 +128,10 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		Slack:           str("slack", i.Slack),
 		Channels:        util.StringSplitAndTrim(str("channels", util.StringJoin(i.Channels, ", ")), ","),
 		JavaPackage:     str("javaPackage", i.JavaPackage),
-		GoVersion:       str("goVersion", i.GoBinary),
+		GoVersion:       str("goVersion", i.GoVersion),
 		GoBinary:        str("goBinary", i.GoBinary),
 		ConfigVars:      cfgVars,
+		AdditionalPorts: additionalPorts,
 		ExtraFiles:      util.StringSplitAndTrim(str("extraFiles", util.StringJoin(i.ExtraFiles, ", ")), ","),
 		IgnoredFiles:    util.StringSplitAndTrim(str("ignoredFiles", util.StringJoin(i.IgnoredFiles, ", ")), ","),
 		Deployments:     util.StringSplitAndTrim(str("deployments", util.StringJoin(i.Deployments, ", ")), ","),

@@ -1,7 +1,20 @@
-{% import "{{{ .Package }}}/app/util" %}
+{% import (
+  "{{{ .Package }}}/app/util"
+  "{{{ .Package }}}/views/components"
+) %}
 
 {% func Int(i any) %}{% stripspace %}
   {%v i %}
+{% endstripspace %}{% endfunc %}
+
+{% func IntTable(title string, value any, indent int) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Int(value) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}
 
 {% func IntArray(value []any) %}{% stripspace %}

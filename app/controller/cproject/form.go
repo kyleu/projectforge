@@ -60,12 +60,27 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Info.Slack = get("slack", prj.Info.Slack)
 	prj.Info.Channels = util.StringSplitAndTrim(get("channels", util.StringJoin(prj.Info.Channels, ", ")), ",")
 	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
-	prj.Info.GoVersion = get("goVersion", prj.Info.GoBinary)
+	prj.Info.GoVersion = get("goVersion", prj.Info.GoVersion)
 	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
 	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", util.StringJoin(prj.Info.ExtraFiles, ", ")), ",")
 	prj.Info.IgnoredFiles = util.StringSplitAndTrim(get("ignoredFiles", util.StringJoin(prj.Info.IgnoredFiles, ", ")), ",")
 	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", util.StringJoin(prj.Info.Deployments, ", ")), ",")
 	prj.Info.Acronyms = util.StringSplitAndTrim(get("acronyms", util.StringJoin(prj.Info.Acronyms, ", ")), ",")
+
+	cv := get("configVars", util.ToJSON(prj.Info.ConfigVars))
+	if err := util.FromJSON([]byte(cv), &prj.Info.ConfigVars); err != nil {
+		return err
+	}
+	if len(prj.Info.ConfigVars) == 0 {
+		prj.Info.ConfigVars = nil
+	}
+	ap := get("additionalPorts", util.ToJSON(prj.Info.AdditionalPorts))
+	if err := util.FromJSON([]byte(ap), &prj.Info.AdditionalPorts); err != nil {
+		return err
+	}
+	if len(prj.Info.AdditionalPorts) == 0 {
+		prj.Info.AdditionalPorts = nil
+	}
 
 	if prj.Package == "" {
 		prj.Package = "github.com/" + prj.Info.Org + "/" + prj.Key

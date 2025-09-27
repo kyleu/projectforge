@@ -79,6 +79,14 @@
       {%- endif -%}
     </div>
   </div>
+  {%- if len(p.Args.ExtraTypes) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`file`, ps) %} {%s util.StringPlural(len(p.Args.ExtraTypes), "Extra Types") %}</h3>
+    <div class="mt">
+      {%= ModelList(p.Args.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", p.Project.Key), as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
 {% endfunc %}
 
 {% func GroupList(groups model.Groups, indent int) %}{% stripspace %}

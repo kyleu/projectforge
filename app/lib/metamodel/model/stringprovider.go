@@ -1,4 +1,6 @@
-package gohelper
+package model
+
+import "projectforge.dev/projectforge/app/util"
 
 type StringProvider interface {
 	PackageName() string
@@ -10,4 +12,6 @@ type StringProvider interface {
 	PackageWithGroup(prefix string) string
 	RelativePath(rGroup []string, extra ...string) string
 	GroupLen() int
+	GroupAndPackage() []string
+	ConfigMap() util.ValueMap
 }

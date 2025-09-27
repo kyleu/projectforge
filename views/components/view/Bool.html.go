@@ -68,8 +68,61 @@ func Bool(b bool) string {
 }
 
 //line views/components/view/Bool.html:13
-func StreamBoolIcon(qw422016 *qt422016.Writer, b bool, size int, cls string, ps *cutil.PageState, titles ...string) {
+func StreamBoolTable(qw422016 *qt422016.Writer, title string, value bool, indent int, ps *cutil.PageState) {
+//line views/components/view/Bool.html:13
+	qw422016.N().S(`<tr>`)
 //line views/components/view/Bool.html:15
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Bool.html:15
+	qw422016.N().S(`<th class="shrink">`)
+//line views/components/view/Bool.html:16
+	qw422016.E().S(title)
+//line views/components/view/Bool.html:16
+	qw422016.N().S(`</th>`)
+//line views/components/view/Bool.html:17
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/Bool.html:17
+	qw422016.N().S(`<td>`)
+//line views/components/view/Bool.html:18
+	StreamBool(qw422016, value)
+//line views/components/view/Bool.html:18
+	qw422016.N().S(`</td>`)
+//line views/components/view/Bool.html:19
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/Bool.html:19
+	qw422016.N().S(`</tr>`)
+//line views/components/view/Bool.html:21
+}
+
+//line views/components/view/Bool.html:21
+func WriteBoolTable(qq422016 qtio422016.Writer, title string, value bool, indent int, ps *cutil.PageState) {
+//line views/components/view/Bool.html:21
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/Bool.html:21
+	StreamBoolTable(qw422016, title, value, indent, ps)
+//line views/components/view/Bool.html:21
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/Bool.html:21
+}
+
+//line views/components/view/Bool.html:21
+func BoolTable(title string, value bool, indent int, ps *cutil.PageState) string {
+//line views/components/view/Bool.html:21
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/Bool.html:21
+	WriteBoolTable(qb422016, title, value, indent, ps)
+//line views/components/view/Bool.html:21
+	qs422016 := string(qb422016.B)
+//line views/components/view/Bool.html:21
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/Bool.html:21
+	return qs422016
+//line views/components/view/Bool.html:21
+}
+
+//line views/components/view/Bool.html:23
+func StreamBoolIcon(qw422016 *qt422016.Writer, b bool, size int, cls string, ps *cutil.PageState, titles ...string) {
+//line views/components/view/Bool.html:25
 	if cls == "" {
 		cls = "inline"
 	}
@@ -92,41 +145,41 @@ func StreamBoolIcon(qw422016 *qt422016.Writer, b bool, size int, cls string, ps 
 	}
 	icon := util.Choose(b, "check", "times")
 
-//line views/components/view/Bool.html:36
+//line views/components/view/Bool.html:46
 	qw422016.N().S(`<span`)
-//line views/components/view/Bool.html:37
+//line views/components/view/Bool.html:47
 	qw422016.N().S(extra)
-//line views/components/view/Bool.html:37
+//line views/components/view/Bool.html:47
 	qw422016.N().S(`>`)
-//line views/components/view/Bool.html:37
+//line views/components/view/Bool.html:47
 	components.StreamSVGRef(qw422016, icon, size, size, cls, ps)
-//line views/components/view/Bool.html:37
+//line views/components/view/Bool.html:47
 	qw422016.N().S(`</span>`)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 }
 
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 func WriteBoolIcon(qq422016 qtio422016.Writer, b bool, size int, cls string, ps *cutil.PageState, titles ...string) {
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	StreamBoolIcon(qw422016, b, size, cls, ps, titles...)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 }
 
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 func BoolIcon(b bool, size int, cls string, ps *cutil.PageState, titles ...string) string {
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	WriteBoolIcon(qb422016, b, size, cls, ps, titles...)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	qs422016 := string(qb422016.B)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 	return qs422016
-//line views/components/view/Bool.html:38
+//line views/components/view/Bool.html:48
 }

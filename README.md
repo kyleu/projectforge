@@ -63,7 +63,7 @@ A project managed by Project Forge...
 | [Filesystem](module/filesystem/doc/module/filesystem.md)         | Provides an abstraction around local and remote filesystems                                    |
 | [Git](module/git/doc/module/git.md)                              | Helper classes for performing operations on git repositories                                   |
 | [GraphQL](module/graphql/doc/module/graphql.md)                  | Supports GraphQL APIs within your application                                                  |
-| [Grep Search](module/databaseui/doc/module/grep.md)              | Provides a mechanism for searching with ripgrep                                                |
+| [Grep Search](module/grep/doc/module/grep.md)                     | Provides a mechanism for searching with ripgrep                                                |
 | [Help](module/help/doc/module/help.md)                           | Provides Markdown help files that integrate into the UI                                        |
 | [HTTP Archive](module/har/doc/module/har.md)                     | Provides classes for parsing HTTP Archive (*.har) files                                        |
 | [iOS App](module/ios/doc/module/ios.md)                          | Webview-based application and iOS build                                                        |
@@ -88,6 +88,7 @@ A project managed by Project Forge...
 | [Scheduled Jobs](module/schedule/doc/module/schedule.md)         | Provides a scheduled job engine and UI based on gocron                                         |
 | [Scripting](module/scripting/doc/module/scripting.md)            | Allows the execution of JavaScript files using a built-in interpreter                          |
 | [Search](module/search/doc/module/search.md)                     | Adds search facilities to the top-level navigation bar                                         |
+| [Settings](module/settings/doc/module/settings.md)               | Provides a framework for managing file-backed application settings                             |
 | [SQL Server](module/sqlserver/doc/module/sqlserver.md)           | Provides an API for accessing MSSQL databases                                                  |
 | [SQLite](module/sqlite/doc/module/sqlite.md)                     | Provides an API for accessing SQLite databases                                                 |
 | [Task](module/task/doc/module/task.md)                           | Provides an engine for executing and monitoring tasks                                          |

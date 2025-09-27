@@ -18,7 +18,7 @@ import (
 const tSet = "Set"
 
 func Array(
-	g *golang.File, m StringProvider, cols model.Columns, importantCols model.Columns, args *metamodel.Args, goVersion string, linebreak string,
+	g *golang.File, m model.StringProvider, cols model.Columns, importantCols model.Columns, args *metamodel.Args, goVersion string, linebreak string,
 ) (*file.File, error) {
 	g.AddImport(helper.ImpLo, helper.ImpAppUtil)
 	imps, err := helper.SpecialImports(importantCols, m.PackageWithGroup(""), args)
@@ -27,9 +27,9 @@ func Array(
 	}
 	g.AddImport(imps...)
 
-	g.AddBlocks(modelArray(m))
+	g.AddBlocks(ModelArray(m))
 	if len(cols.PKs()) > 0 {
-		ag, err := modelArrayGet(g, m, cols.PKs(), args.Enums, goVersion)
+		ag, err := ModelArrayGet(g, m, cols.PKs(), args, goVersion)
 		if err != nil {
 			return nil, err
 		}
@@ -53,23 +53,23 @@ func Array(
 			g.AddBlocks(modelArrayGetBySingle(m, col, args.Enums), modelArrayGetByMulti(m, col, args.Enums))
 		}
 	})
-	g.AddBlocks(modelArrayToMaps(m), modelArrayToOrderedMaps(m), BlockArrayToCSV(m), BlockArrayRandom(m), BlockArrayClone(m))
+	g.AddBlocks(ModelArrayToMaps(m), ModelArrayToOrderedMaps(m), BlockArrayToCSV(m), BlockArrayRandom(m), BlockArrayClone(m))
 	return g.Render(linebreak)
 }
 
-func modelArray(m StringProvider) *golang.Block {
+func ModelArray(m model.StringProvider) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"Array", "type")
 	ret.WF("type %s []*%s", m.ProperPlural(), m.Proper())
 	return ret
 }
 
-func modelArrayGet(g *golang.File, m StringProvider, cols model.Columns, enums enum.Enums, goVersion string) (*golang.Block, error) {
+func ModelArrayGet(g *golang.File, m model.StringProvider, cols model.Columns, x *metamodel.Args, goVersion string) (*golang.Block, error) {
 	ret := golang.NewBlock(m.Proper()+"ArrayGet", "func")
-	args, err := cols.Args(m.PackageName(), enums)
+	argsString, err := helper.GoArgsWithRef(cols, m.PackageName(), x)
 	if err != nil {
 		return nil, err
 	}
-	ret.WF("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), args, m.Proper())
+	ret.WF("func (%s %s) Get(%s) *%s {", m.FirstLetter(), m.ProperPlural(), argsString, m.Proper())
 
 	comps := lo.Map(cols.PKs(), func(pk *model.Column, _ int) string {
 		if types.IsList(pk.Type) {
@@ -86,7 +86,7 @@ func modelArrayGet(g *golang.File, m StringProvider, cols model.Columns, enums e
 	return ret, nil
 }
 
-func modelArrayToMaps(m StringProvider) *golang.Block {
+func ModelArrayToMaps(m model.StringProvider) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayToMaps", "func")
 	ret.WF("func (%s %s) ToMaps() []util.ValueMap {", m.FirstLetter(), m.ProperPlural())
 	ret.WF("\treturn lo.Map(%s, func(x *%s, _ int) util.ValueMap {", m.FirstLetter(), m.Proper())
@@ -96,7 +96,7 @@ func modelArrayToMaps(m StringProvider) *golang.Block {
 	return ret
 }
 
-func modelArrayToOrderedMaps(m StringProvider) *golang.Block {
+func ModelArrayToOrderedMaps(m model.StringProvider) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayToOrderedMaps", "func")
 	ret.WF("func (%s %s) ToOrderedMaps() util.OrderedMaps[any] {", m.FirstLetter(), m.ProperPlural())
 	ret.WF("\treturn lo.Map(%s, func(x *%s, _ int) *util.OrderedMap[any] {", m.FirstLetter(), m.Proper())
@@ -106,7 +106,7 @@ func modelArrayToOrderedMaps(m StringProvider) *golang.Block {
 	return ret
 }
 
-func modelArrayGetByMulti(m StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
+func modelArrayGetByMulti(m model.StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sArrayGetBy%s", m.Proper(), col.Proper()), "func")
 	name := col.ProperPlural()
 	if name == col.Proper() {
@@ -124,7 +124,7 @@ func modelArrayGetByMulti(m StringProvider, col *model.Column, enums enum.Enums)
 	return ret
 }
 
-func modelArrayGetBySingle(m StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
+func modelArrayGetBySingle(m model.StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sArrayGetBy%s", m.Proper(), col.Proper()), "func")
 	t, _ := col.ToGoType(m.PackageName(), enums)
 	ret.WF("func (%s %s) GetBy%s(%s %s) %s {", m.FirstLetter(), m.ProperPlural(), col.Proper(), col.Camel(), t, m.ProperPlural())
@@ -135,7 +135,7 @@ func modelArrayGetBySingle(m StringProvider, col *model.Column, enums enum.Enums
 	return ret
 }
 
-func modelArrayCol(m StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
+func modelArrayCol(m model.StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sArray%s", m.Proper(), col.ProperPlural()), "func")
 	name := col.ProperPlural()
 	if name == col.Proper() {
@@ -153,7 +153,7 @@ func modelArrayCol(m StringProvider, col *model.Column, enums enum.Enums) *golan
 	return ret
 }
 
-func modelArrayColStrings(m StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
+func modelArrayColStrings(m model.StringProvider, col *model.Column, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sArray%sStrings", m.Proper(), col.Proper()), "func")
 	ret.WF("func (%s %s) %sStrings(includeNil bool) []string {", m.FirstLetter(), m.ProperPlural(), col.Proper())
 	ret.WF("\tret := make([]string, 0, len(%s)+1)", m.FirstLetter())
@@ -168,7 +168,7 @@ func modelArrayColStrings(m StringProvider, col *model.Column, enums enum.Enums)
 	return ret
 }
 
-func modelArrayToPKs(m StringProvider) *golang.Block {
+func modelArrayToPKs(m model.StringProvider) *golang.Block {
 	ret := golang.NewBlock(fmt.Sprintf("%sArrayToPKs", m.Proper()), "func")
 	ret.WF("func (%s %s) ToPKs() []*PK {", m.FirstLetter(), m.ProperPlural())
 	ret.WF("\treturn lo.Map(%s, func(x *%s, _ int) *PK {", m.FirstLetter(), m.Proper())
@@ -178,7 +178,7 @@ func modelArrayToPKs(m StringProvider) *golang.Block {
 	return ret
 }
 
-func modelArrayTitleStrings(m StringProvider) *golang.Block {
+func modelArrayTitleStrings(m model.StringProvider) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayTitleStrings", "func")
 	ret.WF("func (%s %s) TitleStrings(nilTitle string) []string {", m.FirstLetter(), m.ProperPlural())
 	ret.WF("\tret := make([]string, 0, len(%s)+1)", m.FirstLetter())

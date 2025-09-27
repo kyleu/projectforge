@@ -44,6 +44,27 @@ func (d *FieldDesc) TitleSafe() string {
 	return d.Key
 }
 
+func (d *FieldDesc) DefaultBool() bool {
+	if d.Default != "" {
+		return ParseBoolSimple(d.Default)
+	}
+	return false
+}
+
+func (d *FieldDesc) DefaultInt() int {
+	if d.Default != "" {
+		return ParseIntSimple(d.Default)
+	}
+	return 0
+}
+
+func (d *FieldDesc) DefaultFloat() float64 {
+	if d.Default != "" {
+		return ParseFloatSimple(d.Default)
+	}
+	return 0
+}
+
 type FieldDescs []*FieldDesc
 
 func (d FieldDescs) Get(key string) *FieldDesc {

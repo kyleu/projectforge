@@ -16,7 +16,7 @@ import (
 
 const nilKey = "nil"
 
-func BlockRandom(cols model.Columns, str StringProvider, enums enum.Enums) (*golang.Block, error) {
+func BlockRandom(cols model.Columns, str model.StringProvider, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock(str.Proper()+"Random", "struct")
 	ret.WF("func Random%s() *%s {", str.Proper(), str.Proper())
 	ret.WF("\treturn &%s{", str.Proper())
@@ -34,7 +34,7 @@ func BlockRandom(cols model.Columns, str StringProvider, enums enum.Enums) (*gol
 	return ret, nil
 }
 
-func BlockArrayRandom(str StringProvider) *golang.Block {
+func BlockArrayRandom(str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock(str.Proper()+"ArrayRandom", "func")
 	ret.WF("func (%s %s) Random() *%s {", str.FirstLetter(), str.ProperPlural(), str.Proper())
 	ret.WF("\treturn util.RandomElement(%s)", str.FirstLetter())

@@ -31,6 +31,6 @@ func ModelMap(m *model.Model, args *metamodel.Args, linebreak string) (*file.Fil
 	} else {
 		return nil, e
 	}
-	g.AddBlocks(gohelper.ToOrderedMap(m, m.Columns))
+	g.AddBlocks(gohelper.ToOrderedMap(m, m.Columns.NotDerived()))
 	return g.Render(linebreak)
 }

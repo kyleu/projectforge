@@ -85,23 +85,33 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 	qw422016.E().S(assets.URL(`logo.svg`))
 //line views/layout/Head.html:20
 	qw422016.N().S(`" type="image/svg+xml">
-  <style>
+`)
+//line views/layout/Head.html:21
+	if !ps.NoStyle {
+//line views/layout/Head.html:21
+		qw422016.N().S(`  <style>
     `)
 //line views/layout/Head.html:22
-	qw422016.N().S(thm.CSS(2))
+		qw422016.N().S(thm.CSS(2))
 //line views/layout/Head.html:22
-	qw422016.N().S(`  </style>`)
+		qw422016.N().S(`  </style>`)
+//line views/layout/Head.html:22
+	}
 //line views/layout/Head.html:22
 	if ps.HideHeader && ps.HideMenu {
 //line views/layout/Head.html:22
-		streaminlineResources(qw422016)
+		streaminlineResources(qw422016, ps.NoStyle, ps.NoScript)
 //line views/layout/Head.html:22
 	} else {
-//line views/layout/Head.html:22
-		qw422016.N().S(`
+//line views/layout/Head.html:23
+		if !ps.NoStyle {
+//line views/layout/Head.html:23
+			qw422016.N().S(`
   `)
 //line views/layout/Head.html:24
-		qw422016.N().S(assets.StylesheetElement(`client.css`))
+			qw422016.N().S(assets.StylesheetElement(`client.css`))
+//line views/layout/Head.html:24
+		}
 //line views/layout/Head.html:24
 		if !ps.NoScript {
 //line views/layout/Head.html:24
@@ -146,52 +156,58 @@ func Head(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/layout/Head.html:29
-func streaminlineResources(qw422016 *qt422016.Writer) {
+func streaminlineResources(qw422016 *qt422016.Writer, noStyle bool, noScript bool) {
+//line views/layout/Head.html:30
+	if !noStyle {
 //line views/layout/Head.html:31
-	csv, err := assets.Embed("client.css")
-	if err != nil {
-		panic(err)
-	}
-	js, err := assets.Embed("client.js")
-	if err != nil {
-		panic(err)
-	}
+		css, _ := assets.Embed("client.css")
 
-//line views/layout/Head.html:39
-	qw422016.N().S(`<style>`)
-//line views/layout/Head.html:40
-	qw422016.N().S(string(csv.Bytes))
-//line views/layout/Head.html:40
-	qw422016.N().S(`</style><script>`)
-//line views/layout/Head.html:41
-	qw422016.N().S(string(js.Bytes))
-//line views/layout/Head.html:41
-	qw422016.N().S(`</script>`)
-//line views/layout/Head.html:42
+//line views/layout/Head.html:31
+		qw422016.N().S(`<style>`)
+//line views/layout/Head.html:32
+		qw422016.N().S(string(css.Bytes))
+//line views/layout/Head.html:32
+		qw422016.N().S(`</style>`)
+//line views/layout/Head.html:33
+	}
+//line views/layout/Head.html:34
+	if !noScript {
+//line views/layout/Head.html:35
+		js, _ := assets.Embed("client.js")
+
+//line views/layout/Head.html:35
+		qw422016.N().S(`<script>`)
+//line views/layout/Head.html:36
+		qw422016.N().S(string(js.Bytes))
+//line views/layout/Head.html:36
+		qw422016.N().S(`</script>`)
+//line views/layout/Head.html:37
+	}
+//line views/layout/Head.html:38
 }
 
-//line views/layout/Head.html:42
-func writeinlineResources(qq422016 qtio422016.Writer) {
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
+func writeinlineResources(qq422016 qtio422016.Writer, noStyle bool, noScript bool) {
+//line views/layout/Head.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Head.html:42
-	streaminlineResources(qw422016)
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
+	streaminlineResources(qw422016, noStyle, noScript)
+//line views/layout/Head.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
 }
 
-//line views/layout/Head.html:42
-func inlineResources() string {
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
+func inlineResources(noStyle bool, noScript bool) string {
+//line views/layout/Head.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Head.html:42
-	writeinlineResources(qb422016)
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
+	writeinlineResources(qb422016, noStyle, noScript)
+//line views/layout/Head.html:38
 	qs422016 := string(qb422016.B)
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
 	return qs422016
-//line views/layout/Head.html:42
+//line views/layout/Head.html:38
 }

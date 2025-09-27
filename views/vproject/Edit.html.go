@@ -367,55 +367,65 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:123
-	edit.StreamStringTable(qw422016, "extraFiles", "", "Extra Files", util.StringJoin(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
+	edit.StreamTextareaTable(qw422016, "configVars", "", "Config Vars", 5, util.ToJSON(info.ConfigVars), 5, project.Helpers["configVars"]...)
 //line views/vproject/Edit.html:123
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:124
-	edit.StreamStringTable(qw422016, "ignoredFiles", "", "Ignored Files", util.StringJoin(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...)
+	edit.StreamTextareaTable(qw422016, "additionalPorts", "", "Additional Ports", 5, util.ToJSON(info.AdditionalPorts), 5, project.Helpers["additionalPorts"]...)
 //line views/vproject/Edit.html:124
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:125
-	edit.StreamStringTable(qw422016, "deployments", "", "Deployments", util.StringJoin(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
+	edit.StreamStringTable(qw422016, "extraFiles", "", "Extra Files", util.StringJoin(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...)
 //line views/vproject/Edit.html:125
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:126
-	edit.StreamTextareaTable(qw422016, "envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...)
+	edit.StreamStringTable(qw422016, "ignoredFiles", "", "Ignored Files", util.StringJoin(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...)
 //line views/vproject/Edit.html:126
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:127
-	edit.StreamTextareaTable(qw422016, "dockerPackages", "", "Docker Packages", 8, util.ToJSON(info.DockerPackages), 5, project.Helpers["dockerPackages"]...)
+	edit.StreamStringTable(qw422016, "deployments", "", "Deployments", util.StringJoin(info.Deployments, ", "), 5, project.Helpers["deployments"]...)
 //line views/vproject/Edit.html:127
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:128
-	edit.StreamTextareaTable(qw422016, "docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...)
+	edit.StreamTextareaTable(qw422016, "envvars", "", "Env Vars", 8, util.ToJSON(info.EnvVars), 5, project.Helpers["envvars"]...)
 //line views/vproject/Edit.html:128
 	qw422016.N().S(`
             `)
 //line views/vproject/Edit.html:129
-	edit.StreamTagsTable(qw422016, "acronyms", "", "Acronyms", info.Acronyms, ps, 5, project.Helpers["acronyms"]...)
+	edit.StreamTextareaTable(qw422016, "dockerPackages", "", "Docker Packages", 8, util.ToJSON(info.DockerPackages), 5, project.Helpers["dockerPackages"]...)
 //line views/vproject/Edit.html:129
+	qw422016.N().S(`
+            `)
+//line views/vproject/Edit.html:130
+	edit.StreamTextareaTable(qw422016, "docs", "", "Documentation", 8, util.ToJSON(info.Docs), 5, project.Helpers["docs"]...)
+//line views/vproject/Edit.html:130
+	qw422016.N().S(`
+            `)
+//line views/vproject/Edit.html:131
+	edit.StreamTagsTable(qw422016, "acronyms", "", "Acronyms", info.Acronyms, ps, 5, project.Helpers["acronyms"]...)
+//line views/vproject/Edit.html:131
 	qw422016.N().S(`
           </tbody>
         </table>
       </div>
     </div>
 `)
-//line views/vproject/Edit.html:135
+//line views/vproject/Edit.html:137
 	t := prj.Theme
 	if t == nil {
 		t = theme.Default
 	}
 
-//line views/vproject/Edit.html:139
+//line views/vproject/Edit.html:141
 	qw422016.N().S(`    `)
-//line views/vproject/Edit.html:140
+//line views/vproject/Edit.html:142
 	vtheme.StreamEditor(qw422016, "Default Theme", prj.Title(), t, prj.IconSafe(), as, ps)
-//line views/vproject/Edit.html:140
+//line views/vproject/Edit.html:142
 	qw422016.N().S(`
     <div class="card" id="builds">
       <h3>Builds</h3>
@@ -423,37 +433,37 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
         <table class="mt min-200">
           <tbody>
 `)
-//line views/vproject/Edit.html:146
+//line views/vproject/Edit.html:148
 	for _, o := range project.AllBuildOptions {
-//line views/vproject/Edit.html:146
+//line views/vproject/Edit.html:148
 		qw422016.N().S(`          <tr>
             <th class="shrink">`)
-//line views/vproject/Edit.html:148
+//line views/vproject/Edit.html:150
 		qw422016.E().S(o.Title)
-//line views/vproject/Edit.html:148
+//line views/vproject/Edit.html:150
 		qw422016.N().S(`</th>
             <td><label><input type="checkbox" name="build-`)
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		qw422016.E().S(o.Key)
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		qw422016.N().S(`" value="true" `)
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		if buildMap[o.Key] {
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 			qw422016.N().S(` checked="checked" `)
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		}
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		qw422016.N().S(`/> `)
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		qw422016.E().S(o.Description)
-//line views/vproject/Edit.html:149
+//line views/vproject/Edit.html:151
 		qw422016.N().S(`</label></td>
           </tr>
 `)
-//line views/vproject/Edit.html:151
+//line views/vproject/Edit.html:153
 	}
-//line views/vproject/Edit.html:151
+//line views/vproject/Edit.html:153
 	qw422016.N().S(`          </tbody>
         </table>
       </div>
@@ -464,31 +474,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
   </form>
 `)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 }
 
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	p.StreamBody(qw422016, as, ps)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 }
 
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	p.WriteBody(qb422016, as, ps)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	qs422016 := string(qb422016.B)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 	return qs422016
-//line views/vproject/Edit.html:161
+//line views/vproject/Edit.html:163
 }

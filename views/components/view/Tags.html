@@ -1,4 +1,8 @@
-{% import "strings" %}
+{% import (
+  "strings"
+
+  "projectforge.dev/projectforge/views/components"
+) %}
 
 {% func Tags(values []string, titles []string, url ...string) %}{% stripspace %}
   <div class="tag-view">
@@ -21,4 +25,14 @@
       {% endfor %}
     </div>
   </div>
+{% endstripspace %}{% endfunc %}
+
+{% func TagsTable(title string, values []string, titles []string, indent int, url ...string) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Tags(values, titles, url...) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}

@@ -129,30 +129,51 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *metamodel.Arg
 //line views/vproject/DetailExport.html:38
 	}
 //line views/vproject/DetailExport.html:39
+	if len(ea.ExtraTypes) > 0 {
+//line views/vproject/DetailExport.html:39
+		qw422016.N().S(`  <h3 class="mt">`)
+//line views/vproject/DetailExport.html:40
+		components.StreamSVGIcon(qw422016, `file`, ps)
+//line views/vproject/DetailExport.html:40
+		qw422016.N().S(` `)
+//line views/vproject/DetailExport.html:40
+		qw422016.E().S(util.StringPlural(len(ea.ExtraTypes), "Extra Types"))
+//line views/vproject/DetailExport.html:40
+		qw422016.N().S(`</h3>
+  <div class="clear"></div>
+  `)
+//line views/vproject/DetailExport.html:42
+		vexport.StreamModelList(qw422016, ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), as, ps)
+//line views/vproject/DetailExport.html:42
+		qw422016.N().S(`
+`)
+//line views/vproject/DetailExport.html:43
+	}
+//line views/vproject/DetailExport.html:44
 }
 
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 func WriteDetailExport(qq422016 qtio422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	StreamDetailExport(qw422016, key, ea, as, ps)
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 }
 
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 func DetailExport(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) string {
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	WriteDetailExport(qb422016, key, ea, as, ps)
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 	return qs422016
-//line views/vproject/DetailExport.html:39
+//line views/vproject/DetailExport.html:44
 }

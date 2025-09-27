@@ -68,6 +68,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `schedule`: Provides a scheduled job engine and UI based on gocron
 - `scripting`: Allows the execution of JavaScript files using a built-in interpreter
 - `search`: Adds search facilities to the top-level navigation bar
+- `settings`: Provides a framework for managing file-backed application settings
 - `sqlite`: Provides an API for accessing SQLite databases
 - `system`: Provides logic and a UI for getting the status of the system the app is running on
 - `themecatalog`: A dozen default themes, and facilities to create additional
@@ -190,7 +191,7 @@ The `layout.Basic` renders menu and navigation, and is swappable for custom resp
 ## What is provided in the TypeScript application?<a name="faq-8"></a>
 
 The TypeScript project (available at `./client`) is dependency-free, lightweight, and is built with ESBuild.
-Most code is wired in automatically when the build's `.js` output is requested. 
+Most code is wired in automatically when the build's `.js` output is requested.
 See the code in `./client/src` for details.
 
 CSS is also built by ESBuild, see `./client/src/client.css` and the files in `./client/src/style`.
@@ -279,6 +280,6 @@ _So many_. See the files in `./app/util`, there's a ton of juicy stuff.
 ## How do I add a new model to the "export" facilities?<a name="faq-19"></a>
 
 Export configuration is stored in `./.projectforge/export`.
-A rudimentary UI is provided in the "Export" section of your project's page. 
+A rudimentary UI is provided in the "Export" section of your project's page.
 To be honest, the easiest way to do this is to copy/paste and modify an existing model definition.
 There's some good examples at [rituals.dev](https://github.com/kyleu/rituals/tree/main/.projectforge/export/models).

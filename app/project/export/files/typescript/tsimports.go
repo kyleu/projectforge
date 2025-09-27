@@ -6,12 +6,11 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/project/export/files/gohelper"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str gohelper.StringProvider) ([]string, error) {
+func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str model.StringProvider) ([]string, error) {
 	var ret TSImports
 	if e, _ := model.AsEnum(col.Type); e != nil {
 		if en := args.Enums.Get(e.Ref); en != nil {
@@ -20,7 +19,7 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str gohelper.
 			ret = ret.With(newImport(en.Proper(), pth), newImport(op, pth))
 		}
 	}
-	r, rm, _ := helper.LoadRef(col, args.Models, args.ExtraTypes)
+	r, rm, _ := helper.LoadRef(col, args.Models, args.Events, args.ExtraTypes)
 	if rm == nil {
 		if col.Metadata != nil {
 			if tsImport := col.Metadata.GetStringOpt("tsImport"); tsImport != "" {
@@ -28,7 +27,7 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str gohelper.
 			}
 		}
 	} else {
-		if tsImport := rm.Config.GetStringOpt("tsImport"); tsImport != "" {
+		if tsImport := rm.ConfigMap().GetStringOpt("tsImport"); tsImport != "" {
 			ret = ret.With(newImport(r.K, tsImport))
 		} else if rm.PackageWithGroup("") != str.PackageWithGroup("") {
 			ret = ret.With(newImport(r.K, str.RelativePath(rm.GroupAndPackage(), rm.Camel())))
@@ -43,7 +42,7 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str gohelper.
 	return ret.Strings(), nil
 }
 
-func tsModelImports(args *metamodel.Args, cols model.Columns, str gohelper.StringProvider) ([]string, error) {
+func tsModelImports(args *metamodel.Args, cols model.Columns, str model.StringProvider) ([]string, error) {
 	ret := &util.StringSlice{}
 	add := func(s string, args ...any) {
 		ret.PushUnique(fmt.Sprintf(s, args...))

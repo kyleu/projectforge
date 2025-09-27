@@ -35,7 +35,7 @@ func tsFromObjectColumn(col *model.Column, enums enum.Enums, ret *golang.Block) 
 		} else {
 			ret.WF(`    const %s = Parse.string(obj.%s, () => "");`, col.Camel(), col.Camel())
 		}
-	case types.KeyMap, types.KeyOrderedMap:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyAny:
 		if opt {
 			ret.WF(`    const %s = Parse.objOpt(obj.%s);`, col.Camel(), col.Camel())
 		} else {

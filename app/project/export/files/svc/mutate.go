@@ -43,13 +43,13 @@ func ServiceMutate(m *model.Model, args *metamodel.Args, linebreak string) (*fil
 	}
 	if m.IsSoftDelete() {
 		g.AddImport(helper.ImpAppUtil)
-		sdel, err := serviceSoftDelete(m, args.Enums)
+		sdel, err := serviceSoftDelete(m, args)
 		if err != nil {
 			return nil, err
 		}
 		g.AddBlocks(sdel, serviceSoftDeleteWhere(m), serviceAddDeletedClause(m))
 	} else {
-		del, err := serviceDelete(m, args.Enums)
+		del, err := serviceDelete(m, args)
 		if err != nil {
 			return nil, err
 		}

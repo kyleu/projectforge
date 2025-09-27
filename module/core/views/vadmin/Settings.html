@@ -1,6 +1,7 @@
 {% import (
   "{{{ .Package }}}/app"
-  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasAccount }}}
+  "{{{ .Package }}}/app/controller/cutil"{{{ if .HasModule "settings" }}}
+  "{{{ .Package }}}/app/lib/settings"{{{ end }}}{{{ if .HasAccount }}}
   "{{{ .Package }}}/app/lib/user"{{{ end }}}
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
@@ -12,7 +13,8 @@
 {% code type Settings struct {
   layout.Basic{{{ if .HasAccount }}}
   Perms user.Permissions{{{ end }}}
-  BuildInfo *app.BuildInfo
+  BuildInfo *app.BuildInfo{{{ if .HasModule "settings" }}}
+  CurrentSettings *settings.Settings{{{ end }}}
 } %}
 
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
@@ -35,7 +37,21 @@
     <ul class="mt">
       <li><a href="/admin/audit">{%= components.SVGIcon(`cog`, ps) %} View audit logs</a></li>
     </ul>
-  </div>{{{ end }}}
+  </div>{{{ end }}}{{{ if .HasModule "settings" }}}
+
+  {%- if p.CurrentSettings != nil -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`cog`, ps) %} App Settings</h3>
+    <hr />
+    <div class="overflow full-width">
+      <table class="min-200 expanded">
+        <tbody>
+          {%= view.Fields(settings.SettingsFieldDescs, p.CurrentSettings.ToMap(), ps) %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {%- endif -%}{{{ end }}}
 
   <div class="card">
     <h3>{%= components.SVGIcon(`archive`, ps) %} Admin Functions</h3>

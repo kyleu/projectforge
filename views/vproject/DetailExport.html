@@ -36,4 +36,9 @@
   <div class="clear"></div>
   {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", key), as, ps) %}
   {%- endif -%}
+  {%- if len(ea.ExtraTypes) > 0 -%}
+  <h3 class="mt">{%= components.SVGIcon(`file`, ps) %} {%s util.StringPlural(len(ea.ExtraTypes), "Extra Types") %}</h3>
+  <div class="clear"></div>
+  {%= vexport.ModelList(ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), as, ps) %}
+  {%- endif -%}
 {%- endfunc -%}

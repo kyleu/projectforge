@@ -75,6 +75,7 @@
         <tr>
           <th class="shrink">Key</th>
           <th>Name</th>
+          <th>Icon</th>
           <th>Description</th>
           {%- for _, x := range ef.Order -%}
           <th>{%s x %}</th>
@@ -86,6 +87,7 @@
         <tr>
           <td>{%s v.Key %}</td>
           <td>{%s v.Name %}</td>
+          <td>{%= components.SVGIcon(v.IconSafe(), ps) %}</td>
           <td>{%s v.Description %}</td>
           {%- for _, x := range ef.Order -%}
           {%- if v.Extra == nil -%}

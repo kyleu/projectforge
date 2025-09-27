@@ -5,54 +5,111 @@
 package view
 
 //line views/components/view/UUID.html:1
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
 
-//line views/components/view/UUID.html:3
+	"projectforge.dev/projectforge/views/components"
+)
+
+//line views/components/view/UUID.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/UUID.html:3
+//line views/components/view/UUID.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/UUID.html:3
+//line views/components/view/UUID.html:7
 func StreamUUID(qw422016 *qt422016.Writer, value *uuid.UUID) {
-//line views/components/view/UUID.html:4
+//line views/components/view/UUID.html:8
 	if value != nil {
-//line views/components/view/UUID.html:5
+//line views/components/view/UUID.html:9
 		qw422016.E().S(value.String())
-//line views/components/view/UUID.html:6
+//line views/components/view/UUID.html:10
 	}
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 }
 
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 func WriteUUID(qq422016 qtio422016.Writer, value *uuid.UUID) {
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	StreamUUID(qw422016, value)
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 }
 
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 func UUID(value *uuid.UUID) string {
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	WriteUUID(qb422016, value)
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	qs422016 := string(qb422016.B)
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
 	return qs422016
-//line views/components/view/UUID.html:7
+//line views/components/view/UUID.html:11
+}
+
+//line views/components/view/UUID.html:13
+func StreamUUIDTable(qw422016 *qt422016.Writer, title string, value *uuid.UUID, indent int) {
+//line views/components/view/UUID.html:13
+	qw422016.N().S(`<tr>`)
+//line views/components/view/UUID.html:15
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/UUID.html:15
+	qw422016.N().S(`<th class="shrink">`)
+//line views/components/view/UUID.html:16
+	qw422016.E().S(title)
+//line views/components/view/UUID.html:16
+	qw422016.N().S(`</th>`)
+//line views/components/view/UUID.html:17
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/UUID.html:17
+	qw422016.N().S(`<td>`)
+//line views/components/view/UUID.html:18
+	StreamUUID(qw422016, value)
+//line views/components/view/UUID.html:18
+	qw422016.N().S(`</td>`)
+//line views/components/view/UUID.html:19
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/UUID.html:19
+	qw422016.N().S(`</tr>`)
+//line views/components/view/UUID.html:21
+}
+
+//line views/components/view/UUID.html:21
+func WriteUUIDTable(qq422016 qtio422016.Writer, title string, value *uuid.UUID, indent int) {
+//line views/components/view/UUID.html:21
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/UUID.html:21
+	StreamUUIDTable(qw422016, title, value, indent)
+//line views/components/view/UUID.html:21
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/UUID.html:21
+}
+
+//line views/components/view/UUID.html:21
+func UUIDTable(title string, value *uuid.UUID, indent int) string {
+//line views/components/view/UUID.html:21
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/UUID.html:21
+	WriteUUIDTable(qb422016, title, value, indent)
+//line views/components/view/UUID.html:21
+	qs422016 := string(qb422016.B)
+//line views/components/view/UUID.html:21
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/UUID.html:21
+	return qs422016
+//line views/components/view/UUID.html:21
 }

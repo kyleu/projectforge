@@ -1,6 +1,4 @@
-{% import (
-  "projectforge.dev/projectforge/app/util"
-) %}
+{% import "projectforge.dev/projectforge/app/util" %}
 
 {% func TableEditor(key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) %}
   <form action="{%s action %}" method="{%s method %}">
@@ -29,19 +27,22 @@
   {%- for _, arg := range columns -%}
     {%- switch arg.Type -%}
     {%- case "bool" -%}
-      {%= BoolTable(arg.Key, arg.TitleSafe(), values.GetBoolOpt(arg.Key), 3, arg.Description) %}
+      {%= BoolTable(arg.Key, arg.TitleSafe(), values.GetBoolOr(arg.Key, arg.DefaultBool(), true), 3, arg.Description) %}
     {%- case "textarea" -%}
-      {%= TextareaTable(arg.Key, "", arg.TitleSafe(), 12, values.GetStringOpt(arg.Key), 3, arg.Description) %}
+      {%= TextareaTable(arg.Key, "", arg.TitleSafe(), 12, values.GetStringOr(arg.Key, arg.Default, true), 3, arg.Description) %}
     {%- case "number", "int" -%}
-      {%= IntTable(arg.Key, "", arg.TitleSafe(), values.GetIntOpt(arg.Key), 3, arg.Description) %}
+      {%= IntTable(arg.Key, "", arg.TitleSafe(), values.GetIntOr(arg.Key, arg.DefaultInt(), true), 3, arg.Description) %}
     {%- case "float" -%}
-      {%= FloatTable(arg.Key, "", arg.TitleSafe(), values.GetFloatOpt(arg.Key), 3, arg.Description) %}
+      {%= FloatTable(arg.Key, "", arg.TitleSafe(), values.GetFloatOr(arg.Key, arg.DefaultFloat(), true), 3, arg.Description) %}
+    {%- case "uuid" -%}
+      {%- code u, _ := values.ParseUUID(arg.Key, true, true) -%}
+      {%= UUIDTable(arg.Key, "", arg.TitleSafe(), u, 3, arg.Description) %}
     {%- case "select" -%}
-      {%= SelectTable(arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description) %}
+      {%= SelectTable(arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), arg.Choices, nil, 3, arg.Description) %}
     {%- case "radio" -%}
-      {%= RadioTable(arg.Key, arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description) %}
+      {%= RadioTable(arg.Key, arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), arg.Choices, nil, 3, arg.Description) %}
     {%- default -%}
-      {%= DatalistTable(arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, false), arg.Choices, nil, 3, arg.Description) %}
+      {%= DatalistTable(arg.Key, "", arg.TitleSafe(), values.GetStringOr(arg.Key, arg.Default, true), arg.Choices, nil, 3, arg.Description) %}
     {%- endswitch -%}
   {%- endfor -%}
 {% endstripspace %}{% endfunc %}

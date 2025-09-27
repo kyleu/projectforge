@@ -2,6 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
 ) %}
 
@@ -98,12 +99,20 @@
           <td>{%s info.JavaPackage %}</td>
         </tr>
         <tr>
+          <th>Go Version</th>
+          <td>{%s info.GoVersion %}</td>
+        </tr>
+        <tr>
           <th>Go Binary</th>
           <td>{%s info.GoBinary %}</td>
         </tr>
         <tr>
-          <th>Go Version</th>
-          <td>{%s info.GoVersion %}</td>
+          <th>Config Vars</th>
+          <td>{%= components.JSON(info.ConfigVars) %}</td>
+        </tr>
+        <tr>
+          <th>Additional Ports</th>
+          <td>{%= components.JSON(info.AdditionalPorts) %}</td>
         </tr>
         <tr>
           <th>Extra Files</th>

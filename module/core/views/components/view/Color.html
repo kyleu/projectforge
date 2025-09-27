@@ -1,8 +1,19 @@
 {% import (
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/lib/theme"
+  "{{{ .Package }}}/views/components"
 ) %}
 
 {% func Color(clr string, cls string, ps *cutil.PageState) %}{% stripspace %}
   <div style="background-color: {%s clr %}; color: {%s theme.TextColorFor(clr) %};" class="{%s cls %}">{%v clr %}</div>
+{% endstripspace %}{% endfunc %}
+
+{% func ColorTable(title string, value string, cls string, indent int, ps *cutil.PageState) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Color(value, cls, ps) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}

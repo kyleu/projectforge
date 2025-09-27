@@ -17,12 +17,12 @@ func SimpleJSON(database string) bool {
 }
 
 func SpecialImports(cols model.Columns, pkg string, args *metamodel.Args) (model.Imports, error) {
-	enums, models, extraTypes := args.Enums, args.Models, args.ExtraTypes
+	enums, models, events, extraTypes := args.Enums, args.Models, args.Events, args.ExtraTypes
 	var ret model.Imports
 	for _, col := range cols {
 		switch col.Type.Key() {
 		case types.KeyReference:
-			ref, mdl, err := LoadRef(col, models, extraTypes)
+			ref, mdl, err := LoadRef(col, models, events, extraTypes)
 			if err != nil {
 				return nil, err
 			}

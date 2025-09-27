@@ -7,7 +7,6 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -26,7 +25,7 @@ func writeGetBy(key string, cols model.Columns, doExtra []string, name string, d
 	returnMultiple := lo.NoneBy(cols, func(x *model.Column) bool {
 		return x.HasTag("unique")
 	})
-	sb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args.Enums, args.Database, g)
+	sb, err := serviceGetBy(name, m, cols, returnMultiple, dbRef, args, args.Database, g)
 	if err != nil {
 		return err
 	}
@@ -47,30 +46,30 @@ func writeGetBy(key string, cols model.Columns, doExtra []string, name string, d
 	return nil
 }
 
-func serviceGetByPK(m *model.Model, dbRef string, enums enum.Enums, database string, g *golang.File) (*golang.Block, error) {
-	return serviceGetBy("Get", m, m.PKs(), false, dbRef, enums, database, g)
+func serviceGetByPK(m *model.Model, dbRef string, args *metamodel.Args, database string, g *golang.File) (*golang.Block, error) {
+	return serviceGetBy("Get", m, m.PKs(), false, dbRef, args, database, g)
 }
 
 func serviceGetBy(
-	key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string, enums enum.Enums, database string, g *golang.File,
+	key string, m *model.Model, cols model.Columns, returnMultiple bool, dbRef string, args *metamodel.Args, database string, g *golang.File,
 ) (*golang.Block, error) {
 	if returnMultiple {
-		return serviceGetByCols(key, m, cols, dbRef, enums, database)
+		return serviceGetByCols(key, m, cols, dbRef, args, database)
 	}
-	return serviceGet(key, g, m, cols, dbRef, enums)
+	return serviceGet(key, g, m, cols, dbRef, args)
 }
 
-func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums, database string) (*golang.Block, error) {
+func serviceGetByCols(key string, m *model.Model, cols model.Columns, dbRef string, x *metamodel.Args, database string) (*golang.Block, error) {
 	if key == "" {
 		key = helper.TextGetBy + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	args, err := cols.Args(m.Package, enums)
+	argsString, err := helper.GoArgsWithRef(cols, m.PackageName(), x)
 	if err != nil {
 		return nil, err
 	}
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s, params *filter.Params%s, logger util.Logger) (%s, error) {"
-	msg = fmt.Sprintf(msg, key, args, getSuffix(m), m.ProperPlural())
+	msg = fmt.Sprintf(msg, key, argsString, getSuffix(m), m.ProperPlural())
 	ret.W(msg)
 	ret.W("\tparams = filters(params)")
 	var placeholder string

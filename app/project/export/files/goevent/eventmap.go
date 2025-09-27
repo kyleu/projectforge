@@ -27,7 +27,7 @@ func eventMap(g *golang.File, evt *model.Event, args *metamodel.Args, linebreak 
 	} else {
 		return e
 	}
-	b := gohelper.ToOrderedMap(evt, evt.Columns)
+	b := gohelper.ToOrderedMap(evt, evt.Columns.NotDerived())
 	g.AddBlocks(b)
 	return nil
 }

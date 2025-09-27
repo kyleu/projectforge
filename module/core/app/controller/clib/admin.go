@@ -30,8 +30,9 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 	}
 	controller.Act(key, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if len(path) == 0 {
-			ps.SetTitleAndData("Administration", "administration")
-			return controller.Render(r, as, {{{ if .HasAccount }}}&vadmin.Settings{Perms: user.GetPermissions(), BuildInfo: as.BuildInfo}{{{ else }}}&vadmin.Settings{BuildInfo: as.BuildInfo}{{{ end }}}, ps, keyAdmin)
+			{{{ if .HasModule "settings" }}}st := as.Services.Settings.Get()
+			{{{ end }}}ps.SetTitleAndData("Administration", "administration")
+			return controller.Render(r, as, {{{ .SettingsPageCall }}}, ps, keyAdmin)
 		}
 		ps.DefaultNavIcon = "cog"
 		switch path[0] {

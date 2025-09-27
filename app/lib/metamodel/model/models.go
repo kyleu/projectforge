@@ -14,7 +14,7 @@ type Models []*Model
 
 func (m Models) Get(n string) *Model {
 	return lo.FindOrElse(m, nil, func(x *Model) bool {
-		return x.Name == n
+		return x.Name == n || x.Camel() == n || x.Proper() == n
 	})
 }
 

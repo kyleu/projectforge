@@ -6,7 +6,6 @@ import (
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
-	"projectforge.dev/projectforge/app/project/export/files/gohelper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -32,14 +31,14 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 	case types.KeyReference:
 		r, _ := model.AsRef(t)
 		return strings.TrimPrefix(r.K, "*")
-	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap:
+	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyAny:
 		return "{ [key: string]: unknown }"
 	default:
 		return t.String()
 	}
 }
 
-func tsFromObject(cols model.Columns, str gohelper.StringProvider, enums enum.Enums, ret *golang.Block) error {
+func tsFromObject(cols model.Columns, str model.StringProvider, enums enum.Enums, ret *golang.Block) error {
 	ret.WB()
 	ret.WF("  static fromObject(obj: { [_: string]: unknown }): %s {", str.Proper())
 	for _, col := range cols {

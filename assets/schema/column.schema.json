@@ -66,7 +66,7 @@
       "items": {
         "oneOf": [
           {
-            "enum": ["const", "created", "debug-only", "deleted", "derived", "force-json" ,"link", "list-first", "no-title", "omitempty", "path", "title", "optional-json", "unique", "updated"]
+            "enum": ["const", "created", "debug-only", "deleted", "derived", "force-json", "ignore-json", "link", "list-first", "no-title", "omitempty", "path", "title", "optional-json", "unique", "updated"]
           },
           {
             "type": "string",

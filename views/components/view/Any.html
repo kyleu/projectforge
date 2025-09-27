@@ -7,6 +7,7 @@
 
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func Any(x any, ps *cutil.PageState) %}{% stripspace %}
@@ -85,4 +86,14 @@
       unhandled type [{%s fmt.Sprintf("%T", x) %}]
     {% endswitch %}
   {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func AnyTable(title string, value any, indent int, ps *cutil.PageState) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= Any(value, ps) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}

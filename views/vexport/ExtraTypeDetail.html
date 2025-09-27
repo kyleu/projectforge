@@ -1,0 +1,26 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type ExtraTypeDetail struct {
+  layout.Basic
+  BaseURL string
+  T *model.Model
+} %}
+
+{% func (p *ExtraTypeDetail) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code m := p.T -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
+    <em>export model</em>
+    {%= modelSummary(p.BaseURL, m, as, ps) %}
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
+    {%= modelColumns(m, as, ps) %}
+  </div>
+{% endfunc %}

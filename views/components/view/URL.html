@@ -33,6 +33,16 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
+{% func URLTable(title string, value *url.URL, indent int, ps *cutil.PageState) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= URL(value, "", false, ps) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+
 {% func CodeLink(path string, title string, ps *cutil.PageState) %}{% stripspace %}
   {%- code
     origPath := path

@@ -8,7 +8,6 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/gohelper"
@@ -17,12 +16,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File, error) {
+func Event(evt *model.Event, args *metamodel.Args, goVersion string, linebreak string) (*file.File, error) {
 	g := golang.NewFile(evt.Package, []string{"app", evt.PackageWithGroup("")}, strings.ToLower(evt.Camel()))
 	lo.ForEach(helper.ImportsForTypes("go", "", evt.Columns.Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
-	g.AddImport(helper.ImpAppUtil)
+	g.AddImport(helper.ImpAppUtil, helper.ImpLo)
 	imps, err := helper.SpecialImports(evt.Columns, evt.PackageWithGroup(""), args)
 	if err != nil {
 		return nil, err
@@ -41,7 +40,7 @@ func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File
 	}
 	g.AddBlocks(str)
 
-	cn, err := eventConstructor(evt, args.Enums)
+	cn, err := eventConstructor(evt, args)
 	if err != nil {
 		return nil, err
 	}
@@ -75,17 +74,26 @@ func Event(evt *model.Event, args *metamodel.Args, linebreak string) (*file.File
 
 	g.AddBlocks(eventToData(evt, evt.Columns.NotDerived(), "", args.Database), rnd, fd)
 
+	g.AddBlocks(gohelper.ModelArray(evt), gohelper.BlockArrayClone(evt))
+	if pks := evt.Columns.PKs(); len(pks) > 0 {
+		ag, err := gohelper.ModelArrayGet(g, evt, pks, args, goVersion)
+		if err != nil {
+			return nil, err
+		}
+		g.AddBlocks(ag)
+	}
+
 	return g.Render(linebreak)
 }
 
-func eventConstructor(m *model.Event, enums enum.Enums) (*golang.Block, error) {
-	ret := golang.NewBlock("New"+m.Proper(), "func")
-	args, err := m.Columns.Args(m.Package, enums)
+func eventConstructor(evt *model.Event, x *metamodel.Args) (*golang.Block, error) {
+	ret := golang.NewBlock("New"+evt.Proper(), "func")
+	argsString, err := helper.GoArgsWithRef(evt.Columns, evt.PackageName(), x)
 	if err != nil {
 		return nil, err
 	}
-	ret.WF("func New%s(%s) *%s {", m.Proper(), args, m.Proper())
-	ret.WF("\treturn &%s{%s}", m.Proper(), m.Columns.Refs())
+	ret.WF("func New%s(%s) *%s {", evt.Proper(), argsString, evt.Proper())
+	ret.WF("\treturn &%s{%s}", evt.Proper(), evt.Columns.Refs())
 	ret.W("}")
 	return ret, nil
 }

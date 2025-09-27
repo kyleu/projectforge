@@ -13,7 +13,7 @@ type Events []*Event
 
 func (m Events) Get(n string) *Event {
 	return lo.FindOrElse(m, nil, func(x *Event) bool {
-		return x.Name == n
+		return x.Name == n || x.Camel() == n || x.Proper() == n
 	})
 }
 

@@ -101,8 +101,61 @@ func URL(u any, content string, includeExternalIcon bool, ps *cutil.PageState) s
 }
 
 //line views/components/view/URL.html:36
-func StreamCodeLink(qw422016 *qt422016.Writer, path string, title string, ps *cutil.PageState) {
+func StreamURLTable(qw422016 *qt422016.Writer, title string, value *url.URL, indent int, ps *cutil.PageState) {
+//line views/components/view/URL.html:36
+	qw422016.N().S(`<tr>`)
 //line views/components/view/URL.html:38
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/URL.html:38
+	qw422016.N().S(`<th class="shrink">`)
+//line views/components/view/URL.html:39
+	qw422016.E().S(title)
+//line views/components/view/URL.html:39
+	qw422016.N().S(`</th>`)
+//line views/components/view/URL.html:40
+	components.StreamIndent(qw422016, true, indent+1)
+//line views/components/view/URL.html:40
+	qw422016.N().S(`<td>`)
+//line views/components/view/URL.html:41
+	StreamURL(qw422016, value, "", false, ps)
+//line views/components/view/URL.html:41
+	qw422016.N().S(`</td>`)
+//line views/components/view/URL.html:42
+	components.StreamIndent(qw422016, true, indent)
+//line views/components/view/URL.html:42
+	qw422016.N().S(`</tr>`)
+//line views/components/view/URL.html:44
+}
+
+//line views/components/view/URL.html:44
+func WriteURLTable(qq422016 qtio422016.Writer, title string, value *url.URL, indent int, ps *cutil.PageState) {
+//line views/components/view/URL.html:44
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/components/view/URL.html:44
+	StreamURLTable(qw422016, title, value, indent, ps)
+//line views/components/view/URL.html:44
+	qt422016.ReleaseWriter(qw422016)
+//line views/components/view/URL.html:44
+}
+
+//line views/components/view/URL.html:44
+func URLTable(title string, value *url.URL, indent int, ps *cutil.PageState) string {
+//line views/components/view/URL.html:44
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/components/view/URL.html:44
+	WriteURLTable(qb422016, title, value, indent, ps)
+//line views/components/view/URL.html:44
+	qs422016 := string(qb422016.B)
+//line views/components/view/URL.html:44
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/components/view/URL.html:44
+	return qs422016
+//line views/components/view/URL.html:44
+}
+
+//line views/components/view/URL.html:46
+func StreamCodeLink(qw422016 *qt422016.Writer, path string, title string, ps *cutil.PageState) {
+//line views/components/view/URL.html:48
 	origPath := path
 	if title == "" {
 		title = path
@@ -112,33 +165,33 @@ func StreamCodeLink(qw422016 *qt422016.Writer, path string, title string, ps *cu
 	}
 	u := util.AppSource + "/blob/main" + path
 
-//line views/components/view/URL.html:47
+//line views/components/view/URL.html:57
 	StreamURL(qw422016, u, origPath, false, ps)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 }
 
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 func WriteCodeLink(qq422016 qtio422016.Writer, path string, title string, ps *cutil.PageState) {
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	StreamCodeLink(qw422016, path, title, ps)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 }
 
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 func CodeLink(path string, title string, ps *cutil.PageState) string {
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	WriteCodeLink(qb422016, path, title, ps)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	qs422016 := string(qb422016.B)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 	return qs422016
-//line views/components/view/URL.html:48
+//line views/components/view/URL.html:58
 }

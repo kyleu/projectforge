@@ -28,6 +28,10 @@ func (m *Model) SkipGolang() bool {
 	return m.HasTag("no-golang")
 }
 
+func (m *Model) ConfigMap() util.ValueMap {
+	return m.Config
+}
+
 func (m Models) WithRoutes() Models {
 	return lo.Reject(m, func(x *Model, _ int) bool {
 		return x.SkipRoutes()

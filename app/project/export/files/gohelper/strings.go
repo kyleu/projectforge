@@ -13,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func BlockString(g *golang.File, cols model.Columns, str StringProvider) *golang.Block {
+func BlockString(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.WF("func (%s *%s) String() string {", str.FirstLetter(), str.Proper())
 	if pks := cols.PKs(); len(pks) == 1 {
@@ -37,7 +37,7 @@ func BlockString(g *golang.File, cols model.Columns, str StringProvider) *golang
 	return ret
 }
 
-func BlockTitle(g *golang.File, cols model.Columns, str StringProvider) *golang.Block {
+func BlockTitle(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Title", "func")
 	ret.WF("func (%s *%s) TitleString() string {", str.FirstLetter(), str.Proper())
 	titles := cols.WithTag("title")
@@ -69,7 +69,7 @@ func BlockTitle(g *golang.File, cols model.Columns, str StringProvider) *golang.
 	return ret
 }
 
-func BlockWebPath(g *golang.File, cols model.Columns, str StringProvider) *golang.Block {
+func BlockWebPath(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
 	ret.WF("func (%s *%s) WebPath(paths ...string) string {", str.FirstLetter(), str.Proper())
 	ret.W("\tif len(paths) == 0 {")
@@ -95,7 +95,7 @@ func BlockWebPath(g *golang.File, cols model.Columns, str StringProvider) *golan
 	return ret
 }
 
-func BlockStrings(g *golang.File, cols model.Columns, str StringProvider) *golang.Block {
+func BlockStrings(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Strings", "func")
 	ret.WF("func (%s *%s) Strings() []string {", str.FirstLetter(), str.Proper())
 	x := cols.NotDerived().ToGoStrings(str.FirstLetter()+".", true, 160)
@@ -118,4 +118,24 @@ func JSONSuffix(col *model.Column) string {
 		return ",omitempty"
 	}
 	return ",omitzero"
+}
+
+func ColumnTag(col *model.Column) string {
+	ret := JSONSuffix(col)
+	var tag string
+	switch {
+	case col.HasTag("ignore-json") || col.Derived():
+		tag += "json:\"-\""
+	case col.JSON == "":
+		tag += fmt.Sprintf("json:%q", col.CamelNoReplace()+ret)
+	default:
+		tag += fmt.Sprintf("json:%q", col.JSON+ret)
+	}
+	if col.Validation != "" {
+		tag += fmt.Sprintf(",validate:%q", col.Validation)
+	}
+	if col.Example != "" {
+		tag += fmt.Sprintf(",fake:%q", col.Example)
+	}
+	return "`" + tag + "`"
 }

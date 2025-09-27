@@ -9,7 +9,6 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -37,7 +36,7 @@ func ServiceGet(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 	g.AddImport(m.Imports.Supporting("serviceget")...)
 	pkLen := len(m.PKs())
 	if pkLen > 0 {
-		gbpk, err := serviceGetByPK(m, dbRef, args.Enums, args.Database, g)
+		gbpk, err := serviceGetByPK(m, dbRef, args, args.Database, g)
 		if err != nil {
 			return nil, err
 		}
@@ -93,17 +92,17 @@ func ServiceGet(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 	return g.Render(linebreak)
 }
 
-func serviceGet(key string, g *golang.File, m *model.Model, cols model.Columns, dbRef string, enums enum.Enums) (*golang.Block, error) {
+func serviceGet(key string, g *golang.File, m *model.Model, cols model.Columns, dbRef string, x *metamodel.Args) (*golang.Block, error) {
 	if key == "" {
 		key = helper.TextGetBy + cols.Smushed()
 	}
 	ret := golang.NewBlock(key, "func")
-	args, err := cols.Args(m.Package, enums)
+	argsString, err := helper.GoArgsWithRef(cols, m.PackageName(), x)
 	if err != nil {
 		return nil, err
 	}
 	msg := "func (s *Service) %s(ctx context.Context, tx *sqlx.Tx, %s%s, logger util.Logger) (*%s, error) {"
-	ret.WF(msg, key, args, getSuffix(m), m.Proper())
+	ret.WF(msg, key, argsString, getSuffix(m), m.Proper())
 	if slices.Equal(m.PKs().Names(), cols.Names()) {
 		ret.W("\twc := defaultWC(0)")
 	} else {

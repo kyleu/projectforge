@@ -120,6 +120,8 @@
             {%- endif -%}
             {%= edit.StringTable("goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
             {%= edit.StringTable("goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
+            {%= edit.TextareaTable("configVars", "", "Config Vars", 5, util.ToJSON(info.ConfigVars), 5, project.Helpers["configVars"]...) %}
+            {%= edit.TextareaTable("additionalPorts", "", "Additional Ports", 5, util.ToJSON(info.AdditionalPorts), 5, project.Helpers["additionalPorts"]...) %}
             {%= edit.StringTable("extraFiles", "", "Extra Files", util.StringJoin(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
             {%= edit.StringTable("ignoredFiles", "", "Ignored Files", util.StringJoin(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...) %}
             {%= edit.StringTable("deployments", "", "Deployments", util.StringJoin(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}

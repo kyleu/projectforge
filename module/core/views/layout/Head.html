@@ -18,25 +18,21 @@
   <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
   <link rel="icon" href="{%s assets.URL(`logo.svg`) %}" type="image/svg+xml">
-  <style>
-    {%s= thm.CSS(2) %}  </style>{%- if ps.HideHeader && ps.HideMenu -%}{%= inlineResources() %}{%- else -%}
-
-  {%s= assets.StylesheetElement(`client.css`) %}{% if !ps.NoScript %}
+{% if !ps.NoStyle %}  <style>
+    {%s= thm.CSS(2) %}  </style>{% endif %}{%- if ps.HideHeader && ps.HideMenu -%}{%= inlineResources(ps.NoStyle, ps.NoScript) %}{%- else -%}
+{% if !ps.NoStyle %}
+  {%s= assets.StylesheetElement(`client.css`) %}{% endif %}{% if !ps.NoScript %}
   {%s= assets.ScriptElement(`client.js`, false) %}{% endif %}
 {%- endif -%}
 {% endfunc %}
 
-{% func inlineResources() %}{% stripspace %}
-  {% code
-    csv, err := assets.Embed("client.css")
-    if err != nil {
-      panic(err)
-    }
-    js, err := assets.Embed("client.js")
-    if err != nil {
-      panic(err)
-    }
-  %}
-  <style>{%s= string(csv.Bytes) %}</style>
+{% func inlineResources(noStyle bool, noScript bool) %}{% stripspace %}
+  {%- if !noStyle -%}
+  {% code css, _ := assets.Embed("client.css") %}
+  <style>{%s= string(css.Bytes) %}</style>
+  {%- endif -%}
+  {%- if !noScript -%}
+  {% code js, _ := assets.Embed("client.js") %}
   <script>{%s= string(js.Bytes) %}</script>
+  {%- endif -%}
 {% endstripspace %}{% endfunc %}

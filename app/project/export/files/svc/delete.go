@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"projectforge.dev/projectforge/app/lib/metamodel/enum"
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -13,14 +13,14 @@ const (
 	delMsg    = "// Delete doesn't actually delete, it only sets [%s]."
 )
 
-func serviceDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func serviceDelete(m *model.Model, x *metamodel.Args) (*golang.Block, error) {
 	pks := m.PKs()
 	ret := golang.NewBlock("Delete", "func")
-	args, err := pks.Args(m.Package, enums)
+	argsString, err := helper.GoArgsWithRef(pks, m.PackageName(), x)
 	if err != nil {
 		return nil, err
 	}
-	ret.WF("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
+	ret.WF("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", argsString)
 	ret.W("\tq := database.SQLDelete(tableQuoted, defaultWC(0), s.db.Type)")
 	ret.WF("\t_, err := s.db.Delete(ctx, q, tx, 1, logger, %s)", util.StringJoin(pks.CamelNames(), ", "))
 	if m.HasTag("events") {
@@ -35,16 +35,16 @@ func serviceDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	return ret, nil
 }
 
-func serviceSoftDelete(m *model.Model, enums enum.Enums) (*golang.Block, error) {
+func serviceSoftDelete(m *model.Model, x *metamodel.Args) (*golang.Block, error) {
 	pks := m.PKs()
 	delCols := m.Columns.WithTag("deleted")
 	ret := golang.NewBlock("Delete", "func")
 	ret.WF(delMsg, util.StringJoin(delCols.Names(), ", "))
-	args, err := pks.Args(m.Package, enums)
+	argsString, err := helper.GoArgsWithRef(pks, m.PackageName(), x)
 	if err != nil {
 		return nil, err
 	}
-	ret.WF("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", args)
+	ret.WF("func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, %s, logger util.Logger) error {", argsString)
 	ret.WF("\tcols := []string{%s}", util.StringJoin(delCols.SQLQuoted(), ", "))
 	ret.W("\tq := database.SQLUpdate(tableQuoted, cols, defaultWC(len(cols)), s.db.Type)")
 	ret.WF("\t_, err := s.db.Update(ctx, q, tx, 1, logger, util.TimeCurrent(), %s)", util.StringJoin(pks.CamelNames(), ", "))

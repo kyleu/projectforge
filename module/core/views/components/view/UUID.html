@@ -1,7 +1,21 @@
-{% import "github.com/google/uuid" %}
+{% import (
+  "github.com/google/uuid"
+
+  "{{{ .Package }}}/views/components"
+) %}
 
 {% func UUID(value *uuid.UUID) %}{% stripspace %}
   {%- if value != nil -%}
   {%s value.String() %}
   {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func UUIDTable(title string, value *uuid.UUID, indent int) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink">{%s title %}</th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>{%= UUID(value) %}</td>
+  {%= components.Indent(true, indent) %}
+  </tr>
 {% endstripspace %}{% endfunc %}
