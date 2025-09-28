@@ -114,6 +114,9 @@ func JSONSuffix(col *model.Column) string {
 	if types.IsList(col.Type) {
 		return ",omitempty"
 	}
+	if col.Type.String() == "map" {
+		return ",omitempty"
+	}
 	if col.Type.Key() == types.KeyReference && util.StringToPlural(col.Name) == col.Name {
 		return ",omitempty"
 	}

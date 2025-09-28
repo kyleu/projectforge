@@ -16,49 +16,72 @@ import (
 
 var _encryptKey string
 
+func EncodeBytes(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
+}
+
+func DecodeBytes(s string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(s)
+}
+
 func EncryptMessage(key []byte, message string, logger Logger) (string, error) {
+	cipherText, err := EncryptBytes(key, []byte(message), logger)
+	if err != nil {
+		return "", err
+	}
+	return EncodeBytes(cipherText), nil
+}
+
+func EncryptBytes(key []byte, b []byte, logger Logger) ([]byte, error) {
 	block, err := newCipher(key, logger)
 	if err != nil {
-		return "", errors.Wrap(err, "could not create new cipher")
+		return nil, errors.Wrap(err, "could not create new cipher")
 	}
 
-	byteMsg := []byte(message)
-	if len(byteMsg) > 1024*1024*64 {
-		return "", errors.New("message is too large")
+	if len(b) > 1024*1024*64 {
+		return nil, errors.New("message is too large")
 	}
-	cipherText := make([]byte, aes.BlockSize+len(byteMsg))
+	cipherText := make([]byte, aes.BlockSize+len(b))
 	iv := cipherText[:aes.BlockSize]
 	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
-		return "", errors.Wrap(err, "could not encrypt")
+		return nil, errors.Wrap(err, "could not encrypt")
 	}
 
 	stream := cipher.NewCTR(block, iv)
-	stream.XORKeyStream(cipherText[aes.BlockSize:], byteMsg)
+	stream.XORKeyStream(cipherText[aes.BlockSize:], b)
 
-	return base64.StdEncoding.EncodeToString(cipherText), nil
+	return cipherText, nil
 }
 
-func DecryptMessage(key []byte, message string, logger Logger) (string, error) {
+func DecryptBytes(key []byte, b []byte, logger Logger) ([]byte, error) {
 	block, err := newCipher(key, logger)
 	if err != nil {
-		return "", errors.Wrap(err, "could not create new cipher")
+		return nil, errors.Wrap(err, "could not create new cipher")
 	}
 
-	cipherText, err := base64.StdEncoding.DecodeString(message)
-	if err != nil {
-		return "", errors.Wrap(err, "could not base64 decode")
-	}
-	if len(cipherText) < aes.BlockSize {
-		return "", errors.New("invalid ciphertext block size")
+	if len(b) < aes.BlockSize {
+		return nil, errors.New("invalid ciphertext block size")
 	}
 
-	iv := cipherText[:aes.BlockSize]
-	cipherText = cipherText[aes.BlockSize:]
+	iv := b[:aes.BlockSize]
+	cipherText := b[aes.BlockSize:]
 
 	stream := cipher.NewCTR(block, iv)
 	stream.XORKeyStream(cipherText, cipherText)
 
-	return string(cipherText), nil
+	return cipherText, nil
+}
+
+func DecryptMessage(key []byte, message string, logger Logger) (string, error) {
+	cipherText, err := DecodeBytes(message)
+	if err != nil {
+		return "", errors.Wrap(err, "could not base64 decode")
+	}
+	byteMsg, err := DecryptBytes(key, cipherText, logger)
+	if err != nil {
+		return "", err
+	}
+	return string(byteMsg), nil
 }
 
 func newCipher(key []byte, logger Logger) (cipher.Block, error) {
