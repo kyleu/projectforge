@@ -6,6 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -13,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func BlockString(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
+func BlockString(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("String", "func")
 	ret.WF("func (%s *%s) String() string {", str.FirstLetter(), str.Proper())
 	if pks := cols.PKs(); len(pks) == 1 {
@@ -37,7 +38,7 @@ func BlockString(g *golang.File, cols model.Columns, str model.StringProvider) *
 	return ret
 }
 
-func BlockTitle(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
+func BlockTitle(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Title", "func")
 	ret.WF("func (%s *%s) TitleString() string {", str.FirstLetter(), str.Proper())
 	titles := cols.WithTag("title")
@@ -69,7 +70,7 @@ func BlockTitle(g *golang.File, cols model.Columns, str model.StringProvider) *g
 	return ret
 }
 
-func BlockWebPath(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
+func BlockWebPath(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("WebPath", "type")
 	ret.WF("func (%s *%s) WebPath(paths ...string) string {", str.FirstLetter(), str.Proper())
 	ret.W("\tif len(paths) == 0 {")
@@ -95,7 +96,7 @@ func BlockWebPath(g *golang.File, cols model.Columns, str model.StringProvider) 
 	return ret
 }
 
-func BlockStrings(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
+func BlockStrings(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Strings", "func")
 	ret.WF("func (%s *%s) Strings() []string {", str.FirstLetter(), str.Proper())
 	x := cols.NotDerived().ToGoStrings(str.FirstLetter()+".", true, 160)

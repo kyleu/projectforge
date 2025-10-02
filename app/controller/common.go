@@ -14,6 +14,11 @@ func Options(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func Head(w http.ResponseWriter, _ *http.Request) {
+	cutil.WriteCORS(w)
+	w.WriteHeader(http.StatusOK)
+}
+
 func NotFoundAction(w http.ResponseWriter, r *http.Request) {
 	Act("notfound", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		return NotFoundResponse(ps.W, r)(as, ps)

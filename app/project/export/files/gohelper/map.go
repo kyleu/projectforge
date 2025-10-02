@@ -11,7 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func ToMap(m model.StringProvider, cols model.Columns) *golang.Block {
+func ToMap(m metamodel.StringProvider, cols model.Columns) *golang.Block {
 	ret := golang.NewBlock(m.PackageName()+"ToMap", "func")
 	ret.WF("func (%s *%s) ToMap() util.ValueMap {", m.FirstLetter(), m.Proper())
 	content := util.StringJoin(lo.Map(cols, func(col *model.Column, _ int) string {
@@ -22,7 +22,7 @@ func ToMap(m model.StringProvider, cols model.Columns) *golang.Block {
 	return ret
 }
 
-func FromMap(g *golang.File, m model.StringProvider, cols model.Columns, args *metamodel.Args) (*golang.Block, error) {
+func FromMap(g *golang.File, m metamodel.StringProvider, cols model.Columns, args *metamodel.Args) (*golang.Block, error) {
 	c := cols.NotDerived().WithoutTags("created", "updated")
 	pks := c.PKs()
 	nonPKs := c.NonPKs()
@@ -63,7 +63,7 @@ func FromMap(g *golang.File, m model.StringProvider, cols model.Columns, args *m
 	return ret, nil
 }
 
-func ToOrderedMap(m model.StringProvider, cols model.Columns) *golang.Block {
+func ToOrderedMap(m metamodel.StringProvider, cols model.Columns) *golang.Block {
 	ret := golang.NewBlock(m.PackageName()+"ToOrderedMap", "func")
 	ret.WF("func (%s *%s) ToOrderedMap() *util.OrderedMap[any] {", m.FirstLetter(), m.Proper())
 	content := util.StringJoin(lo.Map(cols, func(col *model.Column, _ int) string {

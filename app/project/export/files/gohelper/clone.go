@@ -6,6 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -13,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func BlockClone(g *golang.File, cols model.Columns, str model.StringProvider) *golang.Block {
+func BlockClone(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Clone", "func")
 	ret.WF("func (%s *%s) Clone() *%s {", str.FirstLetter(), str.Proper(), str.Proper())
 	calls := lo.Map(cols, func(col *model.Column, _ int) string {
@@ -41,7 +42,7 @@ func BlockClone(g *golang.File, cols model.Columns, str model.StringProvider) *g
 	return ret
 }
 
-func BlockArrayClone(str model.StringProvider) *golang.Block {
+func BlockArrayClone(str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock(str.Proper()+"ArrayClone", "func")
 	ret.WF("func (%s %s) Clone() %s {", str.FirstLetter(), str.ProperPlural(), str.ProperPlural())
 	ret.WF("\treturn lo.Map(%s, func(xx *%s, _ int) *%s {", str.FirstLetter(), str.Proper(), str.Proper())

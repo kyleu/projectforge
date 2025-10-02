@@ -162,52 +162,99 @@ func streaminlineResources(qw422016 *qt422016.Writer, noStyle bool, noScript boo
 //line views/layout/Head.html:31
 		css, _ := assets.Embed("client.css")
 
-//line views/layout/Head.html:31
+//line views/layout/Head.html:32
+		qw422016.N().S(`
+`)
+//line views/layout/Head.html:32
+		qw422016.N().S(` `)
+//line views/layout/Head.html:32
+		qw422016.N().S(` `)
+//line views/layout/Head.html:32
 		qw422016.N().S(`<style>`)
-//line views/layout/Head.html:32
-		qw422016.N().S(string(css.Bytes))
-//line views/layout/Head.html:32
-		qw422016.N().S(`</style>`)
 //line views/layout/Head.html:33
-	}
+		qw422016.N().S(`
+`)
+//line views/layout/Head.html:33
+		qw422016.N().S(` `)
+//line views/layout/Head.html:33
+		qw422016.N().S(` `)
+//line views/layout/Head.html:33
+		qw422016.N().S(` `)
+//line views/layout/Head.html:33
+		qw422016.N().S(` `)
+//line views/layout/Head.html:33
+		qw422016.N().S(string(css.Bytes))
+//line views/layout/Head.html:33
+		qw422016.N().S(` `)
+//line views/layout/Head.html:33
+		qw422016.N().S(` `)
+//line views/layout/Head.html:33
+		qw422016.N().S(`</style>`)
 //line views/layout/Head.html:34
-	if !noScript {
+	}
 //line views/layout/Head.html:35
+	if !noScript {
+//line views/layout/Head.html:36
 		js, _ := assets.Embed("client.js")
 
-//line views/layout/Head.html:35
-		qw422016.N().S(`<script>`)
-//line views/layout/Head.html:36
-		qw422016.N().S(string(js.Bytes))
-//line views/layout/Head.html:36
-		qw422016.N().S(`</script>`)
 //line views/layout/Head.html:37
+		qw422016.N().S(`
+`)
+//line views/layout/Head.html:37
+		qw422016.N().S(` `)
+//line views/layout/Head.html:37
+		qw422016.N().S(` `)
+//line views/layout/Head.html:37
+		qw422016.N().S(`<script>`)
+//line views/layout/Head.html:38
+		qw422016.N().S(`
+`)
+//line views/layout/Head.html:38
+		qw422016.N().S(` `)
+//line views/layout/Head.html:38
+		qw422016.N().S(` `)
+//line views/layout/Head.html:38
+		qw422016.N().S(` `)
+//line views/layout/Head.html:38
+		qw422016.N().S(` `)
+//line views/layout/Head.html:38
+		qw422016.N().S(string(js.Bytes))
+//line views/layout/Head.html:38
+		qw422016.N().S(` `)
+//line views/layout/Head.html:38
+		qw422016.N().S(` `)
+//line views/layout/Head.html:38
+		qw422016.N().S(`</script>`)
+//line views/layout/Head.html:38
+		qw422016.N().S(`
+`)
+//line views/layout/Head.html:39
 	}
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 }
 
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 func writeinlineResources(qq422016 qtio422016.Writer, noStyle bool, noScript bool) {
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	streaminlineResources(qw422016, noStyle, noScript)
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 }
 
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 func inlineResources(noStyle bool, noScript bool) string {
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	writeinlineResources(qb422016, noStyle, noScript)
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	qs422016 := string(qb422016.B)
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 	return qs422016
-//line views/layout/Head.html:38
+//line views/layout/Head.html:40
 }

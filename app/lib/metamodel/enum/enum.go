@@ -73,6 +73,10 @@ func (e *Enum) CamelLower() string {
 	return strings.ToLower(e.Camel())
 }
 
+func (e *Enum) Kebab() string {
+	return util.StringToKebab(e.Name, e.Acronyms...)
+}
+
 func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 	ret := util.NewOrderedMap[string](false, 0)
 	for _, v := range e.Values {

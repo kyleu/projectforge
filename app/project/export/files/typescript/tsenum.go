@@ -60,7 +60,7 @@ func tsEnumContent(imps []string, e *enum.Enum) golang.Blocks {
 func EnumContent(e *enum.Enum, imps []string, linebreak string) (*file.File, error) {
 	dir := []string{"client", "src"}
 	dir = append(dir, e.PackageWithGroup(""))
-	filename := e.Camel()
+	filename := e.Kebab()
 	g := golang.NewGoTemplate(dir, filename+".ts")
 	g.AddBlocks(tsEnumContent(imps, e)...)
 	return g.Render(linebreak)

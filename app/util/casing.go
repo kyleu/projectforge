@@ -35,6 +35,10 @@ func StringToSnake(s string, extraAcronyms ...string) string {
 	return acr(toDelimited(s, '_'), extraAcronyms...)
 }
 
+func StringToKebab(s string, extraAcronyms ...string) string {
+	return acr(toDelimited(s, '-'), extraAcronyms...)
+}
+
 func toProperCase(s string, initCase bool) string {
 	s = strings.TrimSpace(s)
 	if s == "" {

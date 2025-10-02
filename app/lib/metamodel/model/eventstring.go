@@ -75,6 +75,10 @@ func (e *Event) ProperPlural() string {
 	return ret
 }
 
+func (e *Event) Kebab() string {
+	return util.StringToKebab(e.Name)
+}
+
 func (e *Event) FirstLetter() string {
 	return strings.ToLower(e.Name[0:1])
 }

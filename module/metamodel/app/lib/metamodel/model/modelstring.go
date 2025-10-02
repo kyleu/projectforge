@@ -77,6 +77,10 @@ func (m *Model) ProperPlural() string {
 	return ret
 }
 
+func (m *Model) Kebab() string {
+	return util.StringToKebab(m.Name)
+}
+
 func (m *Model) FirstLetter() string {
 	return strings.ToLower(m.Name[0:1])
 }

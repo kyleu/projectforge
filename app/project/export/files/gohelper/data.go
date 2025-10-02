@@ -6,6 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -13,7 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func BlockToData(m model.StringProvider, cols model.Columns, suffix string, database string) *golang.Block {
+func BlockToData(m metamodel.StringProvider, cols model.Columns, suffix string, database string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.WF("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {

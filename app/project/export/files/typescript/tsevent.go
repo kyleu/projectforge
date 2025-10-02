@@ -74,7 +74,7 @@ func tsEventContent(imps []string, evt *model.Event, enums enum.Enums) (golang.B
 func EventContent(evt *model.Event, allEnums enum.Enums, imps []string, linebreak string) (*file.File, error) {
 	dir := []string{"client", "src"}
 	dir = append(dir, evt.PackageWithGroup(""))
-	filename := evt.Camel()
+	filename := evt.Kebab()
 	g := golang.NewGoTemplate(dir, filename+".ts")
 	b, err := tsEventContent(imps, evt, allEnums)
 	if err != nil {

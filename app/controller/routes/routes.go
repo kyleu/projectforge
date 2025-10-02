@@ -49,7 +49,8 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	makeRoute(r, http.MethodGet, "/robots.txt", clib.RobotsTxt)
 	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
-	makeRoute(r, http.MethodOptions, "/", controller.Options)
+	r.Methods(http.MethodOptions).HandlerFunc(controller.Options)
+	r.Methods(http.MethodHead).HandlerFunc(controller.Head)
 
 	return cutil.WireRouter(r, defaultHandler, logger)
 }

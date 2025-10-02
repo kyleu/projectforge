@@ -29,10 +29,12 @@
 {% func inlineResources(noStyle bool, noScript bool) %}{% stripspace %}
   {%- if !noStyle -%}
   {% code css, _ := assets.Embed("client.css") %}
-  <style>{%s= string(css.Bytes) %}</style>
+  {% newline %}{% space %}{% space %}
+  <style>{% newline %}{% space %}{% space %}{% space %}{% space %}{%s= string(css.Bytes) %}{% space %}{% space %}</style>
   {%- endif -%}
   {%- if !noScript -%}
   {% code js, _ := assets.Embed("client.js") %}
-  <script>{%s= string(js.Bytes) %}</script>
+  {% newline %}{% space %}{% space %}
+  <script>{% newline %}{% space %}{% space %}{% space %}{% space %}{%s= string(js.Bytes) %}{% space %}{% space %}</script>{% newline %}
   {%- endif -%}
 {% endstripspace %}{% endfunc %}

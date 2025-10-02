@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -12,7 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func DiffBlock(g *golang.File, cols model.Columns, m model.StringProvider, enums enum.Enums) (*golang.Block, error) {
+func DiffBlock(g *golang.File, cols model.Columns, m metamodel.StringProvider, enums enum.Enums) (*golang.Block, error) {
 	ret := golang.NewBlock("Diff"+m.Proper(), "func")
 
 	ret.WF("func (%s *%s) Diff(%sx *%s) util.Diffs {", m.FirstLetter(), m.Proper(), m.FirstLetter(), m.Proper())
@@ -28,7 +29,7 @@ func DiffBlock(g *golang.File, cols model.Columns, m model.StringProvider, enums
 	return ret, nil
 }
 
-func columnDiff(g *golang.File, m model.StringProvider, col *model.Column, enums enum.Enums, ret *golang.Block) error {
+func columnDiff(g *golang.File, m metamodel.StringProvider, col *model.Column, enums enum.Enums, ret *golang.Block) error {
 	key := col.CamelNoReplace()
 	if col.HasTag("updated") {
 		return nil

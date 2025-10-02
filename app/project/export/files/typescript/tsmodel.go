@@ -72,7 +72,7 @@ func tsModelContent(imps []string, m *model.Model, enums enum.Enums) (golang.Blo
 func ModelContent(m *model.Model, allEnums enum.Enums, imps []string, linebreak string) (*file.File, error) {
 	dir := []string{"client", "src"}
 	dir = append(dir, m.PackageWithGroup(""))
-	filename := m.Camel()
+	filename := m.Kebab()
 	g := golang.NewGoTemplate(dir, filename+".ts")
 	b, err := tsModelContent(imps, m, allEnums)
 	if err != nil {

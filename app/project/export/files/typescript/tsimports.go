@@ -10,11 +10,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str model.StringProvider) ([]string, error) {
+func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str metamodel.StringProvider) ([]string, error) {
 	var ret TSImports
 	if e, _ := model.AsEnum(col.Type); e != nil {
 		if en := args.Enums.Get(e.Ref); en != nil {
-			pth := str.RelativePath(en.GroupAndPackage(), en.Camel())
+			pth := str.RelativePath(en.GroupAndPackage(), en.Kebab())
 			op := fmt.Sprintf(`%s%s`, util.Choose(col.Nullable, "parse", "get"), en.Proper())
 			ret = ret.With(newImport(en.Proper(), pth), newImport(op, pth))
 		}
@@ -30,9 +30,9 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str model.Str
 		if tsImport := rm.ConfigMap().GetStringOpt("tsImport"); tsImport != "" {
 			ret = ret.With(newImport(r.K, tsImport))
 		} else if rm.PackageWithGroup("") != str.PackageWithGroup("") {
-			ret = ret.With(newImport(r.K, str.RelativePath(rm.GroupAndPackage(), rm.Camel())))
+			ret = ret.With(newImport(r.K, str.RelativePath(rm.GroupAndPackage(), rm.Kebab())))
 		} else {
-			ret = ret.With(newImport(r.K, fmt.Sprintf("./%s", rm.Camel())))
+			ret = ret.With(newImport(r.K, fmt.Sprintf("./%s", rm.Kebab())))
 		}
 	}
 	if col.Type.Key() == types.KeyNumeric {
@@ -42,7 +42,7 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str model.Str
 	return ret.Strings(), nil
 }
 
-func tsModelImports(args *metamodel.Args, cols model.Columns, str model.StringProvider) ([]string, error) {
+func tsModelImports(args *metamodel.Args, cols model.Columns, str metamodel.StringProvider) ([]string, error) {
 	ret := &util.StringSlice{}
 	add := func(s string, args ...any) {
 		ret.PushUnique(fmt.Sprintf(s, args...))

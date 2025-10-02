@@ -38,13 +38,13 @@ func GoTypeWithRef(c *model.Column, pkg string, args *metamodel.Args) string {
 	return gt
 }
 
-func LoadRef(col *model.Column, models model.Models, events model.Events, extraTypes model.Models) (*types.Reference, model.StringProvider, error) {
+func LoadRef(col *model.Column, models model.Models, events model.Events, extraTypes model.Models) (*types.Reference, metamodel.StringProvider, error) {
 	ret, err := model.AsRef(col.Type)
 	if err != nil {
 		return nil, nil, err
 	}
 	k := strings.TrimPrefix(ret.K, "*")
-	get := func(key string) model.StringProvider {
+	get := func(key string) metamodel.StringProvider {
 		if ret := models.Get(key); ret != nil {
 			return ret
 		}

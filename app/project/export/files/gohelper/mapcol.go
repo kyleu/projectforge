@@ -14,7 +14,7 @@ import (
 )
 
 //nolint:gocognit
-func forMapCol(g *golang.File, ret *golang.Block, indent int, m model.StringProvider, args *metamodel.Args, col *model.Column) error {
+func forMapCol(g *golang.File, ret *golang.Block, indent int, m metamodel.StringProvider, args *metamodel.Args, col *model.Column) error {
 	ind := util.StringRepeat("\t", indent)
 	catchErr := func(s string) {
 		ret.W(ind + "if " + s + " != nil {")

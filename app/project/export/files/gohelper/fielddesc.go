@@ -3,11 +3,12 @@ package gohelper
 import (
 	"strings"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
-func BlockFieldDescs(cols model.Columns, str model.StringProvider) (*golang.Block, error) {
+func BlockFieldDescs(cols model.Columns, str metamodel.StringProvider) (*golang.Block, error) {
 	ret := golang.NewBlock(str.Proper(), "struct")
 	ret.WF("var %sFieldDescs = util.FieldDescs{", str.Proper())
 	for _, c := range cols.NotDerived() {

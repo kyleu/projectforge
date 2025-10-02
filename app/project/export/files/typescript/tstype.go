@@ -3,6 +3,7 @@ package typescript
 import (
 	"strings"
 
+	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -38,7 +39,7 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 	}
 }
 
-func tsFromObject(cols model.Columns, str model.StringProvider, enums enum.Enums, ret *golang.Block) error {
+func tsFromObject(cols model.Columns, str metamodel.StringProvider, enums enum.Enums, ret *golang.Block) error {
 	ret.WB()
 	ret.WF("  static fromObject(obj: { [_: string]: unknown }): %s {", str.Proper())
 	for _, col := range cols {
