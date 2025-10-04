@@ -30,7 +30,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	pm.Logger = logger
 
 	ret := newResult(TypeBuild, pm.Prj, pm.Cfg, logger)
-	ret.AddLog("building project [%s] in [%s] with phase [%s]", pm.Prj.Key, pm.Prj.Path, phaseStr)
+	ret.AddLog("building project [%s] in [%s] with phase [%s]...", pm.Prj.Key, pm.Prj.Path, phaseStr)
 	phase := AllBuilds.Get(phaseStr)
 	if phase == nil {
 		return ret.WithError(errors.Errorf("invalid phase [%s]", phaseStr))
@@ -38,6 +38,7 @@ func onBuild(ctx context.Context, pm *PrjAndMods) *Result {
 	timer := util.TimerStart()
 	ret = phase.Run(ctx, pm, ret)
 	ret.Duration = timer.End()
+	ret.AddLog("completed [%s] build of project [%s] in [%s]", phaseStr, pm.Prj.Key, timer.EndString())
 	return ret
 }
 

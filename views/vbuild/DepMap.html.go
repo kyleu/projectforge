@@ -55,7 +55,7 @@ func (p *DepMap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`  <div class="card">
     `)
 //line views/vbuild/DepMap.html:30
-	vproject.StreamAvailActions(qw422016, "Dependency Conflicts", p.Tags, nil, "sitemap", ps)
+	vproject.StreamAvailActions(qw422016, "Dependency Conflicts", p.Tags, nil, "sitemap", "", ps)
 //line views/vbuild/DepMap.html:30
 	qw422016.N().S(`
   </div>

@@ -18,7 +18,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    {%= AvailActions("", p.Tags, p.Projects.Tags(), p.Icon, ps) %}
+    {%= AvailActions("", p.Tags, p.Projects.Tags(), p.Icon, "", ps) %}
   </div>
   <a class="link-section" href="/p/new" title="Create a new project">
     <div class="card">

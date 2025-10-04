@@ -142,6 +142,12 @@ func (x ResultContexts) Errors() []string {
 	})
 }
 
+func (x ResultContexts) CountWithErrors() int {
+	return lo.CountBy(x, func(c *ResultContext) bool {
+		return len(c.Res.Errors) > 0
+	})
+}
+
 func (x ResultContexts) Title() string {
 	if len(x) == 0 || x[0].Res == nil {
 		return fmt.Sprintf("Unknown (%d results)", len(x))

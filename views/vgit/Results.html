@@ -14,6 +14,7 @@
   Action *git.Action
   Results git.Results
   Projects project.Projects
+  Duration string
   Tags []string
 } %}
 
@@ -25,7 +26,7 @@
     }
   -%}
   <div class="card">
-    {%= vproject.AvailActions("Git " + p.Action.Title, p.Tags, p.Projects.Tags(), "git", ps) %}
+    {%= vproject.AvailActions("Git " + p.Action.Title, p.Tags, p.Projects.Tags(), "git", p.Duration, ps) %}
   </div>
   <div class="card">
     <div class="overflow full-width">

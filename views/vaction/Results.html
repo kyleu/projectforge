@@ -16,6 +16,7 @@
   Projects project.Projects
   Ctxs action.ResultContexts
   Tags []string
+  Duration string
   IsBuild bool
 } %}
 
@@ -27,7 +28,7 @@
     }
   -%}
   <div class="card">
-    {%= vproject.AvailActions(title, p.Tags, p.Projects.Tags(), p.T.Icon, ps) %}
+    {%= vproject.AvailActions(title, p.Tags, p.Projects.Tags(), p.T.Icon, p.Duration, ps) %}
   </div>
   <div class="card">
     {%- if p.IsBuild -%}

@@ -6,14 +6,19 @@
   "projectforge.dev/projectforge/views/vsearch"
 ) %}
 
-{% func AvailActions(title string, currTags []string, availTags []string, icon string, ps *cutil.PageState) %}
+{% func AvailActions(title string, currTags []string, availTags []string, icon string, duration string, ps *cutil.PageState) %}
   {%- code
     var tags string
     if len(currTags) > 0 {
       tags = "?tags=" + util.StringJoin(currTags, ",")
     }
   -%}
+  {%- if duration == "" -%}
   {%= vsearch.Form("/p/search", "", "Search All Files", currTags, ps) %}
+  {%- else -%}
+  <div class="right"><em>{%s duration %}</em></div>
+  {%- endif %}
+
   <h3>
     {%= components.SVGIcon(icon, ps) %}
     <a href="/p">All Projects</a>{% if len(currTags) > 0 %} tagged [<a href="/p?tags={%s util.StringJoin(currTags, `, `) %}">{%s util.StringJoin(currTags, `, `) %}</a>]{% endif %}{% if title != "" %}: <a href="">{%s title %}</a>{% endif %}

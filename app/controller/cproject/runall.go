@@ -81,10 +81,12 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 				return "", errors.New("can't run multiple instances of golangcilint")
 			}
 		}
+
+		t := util.TimerStart()
 		results := action.ApplyAll(ps.Context, prjs, actT, cfg, as, ps.Logger)
 
 		ps.SetTitleAndData(fmt.Sprintf("[%s] All Projects", actT.Title), results)
-		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags}
+		page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: results, Tags: tags, Duration: t.EndString()}
 		return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 	})
 }

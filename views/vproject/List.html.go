@@ -44,7 +44,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     `)
 //line views/vproject/List.html:21
-	StreamAvailActions(qw422016, "", p.Tags, p.Projects.Tags(), p.Icon, ps)
+	StreamAvailActions(qw422016, "", p.Tags, p.Projects.Tags(), p.Icon, "", ps)
 //line views/vproject/List.html:21
 	qw422016.N().S(`
   </div>
