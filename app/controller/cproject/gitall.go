@@ -31,6 +31,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 		var results git.Results
 		var err error
 		action := git.ActionStatusFromString(a)
+		t := util.TimerStart()
 		switch a {
 		case git.ActionStatus.Key, "":
 			results, err = gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
@@ -92,7 +93,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 			return cmp.Compare(strings.ToLower(lp.Title()), strings.ToLower(rp.Title()))
 		})
 		ps.SetTitleAndData("[git] All Projects", results)
-		return controller.Render(r, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags}, ps, "projects", "Git")
+		return controller.Render(r, as, &vgit.Results{Action: action, Results: results, Projects: prjs, Tags: tags, Duration: t.EndString()}, ps, "projects", "Git")
 	})
 }
 

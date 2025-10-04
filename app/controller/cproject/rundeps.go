@@ -56,11 +56,12 @@ func runAllDeps(cfg util.ValueMap, prjs project.Projects, tags []string, r *http
 		}
 	}
 
+	t := util.TimerStart()
 	ret, err := build.LoadDepsMap(prjs, 2, as.Services.Projects)
 	if err != nil {
 		return "", errors.Wrap(err, "")
 	}
 	ps.SetTitleAndData("Dependency Merge", ret)
-	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags}
+	page := &vbuild.DepMap{Message: msg, Result: ret, Tags: tags, Duration: t.EndString()}
 	return controller.Render(r, as, page, ps, "projects", "Dependencies")
 }
