@@ -49,12 +49,20 @@ func TimeRelative(t *time.Time) string {
 	return humanize.Time(*t)
 }
 
-func TimeRounded(t *time.Time, d time.Duration) *time.Time {
+func TimeRoundedP(t *time.Time, d time.Duration) *time.Time {
 	if t == nil {
 		return nil
 	}
 	ret := t.Round(d)
 	return &ret
+}
+
+func TimeRounded(t time.Time, d time.Duration) time.Time {
+	if t.IsZero() {
+		return t
+	}
+	ret := t.Round(d)
+	return ret
 }
 
 func TimeToMap(t time.Time) map[string]any {
