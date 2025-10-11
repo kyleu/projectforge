@@ -89,8 +89,8 @@ func ModelArrayGet(g *golang.File, m metamodel.StringProvider, cols model.Column
 func ModelArrayToMaps(m metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"ArrayToMaps", "func")
 	ret.WF("func (%s %s) ToMaps() []util.ValueMap {", m.FirstLetter(), m.ProperPlural())
-	ret.WF("\treturn lo.Map(%s, func(x *%s, _ int) util.ValueMap {", m.FirstLetter(), m.Proper())
-	ret.W("\t\treturn x.ToMap()")
+	ret.WF("\treturn lo.Map(%s, func(xx *%s, _ int) util.ValueMap {", m.FirstLetter(), m.Proper())
+	ret.W("\t\treturn xx.ToMap()")
 	ret.W("\t})")
 	ret.W("}")
 	return ret

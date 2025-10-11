@@ -54,6 +54,7 @@ func (s *Service) Disconnect(connID uuid.UUID, logger util.Logger) (bool, error)
 	if !ok {
 		return false, errors.Errorf("no connection found with id [%s]", connID.String())
 	}
+	_ = conn.Close(logger)
 	left := false
 	if conn.Channels != nil {
 		left = true

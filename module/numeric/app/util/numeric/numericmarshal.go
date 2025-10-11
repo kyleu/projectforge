@@ -61,3 +61,19 @@ func (n *Numeric) UnmarshalJSON(data []byte) error {
 	}
 	return nil
 }
+
+var _ util.Diffable = (*Numeric)(nil)
+
+func (n Numeric) Diff(other any, path []string, ignored ...string) util.Diffs {
+	if other == nil {
+		return util.Diffs{}
+	}
+	otherNum, ok := other.(Numeric)
+	if !ok {
+		return util.DiffObjects(n, other)
+	}
+	if n.Equals(otherNum) {
+		return util.Diffs{}
+	}
+	return util.Diffs{util.NewDiff(util.StringJoin(path, "."), n.String(), otherNum.String())}
+}

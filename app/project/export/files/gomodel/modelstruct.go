@@ -27,6 +27,9 @@ func modelStruct(m *model.Model, args *metamodel.Args) (*golang.Block, error) {
 	})
 
 	for idx, c := range cols {
+		if c.HelpString != "" {
+			ret.WF("\t// %s", c.HelpString)
+		}
 		goType := util.StringPad(gts[idx], maxTypeLength)
 		tag := gohelper.ColumnTag(c)
 		ret.WF("\t%s %s %s", util.StringPad(c.Proper(), maxColLength), goType, tag)

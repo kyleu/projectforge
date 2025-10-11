@@ -328,6 +328,10 @@ func ParseString(r any, path string, allowEmpty bool) (string, error) {
 			return "", errors.New("empty string")
 		}
 		return StringJoin(t, "||"), nil
+	case map[string]any:
+		return ToJSONCompact(t), nil
+	case ValueMap:
+		return ToJSONCompact(t), nil
 	case nil:
 		if !allowEmpty {
 			return "", errors.Errorf("could not find string for path [%s]", path)

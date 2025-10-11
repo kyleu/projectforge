@@ -74,7 +74,7 @@ func Event(evt *model.Event, args *metamodel.Args, goVersion string, linebreak s
 
 	g.AddBlocks(eventToData(evt, evt.Columns.NotDerived(), "", args.Database), rnd, fd)
 
-	g.AddBlocks(gohelper.ModelArray(evt), gohelper.BlockArrayClone(evt))
+	g.AddBlocks(gohelper.ModelArray(evt), gohelper.BlockArrayClone(evt), gohelper.ModelArrayToMaps(evt), gohelper.ModelArrayToOrderedMaps(evt))
 	if pks := evt.Columns.PKs(); len(pks) > 0 {
 		ag, err := gohelper.ModelArrayGet(g, evt, pks, args, goVersion)
 		if err != nil {

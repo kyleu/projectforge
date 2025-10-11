@@ -154,6 +154,20 @@
             <th>Channels</th>
             <td>{%s util.StringJoin(c.Channels, ", ") %}</td>
           </tr>
+          {%- if c.Stats != nil -%}
+          <tr>
+            <th>Sent</th>
+            <td>{%d c.Stats.MessagesSent %} msgs, {%s util.ByteSizeSI(int64(c.Stats.BytesSent)) %}</td>
+          </tr>
+          <tr>
+            <th>Received</th>
+            <td>{%d c.Stats.MessagesReceived %} msgs, {%s util.ByteSizeSI(int64(c.Stats.BytesReceived)) %}</td>
+          </tr>
+          <tr>
+            <th>Started</th>
+            <td>{%s util.TimeToFull(&c.Stats.Started) %}</td>
+          </tr>
+          {%- endif -%}
         </tbody>
       </table>
     </div>

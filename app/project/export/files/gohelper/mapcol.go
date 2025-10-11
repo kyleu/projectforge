@@ -2,6 +2,7 @@ package gohelper
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -42,7 +43,11 @@ func forMapCol(g *golang.File, ret *golang.Block, indent int, m metamodel.String
 			return errors.Wrap(err, "invalid ref")
 		}
 		ret.WF(ind+"%sArg := %s{}", col.Camel(), ref.LastAddr(ref.Pkg.Last() != m.PackageName()))
-		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), %sArg)", col.Proper(), col.Camel())
+		var isReference string
+		if !strings.HasPrefix(ref.K, "*") {
+			isReference = "&"
+		}
+		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), %s%sArg)", col.Proper(), isReference, col.Camel())
 		catchErr("err")
 		ret.WF(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
 	case col.Type.Key() == types.KeyEnum:

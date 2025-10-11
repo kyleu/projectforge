@@ -20,13 +20,22 @@ type Connection struct {
 	ModelID  *uuid.UUID    `json:"modelID,omitzero"`
 	Channels []string      `json:"channels,omitempty"`
 	Started  time.Time     `json:"started,omitzero"`
+	Stats    *Stats        `json:"stats,omitempty"`
 	handler  Handler
 	socket   *websocket.Conn
 	mu       sync.Mutex
 }
 
 func NewConnection(svc string, profile *user.Profile, socket *websocket.Conn, handler Handler) *Connection {
-	return &Connection{ID: util.UUID(), Profile: profile, Svc: svc, Started: util.TimeCurrent(), handler: handler, socket: socket}
+	return &Connection{
+		ID:       util.UUID(),
+		Profile:  profile,
+		Svc:      svc,
+		Started:  util.TimeCurrent(),
+		Stats:    NewStats(),
+		handler:  handler,
+		socket:   socket,
+	}
 }
 
 func (c *Connection) ToStatus() *Status {
@@ -55,7 +64,10 @@ func (c *Connection) Read() ([]byte, error) {
 	return message, errors.Wrap(err, "unable to write to websocket")
 }
 
-func (c *Connection) Close() error {
+func (c *Connection) Close(logger util.Logger) error {
+	if logger != nil {
+		logger.Infof("closing connection [%s]: %s", c.ID, c.Stats.String())
+	}
 	return c.socket.Close()
 }
 

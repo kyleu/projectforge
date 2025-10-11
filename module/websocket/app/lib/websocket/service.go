@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/pkg/errors"
 	{{{ if .HasModule "process" }}}"github.com/robert-nix/ansihtml"
 	{{{ end }}}"github.com/samber/lo"
 
@@ -18,6 +19,7 @@ import (
 type ConnectEvent func(s *Service, conn *Connection, logger util.Logger) error
 
 type Service struct {
+	stats         *Stats
 	connections   map[uuid.UUID]*Connection
 	connectionsMu sync.Mutex
 	channels      map[string]*Channel
@@ -30,6 +32,7 @@ type Service struct {
 
 func NewService(onOpen ConnectEvent, onClose ConnectEvent) *Service {
 	return &Service{
+		stats:       NewStats(),
 		connections: make(map[uuid.UUID]*Connection),
 		channels:    make(map[string]*Channel),
 		taps:        make(map[uuid.UUID]*websocket.Conn),
@@ -50,11 +53,22 @@ func (s *Service) ReplaceHandlers(onOpen ConnectEvent, onClose ConnectEvent) {
 	s.onClose = onClose
 }
 
-func (s *Service) Close() {
+func (s *Service) Stats(connID *uuid.UUID) (*Stats, error) {
+	if connID == nil {
+		return s.stats.Clone(), nil
+	}
+	conn, ok := s.connections[*connID]
+	if !ok {
+		return nil, errors.Errorf("connection [%s] was not found", connID)
+	}
+	return conn.Stats.Clone(), nil
+}
+
+func (s *Service) Close(logger util.Logger) {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	lo.ForEach(lo.Values(s.connections), func(v *Connection, _ int) {
-		_ = v.Close()
+		_ = v.Close(logger)
 	})
 }
 

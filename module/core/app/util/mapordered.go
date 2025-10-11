@@ -36,6 +36,14 @@ func NewOrderedMap[V any](lexical bool, capacity int, pairs ...*OrderedPair[V]) 
 	return ret
 }
 
+func OrderedMapFromMap[V any](m map[string]V, lexical bool) *OrderedMap[V] {
+	ret := &OrderedMap[V]{Lexical: lexical, Order: make([]string, 0, len(m)), Map: make(map[string]V, len(m))}
+	for k, v := range m {
+		ret.Set(k, v)
+	}
+	return ret
+}
+
 func NewOMap[V any]() *OrderedMap[V] {
 	return NewOrderedMap[V](false, 0)
 }
@@ -51,6 +59,18 @@ func (o *OrderedMap[V]) Set(k string, v V) {
 	if o.Lexical {
 		slices.Sort(o.Order)
 	}
+}
+
+func (o *OrderedMap[V]) ToMap() ValueMap {
+	ret := make(ValueMap, len(o.Order))
+	for _, k := range o.Order {
+		ret[k] = o.Map[k]
+	}
+	return ret
+}
+
+func (o *OrderedMap[V]) ToOrderedMap() *OrderedMap[V] {
+	return o
 }
 
 func (o *OrderedMap[V]) HasKey(k string) bool {

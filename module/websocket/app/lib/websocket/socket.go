@@ -4,7 +4,6 @@ import (
 	"context"
 	"slices"
 	"strings"
-	"sync/atomic"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -14,8 +13,6 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var count int64
-
 func (s *Service) write(connID uuid.UUID, message string, logger util.Logger) error {
 	if connID == systemID {
 		logger.Warnf("admin message sent: %s", message)
@@ -24,9 +21,11 @@ func (s *Service) write(connID uuid.UUID, message string, logger util.Logger) er
 
 	s.connectionsMu.Lock()
 	c, ok := s.connections[connID]
+	if ok {
+		c.Stats.Sent(len(message))
+	}
+	s.stats.Sent(len(message))
 	s.connectionsMu.Unlock()
-
-	atomic.AddInt64(&count, 1)
 
 	if !ok {
 		return errors.Errorf("cannot load connection [%s] for writing", connID.String())
@@ -36,6 +35,9 @@ func (s *Service) write(connID uuid.UUID, message string, logger util.Logger) er
 
 	err := c.socket.WriteMessage(websocket.TextMessage, []byte(message))
 	if err != nil {
+		if err.Error() == "websocket: close sent" {
+			return nil
+		}
 		return errors.Wrap(err, "unable to write to websocket")
 	}
 	return nil
@@ -108,10 +110,12 @@ func (s *Service) ReadLoop(ctx context.Context, connID uuid.UUID, logger util.Lo
 	m := func(m *Message) error {
 		return OnMessage(ctx, s, connID, m, logger)
 	}
-	return ReadSocketLoop(connID, c.socket, m, d, logger)
+	return ReadSocketLoop(connID, c.socket, m, d, logger, s.stats, c.Stats)
 }
 
-func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Message) error, onDisconnect func() error, logger util.Logger) error {
+func ReadSocketLoop(
+	connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Message) error, onDisconnect func() error, logger util.Logger, stats ...*Stats,
+) error {
 	defer func() {
 		_ = sock.Close()
 		if onDisconnect != nil {
@@ -130,6 +134,9 @@ func ReadSocketLoop(connID uuid.UUID, sock *websocket.Conn, onMessage func(m *Me
 				return nil
 			}
 			return errors.Wrapf(err, "error processing socket read loop for connection [%s]", connID.String())
+		}
+		for _, x := range stats {
+			x.Received(len(message))
 		}
 		m, err := util.FromJSONObj[*Message](message)
 		if err != nil {

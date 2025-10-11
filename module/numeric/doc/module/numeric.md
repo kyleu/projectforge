@@ -61,11 +61,6 @@ b := numeric.FromFloat(1.23e15)
 // Arithmetic operations
 sum := a.Add(b)
 product := a.Multiply(b)
-
-// Formatting
-fmt.Println(sum.String())          // Standard notation
-fmt.Println(sum.Scientific())      // Scientific notation
-fmt.Println(sum.Engineering())     // Engineering notation
 ```
 
 ### TypeScript
@@ -105,7 +100,7 @@ No additional configuration required. The module works out of the box with sensi
 ## Source Code
 
 - **Repository**: https://github.com/kyleu/projectforge/tree/main/module/numeric
-- **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)  
+- **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
 
 ## See Also

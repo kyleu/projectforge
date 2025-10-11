@@ -15,6 +15,10 @@ type Diff struct {
 	New  string `json:"n"`
 }
 
+type Diffable interface {
+	Diff(other any, path []string, ignored ...string) Diffs
+}
+
 func NewDiff(p string, o string, n string) *Diff {
 	return &Diff{Path: p, Old: o, New: n}
 }
@@ -121,6 +125,8 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 		if t != s {
 			ret = append(ret, NewDiff(StringJoin(path, "."), t, s))
 		}
+	case Diffable:
+		ret = append(ret, t.Diff(r, ignored, path...)...)
 	default:
 		lj, rj := ToJSONCompact(l), ToJSONCompact(r)
 		if !recursed && (strings.HasPrefix(lj, "{") || strings.HasPrefix(lj, "[")) {

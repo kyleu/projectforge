@@ -109,3 +109,45 @@ func TestMultiply(t *testing.T) {
 		})
 	}
 }
+
+func TestJSON(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name string
+		num  numeric.Numeric
+		str  string
+		json string
+	}{
+		{"Zero", numeric.Zero, `0`, `0`},
+		{"One", numeric.One, `1`, `1`},
+		{"OneFull", numeric.One, `1`, `{"m": 1,"e": 0}`},
+		{"Ten", numeric.Ten, `10`, `10`},
+		{"Negative", numeric.One.Negate(), `-1`, `-1`},
+		{"Float", numeric.FromFloat(123.45), `123.45`, `123.45`},
+		{"Big", numeric.From(1.01, 1000), `{"m": 1.01, "e": 1000}`, `{"m": 1.01, "e": 1000}`},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			result, err := tt.num.MarshalJSON()
+			if err != nil {
+				t.Errorf("numeric.MarshalJSON(%s) error = %v", tt.num, err)
+				return
+			}
+			if string(result) != tt.str {
+				t.Errorf("numeric.MarshalJSON(%s) = %s; want %s", tt.num, string(result), tt.str)
+			}
+
+			var unmarshaled numeric.Numeric
+			err = unmarshaled.UnmarshalJSON([]byte(tt.json))
+			if err != nil {
+				t.Errorf("numeric.UnmarshalJSON(%s) error = %v", tt.json, err)
+				return
+			}
+			if !unmarshaled.Equals(tt.num) {
+				t.Errorf("numeric.UnmarshalJSON(%s) = %s; want %s", tt.str, unmarshaled.Debug(), tt.num.Debug())
+			}
+		})
+	}
+}

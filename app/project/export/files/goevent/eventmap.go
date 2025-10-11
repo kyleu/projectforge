@@ -21,12 +21,12 @@ func eventMap(g *golang.File, evt *model.Event, args *metamodel.Args, linebreak 
 	}
 	g.AddImport(imps...)
 	g.AddImport(evt.Imports.Supporting("map")...)
-	g.AddBlocks(gohelper.ToMap(evt, evt.Columns))
 	if b, e := gohelper.FromMap(g, evt, evt.Columns, args); e == nil {
 		g.AddBlocks(b)
 	} else {
 		return e
 	}
+	g.AddBlocks(gohelper.ToMap(evt, evt.Columns))
 	b := gohelper.ToOrderedMap(evt, evt.Columns.NotDerived())
 	g.AddBlocks(b)
 	return nil

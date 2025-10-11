@@ -10,14 +10,15 @@ import (
 )
 
 type Channel struct {
-	Key          string      `json:"key"`
-	ConnIDs      []uuid.UUID `json:"connIDs"`
-	LastUpdate   time.Time   `json:"lastUpdate"`
-	MessageCount int         `json:"messageCount"`
+	Key        string      `json:"key"`
+	ConnIDs    []uuid.UUID `json:"connIDs"`
+	LastUpdate time.Time   `json:"lastUpdate"`
+	Stats      *Stats      `json:"stats,omitempty"`
 }
 
 func newChannel(key string) *Channel {
-	return &Channel{Key: key, LastUpdate: util.TimeCurrent()}
+	started := util.TimeCurrent()
+	return &Channel{Key: key, LastUpdate: started, Stats: &Stats{Started: started}}
 }
 
 func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, error) {

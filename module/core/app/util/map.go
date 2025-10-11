@@ -27,6 +27,24 @@ func ValueMapFrom(m map[string]any) ValueMap {
 	return ret
 }
 
+func ValueMapFromAny(x any) (ValueMap, error) {
+	switch t := x.(type) {
+	case ValueMap:
+		return t, nil
+	case map[string]any:
+		return ValueMapFrom(t), nil
+	case ToMap:
+		return t.ToMap(), nil
+	default:
+		return nil, errors.Errorf("unable to parse [%T] as ValueMap", x)
+	}
+}
+
+func ValueMapFromAnyOK(x any) ValueMap {
+	m, _ := ValueMapFromAny(x)
+	return m
+}
+
 func (m ValueMap) Add(kvs ...any) {
 	for i := 0; i < len(kvs); i += 2 {
 		k, err := Cast[string](kvs[i])
@@ -132,6 +150,14 @@ func (m ValueMap) String() string {
 
 func (m ValueMap) JSON() string {
 	return ToJSON(m)
+}
+
+func (m ValueMap) ToMap() ValueMap {
+	return m
+}
+
+func (m ValueMap) ToOrderedMap() *OrderedMap[any] {
+	return OrderedMapFromMap(m, true)
 }
 
 func (m ValueMap) ToStringMap() map[string]string {
