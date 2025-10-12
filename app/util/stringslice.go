@@ -18,6 +18,13 @@ func (s *StringSlice) Empty() bool {
 	return len(s.Slice) == 0
 }
 
+func (s *StringSlice) SliceSafe() []string {
+	if s == nil || len(s.Slice) == 0 {
+		return nil
+	}
+	return s.Slice
+}
+
 func (s *StringSlice) TotalLength() int {
 	var total int
 	for _, str := range s.Slice {

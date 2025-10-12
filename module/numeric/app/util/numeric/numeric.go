@@ -44,6 +44,14 @@ func (n Numeric) IsZero() bool {
 	return math.Abs(n.mantissa) < Epsilon
 }
 
+func (n Numeric) IsPositive() bool {
+	return n.GreaterThan(Zero)
+}
+
+func (n Numeric) IsNegative() bool {
+	return n.LessThan(Zero)
+}
+
 func (n Numeric) Sign() int {
 	return util.Choose(math.Signbit(n.mantissa), -1, 1)
 }
