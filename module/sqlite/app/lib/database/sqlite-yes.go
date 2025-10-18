@@ -39,5 +39,5 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	}
 
 	logger = logger.With("svc", "database", "db", key)
-	return NewService(TypeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, params.File, logger)
+	return NewService(ctx, TypeSQLite, key, key, params.Schema, "sqlite", params.Debug, db, params.File, logger)
 }

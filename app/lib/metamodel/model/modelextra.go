@@ -1,8 +1,6 @@
 package model
 
 import (
-	"fmt"
-
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/util"
@@ -60,19 +58,4 @@ func (m Models) WithTypeScript() Models {
 	return lo.Filter(m, func(x *Model, _ int) bool {
 		return x.HasTag("typescript")
 	})
-}
-
-func (m *Model) RelativePath(rGroup []string, extra ...string) string {
-	mGroup := m.GroupAndPackage()
-	commonPrefix := 0
-	for i := 0; i < len(mGroup) && i < len(rGroup) && mGroup[i] == rGroup[i]; i++ {
-		commonPrefix++
-	}
-	upLevels := len(mGroup) - commonPrefix
-	var pathParts []string
-	for i := commonPrefix; i < len(rGroup); i++ {
-		pathParts = append(pathParts, rGroup[i])
-	}
-	pathParts = append(pathParts, extra...)
-	return fmt.Sprintf("%s%s", util.StringRepeat("../", upLevels), util.StringJoin(pathParts, "/"))
 }

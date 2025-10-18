@@ -15,12 +15,12 @@ type TSImport struct {
 	Prefix string `json:"prefix,omitzero"`
 }
 
-func (t *TSImport) RefString() string {
-	return util.Choose(t.Prefix == "", "", t.Prefix+" ") + strings.TrimPrefix(t.Ref, "*")
-}
-
 func newImport(ref string, path string, prefix ...string) *TSImport {
 	return &TSImport{Ref: ref, Path: path, Prefix: strings.Join(prefix, "")}
+}
+
+func (t *TSImport) RefString() string {
+	return util.Choose(t.Prefix == "", "", t.Prefix+" ") + strings.TrimPrefix(t.Ref, "*")
 }
 
 type TSImports []*TSImport
@@ -63,7 +63,7 @@ func (t TSImports) Strings() []string {
 	ret := util.NewStringSlice(nil)
 	for _, pth := range t.Paths() {
 		matches := t.ByPath(pth)
-		ret.Pushf("import { %s } from '%s'", strings.Join(matches.RefStrings(), ", "), pth)
+		ret.Pushf("import { %s } from %q;", strings.Join(matches.RefStrings(), ", "), pth)
 	}
 	ret.Sort()
 	return ret.Slice

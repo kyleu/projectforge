@@ -10,11 +10,32 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const localRef = "./"
+
+func relativePath(sp metamodel.StringProvider, rGroup []string, extra ...string) string {
+	mGroup := sp.GroupAndPackage()
+	commonPrefix := 0
+	for i := 0; i < len(mGroup) && i < len(rGroup) && mGroup[i] == rGroup[i]; i++ {
+		commonPrefix++
+	}
+	upLevels := len(mGroup) - commonPrefix
+	var pathParts []string
+	for i := commonPrefix; i < len(rGroup); i++ {
+		pathParts = append(pathParts, rGroup[i])
+	}
+	pathParts = append(pathParts, extra...)
+	p := util.StringRepeat("../", upLevels)
+	if upLevels == 0 {
+		p = localRef
+	}
+	return fmt.Sprintf("%s%s", p, util.StringJoin(pathParts, "/"))
+}
+
 func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str metamodel.StringProvider) ([]string, error) {
 	var ret TSImports
 	if e, _ := model.AsEnum(col.Type); e != nil {
 		if en := args.Enums.Get(e.Ref); en != nil {
-			pth := str.RelativePath(en.GroupAndPackage(), en.Kebab())
+			pth := relativePath(str, en.GroupAndPackage(), en.Kebab())
 			op := fmt.Sprintf(`%s%s`, util.Choose(col.Nullable, "parse", "get"), en.Proper())
 			ret = ret.With(newImport(en.Proper(), pth), newImport(op, pth))
 		}
@@ -30,7 +51,7 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str metamodel
 		if tsImport := rm.ConfigMap().GetStringOpt("tsImport"); tsImport != "" {
 			ret = ret.With(newImport(r.K, tsImport))
 		} else if rm.PackageWithGroup("") != str.PackageWithGroup("") {
-			ret = ret.With(newImport(r.K, str.RelativePath(rm.GroupAndPackage(), rm.Kebab())))
+			ret = ret.With(newImport(r.K, relativePath(str, rm.GroupAndPackage(), rm.Kebab())))
 		} else {
 			ret = ret.With(newImport(r.K, fmt.Sprintf("./%s", rm.Kebab())))
 		}
@@ -48,6 +69,9 @@ func tsModelImports(args *metamodel.Args, cols model.Columns, str metamodel.Stri
 		ret.PushUnique(fmt.Sprintf(s, args...))
 	}
 	relPath := util.StringRepeat("../", str.GroupLen()+1)
+	if str.GroupLen() == 0 {
+		relPath = localRef
+	}
 	add(`import { Parse } from "%sparse";`, relPath)
 	for _, col := range cols {
 		x, err := tsModelImportsColumn(col, args, str)

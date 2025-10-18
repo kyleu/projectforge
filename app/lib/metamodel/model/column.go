@@ -65,6 +65,10 @@ func (c *Column) NameQuoted() string {
 	return fmt.Sprintf("%q", c.Name)
 }
 
+func (c *Column) Initials() string {
+	return util.StringToInitials(c.Name, c.acronyms...)
+}
+
 func (c *Column) Camel() string {
 	return util.StringToCamel(c.Name, c.acronyms...)
 }

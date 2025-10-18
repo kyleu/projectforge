@@ -109,5 +109,5 @@ func OpenMySQLDatabase(ctx context.Context, key string, params *MySQLParams, log
 	logger = logger.With("svc", "database", "db", key)
 	stringRep := fmt.Sprintf("%s@%s:%d", params.Database, host, port)
 
-	return NewService(TypeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, stringRep, logger)
+	return NewService(ctx, TypeMySQL, key, params.Database, params.Schema, params.Username, params.Debug, db, stringRep, logger)
 }

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
@@ -88,19 +87,4 @@ func (e *Event) SetAcronyms(acronyms ...string) {
 	for _, col := range e.Columns {
 		col.SetAcronyms(acronyms...)
 	}
-}
-
-func (e *Event) RelativePath(rGroup []string, extra ...string) string {
-	mGroup := e.GroupAndPackage()
-	commonPrefix := 0
-	for i := 0; i < len(mGroup) && i < len(rGroup) && mGroup[i] == rGroup[i]; i++ {
-		commonPrefix++
-	}
-	upLevels := len(mGroup) - commonPrefix
-	var pathParts []string
-	for i := commonPrefix; i < len(rGroup); i++ {
-		pathParts = append(pathParts, rGroup[i])
-	}
-	pathParts = append(pathParts, extra...)
-	return fmt.Sprintf("%s%s", util.StringRepeat("../", upLevels), util.StringJoin(pathParts, "/"))
 }

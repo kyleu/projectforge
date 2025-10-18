@@ -1,4 +1,5 @@
 import { rowEditHandler } from "./editorobject";
+import { unknownToString } from "./util";
 import { type Column, type Editor, type Type, typeToString } from "./editortypes";
 
 function createTableHead(cols: Column[]): HTMLElement {
@@ -35,12 +36,12 @@ function createTableCell(col: Column, v: unknown): HTMLElement {
       c.innerText = typeToString(v as Type);
     }
   } else {
-    c.innerText = v.toString();
+    c.innerText = unknownToString(v);
   }
   return c;
 }
 
-function createTableRow(e: Editor, idx: number, x: { [key: string]: unknown }): HTMLElement {
+function createTableRow(e: Editor, idx: number, x: Record<string, unknown>): HTMLElement {
   const r = document.createElement("tr");
   r.dataset.index = idx.toString();
   e.columns.forEach((col) => {

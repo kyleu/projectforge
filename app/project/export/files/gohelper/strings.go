@@ -136,10 +136,10 @@ func ColumnTag(col *model.Column) string {
 		tag += fmt.Sprintf("json:%q", col.JSON+ret)
 	}
 	if col.Validation != "" {
-		tag += fmt.Sprintf(",validate:%q", col.Validation)
+		tag += fmt.Sprintf(" validate:%q", col.Validation)
 	}
 	if col.Example != "" {
-		tag += fmt.Sprintf(",fake:%q", col.Example)
+		tag += fmt.Sprintf(" fake:%q", col.Example)
 	}
 	return "`" + tag + "`"
 }

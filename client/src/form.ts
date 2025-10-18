@@ -11,10 +11,12 @@ export function setSiblingToNull(el: HTMLElement) {
 }
 
 export function initForm(frm: HTMLFormElement) {
-  frm.onreset = () => initForm(frm);
-  const editorCache: { [key: string]: string } = {};
-  const selectedCache: { [key: string]: HTMLInputElement } = {};
-  for (const el of frm.elements) {
+  frm.onreset = () => {
+    initForm(frm);
+  };
+  const editorCache: Record<string, string> = {};
+  const selectedCache: Record<string, HTMLInputElement> = {};
+  for (const el of Array.from(frm.elements)) {
     const input = el as HTMLInputElement;
     if (input.name.length > 0) {
       if (input.name.endsWith(selected)) {

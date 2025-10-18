@@ -47,13 +47,8 @@ export abstract class Notation {
     return `-${this.infinite}`;
   }
 
-  public get infinite(): string {
-    return "Infinite";
-  }
-
-  public get nan(): string {
-    return "NaN";
-  }
+  public infinite = "Infinite";
+  public nan = "NaN";
 
   public formatVerySmallNegativeNumeric(v: Numeric, places: number): string {
     return `-${this.formatVerySmallNumeric(v, places)}`;

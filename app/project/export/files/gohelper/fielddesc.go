@@ -16,11 +16,23 @@ func BlockFieldDescs(cols model.Columns, str metamodel.StringProvider) (*golang.
 		if idx := strings.LastIndex(t, "/"); idx > -1 {
 			t = t[idx+1:]
 		}
-		if c.Example == "" {
-			ret.WF("\t{Key: %q, Title: %q, Description: %q, Type: %q},", c.CamelNoReplace(), c.Title(), c.HelpString, t)
-		} else {
-			ret.WF("\t{Key: %q, Title: %q, Description: %q, Type: %q, Default: %q},", c.CamelNoReplace(), c.Title(), c.HelpString, t, c.Example)
+
+		msg := "\t{Key: %q, Title: %q"
+		args := []any{c.CamelNoReplace(), c.Title()}
+		if c.HelpString != "" {
+			msg += ", Description: %q"
+			args = append(args, c.HelpString)
 		}
+		msg += ", Type: %q"
+		args = append(args, t)
+
+		if c.Example != "" {
+			msg += ", Default: %q"
+			args = append(args, c.Example)
+		}
+		msg += "},"
+
+		ret.WF(msg, args...)
 	}
 	ret.W("}")
 	return ret, nil

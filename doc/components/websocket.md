@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function() {
 interface Message {
     readonly channel: string;  // Channel identifier
     readonly cmd: string;      // Command/message type
-    readonly param: { [key: string]: unknown }; // Message payload
+    readonly param: Record<string, unknown>; // Message payload
 }
 ```
 

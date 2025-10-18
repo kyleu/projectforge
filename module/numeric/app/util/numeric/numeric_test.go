@@ -47,16 +47,15 @@ type OpTest struct {
 	l    numeric.Numeric
 	r    numeric.Numeric
 	res  numeric.Numeric
-	err  error
 }
 
 func TestAdd(t *testing.T) {
 	t.Parallel()
 	tests := []*OpTest{
-		{"Zero", numeric.Zero, numeric.Zero, numeric.Zero, nil},
-		{"One", numeric.Zero, numeric.One, numeric.One, nil},
-		{"Two", numeric.One, numeric.One, numeric.FromFloat(2), nil},
-		{"Hundreds", numeric.FromFloat(123), numeric.FromFloat(321), numeric.FromFloat(444), nil},
+		{"Zero", numeric.Zero, numeric.Zero, numeric.Zero},
+		{"One", numeric.Zero, numeric.One, numeric.One},
+		{"Two", numeric.One, numeric.One, numeric.FromFloat(2)},
+		{"Hundreds", numeric.FromFloat(123), numeric.FromFloat(321), numeric.FromFloat(444)},
 	}
 
 	for _, tt := range tests {
@@ -73,10 +72,10 @@ func TestAdd(t *testing.T) {
 func TestSubtract(t *testing.T) {
 	t.Parallel()
 	tests := []*OpTest{
-		{"Zero", numeric.Zero, numeric.Zero, numeric.Zero, nil},
-		{"One", numeric.Zero, numeric.One, numeric.One.Negate(), nil},
-		{"Two", numeric.One, numeric.One, numeric.Zero, nil},
-		{"Hundreds", numeric.FromFloat(123), numeric.FromFloat(321), numeric.FromFloat(-198), nil},
+		{"Zero", numeric.Zero, numeric.Zero, numeric.Zero},
+		{"One", numeric.Zero, numeric.One, numeric.One.Negate()},
+		{"Two", numeric.One, numeric.One, numeric.Zero},
+		{"Hundreds", numeric.FromFloat(123), numeric.FromFloat(321), numeric.FromFloat(-198)},
 	}
 
 	for _, tt := range tests {
@@ -93,10 +92,10 @@ func TestSubtract(t *testing.T) {
 func TestMultiply(t *testing.T) {
 	t.Parallel()
 	tests := []*OpTest{
-		{"Zero", numeric.Zero, numeric.Zero, numeric.Zero, nil},
-		{"One", numeric.Zero, numeric.One, numeric.Zero, nil},
-		{"Two", numeric.One, numeric.One, numeric.One, nil},
-		{"Hundreds", numeric.FromFloat(123), numeric.FromFloat(321), numeric.FromFloat(39483), nil},
+		{"Zero", numeric.Zero, numeric.Zero, numeric.Zero},
+		{"One", numeric.Zero, numeric.One, numeric.Zero},
+		{"Two", numeric.One, numeric.One, numeric.One},
+		{"Hundreds", numeric.FromFloat(123), numeric.FromFloat(321), numeric.FromFloat(39483)},
 	}
 
 	for _, tt := range tests {

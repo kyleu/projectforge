@@ -10,6 +10,13 @@ function debounce(callback: (...args: unknown[]) => void, wait: number) {
   };
 }
 
+interface AutocompleteEntry {
+  url: string;
+  complete: boolean;
+  data: unknown[];
+  frag: DocumentFragment;
+}
+
 function autocomplete(
   el: HTMLInputElement,
   url: string,
@@ -34,14 +41,7 @@ function autocomplete(
   el.setAttribute("autocomplete", "off");
   el.setAttribute("list", listId);
 
-  const cache: {
-    [_: string]: {
-      url: string;
-      complete: boolean;
-      data: unknown[];
-      frag: DocumentFragment;
-    };
-  } = {};
+  const cache: Record<string, AutocompleteEntry> = {};
   let lastQuery = "";
 
   function getURL(q: string): string {
@@ -54,7 +54,7 @@ function autocomplete(
 
   function datalistUpdate(q: string) {
     const c = cache[q];
-    if (!c || !c.frag) {
+    if (!c?.frag) {
       return;
     }
     lastQuery = q;
@@ -82,7 +82,7 @@ function autocomplete(
       return;
     }
 
-    fetch(dest, { credentials: "include" })
+    void fetch(dest, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (!data) {

@@ -1,7 +1,8 @@
 import { createEditorInput } from "./editorfield";
+import { createTable } from "./editortable";
 import type { Editor } from "./editortypes";
 import { modalGetBody, modalGetOrCreate, modalSetTitle } from "./modal";
-import { createTable } from "./editortable";
+import { isRecord } from "./util";
 
 function createEditorButtons() {
   const btns = document.createElement("div");
@@ -28,8 +29,12 @@ function createEditorButtons() {
   return btns;
 }
 
-function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: { [p: string]: unknown }) => void) {
-  const editCopy: { [p: string]: unknown } = JSON.parse(JSON.stringify(x));
+function createEditor(e: Editor, x: Record<string, unknown>, onComplete: (row: Record<string, unknown>) => void) {
+  const editCopyJson = JSON.parse(JSON.stringify(x)) as unknown;
+  if (!isRecord(editCopyJson)) {
+    throw new Error("Editor rows must be objects");
+  }
+  const editCopy = editCopyJson;
 
   const div = document.createElement("div");
   div.classList.add("overflow", "full-width");
@@ -66,8 +71,7 @@ function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: 
     const td = document.createElement("td");
     tr.appendChild(td);
 
-    const input = createEditorInput(id, col, editCopy);
-    td.appendChild(input);
+    td.appendChild(createEditorInput(id, col, editCopy));
   });
 
   form.appendChild(createEditorButtons());
@@ -75,7 +79,7 @@ function createEditor(e: Editor, x: { [p: string]: unknown }, onComplete: (row: 
   return div;
 }
 
-function onEditComplete(e: Editor, idx: number, row: { [p: string]: unknown }) {
+function onEditComplete(e: Editor, idx: number, row: Record<string, unknown>) {
   e.rows[idx] = row;
   e.textarea.value = JSON.stringify(e.rows, null, 2);
   if (e.table) {
@@ -84,11 +88,11 @@ function onEditComplete(e: Editor, idx: number, row: { [p: string]: unknown }) {
   window.location.href = "#";
 }
 
-export function rowEditHandler(idx: number, e: Editor, x: { [p: string]: unknown }) {
+export function rowEditHandler(idx: number, e: Editor, x: Record<string, unknown>) {
   return () => {
     const modal = modalGetOrCreate("rich-editor", "Rich Editor");
     modalSetTitle(modal, "Editing Row");
-    const onComplete = (row: { [p: string]: unknown }) => {
+    const onComplete = (row: Record<string, unknown>) => {
       onEditComplete(e, idx, row);
     };
     const objectEditor = createEditor(e, x, onComplete);

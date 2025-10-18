@@ -6,7 +6,7 @@ export function socketLog(
   parentEl: HTMLElement,
   terminal: boolean,
   url: string,
-  extraHandlers: Array<(m: SocketMessage) => void>
+  extraHandlers: ((m: SocketMessage) => void)[]
 ) {
   const o = () => {
     if (debug) {
@@ -48,14 +48,12 @@ export function socketLog(
 
     let content = "";
     for (const x of html) {
-      if (!currRow) {
-        currRow = newRow();
-      }
+      currRow ??= newRow();
       if (x === "\n") {
         if (content === "") {
           content = "&nbsp;";
         }
-        currRow!.innerHTML += content;
+        currRow.innerHTML += content;
         content = "";
         currRow = null;
       } else {

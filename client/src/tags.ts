@@ -58,6 +58,7 @@ function tagsEdit(itemEl: HTMLElement) {
       apply();
       return false;
     }
+    return true;
   };
   setDisplay(value, false);
   setDisplay(edit, true);

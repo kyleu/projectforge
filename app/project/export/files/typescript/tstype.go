@@ -33,7 +33,7 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 		r, _ := model.AsRef(t)
 		return strings.TrimPrefix(r.K, "*")
 	case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyAny:
-		return "{ [key: string]: unknown }"
+		return "Record<string, unknown>"
 	default:
 		return t.String()
 	}
@@ -41,7 +41,7 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 
 func tsFromObject(cols model.Columns, str metamodel.StringProvider, enums enum.Enums, ret *golang.Block) error {
 	ret.WB()
-	ret.WF("  static fromObject(obj: { [_: string]: unknown }): %s {", str.Proper())
+	ret.WF("  static fromObject(obj: Record<string, unknown>): %s {", str.Proper())
 	for _, col := range cols {
 		err := tsFromObjectColumn(col, enums, ret)
 		if err != nil {

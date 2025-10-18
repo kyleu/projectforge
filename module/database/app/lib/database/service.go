@@ -32,7 +32,7 @@ type Service struct {
 }
 
 func NewService(
-	typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, stringRep string, logger util.Logger,
+	ctx context.Context, typ *DBType, key string, dbName string, schName string, username string, debug bool, db *sqlx.DB, stringRep string, logger util.Logger,
 ) (*Service, error) {
 	if logger == nil {
 		return nil, errors.New("logger must be provided to database service")
@@ -44,7 +44,7 @@ func NewService(
 	}
 
 	ret := &Service{Key: key, DatabaseName: dbName, SchemaName: schName, Username: username, Debug: debug, Type: typ, db: db, metrics: m, stringRep: stringRep}
-	err = ret.Healthcheck(dbName, db)
+	err = ret.Healthcheck(ctx, dbName, db)
 	if err != nil {
 		return ret, errors.Wrap(err, "unable to run healthcheck")
 	}
@@ -56,9 +56,9 @@ func (s *Service) String() string {
 	return s.stringRep
 }
 
-func (s *Service) Healthcheck(dbName string, db *sqlx.DB) error {
+func (s *Service) Healthcheck(ctx context.Context, dbName string, db *sqlx.DB) error {
 	q := {{{ if .HasModule "migration" }}}queries.Healthcheck(){{{ else }}}"select 1"{{{ end }}}
-	res, err := db.Query(q)
+	res, err := db.QueryContext(ctx, q)
 	if err != nil || res.Err() != nil {
 		if err == nil {
 			err = res.Err()

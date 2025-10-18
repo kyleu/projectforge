@@ -3,7 +3,7 @@ import { els } from "./dom";
 export function modalInit() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      if (document.location.hash.substring(0, 7) === "#modal-") {
+      if (document.location.hash.startsWith("#modal-")) {
         // document.location.hash = "";
         window.history.back();
       }
@@ -83,9 +83,14 @@ export function modalGetHeader(m: HTMLElement) {
 
 export function modalSetTitle(m: HTMLElement, title: string) {
   const hd = modalGetHeader(m);
+  if (!hd) {
+    throw new Error("unable to find modal header");
+  }
   const t = hd.getElementsByTagName("h2");
   if (t.length !== 1) {
     throw new Error("unable to find modal title");
   }
-  t[0].innerText = title;
+  if (t[0]) {
+    t[0].innerText = title;
+  }
 }

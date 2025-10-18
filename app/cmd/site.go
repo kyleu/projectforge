@@ -36,7 +36,7 @@ func startSite(ctx context.Context, flags *Flags) error {
 		return err
 	}
 
-	_, err = listenAndServe(flags.Address, flags.Port, r)
+	_, err = listenAndServe(ctx, flags.Address, flags.Port, r)
 	return err
 }
 

@@ -15,6 +15,7 @@ fi
 
 [[ -f "$HOME/bin/oauth" ]] && . "$HOME/bin/oauth"
 export {{{ .CleanKey }}}_encryption_key=TEMP_SECRET_KEY
+export GOEXPERIMENT=jsonv2
 
 # include env file
 if [ -f ".env" ]; then

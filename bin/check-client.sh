@@ -7,4 +7,5 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/../client"
 
 echo "=== linting client ==="
+npm run build:tsc
 npm run lint

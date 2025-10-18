@@ -50,7 +50,7 @@ func tsEvent(evt *model.Event, enums enum.Enums) (*golang.Block, error) {
 	}
 	ret.W("}")
 	ret.WB()
-	ret.WF("export type %s = Array<%s>;", evt.ProperPlural(), evt.Proper())
+	ret.WF("export type %s = %s[];", evt.ProperPlural(), evt.Proper())
 	return ret, nil
 }
 

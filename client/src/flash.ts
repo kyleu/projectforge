@@ -1,7 +1,9 @@
 function fade(el: HTMLElement) {
   setTimeout(() => {
     el.style.opacity = "0";
-    setTimeout(() => el.remove(), 500);
+    setTimeout(() => {
+      el.remove();
+    }, 500);
   }, 5000);
 }
 
@@ -44,9 +46,7 @@ export function flashInit() {
   }
   const x = container.querySelectorAll<HTMLElement>(".flash");
   if (x.length > 0) {
-    for (const f of x) {
-      fade(f);
-    }
+    x.forEach(fade);
   }
   return flashCreate;
 }

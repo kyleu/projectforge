@@ -15,6 +15,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitOverride": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outFile": "../assets/client.js",
@@ -24,7 +25,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES6"
+    "target": "ES6",
+    "types": []
   },
   "include": ["**/*"],
   "exclude": ["node_modules"]

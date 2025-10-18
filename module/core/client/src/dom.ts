@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
   if (context) {
@@ -12,6 +13,7 @@ export function els<T extends HTMLElement>(selector: string, context?: Element):
   return ret;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function opt<T extends HTMLElement>(selector: string, context?: Element): T | undefined {
   const e = els<T>(selector, context);
   switch (e.length) {
@@ -20,10 +22,12 @@ export function opt<T extends HTMLElement>(selector: string, context?: Element):
     case 1:
       return e[0];
     default:
-      console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`);
+      console.warn(`found [${e.length.toString()}] elements with selector [${selector}], wanted zero or one`);
+      return undefined;
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {

@@ -1,16 +1,14 @@
 let appUnloading = false;
 
-export type SocketMessage = {
+export interface SocketMessage {
   readonly channel: string;
   readonly cmd: string;
-  readonly param: { [key: string]: unknown };
-};
+  readonly param: Record<string, unknown>;
+}
 
 function socketUrl(u?: string) {
-  if (!u) {
-    u = "/connect";
-  }
-  if (u.indexOf("ws") === 0) {
+  u ??= "/connect";
+  if (u.startsWith("ws")) {
     return u;
   }
   const l = document.location;
@@ -18,7 +16,7 @@ function socketUrl(u?: string) {
   if (l.protocol === "https:") {
     protocol = "wss";
   }
-  if (u.indexOf("/") !== 0) {
+  if (!u.startsWith("/")) {
     u = "/" + u;
   }
   return protocol + `://${l.host}${u}`;
@@ -65,7 +63,9 @@ export class Socket {
     const s = this; // eslint-disable-line @typescript-eslint/no-this-alias
     this.sock.onopen = () => {
       s.connected = true;
-      s.pendingMessages.forEach(s.send);
+      s.pendingMessages.forEach((msg) => {
+        s.send(msg);
+      });
       s.pendingMessages = [];
       if (s.debug) {
         console.log("WebSocket connected");
@@ -73,7 +73,7 @@ export class Socket {
       s.open();
     };
     this.sock.onmessage = (event) => {
-      const msg = JSON.parse(event.data) as SocketMessage;
+      const msg = JSON.parse(event.data as string) as SocketMessage;
       if (s.debug) {
         console.debug("[socket]: receive", msg);
       }
@@ -95,13 +95,13 @@ export class Socket {
       if (elapsed > 0 && elapsed < 2000) {
         s.pauseSeconds = s.pauseSeconds * 2;
         if (s.debug) {
-          console.debug(`socket closed immediately, reconnecting in ${s.pauseSeconds} seconds`);
+          console.debug(`socket closed immediately, reconnecting in ${s.pauseSeconds.toString()} seconds`);
         }
         setTimeout(() => {
           s.connect();
         }, s.pauseSeconds * 1000);
       } else {
-        console.debug("socket closed after [" + elapsed + "ms]");
+        console.debug("socket closed after [" + elapsed.toString() + "ms]");
         setTimeout(() => {
           s.connect();
         }, s.pauseSeconds * 500);

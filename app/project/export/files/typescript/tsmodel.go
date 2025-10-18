@@ -48,7 +48,7 @@ func tsModel(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	}
 	ret.W("}")
 	ret.WB()
-	ret.WF("export type %s = Array<%s>;", m.ProperPlural(), m.Proper())
+	ret.WF("export type %s = %s[];", m.ProperPlural(), m.Proper())
 	return ret, nil
 }
 

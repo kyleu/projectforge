@@ -54,6 +54,8 @@ if [[ $TGT =~ $pat ]]; then
   rm -f "./tools/notarize/notarize.sh.bak"
   sed -i.bak -e "s/\\\"version\\\": \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g" ./.projectforge/project.json
   rm -f "./.projectforge/project.json.bak"
+  sed -i.bak -e "s/\\\"version\\\": \\\"[v]*[0-9]*[0-9]\.[0-9]*[0-9]\.[0-9]*[0-9]\\\"/\"version\": \"${TGT}\"/g" ./client/package.json
+  rm -f "./client/package.json.bak"
 fi
 
 make build

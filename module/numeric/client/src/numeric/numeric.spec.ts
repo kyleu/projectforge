@@ -1,11 +1,12 @@
 /* eslint-disable max-lines, max-lines-per-function */
+import { describe, expect, test } from "@jest/globals";
 import { Numeric } from "./numeric";
 import { ScientificNotation } from "./formatter/scientific";
 import { EngineeringNotation } from "./formatter/engineering";
 import { StandardNotation } from "./formatter/standard";
 import { EnglishNotation } from "./formatter/english";
 
-type example = {
+interface example {
   name: string;
   mantissa: number;
   exponent: number;
@@ -13,7 +14,7 @@ type example = {
   sci: string;
   eng: string;
   en: string;
-};
+}
 
 describe("NumberFormat", () => {
   const tests: example[] = [

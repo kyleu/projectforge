@@ -1,23 +1,34 @@
+import { isRecord, jsonParse } from "./util";
 import { els, req } from "./dom";
 import { createTable } from "./editortable";
 import type { Column, Editor } from "./editortypes";
 
 const rawLabel = "Raw JSON";
 
+function parseRows(value: string, context?: string): Record<string, unknown>[] {
+  const parsed: unknown = JSON.parse(value);
+  if (parsed == null) {
+    return [];
+  }
+  if (!Array.isArray(parsed)) {
+    throw new Error("input value" + (context ? " for " + context : "") + " must be an array");
+  }
+  return parsed.map((row) => {
+    if (!isRecord(row)) {
+      throw new Error("row values" + (context ? " for " + context : "") + " must be objects");
+    }
+    return row;
+  });
+}
+
 function extractEditor(el: HTMLElement) {
   const key = el.dataset.key ?? "editor";
   const title = el.dataset.title ?? "Object";
   const columnsStr = el.dataset.columns ?? "[]";
-  const columns: Column[] = JSON.parse(columnsStr.replace(/\\"/gu, '"'));
+  const columns = jsonParse<Column[]>(columnsStr) ?? [];
 
   const inp: HTMLTextAreaElement = req<HTMLTextAreaElement>("textarea", el);
-  let curr: { [key: string]: unknown }[] = JSON.parse(inp.value);
-  if (curr === undefined || curr === null) {
-    curr = [];
-  }
-  if (!Array.isArray(curr)) {
-    throw new Error("input value for element [" + key + "] of type [" + typeof curr + "] must be an array");
-  }
+  const curr = parseRows(inp.value, "editor [" + key + "]");
   inp.hidden = true;
 
   const e: Editor = { key: key, title: title, columns: columns, textarea: inp, rows: curr };
@@ -32,10 +43,7 @@ function editorShow(el: HTMLElement, e: Editor) {
   els(".toggle-editor-" + e.key).forEach((toggle) => {
     toggle.innerText = rawLabel;
   });
-  e.rows = JSON.parse(e.textarea.value);
-  if (e.rows === undefined || e.rows === null) {
-    e.rows = [];
-  }
+  e.rows = parseRows(e.textarea.value, "editor [" + e.key + "]");
   e.table?.remove();
   createTable(e);
   if (e.table) {

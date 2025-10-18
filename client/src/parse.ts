@@ -5,7 +5,7 @@ export const Parse = {
       return d;
     }
     if (dflt === undefined) {
-      throw new Error(`invalid date input [${x}] of type [${typeof x}]`);
+      throw new Error(`invalid date input [${String(x)}] of type [${typeof x}]`);
     }
     return dflt();
   },
@@ -26,7 +26,7 @@ export const Parse = {
       return s;
     }
     if (dflt === undefined) {
-      throw new Error(`invalid float input [${x}] of type [${typeof x}]`);
+      throw new Error(`invalid float input [${String(x)}] of type [${typeof x}]`);
     }
     return dflt();
   },
@@ -47,7 +47,7 @@ export const Parse = {
       return s;
     }
     if (dflt === undefined) {
-      throw new Error(`invalid integer input [${x}] of type [${typeof x}]`);
+      throw new Error(`invalid integer input [${String(x)}] of type [${typeof x}]`);
     }
     return dflt();
   },
@@ -62,20 +62,20 @@ export const Parse = {
     return undefined;
   },
 
-  obj: (x: unknown, dflt?: () => { [key: string]: unknown }): { [key: string]: unknown } => {
+  obj: (x: unknown, dflt?: () => Record<string, unknown>): Record<string, unknown> => {
     const o = Parse.objOpt(x);
     if (o !== undefined) {
       return o;
     }
     if (dflt === undefined) {
-      throw new Error(`invalid object input [${x}] of type [${typeof x}]`);
+      throw new Error(`invalid object input [${String(x)}] of type [${typeof x}]`);
     }
     return dflt();
   },
 
-  objOpt: (x: unknown): { [key: string]: unknown } | undefined => {
+  objOpt: (x: unknown): Record<string, unknown> | undefined => {
     if (typeof x === "object" && x !== null) {
-      return x as { [key: string]: unknown };
+      return x as Record<string, unknown>;
     }
     return undefined;
   },
@@ -86,7 +86,7 @@ export const Parse = {
       return s;
     }
     if (dflt === undefined) {
-      throw new Error(`invalid string input [${x}] of type [${typeof x}]`);
+      throw new Error(`invalid string input [${String(x)}] of type [${typeof x}]`);
     }
     return dflt();
   },

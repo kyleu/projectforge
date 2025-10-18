@@ -27,7 +27,7 @@ func Lib(path string) int32 {
 		panic(errors.WithStack(err))
 	}
 
-	port, listener, err := listen(f.Address, f.Port)
+	port, listener, err := listen(ctx, f.Address, f.Port)
 	if err != nil {
 		panic(errors.WithStack(err))
 	}

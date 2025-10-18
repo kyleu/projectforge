@@ -7,7 +7,9 @@ function call(mockup: Element, sel: string, f: (el: HTMLElement) => void) {
   if (q.length === 0) {
     throw new Error("empty query selector [" + sel + "]");
   }
-  q.forEach((x) => f(x as HTMLElement));
+  q.forEach((x) => {
+    f(x as HTMLElement);
+  });
 }
 
 function setBG(mockup: Element, sel: string, v: string) {
@@ -74,12 +76,12 @@ function set(mode: string, key: string, v: string) {
 
 export function themeInit() {
   for (const el of els<HTMLInputElement>(".color-var")) {
-    const v = el.dataset.var as string;
-    const m = el.dataset.mode as string;
-    keys.push(v);
+    const v = el.dataset.var ?? "";
+    const m = el.dataset.mode ?? "";
     if (!v || v.length === 0) {
       continue;
     }
+    keys.push(v);
     el.oninput = () => {
       set(m, v, el.value);
     };

@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	localhost = "localhost"
+	{{{ if not .SQLiteOnly }}}localhost = "localhost"
 
-	{{{ if not .SQLiteOnly }}}cfgHost     = "db_host"
+	cfgHost     = "db_host"
 	cfgPort     = "db_port"
 	{{{ end }}}cfgUser     = "db_user"
 	cfgPassword = "db_password"{{{ if not .SQLiteOnly }}}

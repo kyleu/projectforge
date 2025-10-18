@@ -35,7 +35,7 @@ function addCommas(v: string): string {
 
 export function formatWithCommas(v: number | string): string {
   const decimalPointSplit = v.toString().split(".");
-  decimalPointSplit[0] = decimalPointSplit[0].replace(/\w+$/gu, addCommas);
+  decimalPointSplit[0] = (decimalPointSplit[0] ?? "").replace(/\w+$/gu, addCommas);
   return decimalPointSplit.join(".");
 }
 
@@ -108,13 +108,16 @@ export function abbreviateStandard(rawExp: number): string {
     return "";
   }
   if (exp < STANDARD_ABBREVIATIONS.length) {
-    return STANDARD_ABBREVIATIONS[exp];
+    return STANDARD_ABBREVIATIONS[exp] ?? "?";
   }
   const prefix = [];
   let e = exp;
   while (e > 0) {
-    prefix.push(STANDARD_PREFIXES[prefix.length % 3][e % 10]);
-    e = Math.floor(e / 10);
+    const p: string[] | undefined = STANDARD_PREFIXES[prefix.length % 3];
+    if (p) {
+      prefix.push(p[e % 10]);
+      e = Math.floor(e / 10);
+    }
   }
   while (prefix.length % 3 !== 0) {
     prefix.push("");
@@ -147,8 +150,8 @@ export function formatMantissaWithExponent(
   base: number,
   steps: number,
   mantissaFormattingIfExponentIsFormatted?: (n: number, precision: number) => string,
-  separator: string = "e",
-  forcePositiveExponent: boolean = false
+  separator = "e",
+  forcePositiveExponent = false
 ): (n: Numeric, precision: number, precisionExponent: number) => string {
   return function (n: Numeric, precision: number, precisionExponent: number): string {
     const realBase = base ** steps;

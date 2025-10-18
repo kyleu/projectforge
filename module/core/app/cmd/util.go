@@ -90,8 +90,9 @@ func initIfNeeded(ctx context.Context) (util.Logger, error) {
 	return util.RootLogger, nil
 }
 
-func listen(address string, port uint16) (uint16, net.Listener, error) {
-	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", address, port))
+func listen(ctx context.Context, address string, port uint16) (uint16, net.Listener, error) {
+	cfg := &net.ListenConfig{KeepAlive: 5 * time.Minute}
+	l, err := cfg.Listen(ctx, "tcp", fmt.Sprintf("%s:%d", address, port))
 	if err != nil {
 		return port, nil, errors.Wrapf(err, "unable to listen on port [%d]", port)
 	}
@@ -117,8 +118,8 @@ func serve(listener net.Listener, h http.Handler) error {
 	return nil
 }
 
-func listenAndServe(addr string, port uint16, h http.Handler) (uint16, error) {
-	p, l, err := listen(addr, port)
+func listenAndServe(ctx context.Context, addr string, port uint16, h http.Handler) (uint16, error) {
+	p, l, err := listen(ctx, addr, port)
 	if err != nil {
 		return p, err
 	}

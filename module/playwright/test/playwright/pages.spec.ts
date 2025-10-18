@@ -6,7 +6,7 @@ const screenshot = async(key: string, page: Page, testInfo: TestInfo, browserNam
 };
 
 test.describe("pages", () => {
-  test('about', async ({ page, viewport, browserName }, testInfo) => {
+  test("about", async ({ page, viewport, browserName }, testInfo) => {
     await page.goto(`http://127.0.0.1:{{{ .Port }}}/about`)
     await screenshot("about", page, testInfo, browserName);
 

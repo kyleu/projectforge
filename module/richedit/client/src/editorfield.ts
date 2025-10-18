@@ -1,23 +1,22 @@
+import { unknownToString } from "./util";
 import { type Column, typeKey } from "./editortypes";
 
-function stringInput(id: string, col: Column, x: { [p: string]: unknown }, onChange?: () => void) {
+function stringInput(id: string, col: Column, x: Record<string, unknown>, onChange?: () => void) {
   const input = document.createElement("input");
   input.name = col.key;
   input.id = id;
   const v = x[col.key];
   if (v !== null && v) {
-    input.value = v.toString();
+    input.value = unknownToString(v);
   }
-  if (!onChange) {
-    onChange = () => {
-      x[col.key] = input.value;
-    };
-  }
+  onChange ??= () => {
+    x[col.key] = input.value;
+  };
   input.onchange = onChange;
   return input;
 }
 
-function boolInput(col: Column, x: { [p: string]: unknown }) {
+function boolInput(col: Column, x: Record<string, unknown>) {
   const vx = x[col.key];
   const v = vx !== null && (vx === "true" || vx === true);
 
@@ -43,7 +42,7 @@ function boolInput(col: Column, x: { [p: string]: unknown }) {
   return div;
 }
 
-function intInput(id: string, col: Column, x: { [p: string]: unknown }) {
+function intInput(id: string, col: Column, x: Record<string, unknown>) {
   const input = stringInput(id, col, x, () => {
     x[col.key] = parseInt(input.value, 10);
   });
@@ -51,7 +50,7 @@ function intInput(id: string, col: Column, x: { [p: string]: unknown }) {
   return input;
 }
 
-function typeInput(id: string, col: Column, x: { [p: string]: unknown }) {
+function typeInput(id: string, col: Column, x: Record<string, unknown>) {
   const textarea = document.createElement("textarea");
   textarea.name = col.key;
   textarea.id = id;
@@ -59,7 +58,7 @@ function typeInput(id: string, col: Column, x: { [p: string]: unknown }) {
   return textarea;
 }
 
-export function createEditorInput(id: string, col: Column, x: { [p: string]: unknown }): HTMLElement {
+export function createEditorInput(id: string, col: Column, x: Record<string, unknown>): HTMLElement {
   const t = typeKey(col.type);
   switch (t) {
     case "bool":

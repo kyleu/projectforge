@@ -8,7 +8,7 @@ const ROUND_TOLERANCE = 1e-10;
 
 const powersOf10: number[] = [];
 for (let i = NUMBER_EXP_MIN + 1; i <= NUMBER_EXP_MAX; i++) {
-  powersOf10.push(Number("1e" + i));
+  powersOf10.push(Number("1e" + i.toString()));
 }
 const indexOf0InPowersOf10 = 323;
 
@@ -16,10 +16,10 @@ export function powerOf10(power: number): number {
   return powersOf10[power + indexOf0InPowersOf10];
 }
 
-export type MantissaExponent = {
+export interface MantissaExponent {
   m: number;
   e: number;
-};
+}
 
 export type NumericSource = MantissaExponent | number | string;
 
@@ -70,7 +70,7 @@ export class Numeric {
   public e = NaN;
 
   constructor(x?: NumericSource) {
-    if (x === undefined || x === null) {
+    if (x === undefined) {
       this.m = 0;
       this.e = 0;
     } else if (typeof x === "number") {
@@ -87,7 +87,6 @@ export class Numeric {
   }
 
   public isNaN(): boolean {
-    // eslint-disable-next-line no-self-compare
     return this.m !== this.m;
   }
 
@@ -98,6 +97,20 @@ export class Numeric {
 
   public clone(): Numeric {
     return Numeric.raw(this.m, this.e);
+  }
+
+  public floor(): Numeric {
+    if (this.e < 15) {
+      return Numeric.fromNum(Math.floor(this.toNumber()));
+    }
+    return this.clone();
+  }
+
+  public ceiling(): Numeric {
+    if (this.e < 15) {
+      return Numeric.fromNum(Math.ceil(this.toNumber()));
+    }
+    return this.clone();
   }
 
   public log(base: number): number {
@@ -212,7 +225,7 @@ export class Numeric {
     return Numeric.raw(1 / this.m, -this.e);
   }
 
-  public normalize(): Numeric {
+  public normalize(): this {
     if (this.m >= 1 && this.m < 10) {
       return this;
     }
@@ -274,10 +287,10 @@ export class Numeric {
   }
 
   public toString(): string {
-    return `n(${this.m}e${this.e})`;
+    return `n(${this.m.toString()}e${this.e.toString()})`;
   }
 
-  private setFromNumber(v: number): Numeric {
+  private setFromNumber(v: number): this {
     if (!isFinite(v)) {
       this.m = v;
       this.e = 0;
@@ -298,8 +311,11 @@ export class Numeric {
 
   private setFromString(v: string): void {
     v = v.toLowerCase();
-    if (v.indexOf("e") !== -1) {
+    if (v.includes("e")) {
       const parts = v.split("e");
+      if (parts.length !== 2) {
+        throw new Error("invalid [Numeric] argument: " + v);
+      }
       this.m = parseFloat(parts[0]);
       if (isNaN(this.m)) {
         this.m = 1;
@@ -323,4 +339,4 @@ export class Numeric {
 export const maxNumeric = Numeric.raw(1, EXP_LIMIT);
 export const minNumeric = Numeric.raw(1, -EXP_LIMIT);
 
-export type NumericMap = { [key: string]: Numeric };
+export type NumericMap = Record<string, Numeric>;

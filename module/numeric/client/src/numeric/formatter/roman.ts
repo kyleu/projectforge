@@ -33,15 +33,14 @@ const MAXIMUM = 4000000;
 const MAX_LOG_10 = Math.log10(MAXIMUM);
 
 export class RomanNotation extends Notation {
-  public get name(): string {
+  public override get name(): string {
     return "Roman";
   }
 
-  public get infinite(): string {
-    return "Infinitus";
-  }
+  public override infinite = "Infinitus";
+  public override nan = "Non numquam";
 
-  public formatUnder1000(value: number): string {
+  public override formatUnder1000(value: number): string {
     return this.romanize(value);
   }
 

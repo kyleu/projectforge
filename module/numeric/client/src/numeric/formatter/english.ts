@@ -151,6 +151,14 @@ const prefixes2 = [
   "duehecto-"
 ];
 
+const prefixCO = ["c", "o"];
+const prefixDCTQS = ["d", "c", "t", "q", "s"];
+const prefixSepteNove = ["septe", "nove"];
+const prefixTreOrSe = ["tre", "se"];
+const prefixVO = ["v", "o"];
+const prefixVTQ = ["v", "t", "q"];
+const smallPrefixes = ["", "thousand", "million", "billion", "trillion"];
+
 export class EnglishNotation extends EngineeringNotation {
   public override get name(): string {
     return "English";
@@ -160,13 +168,8 @@ export class EnglishNotation extends EngineeringNotation {
     return "an infinitely large negative number";
   }
 
-  public override get infinite(): string {
-    return "an infinitely large positive number";
-  }
-
-  public override get nan(): string {
-    return "not a number";
-  }
+  public override infinite = "an infinitely large positive number";
+  public override nan = "not a number";
 
   public formatNegativeVerySmallNumeric(v: Numeric, places: number): string {
     return `negative one ${this.formatNumeric(v.recip(), places).replace(/ /gu, "-").replace("--", "-")}th`;
@@ -265,7 +268,7 @@ export class EnglishNotation extends EngineeringNotation {
     e = Math.floor(e / 3) - 1;
     // Quick returns.
     if (e <= 3) {
-      return ["", "thousand", "million", "billion", "trillion"][e + 1];
+      return smallPrefixes[e + 1];
     }
     // I don't know how to clean this please send help
     let index2 = 0;
@@ -288,19 +291,16 @@ export class EnglishNotation extends EngineeringNotation {
       ) {
         let abb2 = prefix[index2 * 3 + 1] + prefix[index2 * 3 + 2];
         // Special cases.
-        if (["tre", "se"].includes(prefix[index2 * 3]) && ["v", "t", "q"].includes(abb2.substring(0, 1))) {
+        if (prefixTreOrSe.includes(prefix[index2 * 3]) && prefixVTQ.includes(abb2.substring(0, 1))) {
           abb2 = `s${abb2}`;
         }
-        if (prefix[index2 * 3] === "se" && ["c", "o"].includes(abb2.substr(0, 1))) {
+        if (prefix[index2 * 3] === "se" && prefixCO.includes(abb2.substr(0, 1))) {
           abb2 = `x${abb2}`;
         }
-        if (["septe", "nove"].includes(prefix[index2 * 3]) && ["v", "o"].includes(abb2.substring(0, 1))) {
+        if (prefixSepteNove.includes(prefix[index2 * 3]) && prefixVO.includes(abb2.substring(0, 1))) {
           abb2 = `m${abb2}`;
         }
-        if (
-          ["septe", "nove"].includes(prefix[index2 * 3]) &&
-          ["d", "c", "t", "q", "s"].includes(abb2.substring(0, 1))
-        ) {
+        if (prefixSepteNove.includes(prefix[index2 * 3]) && prefixDCTQS.includes(abb2.substring(0, 1))) {
           abb2 = `n${abb2}`;
         }
         abbreviation += prefix[index2 * 3] + abb2;

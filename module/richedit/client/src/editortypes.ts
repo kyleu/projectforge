@@ -9,7 +9,7 @@ export type Type =
   | string
   | {
       k: string;
-      t: { [key: string]: unknown };
+      t: Record<string, unknown>;
     };
 
 export function typeToString(t: Type): string {
@@ -18,7 +18,7 @@ export function typeToString(t: Type): string {
   }
   switch (t.k) {
     case "enum":
-      return "enum(" + t.t.ref + ")";
+      return "enum(" + String(t.t.ref) + ")";
     case "list":
       return "[]" + typeToString(t.t.v as Type);
     default:
@@ -26,18 +26,18 @@ export function typeToString(t: Type): string {
   }
 }
 
-export type Column = {
+export interface Column {
   key: string;
   title: string;
   description?: string;
   type?: string;
-};
+}
 
-export type Editor = {
+export interface Editor {
   key: string;
   title: string;
   columns: Column[];
   textarea: HTMLTextAreaElement;
-  rows: { [key: string]: unknown }[];
+  rows: Record<string, unknown>[];
   table?: Element;
-};
+}

@@ -12,7 +12,6 @@ type StringProvider interface {
 	Kebab() string
 	FirstLetter() string
 	PackageWithGroup(prefix string) string
-	RelativePath(rGroup []string, extra ...string) string
 	GroupLen() int
 	GroupAndPackage() []string
 	ConfigMap() util.ValueMap
