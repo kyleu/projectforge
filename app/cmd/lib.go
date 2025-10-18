@@ -12,7 +12,7 @@ import (
 // Lib starts the application as a library, returning the actual TCP port the server is listening on (as an int32 to make interop easier).
 func Lib(path string) int32 {
 	if _buildInfo == nil {
-		_buildInfo = &app.BuildInfo{Version: "1.8.2"}
+		_buildInfo = &app.BuildInfo{Version: "1.9.0"}
 	}
 	f := &Flags{Address: "0.0.0.0", Port: 0, ConfigDir: path}
 
