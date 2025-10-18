@@ -29,6 +29,8 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 		return tsType(lt, enums) + "[]"
 	case types.KeyNumeric:
 		return "Numeric"
+	case types.KeyNumericMap:
+		return "NumericMap"
 	case types.KeyReference:
 		r, _ := model.AsRef(t)
 		return strings.TrimPrefix(r.K, "*")

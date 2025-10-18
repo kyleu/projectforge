@@ -109,6 +109,8 @@ func randForType(t *types.Wrapped, format string, nullable bool, tags []string, 
 		return "nil", nil
 	case types.KeyNumeric:
 		return "numeric.Random(4)", nil
+	case types.KeyNumericMap:
+		return `numeric.NumericMap{"n": numeric.Random(4)}`, nil
 	case types.KeyReference:
 		return nilKey, nil
 	case types.KeyString:

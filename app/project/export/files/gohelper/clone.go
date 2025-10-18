@@ -19,7 +19,7 @@ func BlockClone(g *golang.File, cols model.Columns, str metamodel.StringProvider
 	ret.WF("func (%s *%s) Clone() *%s {", str.FirstLetter(), str.Proper(), str.Proper())
 	calls := lo.Map(cols, func(col *model.Column, _ int) string {
 		switch col.Type.Key() {
-		case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference:
+		case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyNumericMap, types.KeyReference:
 			return fmt.Sprintf("%s: %s.%s.Clone(),", col.Proper(), str.FirstLetter(), col.Proper())
 		case types.KeyList:
 			g.AddImport(helper.ImpAppUtil)

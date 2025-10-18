@@ -14,13 +14,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+func IsComplicated(t string) bool {
+	return t == types.KeyAny || t == types.KeyList || t == types.KeyMap || t == types.KeyOrderedMap || t == types.KeyNumericMap || t == types.KeyReference
+}
+
 func BlockToData(m metamodel.StringProvider, cols model.Columns, suffix string, database string) *golang.Block {
 	ret := golang.NewBlock(m.Proper(), "func")
 	ret.WF("func (%s *%s) ToData%s() []any {", m.FirstLetter(), m.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
-		tk := c.Type.Key()
-		complicated := tk == types.KeyAny || tk == types.KeyList || tk == types.KeyMap || tk == types.KeyOrderedMap || tk == types.KeyReference
-		if complicated && helper.SimpleJSON(database) {
+		if IsComplicated(c.Type.Key()) && helper.SimpleJSON(database) {
 			return fmt.Sprintf("util.ToJSON(%s.%s),", m.FirstLetter(), c.Proper())
 		} else {
 			return fmt.Sprintf("%s.%s,", m.FirstLetter(), c.Proper())

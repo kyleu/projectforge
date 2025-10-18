@@ -91,6 +91,8 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		t, err = util.FromJSONObj[*Nil](wu.T)
 	case KeyNumeric:
 		t, err = util.FromJSONObj[*Numeric](wu.T)
+	case KeyNumericMap:
+		t, err = util.FromJSONObj[*NumericMap](wu.T)
 	case KeyOption:
 		var tgt *Option
 		tgt, err = util.FromJSONObj[*Option](wu.T)

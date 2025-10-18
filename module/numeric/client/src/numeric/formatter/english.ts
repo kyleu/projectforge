@@ -294,7 +294,7 @@ export class EnglishNotation extends EngineeringNotation {
         if (prefixTreOrSe.includes(prefix[index2 * 3]) && prefixVTQ.includes(abb2.substring(0, 1))) {
           abb2 = `s${abb2}`;
         }
-        if (prefix[index2 * 3] === "se" && prefixCO.includes(abb2.substr(0, 1))) {
+        if (prefix[index2 * 3] === "se" && prefixCO.includes(abb2.substring(0, 1))) {
           abb2 = `x${abb2}`;
         }
         if (prefixSepteNove.includes(prefix[index2 * 3]) && prefixVO.includes(abb2.substring(0, 1))) {

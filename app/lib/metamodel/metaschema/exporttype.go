@@ -49,6 +49,8 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 		ret.Type = KeyObject
 	case *types.Numeric:
 		ret.Ref = types.KeyNumeric
+	case *types.NumericMap:
+		ret.Ref = types.KeyNumericMap
 	case *types.Reference:
 		ret.Ref = t.String()
 	case *types.String:

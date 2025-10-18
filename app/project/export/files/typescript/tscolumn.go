@@ -43,6 +43,12 @@ func tsFromObjectColumn(col *model.Column, enums enum.Enums, ret *golang.Block) 
 		}
 	case types.KeyNumeric:
 		ret.WF(`    const %s = new Numeric(obj.%s as NumericSource);`, col.Camel(), col.Camel())
+	case types.KeyNumericMap:
+		if opt {
+			ret.WF(`    const %s = parseNumericMap(Parse.objOpt(obj.%s) ?? {});`, col.Camel(), col.Camel())
+		} else {
+			ret.WF(`    const %s = parseNumericMap(Parse.obj(obj.%s, () => ({})));`, col.Camel(), col.Camel())
+		}
 	case types.KeyEnum:
 		op := util.Choose(opt, "parse", "get")
 		e, err := model.AsEnum(col.Type)

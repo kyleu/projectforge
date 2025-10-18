@@ -9,7 +9,6 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
-	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/gohelper"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -102,9 +101,7 @@ func eventToData(evt *model.Event, cols model.Columns, suffix string, database s
 	ret := golang.NewBlock(evt.Proper(), "func")
 	ret.WF("func (%s *%s) ToData%s() []any {", evt.FirstLetter(), evt.Proper(), suffix)
 	calls := lo.Map(cols, func(c *model.Column, _ int) string {
-		tk := c.Type.Key()
-		complicated := tk == types.KeyAny || tk == types.KeyList || tk == types.KeyMap || tk == types.KeyOrderedMap || tk == types.KeyReference
-		if complicated && helper.SimpleJSON(database) {
+		if gohelper.IsComplicated(c.Type.Key()) && helper.SimpleJSON(database) {
 			return fmt.Sprintf("util.ToJSON(%s.%s),", evt.FirstLetter(), c.Proper())
 		} else {
 			return fmt.Sprintf("%s.%s,", evt.FirstLetter(), c.Proper())

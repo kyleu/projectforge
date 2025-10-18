@@ -37,7 +37,7 @@ func columnDiff(g *golang.File, m metamodel.StringProvider, col *model.Column, e
 	l := fmt.Sprintf("%s.%s", m.FirstLetter(), col.Proper())
 	r := fmt.Sprintf("%sx.%s", m.FirstLetter(), col.Proper())
 	switch col.Type.Key() {
-	case types.KeyAny, types.KeyJSON, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyReference, types.KeyNumeric:
+	case types.KeyAny, types.KeyJSON, types.KeyList, types.KeyMap, types.KeyValueMap, types.KeyNumericMap, types.KeyReference, types.KeyNumeric:
 		ret.WF("\tdiffs = append(diffs, util.DiffObjects(%s, %s, %q)...)", l, r, col.Camel())
 	case types.KeyOrderedMap:
 		ret.WF("\tdiffs = append(diffs, util.DiffObjects(%s.Map, %s.Map, %q)...)", l, r, col.Camel())

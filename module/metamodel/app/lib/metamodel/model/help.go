@@ -40,6 +40,8 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 		return q("JSON object"), nil
 	case types.KeyNumeric:
 		return q("A potentially very large number"), nil
+	case types.KeyNumericMap:
+		return q("Map of potentially very large numbers"), nil
 	case types.KeyReference:
 		return q("[" + strings.TrimPrefix(asRefK(t), "*") + "], as a JSON object"), nil
 	case types.KeyString:

@@ -94,6 +94,14 @@ func forMapCol(g *golang.File, ret *golang.Block, indent int, m metamodel.String
 	case col.Type.Key() == types.KeyNumeric:
 		g.AddImport(helper.ImpAppNumeric)
 		ret.WF(ind+"ret.%s, err = numeric.FromAny(v)", col.Proper())
+	case col.Type.Key() == types.KeyNumericMap:
+		g.AddImport(helper.ImpAppNumeric)
+		ret.WF(ind+"tmp%s, err := m.ParseString(%q, true, true)", col.Proper(), col.Camel())
+		catchErr("err")
+		ret.WF(ind+"%sArg := numeric.NumericMap{}", col.Camel())
+		ret.WF(ind+"err = util.FromJSON([]byte(tmp%s), &%sArg)", col.Proper(), col.Camel())
+		catchErr("err")
+		ret.WF(ind+"ret.%s = %sArg", col.Proper(), col.Camel())
 	case col.Nullable || col.Type.Scalar():
 		if err := colMP(ind + parseMsg); err != nil {
 			return err

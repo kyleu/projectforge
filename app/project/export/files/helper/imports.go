@@ -82,7 +82,7 @@ func importsForTypeCtxGo(t types.Type) model.Imports {
 		return model.Imports{ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
-	case types.KeyNumeric:
+	case types.KeyNumeric, types.KeyNumericMap:
 		return model.Imports{ImpAppNumeric}
 	case types.KeyUUID:
 		return model.Imports{ImpUUID}
@@ -99,7 +99,7 @@ func importsForTypeCtxRow(t types.Type, database string) model.Imports {
 		return model.Imports{ImpAppUtil}
 	case types.KeyDate, types.KeyTimestamp, types.KeyTimestampZoned:
 		return model.Imports{ImpTime}
-	case types.KeyNumeric:
+	case types.KeyNumeric, types.KeyNumericMap:
 		return model.Imports{ImpAppNumeric}
 	case types.KeyUUID:
 		if database == util.DatabaseSQLServer {

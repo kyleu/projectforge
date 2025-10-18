@@ -16,6 +16,9 @@ func BlockFieldDescs(cols model.Columns, str metamodel.StringProvider) (*golang.
 		if idx := strings.LastIndex(t, "/"); idx > -1 {
 			t = t[idx+1:]
 		}
+		if c.Type.Key() == "numericMap" {
+			t = "map"
+		}
 
 		msg := "\t{Key: %q, Title: %q"
 		args := []any{c.CamelNoReplace(), c.Title()}

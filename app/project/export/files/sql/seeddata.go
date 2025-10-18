@@ -97,7 +97,7 @@ func sqlSeedDataColumns(m *model.Model, block *golang.Block, tableName string, c
 					continue
 				}
 				vs = append(vs, fmt.Sprintf("%f", cell))
-			case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyReference, types.KeyNumeric:
+			case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyNumericMap, types.KeyReference, types.KeyNumeric:
 				if cellStr == helper.TextNil {
 					vs = append(vs, helper.TextNull)
 					continue

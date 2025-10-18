@@ -97,7 +97,7 @@ func (c *Column) ToGoEditString(prefix string, format string, id string, enums e
 			return fmt.Sprintf(msg, key, id, c.Title(), prop, h), nil
 		}
 		return fmt.Sprintf(msgTextarea, key, id, c.Title(), prop, h), nil
-	case types.KeyMap, types.KeyValueMap, types.KeyOrderedMap:
+	case types.KeyMap, types.KeyValueMap, types.KeyOrderedMap, types.KeyNumericMap:
 		return fmt.Sprintf(msgTextarea, key, id, c.Title(), preprop, h), nil
 	case types.KeyNumeric:
 		return fmt.Sprintf(`{%%%%= edit.NumericTable(%q, %q, %q, %s, 5, %s) %%%%}`, key, id, c.Title(), preprop, h), nil
@@ -183,6 +183,8 @@ func toGoMapParse(t types.Type) (string, error) {
 		return "OrderedMap", nil
 	case types.KeyNumeric:
 		return "Numeric", nil
+	case types.KeyNumericMap:
+		return "NumericMap", nil
 	case types.KeyReference:
 		return asRefK(t), nil
 	case types.KeyString, types.KeyEnum:
@@ -211,7 +213,7 @@ func (c *Column) ZeroVal() string {
 		return "0"
 	case types.KeyFloat:
 		return "0.0"
-	case types.KeyMap, types.KeyValueMap, types.KeyOrderedMap, types.KeyReference:
+	case types.KeyMap, types.KeyValueMap, types.KeyOrderedMap, types.KeyNumericMap, types.KeyReference:
 		return types.KeyNil
 	case types.KeyNumeric:
 		return "numeric.Zero"

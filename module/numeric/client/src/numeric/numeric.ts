@@ -338,5 +338,3 @@ export class Numeric {
 
 export const maxNumeric = Numeric.raw(1, EXP_LIMIT);
 export const minNumeric = Numeric.raw(1, -EXP_LIMIT);
-
-export type NumericMap = Record<string, Numeric>;

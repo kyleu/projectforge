@@ -26,6 +26,8 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 			ret = types.NewAny()
 		case types.KeyNumeric:
 			ret = types.NewNumeric()
+		case types.KeyNumericMap:
+			ret = types.NewNumericMap()
 		default:
 			if strings.Contains(sch.Ref, "/") {
 				ret = types.NewReferencePath(sch.Ref, true)
