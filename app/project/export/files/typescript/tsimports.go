@@ -62,7 +62,7 @@ func tsModelImportsColumn(col *model.Column, args *metamodel.Args, str metamodel
 	}
 	if col.Type.Key() == types.KeyNumericMap {
 		pth := "@numeric/numeric-map"
-		ret = ret.With(newImport("NumericMap", pth), newImport("parseNumericMap", pth))
+		ret = ret.With(newImport("NumericMap", pth))
 	}
 	return ret.Strings(), nil
 }

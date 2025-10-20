@@ -168,6 +168,30 @@ export class Numeric {
     return Numeric.raw(Math.abs(this.m), this.e);
   }
 
+  public ln(): Numeric {
+    const m = this.m;
+    if (m !== m) {
+      return Numeric.numericNaN;
+    }
+    if (!isFinite(m)) {
+      return m === Infinity ? Numeric.positiveInfinity : Numeric.numericNaN;
+    }
+    if (m <= 0) {
+      return m === 0 ? Numeric.negativeInfinity : Numeric.numericNaN;
+    }
+    const value = Math.log(m) + this.e * Math.LN10;
+    if (!isFinite(value)) {
+      if (value === Infinity) {
+        return Numeric.positiveInfinity;
+      }
+      if (value === -Infinity) {
+        return Numeric.negativeInfinity;
+      }
+      return Numeric.numericNaN;
+    }
+    return Numeric.fromNum(value);
+  }
+
   public eq(v: NumericSource): boolean {
     const n = new Numeric(v);
     return this.e === n.e && this.m === n.m;
@@ -269,6 +293,26 @@ export class Numeric {
       return resultRounded;
     }
     return result;
+  }
+
+  public toInt(): number {
+    return 0 // TODO;
+  }
+
+  public add(v: NumericSource): Numeric {
+    if (typeof v === "number") {
+      return Numeric.from(this.m + v, this.e);
+    }
+    const n = new Numeric(v);
+    return Numeric.from(this.m + n.m, this.e + n.e);
+  }
+
+  public sub(v: NumericSource): Numeric {
+    if (typeof v === "number") {
+      return Numeric.from(this.m - v, this.e);
+    }
+    const n = new Numeric(v);
+    return Numeric.from(this.m - n.m, this.e + n.e);
   }
 
   public mul(v: NumericSource): Numeric {
