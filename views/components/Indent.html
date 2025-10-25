@@ -2,7 +2,7 @@
 
 {% func Indent(br bool, level int) %}{% stripspace %}
   {% if br %}{% newline %}{% endif %}
-  {% for i := 0; i < level; i ++ %}
+  {% for _ = range level %}
     {% space %}{% space %}
   {% endfor %}
 {% endstripspace %}{% endfunc %}

@@ -162,7 +162,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 //line views/vaction/Detail.html:62
 		case string:
 //line views/vaction/Detail.html:62
-			qw422016.N().S(`    <pre>`)
+			qw422016.N().S(`    <pre class="mt">`)
 //line views/vaction/Detail.html:63
 			qw422016.E().S(t)
 //line views/vaction/Detail.html:63

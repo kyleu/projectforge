@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/file/diff"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
@@ -61,6 +62,20 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 			}
 
 			page = &vaction.Result{Ctx: &action.ResultContext{Prj: prj, Cfg: cfg, Res: res}}
+		case "search":
+			q := r.URL.Query().Get("q")
+			cfg := util.ValueMap{"q": q}
+
+			prjs := as.Services.Projects.Projects().WithModules("export")
+			ctxs := lo.Map(prjs, func(p *project.Project, _ int) *action.ResultContext {
+				ret := util.OK
+				res := &action.Result{Project: p, Action: action.TypeTest, Status: "ok", Args: cfg, Data: ret}
+				return &action.ResultContext{Prj: p, Res: res}
+			})
+
+			bc = append(bc, "Search")
+			ps.SetTitleAndData("Search", q)
+			page = &vaction.Results{Projects: prjs, T: action.TypeTest, Cfg: cfg, Ctxs: ctxs}
 		default:
 			return "", errors.Errorf("invalid test [%s]", key)
 		}

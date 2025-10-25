@@ -37,38 +37,49 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtest/List.html:12
 	components.StreamSVGIcon(qw422016, `list`, ps)
 //line views/vtest/List.html:12
-	qw422016.N().S(` Tests!</h3>
-    <ul>
-      <li><a href="/test/bootstrap">Rebuild test project</a></li>
-      <li><a href="/test/diff">Text diff tests</a></li>
-    </ul>
+	qw422016.N().S(` Tests</h3>
+    <div class="mt">
+      <a href="/test/bootstrap"><button>Rebuild test project</button></a>
+      <a href="/test/diff"><button>Text diff tests</button></a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>`)
+//line views/vtest/List.html:19
+	components.StreamSVGIcon(qw422016, `search`, ps)
+//line views/vtest/List.html:19
+	qw422016.N().S(` Search Project Definitions</h3>
+    <form action="/test/search" method="get" class="mt">
+      <input type="text" name="q" placeholder="Search..." />
+      <button type="submit">Search</button>
+    </form>
   </div>
 `)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 }
 
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	p.StreamBody(qw422016, as, ps)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 }
 
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	p.WriteBody(qb422016, as, ps)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	qs422016 := string(qb422016.B)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 	return qs422016
-//line views/vtest/List.html:18
+//line views/vtest/List.html:25
 }

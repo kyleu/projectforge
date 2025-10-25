@@ -94,7 +94,7 @@ func populateRequest(req js.Value, headers js.Value, reqBody js.Value) (r *http.
 	ret.Host = ret.URL.Hostname()
 
 	if !headers.IsNull() && !headers.IsUndefined() {
-		for i := 0; i < headers.Length(); i++ {
+		for i := range headers.Length() {
 			entry := headers.Index(i)
 			k, v := entry.Index(0).String(), entry.Index(1).String()
 			ret.Header.Set(k, v)

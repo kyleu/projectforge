@@ -9,10 +9,17 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`list`, ps) %} Tests!</h3>
-    <ul>
-      <li><a href="/test/bootstrap">Rebuild test project</a></li>
-      <li><a href="/test/diff">Text diff tests</a></li>
-    </ul>
+    <h3>{%= components.SVGIcon(`list`, ps) %} Tests</h3>
+    <div class="mt">
+      <a href="/test/bootstrap"><button>Rebuild test project</button></a>
+      <a href="/test/diff"><button>Text diff tests</button></a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGIcon(`search`, ps) %} Search Project Definitions</h3>
+    <form action="/test/search" method="get" class="mt">
+      <input type="text" name="q" placeholder="Search..." />
+      <button type="submit">Search</button>
+    </form>
   </div>
 {% endfunc %}

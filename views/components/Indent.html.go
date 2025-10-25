@@ -30,7 +30,7 @@ func StreamIndent(qw422016 *qt422016.Writer, br bool, level int) {
 //line views/components/Indent.html:4
 	}
 //line views/components/Indent.html:5
-	for i := 0; i < level; i++ {
+	for _ = range level {
 //line views/components/Indent.html:6
 		qw422016.N().S(` `)
 //line views/components/Indent.html:6

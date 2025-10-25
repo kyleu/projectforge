@@ -60,7 +60,7 @@
     <h3>{%= components.SVGIcon(`mountain`, ps) %} Data</h3>
     {%- switch t := res.Data.(type) -%}
     {%- case string -%}
-    <pre>{%s t %}</pre>
+    <pre class="mt">{%s t %}</pre>
     {%- case *action.AuditResult -%}
     {%= components.PlotAssets() %}
     {%= RenderAudit(res.Project.Key, t, as, ps) %}

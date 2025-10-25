@@ -1,4 +1,4 @@
-# AGENT.md
+# AGENTS.md
 
 This file provides guidance for AI agents and humans working with the Project Forge codebase.
 
@@ -31,7 +31,7 @@ This file provides guidance for AI agents and humans working with the Project Fo
 ### What Project Forge Does
 
 1. **Generates** complete Go web applications with your chosen feature set
-2. **Manages** application lifecycle through updates and module changes  
+2. **Manages** application lifecycle through updates and module changes
 3. **Builds** applications for 60+ platform/architecture combinations
 4. **Provides** a rich MVC framework with templating, routing, and utilities
 
@@ -96,7 +96,7 @@ views/                # HTML templates (quicktemplate)
 
 # The server will automatically:
 # - Rebuild Go code on changes
-# - Recompile templates on changes  
+# - Recompile templates on changes
 # - Rebuild client assets on changes
 # - Restart the server as needed
 ```
@@ -115,12 +115,15 @@ views/                # HTML templates (quicktemplate)
 
 # Ensure everything builds
 make build
+
+# If changes are significant, consider running
+./bin/build/release-test.sh
 ```
 
 ### 3. Template Development
 
 ```bash
-# Compile templates manually
+# Compile templates manually (automatically handled by `dev.sh` and `make build`)
 ./bin/templates.sh
 
 # Templates use quicktemplate syntax (.html files -> .html.go files)
@@ -133,10 +136,10 @@ make build
 |---------|-------------|
 | `make build` | Build debug binary |
 | `make build-release` | Build optimized release binary |
-| `make dev` | Start development server with live reload |
+| `make dev` | Start development server with live reload (powered by `air`) |
 | `make lint` | Run linters and code quality checks |
 | `make clean` | Remove build artifacts and compiled templates |
-| `make templates` | Compile quicktemplate files |
+| `make templates` | Compile quicktemplate files (automatically handled by `dev.sh` and `make build`) |
 | `make help` | Show available make targets |
 
 ### Script Commands
@@ -147,8 +150,6 @@ make build
 | `./bin/check.sh` | Lint, format check, and validation |
 | `./bin/format.sh` | Format Go code with gofumpt |
 | `./bin/test.sh` | Run all tests |
-| `./bin/test.sh -w` | Run tests in watch mode |
-| `./bin/test.sh -c` | Run tests with clean cache |
 | `./bin/templates.sh` | Compile quicktemplate files |
 | `./bin/coverage.sh` | Generate test coverage report |
 
@@ -163,7 +164,7 @@ make build
 # Single package
 go test ./app/util -v
 
-# Single test  
+# Single test
 go test ./app/util -run TestPlural
 
 # With coverage
@@ -200,17 +201,17 @@ import (
     // Standard library
     "context"
     "fmt"
-    
+
     // Third-party
     "github.com/gorilla/mux"
     "go.uber.org/zap"
-    
+
     // Project imports
     "projectforge.dev/projectforge/app/util"
 )
 ```
 
-### Template Conventions
+### HTML Template Conventions
 
 - Use [quicktemplate](https://github.com/vayala/quicktemplate) syntax (not html/template)
 - Templates in `/views/` compile to `.html.go` files
@@ -261,20 +262,6 @@ See [technology.md](doc/technology.md) for a complete list.
 
 ## Common Patterns
 
-### Services
-
-Business logic lives in service packages:
-
-```go
-type Service struct {
-    logger *zap.Logger
-}
-
-func (s *Service) SomeFeature(ctx context.Context) error {
-    // Business logic here
-}
-```
-
 ### Error Handling
 
 ```go
@@ -296,15 +283,15 @@ Project Forge controllers can serve both HTML pages and API responses using the 
 ```go
 func APIEndpoint(w http.ResponseWriter, r *http.Request) {
 	controller.Act("api.endpoint", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		// Business logic here
 		data := getSomeData()
-		
 		// Set data for API responses (JSON, XML, CSV, etc.)
 		ps.SetTitleAndData("API Response", data)
-		
+
 		// Render handles content negotiation automatically
-		// Returns JSON for Accept: application/json
-		// Returns HTML page for browser requests
+		// Returns JSON for Accept: `application/json` or `?t=json`
+		// Returns XML for Accept: `application/xml` or `?t=xml`
+		// ...and so on for `csv`, `print`, `toml, and `yaml`; a `debug` output is also available for admins
+		// Defaults to HTML page, rendering the available page
 		page := &views.SomePage{Data: data}
 		return controller.Render(r, as, page, ps, "breadcrumb")
 	})
@@ -313,24 +300,10 @@ func APIEndpoint(w http.ResponseWriter, r *http.Request) {
 
 **Content Type Support**: The `Render` function automatically serves multiple formats based on Accept headers or `?format=` query params:
 - **JSON**: `Accept: application/json` or `?format=json`
-- **CSV**: `Accept: text/csv` or `?format=csv` 
+- **CSV**: `Accept: text/csv` or `?format=csv`
 - **XML**: `Accept: application/xml` or `?format=xml`
 - **YAML**: `Accept: application/yaml` or `?format=yaml`
 - **HTML**: Default for browser requests
-
-**Custom Format Handling**: Handle special formats with query parameters:
-
-```go
-switch r.URL.Query().Get("fmt") {
-case "custom":
-	result := processCustomFormat(data)
-	_, _ = ps.W.Write([]byte(result))
-	return "", nil
-default:
-	// Normal rendering
-	return controller.Render(r, as, page, ps)
-}
-```
 
 ### Configuration
 
@@ -344,16 +317,7 @@ count := util.GetEnvInt("my_variable", 42000)
 
 ### Project Configuration
 
-Project settings for both Project Forge and the projects it manages live in `.projectforge/project.json`. See [project.schema.md](assets/schema/project.schema.md) for the definition
-
-### Environment Variables
-
-Common environment variables:
-
-- `PORT`: HTTP server port (default: 42000)
-- `DEBUG`: Enable debug logging (default: false)
-- `CONFIG_DIR`: Configuration directory override
-- `ADDR`: Server bind address (default: 0.0.0.0)
+Project definitions live in `.projectforge/project.json` (from the app's root directory). See [project.schema.json](assets/schema/project.schema.json) for the schema.
 
 ## Troubleshooting
 
@@ -361,15 +325,7 @@ Common environment variables:
 
 **Build fails with template errors:**
 ```bash
-# Recompile templates
-./bin/templates.sh
-make build
-```
-
-**Tests failing:**
-```bash
-# Clean test cache
-./bin/test.sh -c
+make clean;make build
 ```
 
 **Linting errors:**
@@ -398,7 +354,7 @@ make build
 ### Documentation
 
 - [Installation Guide](doc/installation.md)
-- [Running Guide](doc/running.md) 
+- [Running Guide](doc/running.md)
 - [Contributing Guide](doc/contributing.md)
 - [Technology Overview](doc/technology.md)
 - [Module Documentation](README.md#available-modules)
@@ -414,7 +370,7 @@ Explore `/bin/` directory for additional utilities:
 ### Development Files
 
 - `Makefile`: Primary build targets
-- `.air.toml`: Live reload configuration (if present)  
+- `.air.toml`: Live reload configuration (if present)
 - `go.mod`: Go dependency management
 - `client/package.json`: Frontend dependencies
 
