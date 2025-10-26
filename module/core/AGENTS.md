@@ -1,6 +1,7 @@
+<!-- $PF_GENERATE_ONCE$ -->
 # AGENTS.md
 
-This file provides guidance for AI agents and humans working with the Project Forge codebase.
+This file provides guidance for AI agents and humans working with the {{{ .Name }}} codebase.
 
 ## Table of Contents
 
@@ -20,24 +21,11 @@ This file provides guidance for AI agents and humans working with the Project Fo
 
 ## Project Overview
 
-**Project Forge** is a web application generator and management tool for Go applications. It provides:
+**{{{ .Name }}}**
 
-
-- Module-based architecture: Mix and match features via self-contained modules
-- Multi-platform builds: Desktop, mobile, WASM, and traditional server applications
-- Zero-JS functionality: Full functionality without JavaScript, with progressive enhancement
-- High performance: Sub-second builds, <20KB total payload, <1ms response times
-- Developer experience: Instant compiles, comprehensive tooling, extensive documentation
-
-### What Project Forge Does
-
-1. Generates complete Go web applications with your chosen feature set
-2. Manages application lifecycle through updates and module changes
-3. Builds applications for 60+ platform/architecture combinations
-4. Provides a rich MVC framework with templating, routing, and utilities
+ {{{ .Info.Description }}}
 
 This application is managed with [Project Forge](https://projectforge.dev).
-Project Forge is itself an application managed by Project Forge
 
 ## Quick Start
 
@@ -73,9 +61,6 @@ assets/               # Static files (CSS, JS, images)
 bin/                  # Build and development scripts
 client/               # TypeScript/JavaScript client code
 doc/                  # Project documentation
-help/                 # Embedded help files
-module/               # Available Project Forge modules
-test/                 # Integration and E2E tests
 tools/                # Platform-specific build tools
 views/                # HTML templates (quicktemplate)
 ```
@@ -83,10 +68,9 @@ views/                # HTML templates (quicktemplate)
 ### Key Directories
 
 - `/app/controller/`: HTTP handlers organized by feature area
-- `/app/lib/`: Module-provided logic, organized by module
-- `/views/`: HTML templates using quicktemplate syntax
-- `/module/`: Self-contained feature modules
+- `/app/lib/`: Mostly logic provided by {{{ .Package }}}
 - `/bin/`: Development and build automation scripts
+- `/views/`: HTML templates using quicktemplate syntax
 
 ## Development Workflow
 
@@ -97,6 +81,7 @@ views/                # HTML templates (quicktemplate)
 ```bash
 # Start development server with live reload
 ./bin/dev.sh
+
 # The server will automatically:
 # - Rebuild Go code on changes
 # - Recompile templates on changes
@@ -108,8 +93,7 @@ views/                # HTML templates (quicktemplate)
 
 ```bash
 make build
-
-./build/debug/projectforge
+./build/debug/{{{ .Exec }}}
 ```
 
 ### 2. Before Committing
@@ -214,11 +198,10 @@ import (
     "fmt"
 
     // Third-party
-    "github.com/gorilla/mux"
     "go.uber.org/zap"
 
     // Project imports
-    "projectforge.dev/projectforge/app/util"
+    "{{{ .Package }}}/app/util"
 )
 ```
 
@@ -228,27 +211,6 @@ import (
 - Templates in `/views/` compile to `.html.go` files
 - Follow existing naming patterns (PascalCase for template names)
 - Leverage existing component templates in `/views/components/`
-
-## Module System
-
-### Understanding Modules
-
-Modules are self-contained feature packages that can be mixed and matched:
-
-- Location: `/module/{module-name}/`
-- Configuration: Each module has a `.module.json` file
-- Documentation: Module docs in `/module/{name}/doc/module/{name}.md`
-- Dependencies: Modules can depend on other modules
-
-### Available Modules
-
-See [README.md](README.md#available-modules) for a complete list.
-
-### Module Structure
-
-The files in the `module` directory are templates, using Go templating syntax, using `{{{` and `}}}` as tokens
-
-The files are run through the template engine using the project's model as the template data, producing files in the generated applications
 
 ## Key Technologies
 
@@ -277,12 +239,12 @@ See [technology.md](doc/technology.md) for a complete list.
 ```go
 import "github.com/pkg/errors"
 
-func process() error {
-    data, err := fetch()
+func process(url string) (any, error) {
+    data, err := fetch(url)
     if err != nil {
-        return errors.Wrap(err, "failed to fetch data")
+        return nil, errors.Wrapf(err, "failed to fetch data from [%s]", url)
     }
-    return nil
+    return data, nil
 }
 ```
 
@@ -325,7 +287,7 @@ count := util.GetEnvInt("my_variable", 42000)
 
 ### Project Configuration
 
-Project definitions live in `.projectforge/project.json` (from the app's root directory), which represents the [Project Forge](https://projectforge.dev) configuration.
+The project definition lives in `.projectforge/project.json`, which represents the [{{{ .Package }}}(https{{{ .Package }}}v) configuration.
 
 ## Troubleshooting
 
@@ -368,7 +330,6 @@ make clean;make build
 - [Running Guide](doc/running.md)
 - [Contributing Guide](doc/contributing.md)
 - [Technology Overview](doc/technology.md)
-- [Module Documentation](README.md#available-modules)
 
 ### Build Scripts
 
@@ -389,7 +350,6 @@ Explore `/bin/` directory for additional utilities:
 ### Getting Help
 
 - Check existing documentation in `/doc/`
-- Review module-specific docs in `/module/{name}/doc/`
 - Examine similar patterns in existing code
 - Look at example applications in README.md
 

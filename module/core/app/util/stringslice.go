@@ -49,6 +49,12 @@ func (s *StringSlice) Pushf(msg string, args ...any) {
 	s.Push(fmt.Sprintf(msg, args...))
 }
 
+func (s *StringSlice) PushfUnlessNil(msg string, args ...any) {
+	if s != nil {
+		s.Pushf(msg, args...)
+	}
+}
+
 func (s *StringSlice) Join(x string) string {
 	return StringJoin(s.Slice, x)
 }
