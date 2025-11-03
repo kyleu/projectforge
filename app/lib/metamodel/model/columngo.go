@@ -45,7 +45,7 @@ func (c *Column) ToSQLType(database string) (string, error) {
 }
 
 func (c *Column) ToGoEditString(prefix string, format string, id string, enums enum.Enums) (string, error) {
-	h, err := c.Help(enums)
+	h, err := c.HelpString(enums)
 	if err != nil {
 		return "", err
 	}

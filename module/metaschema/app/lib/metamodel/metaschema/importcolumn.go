@@ -51,8 +51,10 @@ func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 				col.Values = prop.Metadata.GetStringArrayOpt(k)
 			case "tags":
 				col.Tags = prop.Metadata.GetStringArrayOpt(k)
+			case "comment":
+				col.Comment = prop.Metadata.GetStringOpt(k)
 			case "help":
-				col.HelpString = prop.Metadata.GetStringOpt(k)
+				col.Help = prop.Metadata.GetStringOpt(k)
 			case "bits":
 				switch t := col.Type.T.(type) {
 				case *types.Int:

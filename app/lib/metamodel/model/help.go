@@ -8,7 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/types"
 )
 
-func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, error) {
+func HelpString(t types.Type, f string, nullable bool, enums enum.Enums) (string, error) {
 	q := func(s string) string {
 		if nullable {
 			s += " (optional)"
@@ -82,13 +82,20 @@ func Help(t types.Type, f string, nullable bool, enums enum.Enums) (string, erro
 	}
 }
 
-func (c *Column) Help(enums enum.Enums) (string, error) {
-	if c.HelpString != "" {
-		return "\"" + c.HelpString + "\"", nil
+func (c *Column) HelpString(enums enum.Enums) (string, error) {
+	if c.Help != "" {
+		return "\"" + c.Help + "\"", nil
 	}
-	ret, err := Help(c.Type, c.Format, c.Nullable, enums)
+	ret, err := HelpString(c.Type, c.Format, c.Nullable, enums)
 	if err != nil {
 		return "", err
 	}
 	return ret, nil
+}
+
+func (c *Column) CommentString() string {
+	if c.Comment == "" {
+		return ""
+	}
+	return " // " + c.Comment
 }

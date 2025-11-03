@@ -26,7 +26,8 @@ var ColumnFieldDescs = util.FieldDescs{
 	{Key: "validation", Title: "Validation", Description: "Validation annotation for the column's value"},
 	// {Key: "values", Title: "Values", Description: "The X of the column"},
 	// {Key: "tags", Title: "Tags", Description: "The X of the column"},
-	// {Key: "helpstring", Title: "Help String", Description: "The X of the column"},
+	// {Key: "comment", Title: "Comment", Description: "A comment added to generated code"},
+	// {Key: "help", Title: "Help String", Description: "The X of the column"},
 }
 
 type Column struct {
@@ -48,7 +49,8 @@ type Column struct {
 	Validation     string         `json:"validation,omitzero"`
 	Values         []string       `json:"values,omitempty"`
 	Tags           []string       `json:"tags,omitempty"`
-	HelpString     string         `json:"helpString,omitzero"`
+	Comment        string         `json:"comment,omitzero"`
+	Help           string         `json:"help,omitzero"`
 	Metadata       util.ValueMap  `json:"metadata,omitzero"`
 	acronyms       []string
 }
@@ -57,7 +59,7 @@ func (c *Column) Clone() *Column {
 	return &Column{
 		Name: c.Name, Type: c.Type, PK: c.PK, Nullable: c.Nullable, Search: c.Search, SQLDefault: c.SQLDefault,
 		Display: c.Display, Format: c.Format, Example: c.Example, JSON: c.JSON, Validation: c.Validation,
-		Values: c.Values, Tags: c.Tags, HelpString: c.HelpString, Metadata: c.Metadata, acronyms: c.acronyms,
+		Values: c.Values, Tags: c.Tags, Comment: c.Comment, Help: c.Help, Metadata: c.Metadata, acronyms: c.acronyms,
 	}
 }
 

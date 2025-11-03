@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { methods } from "./numeric-impl";
 import { Pool } from "./utils";
 
 const EXP_LIMIT = 9e15;
@@ -100,21 +101,15 @@ export class Numeric {
   }
 
   public floor(): Numeric {
-    if (this.e < 15) {
-      return Numeric.fromNum(Math.floor(this.toNumber()));
-    }
-    return this.clone();
+    return methods.floor(this);
   }
 
-  public ceiling(): Numeric {
-    if (this.e < 15) {
-      return Numeric.fromNum(Math.ceil(this.toNumber()));
-    }
-    return this.clone();
+  public ceil(): Numeric {
+    return methods.ceil(this);
   }
 
-  public log(base: number): number {
-    return (Math.LN10 / Math.log(base)) * this.log10();
+  public log(base: Numeric): Numeric {
+    return methods.log(this, base);
   }
 
   public log10(): number {
@@ -125,35 +120,8 @@ export class Numeric {
     return this.e + Math.log10(Math.abs(this.m));
   }
 
-  public pow(v: number | Numeric): Numeric {
-    if (this.m === 0) {
-      return this;
-    }
-    const numberValue = v instanceof Numeric ? v.toNumber() : v;
-    const temp = this.e * numberValue;
-    let newMantissa;
-    if (Number.isSafeInteger(temp)) {
-      newMantissa = Math.pow(this.m, numberValue);
-      if (isFinite(newMantissa) && newMantissa !== 0) {
-        return Numeric.from(newMantissa, temp);
-      }
-    }
-    const newExponent = Math.trunc(temp);
-    const residue = temp - newExponent;
-    newMantissa = Math.pow(10, numberValue * Math.log10(this.m) + residue);
-    if (isFinite(newMantissa) && newMantissa !== 0) {
-      return Numeric.from(newMantissa, newExponent);
-    }
-    const result = Numeric.pow10(numberValue * this.absLog10()); // this is 2x faster and gives same values AFAIK
-    if (this.sign() === -1) {
-      if (Math.abs(numberValue % 2) === 1) {
-        return result.neg();
-      } else if (Math.abs(numberValue % 2) === 0) {
-        return result;
-      }
-      return Numeric.numericNaN;
-    }
-    return result;
+  public pow(v: number): Numeric {
+    return methods.pow(this, v);
   }
 
   public neg(): Numeric {
@@ -193,56 +161,26 @@ export class Numeric {
   }
 
   public eq(v: NumericSource): boolean {
-    const n = new Numeric(v);
-    return this.e === n.e && this.m === n.m;
+    return methods.eq(this, new Numeric(v));
   }
 
   public neq(v: NumericSource): boolean {
-    return !this.eq(v);
+    return !methods.eq(this, new Numeric(v));
   }
 
   public lt(v: NumericSource): boolean {
-    const n = new Numeric(v);
-    if (!this.isFinite()) {
-      return !n.isFinite();
-    }
-    if (this.m === 0) {
-      return n.m > 0;
-    }
-    if (n.m === 0) {
-      return this.m <= 0;
-    }
-    if (this.e === n.e) {
-      return this.m < n.m;
-    }
-    if (this.m > 0) {
-      return n.m > 0 && this.e < n.e;
-    }
-    return n.m > 0 || this.e > n.e;
+    return methods.lt(this, new Numeric(v));
   }
   public lte(v: NumericSource): boolean {
-    return !this.gt(v);
+    return methods.lte(this, new Numeric(v));
   }
 
   public gt(v: NumericSource): boolean {
-    const n = new Numeric(v);
-    if (this.m === 0) {
-      return n.m < 0;
-    }
-    if (n.m === 0) {
-      return this.m > 0;
-    }
-    if (this.e === n.e) {
-      return this.m > n.m;
-    }
-    if (this.m > 0) {
-      return n.m < 0 || this.e > n.e;
-    }
-    return n.m < 0 && this.e < n.e;
+    return methods.gt(this, new Numeric(v));
   }
 
   public gte(v: NumericSource): boolean {
-    return !this.lt(v);
+    return methods.gte(this, new Numeric(v));
   }
 
   public recip(): Numeric {
@@ -269,6 +207,10 @@ export class Numeric {
 
   public isFinite(): boolean {
     return isFinite(this.m);
+  }
+
+  public isZero(): boolean {
+    return this.m === 0;
   }
 
   public toNumber(): number {
@@ -300,34 +242,19 @@ export class Numeric {
   }
 
   public add(v: NumericSource): Numeric {
-    if (typeof v === "number") {
-      return Numeric.from(this.m + v, this.e);
-    }
-    const n = new Numeric(v);
-    return Numeric.from(this.m + n.m, this.e + n.e);
+    return methods.add(this, new Numeric(v));
   }
 
   public sub(v: NumericSource): Numeric {
-    if (typeof v === "number") {
-      return Numeric.from(this.m - v, this.e);
-    }
-    const n = new Numeric(v);
-    return Numeric.from(this.m - n.m, this.e + n.e);
+    return methods.add(this, new Numeric(v).neg());
   }
 
-  public mul(v: NumericSource): Numeric {
-    if (typeof v === "number") {
-      if (v < 1e307 && v > -1e307) {
-        return Numeric.from(this.m * v, this.e);
-      }
-      return Numeric.from(this.m * 1e-307 * v, this.e + 307);
-    }
-    const n = new Numeric(v);
-    return Numeric.from(this.m * n.m, this.e + n.e);
+  public mult(v: NumericSource): Numeric {
+    return methods.mult(this, new Numeric(v));
   }
 
   public div(v: NumericSource): Numeric {
-    return this.mul(new Numeric(v).recip());
+    return methods.div(this, new Numeric(v));
   }
 
   public toString(): string {

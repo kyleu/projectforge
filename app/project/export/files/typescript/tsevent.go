@@ -40,7 +40,7 @@ func tsEvent(evt *model.Event, enums enum.Enums) (*golang.Block, error) {
 	cols := evt.Columns.NotDerived()
 	for _, col := range cols {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
-		ret.WF("  %s: %s%s;", col.Camel(), tsType(col.Type, enums), optional)
+		ret.WF("  %s: %s%s;%s", col.Camel(), tsType(col.Type, enums), optional, col.CommentString())
 	}
 	ret.WB()
 	tsEventConstructor(evt, enums, ret)

@@ -22,11 +22,11 @@ The project uses **esbuild** for fast bundling:
 - **Entry point**: `src/client.ts`
 - **Output**: `../assets/client.js` (consumed by Go application)
 - **Bundle**: Single minified file with sourcemap
-- **Target**: ES6 for broad browser compatibility
+- **Target**: ES2021 for broad browser compatibility
 
 ### Build Configuration
 
-- **TypeScript**: Strict mode, ES6 target, JSX support
+- **TypeScript**: Strict mode, ES2021 target, JSX support
 - **Module system**: ESM with single-file output (`module: "none"`)
 - **JSX**: Custom JSX factory for lightweight React-like syntax
 

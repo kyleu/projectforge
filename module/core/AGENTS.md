@@ -23,7 +23,7 @@ This file provides guidance for AI agents and humans working with the {{{ .Name 
 
 **{{{ .Name }}}**
 
- {{{ .Info.Description }}}
+{{{ .Info.Description }}}
 
 This application is managed with [Project Forge](https://projectforge.dev).
 
@@ -287,7 +287,7 @@ count := util.GetEnvInt("my_variable", 42000)
 
 ### Project Configuration
 
-The project definition lives in `.projectforge/project.json`, which represents the [{{{ .Package }}}(https{{{ .Package }}}v) configuration.
+The project definition lives in `.projectforge/project.json`, which represents the [{{{ .Package }}}](https://{{{ .Package }}}) configuration.
 
 ## Troubleshooting
 

@@ -22,9 +22,9 @@ func BlockFieldDescs(cols model.Columns, str metamodel.StringProvider) (*golang.
 
 		msg := "\t{Key: %q, Title: %q"
 		args := []any{c.CamelNoReplace(), c.Title()}
-		if c.HelpString != "" {
+		if c.Help != "" {
 			msg += ", Description: %q"
-			args = append(args, c.HelpString)
+			args = append(args, c.Help)
 		}
 		msg += ", Type: %q"
 		args = append(args, t)

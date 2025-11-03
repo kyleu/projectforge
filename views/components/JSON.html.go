@@ -85,7 +85,7 @@ func StreamJSON(qw422016 *qt422016.Writer, v any) {
 //line views/components/JSON.html:34
 	b, ok := v.([]byte)
 	if ok {
-		_ = util.FromJSON(b, &v)
+		v, _ = util.FromJSONAny(b)
 	}
 
 //line views/components/JSON.html:39

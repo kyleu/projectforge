@@ -155,7 +155,7 @@ export function formatMantissaWithExponent(
 ): (n: Numeric, precision: number, precisionExponent: number) => string {
   return function (n: Numeric, precision: number, precisionExponent: number): string {
     const realBase = base ** steps;
-    let exponent = Math.floor(n.log(realBase)) * steps;
+    let exponent = Math.floor(n.log(Numeric.fromNum(realBase)).toNumber()) * steps;
     if (forcePositiveExponent) {
       exponent = Math.max(exponent, 0);
     }

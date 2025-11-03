@@ -59,6 +59,20 @@ func ArrayRemoveDuplicates[T comparable](x []T) []T {
 	return lo.Uniq(x)
 }
 
+func ArrayFindDuplicates[T comparable](items []T) []T {
+	seen := make(map[T]int)
+	var duplicates []T
+	for _, item := range items {
+		seen[item]++
+	}
+	for item, count := range seen {
+		if count > 1 {
+			duplicates = append(duplicates, item)
+		}
+	}
+	return duplicates
+}
+
 func ArraySorted[T cmp.Ordered](x []T) []T {
 	slices.Sort(x)
 	return x

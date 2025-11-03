@@ -1,6 +1,6 @@
 package metamodel
 
-import "projectforge.dev/projectforge/app/util"
+import "{{{ .Package }}}/app/util"
 
 type StringProvider interface {
 	PackageName() string

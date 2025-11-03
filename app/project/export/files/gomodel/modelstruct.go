@@ -17,6 +17,9 @@ func modelStruct(m *model.Model, args *metamodel.Args) (*golang.Block, error) {
 	cols := m.Columns.NotDerived()
 	maxColLength := cols.MaxCamelLength()
 	maxTypeLength := cols.MaxGoTypeLength(m.Package, args.Enums)
+	maxTagLength := util.StringArrayMaxLength(lo.Map(cols, func(x *model.Column, _ int) string {
+		return gohelper.ColumnTag(x)
+	}))
 
 	gts := lo.Map(cols, func(c *model.Column, _ int) string {
 		gt := helper.GoTypeWithRef(c, m.Package, args)
@@ -26,13 +29,19 @@ func modelStruct(m *model.Model, args *metamodel.Args) (*golang.Block, error) {
 		return gt
 	})
 
+	withComment := cols.WithComment()
 	for idx, c := range cols {
-		if c.HelpString != "" {
-			ret.WF("\t// %s", c.HelpString)
-		}
 		goType := util.StringPad(gts[idx], maxTypeLength)
 		tag := gohelper.ColumnTag(c)
-		ret.WF("\t%s %s %s", util.StringPad(c.Proper(), maxColLength), goType, tag)
+		if len(withComment) == 0 {
+			ret.WF("\t%s %s %s", util.StringPad(c.Proper(), maxColLength), goType, tag)
+		} else {
+			comment := " //"
+			if c.Comment != "" {
+				comment += " " + c.Comment
+			}
+			ret.WF("\t%s %s %s%s", util.StringPad(c.Proper(), maxColLength), goType, util.StringPad(tag, maxTagLength), comment)
+		}
 	}
 	ret.W("}")
 	return ret, nil

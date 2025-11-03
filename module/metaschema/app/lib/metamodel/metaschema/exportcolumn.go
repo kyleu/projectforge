@@ -59,8 +59,11 @@ func ExportColumn(col *model.Column, coll *jsonschema.Collection, args *metamode
 	if len(col.Tags) > 0 {
 		ret.AddMetadata("tags", col.Tags)
 	}
-	if col.HelpString != "" {
-		ret.AddMetadata("help", col.HelpString)
+	if col.Comment != "" {
+		ret.AddMetadata("comment", col.Comment)
+	}
+	if col.Help != "" {
+		ret.AddMetadata("help", col.Help)
 	}
 	if col.Metadata != nil {
 		for k, v := range col.Metadata {

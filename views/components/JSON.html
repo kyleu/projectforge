@@ -33,7 +33,7 @@
   {% code
     b, ok := v.([]byte)
     if ok {
-      _ = util.FromJSON(b, &v)
+      v, _ = util.FromJSONAny(b)
     }
   %}
   {% code json := util.ToJSONBytes(v, true) %}

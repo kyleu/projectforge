@@ -104,11 +104,11 @@ export class NumericMap implements Iterable<[string, Numeric]> {
   }
 
   mul(other: Numeric): NumericMap {
-    return this.mapWithNumeric(other, (a, b) => a.mul(b));
+    return this.mapWithNumeric(other, (a, b) => a.mult(b));
   }
 
   mulMap(other: NumericMap): NumericMap {
-    return this.merge(other, (a, b) => a.mul(b));
+    return this.merge(other, (a, b) => a.mult(b));
   }
 
   div(other: Numeric): NumericMap {
@@ -123,8 +123,8 @@ export class NumericMap implements Iterable<[string, Numeric]> {
     return this.map((value) => value.floor());
   }
 
-  ceiling(): NumericMap {
-    return this.map((value) => value.ceiling());
+  ceil(): NumericMap {
+    return this.map((value) => value.ceil());
   }
 
   min(): Numeric {

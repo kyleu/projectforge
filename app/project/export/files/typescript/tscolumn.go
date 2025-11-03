@@ -1,6 +1,8 @@
 package typescript
 
 import (
+	"fmt"
+
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -56,7 +58,11 @@ func tsFromObjectColumn(col *model.Column, enums enum.Enums, ret *golang.Block) 
 			return err
 		}
 		en := enums.Get(e.Ref)
-		ret.WF(`    const %s = %s%s(Parse.string(obj.%s));`, col.Camel(), op, en.Proper(), col.Camel())
+		suffix := ""
+		if dflt := en.Values.Default(); dflt != nil {
+			suffix = fmt.Sprintf(", () => %q", dflt.Key)
+		}
+		ret.WF(`    const %s = %s%s(Parse.string(obj.%s%s));`, col.Camel(), op, en.Proper(), col.Camel(), suffix)
 	default:
 		ret.WF("    const %s = obj.%s as %s;", col.Camel(), col.Camel(), tsType(col.Type, enums))
 	}

@@ -42,6 +42,12 @@ func (c Columns) WithoutTags(t ...string) Columns {
 	})
 }
 
+func (c Columns) WithComment() Columns {
+	return lo.Filter(c, func(col *Column, _ int) bool {
+		return col.Comment != ""
+	})
+}
+
 func (c Columns) WithFormat(f string) Columns {
 	return lo.Filter(c, func(col *Column, _ int) bool {
 		return col.Format == f

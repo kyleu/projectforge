@@ -180,7 +180,7 @@ func exportViewDetailTable(m *model.Model, models model.Models, enums enum.Enums
 			ret.W(`        {%%- if as.Debug -%%}`)
 		}
 		ret.W("        <tr>")
-		h, err := col.Help(enums)
+		h, err := col.HelpString(enums)
 		if err != nil {
 			return nil, err
 		}

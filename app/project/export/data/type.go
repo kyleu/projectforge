@@ -34,7 +34,7 @@ func exportColumn(f *Field, ex []any) (*model.Column, error) {
 			key = "empty_id"
 		}
 	}
-	ret := &model.Column{Name: key, Type: typ, PK: isPK, Nullable: false, Search: f.Unique, Tags: tags, HelpString: f.Description}
+	ret := &model.Column{Name: key, Type: typ, PK: isPK, Nullable: false, Search: f.Unique, Tags: tags, Help: f.Description}
 	return ret, nil
 }
 

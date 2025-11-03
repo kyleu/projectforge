@@ -38,7 +38,7 @@ func tsModel(m *model.Model, enums enum.Enums) (*golang.Block, error) {
 	ret.WF("export class %s {", m.Proper())
 	for _, col := range m.Columns {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
-		ret.WF("  %s: %s%s;", col.Camel(), tsType(col.Type, enums), optional)
+		ret.WF("  %s: %s%s;%s", col.Camel(), tsType(col.Type, enums), optional, col.CommentString())
 	}
 	ret.WB()
 	tsModelConstructor(m, enums, ret)

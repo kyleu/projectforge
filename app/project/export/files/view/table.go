@@ -34,7 +34,7 @@ func table(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 	}
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("viewtable")...)
-	vtf, err := exportViewTableFunc(m, args.Models, args.Enums, g)
+	vtf, err := exportViewTableFunc(m, args.Acronyms, args.Models, args.Enums, g)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func table(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 	return g.Render(linebreak)
 }
 
-func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {
+func exportViewTableFunc(m *model.Model, acronyms []string, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {
 	xCols := m.Columns.ForDisplay("summary")
 	firstCols := xCols.WithTag("list-first")
 	restCols := xCols.WithoutTags("list-first")
@@ -65,11 +65,11 @@ func exportViewTableFunc(m *model.Model, models model.Models, enums enum.Enums, 
 	ret.W("      <thead>")
 	ret.W("        <tr>")
 	for _, col := range summCols {
-		h, err := col.Help(enums)
+		h, err := col.HelpString(enums)
 		if err != nil {
 			return nil, err
 		}
-		title := util.StringToTitle(col.Name)
+		title := util.StringToTitle(col.Name, acronyms...)
 		if col.HasTag("no-title") {
 			title = ""
 		}
