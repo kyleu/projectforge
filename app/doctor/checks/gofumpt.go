@@ -14,7 +14,7 @@ var Gofumpt = &doctor.Check{
 	Summary: "Formats the code; stricter than [go fmt]",
 	URL:     "https://github.com/mvdan/gofumpt",
 	UsedBy:  "[bin/format.sh]",
-	Fn:      simpleOut(".", "gofumpt", nil, noop),
+	Fn:      simpleOut(".", "gofumpt", []string{"--version"}, noop),
 	Solve:   solveGofumpt,
 }
 

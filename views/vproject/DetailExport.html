@@ -31,6 +31,11 @@
   {%= vexport.EnumList(ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), as, ps) %}
   <hr />
   {%- endif -%}
+  {%- if len(ea.Events) > 0 -%}
+  <h3 class="mt">{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(ea.Events), "Event") %}</h3>
+  <div class="clear"></div>
+  {%= vexport.EventList(ea.Events, fmt.Sprintf("/p/%s/export/events", key), as, ps) %}
+  {%- endif -%}
   {%- if len(ea.Models) > 0 -%}
   <h3 class="mt">{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(ea.Models), "Model") %}</h3>
   <div class="clear"></div>

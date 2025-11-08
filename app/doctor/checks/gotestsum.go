@@ -14,7 +14,7 @@ var Gotestsum = &doctor.Check{
 	Summary: "Runs the tests and displays the results",
 	URL:     "https://github.com/gotestyourself/gotestsum",
 	UsedBy:  "[bin/test.sh]",
-	Fn:      simpleOut(".", "gotestsum", nil, noop),
+	Fn:      simpleOut(".", "gotestsum", []string{"--version"}, noop),
 	Solve:   solveGotestsum,
 }
 
