@@ -19,12 +19,8 @@ func MenuFor(
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(menu)$
-	ret = append(ret,
-		projectMenu(ctx, as.Services.Projects.Projects()),
-		menu.Separator,
-		moduleMenu(ctx, as.Services.Modules.ModulesVisible()),
-		menu.Separator,
-	)
+	ret = append(ret, projectMenu(ctx, as.Services.Projects.Projects())...)
+	ret = append(ret, menu.Separator, moduleMenu(ctx, as.Services.Modules.ModulesVisible()), menu.Separator)
 	if len(as.Services.Exec.Execs) > 0 {
 		ret = append(ret, processMenu(as.Services.Exec.Execs))
 	}

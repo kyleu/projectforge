@@ -131,70 +131,109 @@ func StreamAvailActions(qw422016 *qt422016.Writer, title string, currTags []stri
 //line views/vproject/AvailActions.html:34
 	}
 //line views/vproject/AvailActions.html:34
-	qw422016.N().S(`  <div class="mt">
+	qw422016.N().S(`  `)
+//line views/vproject/AvailActions.html:35
+	StreamActionButtons(qw422016, tags, ps)
+//line views/vproject/AvailActions.html:35
+	qw422016.N().S(`
 `)
 //line views/vproject/AvailActions.html:36
-	for _, t := range action.ProjectTypes {
+}
+
 //line views/vproject/AvailActions.html:36
+func WriteAvailActions(qq422016 qtio422016.Writer, title string, currTags []string, availTags []string, icon string, duration string, ps *cutil.PageState) {
+//line views/vproject/AvailActions.html:36
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vproject/AvailActions.html:36
+	StreamAvailActions(qw422016, title, currTags, availTags, icon, duration, ps)
+//line views/vproject/AvailActions.html:36
+	qt422016.ReleaseWriter(qw422016)
+//line views/vproject/AvailActions.html:36
+}
+
+//line views/vproject/AvailActions.html:36
+func AvailActions(title string, currTags []string, availTags []string, icon string, duration string, ps *cutil.PageState) string {
+//line views/vproject/AvailActions.html:36
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vproject/AvailActions.html:36
+	WriteAvailActions(qb422016, title, currTags, availTags, icon, duration, ps)
+//line views/vproject/AvailActions.html:36
+	qs422016 := string(qb422016.B)
+//line views/vproject/AvailActions.html:36
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vproject/AvailActions.html:36
+	return qs422016
+//line views/vproject/AvailActions.html:36
+}
+
+//line views/vproject/AvailActions.html:38
+func StreamActionButtons(qw422016 *qt422016.Writer, tags string, ps *cutil.PageState) {
+//line views/vproject/AvailActions.html:38
+	qw422016.N().S(`
+  <div class="mt">
+`)
+//line views/vproject/AvailActions.html:40
+	for _, t := range action.ProjectTypes {
+//line views/vproject/AvailActions.html:40
 		qw422016.N().S(`    <a href="/run/`)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.E().S(t.Key)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.E().S(tags)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.N().S(`" title="`)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.E().S(t.Description)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.N().S(`"><button>`)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		components.StreamSVGButton(qw422016, t.Icon, ps)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.N().S(` `)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.E().S(t.Title)
-//line views/vproject/AvailActions.html:37
+//line views/vproject/AvailActions.html:41
 		qw422016.N().S(`</button></a>
 `)
-//line views/vproject/AvailActions.html:38
+//line views/vproject/AvailActions.html:42
 	}
-//line views/vproject/AvailActions.html:38
+//line views/vproject/AvailActions.html:42
 	qw422016.N().S(`    <a href="/git`)
-//line views/vproject/AvailActions.html:39
+//line views/vproject/AvailActions.html:43
 	qw422016.E().S(tags)
-//line views/vproject/AvailActions.html:39
+//line views/vproject/AvailActions.html:43
 	qw422016.N().S(`" title="Git dashboard for all projects"><button>`)
-//line views/vproject/AvailActions.html:39
+//line views/vproject/AvailActions.html:43
 	components.StreamSVGButton(qw422016, "git", ps)
-//line views/vproject/AvailActions.html:39
+//line views/vproject/AvailActions.html:43
 	qw422016.N().S(` Git</button></a>
   </div>
 `)
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
 }
 
-//line views/vproject/AvailActions.html:41
-func WriteAvailActions(qq422016 qtio422016.Writer, title string, currTags []string, availTags []string, icon string, duration string, ps *cutil.PageState) {
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
+func WriteActionButtons(qq422016 qtio422016.Writer, tags string, ps *cutil.PageState) {
+//line views/vproject/AvailActions.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/AvailActions.html:41
-	StreamAvailActions(qw422016, title, currTags, availTags, icon, duration, ps)
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
+	StreamActionButtons(qw422016, tags, ps)
+//line views/vproject/AvailActions.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
 }
 
-//line views/vproject/AvailActions.html:41
-func AvailActions(title string, currTags []string, availTags []string, icon string, duration string, ps *cutil.PageState) string {
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
+func ActionButtons(tags string, ps *cutil.PageState) string {
+//line views/vproject/AvailActions.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/AvailActions.html:41
-	WriteAvailActions(qb422016, title, currTags, availTags, icon, duration, ps)
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
+	WriteActionButtons(qb422016, tags, ps)
+//line views/vproject/AvailActions.html:45
 	qs422016 := string(qb422016.B)
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
 	return qs422016
-//line views/vproject/AvailActions.html:41
+//line views/vproject/AvailActions.html:45
 }

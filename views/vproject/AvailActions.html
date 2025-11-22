@@ -32,6 +32,10 @@
     {%- endfor -%}
   </div>
   {%- endif -%}
+  {%= ActionButtons(tags, ps) %}
+{% endfunc %}
+
+{% func ActionButtons(tags string, ps *cutil.PageState) %}
   <div class="mt">
     {%- for _, t := range action.ProjectTypes -%}
     <a href="/run/{%s t.Key %}{%s tags %}" title="{%s t.Description %}"><button>{%= components.SVGButton(t.Icon, ps) %} {%s t.Title %}</button></a>

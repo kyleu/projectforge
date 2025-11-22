@@ -34,15 +34,16 @@ func table(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 	}
 	g.AddImport(imps...)
 	g.AddImport(m.Imports.Supporting("viewtable")...)
+	vtrf := exportViewTableRowFunc(m, args.Acronyms, args.Models, args.Enums, g)
 	vtf, err := exportViewTableFunc(m, args.Acronyms, args.Models, args.Enums, g)
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(vtf)
+	g.AddBlocks(vtrf, vtf)
 	return g.Render(linebreak)
 }
 
-func exportViewTableFunc(m *model.Model, acronyms []string, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {
+func exportViewTableRowFunc(m *model.Model, acronyms []string, models model.Models, enums enum.Enums, g *golang.Template) *golang.Block {
 	xCols := m.Columns.ForDisplay("summary")
 	firstCols := xCols.WithTag("list-first")
 	restCols := xCols.WithoutTags("list-first")
@@ -55,6 +56,34 @@ func exportViewTableFunc(m *model.Model, acronyms []string, models model.Models,
 			relNames := util.StringJoin(relCols.ProperNames(), "")
 			g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
 			suffix += fmt.Sprintf(", %sBy%s %s.%s", relModel.CamelPlural(), relNames, relModel.Package, relModel.ProperPlural())
+		}
+	})
+	mt := "*" + m.Package + "." + m.Proper() + suffix
+	ret.W("{%% func TableRow(model " + mt + ", ps *cutil.PageState, paths ...string) %%}")
+	ret.W("  <tr>")
+	lo.ForEach(summCols, func(col *model.Column, _ int) {
+		viewTableColumn(ret, models, m, true, col, helper.TextModelPrefix, "", 2, enums)
+	})
+	ret.W("  </tr>")
+	ret.W(helper.TextEndFunc)
+	return ret
+}
+
+func exportViewTableFunc(m *model.Model, acronyms []string, models model.Models, enums enum.Enums, g *golang.Template) (*golang.Block, error) {
+	xCols := m.Columns.ForDisplay("summary")
+	firstCols := xCols.WithTag("list-first")
+	restCols := xCols.WithoutTags("list-first")
+	summCols := append(slices.Clone(firstCols), restCols...)
+	ret := golang.NewBlock("Table", "func")
+	var suffix string
+	var callSuffix string
+	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
+		if relModel := models.Get(rel.Table); relModel.CanTraverseRelation() {
+			relCols := rel.SrcColumns(m)
+			relNames := util.StringJoin(relCols.ProperNames(), "")
+			g.AddImport(helper.AppImport(relModel.PackageWithGroup("")))
+			suffix += fmt.Sprintf(", %sBy%s %s.%s", relModel.CamelPlural(), relNames, relModel.Package, relModel.ProperPlural())
+			callSuffix += fmt.Sprintf(", %sBy%s", relModel.CamelPlural(), relNames)
 		}
 	})
 	mt := m.Package + "." + m.ProperPlural() + suffix
@@ -80,11 +109,7 @@ func exportViewTableFunc(m *model.Model, acronyms []string, models model.Models,
 	ret.W("      </thead>")
 	ret.W("      <tbody>")
 	ret.W("        {%%- for _, model := range models -%%}")
-	ret.W("        <tr>")
-	lo.ForEach(summCols, func(col *model.Column, _ int) {
-		viewTableColumn(ret, models, m, true, col, helper.TextModelPrefix, "", 5, enums)
-	})
-	ret.W("        </tr>")
+	ret.WF("        {%%%%= TableRow(model%s, ps, paths...) -%%%%}", callSuffix)
 	ret.W("        {%%- endfor -%%}")
 	ret.W("      </tbody>")
 	ret.W("    </table>")

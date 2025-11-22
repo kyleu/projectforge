@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/project"
 )
 
-func projectMenu(_ context.Context, prjs project.Projects) *menu.Item {
+func projectMenu(_ context.Context, prjs project.Projects) menu.Items {
 	ret := &menu.Item{Key: "projects", Title: "Projects", Description: "View all of the projects managed by this application", Icon: "code", Route: "/p"}
 	lo.ForEach(prjs, func(prj *project.Project, _ int) {
 		if prj == nil {
@@ -20,7 +20,7 @@ func projectMenu(_ context.Context, prjs project.Projects) *menu.Item {
 		i := &menu.Item{Key: key, Title: prj.Title(), Description: prj.DescriptionSafe(), Icon: prj.IconSafe(), Route: prj.WebPath()}
 		ret.Children = append(ret.Children, i)
 	})
-	return ret
+	return menu.Items{ret}
 }
 
 func moduleMenu(_ context.Context, mods module.Modules) *menu.Item {
