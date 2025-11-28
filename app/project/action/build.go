@@ -73,19 +73,19 @@ var (
 	buildLintClient    = simpleBuild("lint-client", "Lint Client", util.StringFilePath("bin", "check-client."+build.ScriptExtension), false)
 	buildTemplates     = simpleBuild("templates", "Templates", util.StringFilePath("bin", "templates."+build.ScriptExtension), false)
 	buildClientInstall = &Build{Key: "clientInstall", Title: "Client Install", Description: ciDesc, Run: onClientInstall}
+	buildClientUpdate  = &Build{Key: "clientUpdate", Title: "Client Update", Description: ciDesc, Run: onClientUpdate}
 	buildClientBuild   = simpleBuild("clientBuild", "Client Build", util.StringFilePath("bin", "build", "client."+build.ScriptExtension), false)
 	buildThemeRebuild  = &Build{Key: "themeRebuild", Title: "Theme Rebuild", Description: "Rebuilds the theme", Run: onThemeRebuild}
 	buildDeployments   = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
+	buildTest          = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: onBuildTest, Expensive: true}
 	buildCoverage      = &Build{Key: "coverage", Title: "Code Coverage", Description: "Runs a coverage report", Run: onCoverage, Expensive: true}
-	buildTest          = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: func(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-		return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
-	}, Expensive: true}
+	buildCustom        = &Build{Key: "custom", Title: "Custom Command", Description: "Runs a custom command", Run: onCustom, Expensive: true}
 )
 
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
-	buildTidy, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientBuild,
-	buildThemeRebuild, buildDeployments, buildTest, buildCoverage,
+	buildTidy, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientUpdate, buildClientBuild,
+	buildThemeRebuild, buildDeployments, buildTest, buildCoverage, buildCustom,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

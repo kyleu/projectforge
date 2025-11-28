@@ -104,3 +104,54 @@ func (p *Result) Body(as *app.State, ps *cutil.PageState) string {
 	return qs422016
 //line views/vaction/Result.html:28
 }
+
+//line views/vaction/Result.html:30
+func StreamRenderCmdOutput(qw422016 *qt422016.Writer, o *action.CustomCmdResult, ps *cutil.PageState) {
+//line views/vaction/Result.html:30
+	qw422016.N().S(`
+    <div class="right">`)
+//line views/vaction/Result.html:31
+	qw422016.E().S(util.MicrosToMillis(o.Duration))
+//line views/vaction/Result.html:31
+	qw422016.N().S(`</div>
+    <h4>`)
+//line views/vaction/Result.html:32
+	qw422016.E().S(o.Cmd)
+//line views/vaction/Result.html:32
+	qw422016.N().S(`</h4>
+    <div class="mt">
+      `)
+//line views/vaction/Result.html:34
+	components.StreamTerminal(qw422016, o.Cmd, o.Output...)
+//line views/vaction/Result.html:34
+	qw422016.N().S(`
+    </div>
+`)
+//line views/vaction/Result.html:36
+}
+
+//line views/vaction/Result.html:36
+func WriteRenderCmdOutput(qq422016 qtio422016.Writer, o *action.CustomCmdResult, ps *cutil.PageState) {
+//line views/vaction/Result.html:36
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vaction/Result.html:36
+	StreamRenderCmdOutput(qw422016, o, ps)
+//line views/vaction/Result.html:36
+	qt422016.ReleaseWriter(qw422016)
+//line views/vaction/Result.html:36
+}
+
+//line views/vaction/Result.html:36
+func RenderCmdOutput(o *action.CustomCmdResult, ps *cutil.PageState) string {
+//line views/vaction/Result.html:36
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vaction/Result.html:36
+	WriteRenderCmdOutput(qb422016, o, ps)
+//line views/vaction/Result.html:36
+	qs422016 := string(qb422016.B)
+//line views/vaction/Result.html:36
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vaction/Result.html:36
+	return qs422016
+//line views/vaction/Result.html:36
+}

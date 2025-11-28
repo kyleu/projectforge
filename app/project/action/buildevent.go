@@ -127,6 +127,10 @@ func onClientInstall(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 	return simpleProc(ctx, "npm install", util.StringFilePath(pm.Prj.Path, "client"), ret, pm.Logger)
 }
 
+func onClientUpdate(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	return simpleProc(ctx, "npx npm-check-updates -u", util.StringFilePath(pm.Prj.Path, "client"), ret, pm.Logger)
+}
+
 func onFull(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	t := util.TimerStart()
 	logs, err := build.Full(ctx, pm.Prj, pm.Logger)
@@ -174,5 +178,14 @@ func onThemeRebuild(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
 	if err != nil {
 		return r.WithError(err)
 	}
+	return r
+}
+
+func onCustom(ctx context.Context, pm *PrjAndMods, r *Result) *Result {
+	ret, err := runCustom(pm.Prj, r.Args.GetStringOpt("cmd"), r.Args.GetStringOpt("dir"), pm.Logger)
+	if err != nil {
+		return r.WithError(err)
+	}
+	r.Data = ret
 	return r
 }

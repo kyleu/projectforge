@@ -19,6 +19,8 @@ import (
 var (
 	authorsArg = &util.FieldDesc{Key: "authors", Title: "Authors", Description: "Limit to a set of author emails (comma-separated)"}
 	branchArg  = &util.FieldDesc{Key: "name", Title: "Branch Name", Description: "The name to used for the new branch"}
+	cmdArg     = &util.FieldDesc{Key: "cmd", Title: "Command", Description: "The command to run"}
+	dirArg     = &util.FieldDesc{Key: "dir", Title: "Directory", Description: "The directory to run the command in"}
 	dryRunArg  = &util.FieldDesc{Key: "dryRun", Title: "Dry Run", Description: "Runs without any destructive operations", Type: "bool", Default: util.BoolTrue}
 	limitArg   = &util.FieldDesc{Key: "limit", Title: "Limit", Description: "Limits the results to, at most, this amount", Type: "number", Default: "100"}
 	messageArg = &util.FieldDesc{Key: "message", Title: "Message", Description: "The message to used for the commit"}
@@ -29,6 +31,7 @@ var (
 	gitCommitArgs  = util.FieldDescs{messageArg}
 	gitHistoryArgs = util.FieldDescs{pathArg, sinceArg, authorsArg, limitArg}
 	gitMagicArgs   = util.FieldDescs{messageArg, dryRunArg}
+	gitCustomArgs  = util.FieldDescs{cmdArg, dirArg}
 )
 
 func GitAction(w http.ResponseWriter, r *http.Request) {

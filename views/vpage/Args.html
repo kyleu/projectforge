@@ -27,7 +27,7 @@
         onsubmit = fmt.Sprintf(` onsubmit="return confirm('%s')"`, strings.ReplaceAll(strings.ReplaceAll(p.Warning, "'", "\\'"), "\"", ""))
       }
     -%}
-    <form action="{%s p.URL %}" method="get"{%s= onsubmit %}>
+    <form action="{%s= p.URL %}" method="get"{%s= onsubmit %}>
       {%- for k, v := range p.Hidden -%}
       <input type="hidden" name="{%s k %}" value="{%s v %}" />
       {%- endfor -%}

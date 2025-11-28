@@ -14,6 +14,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vaction"
 	"projectforge.dev/projectforge/views/vbuild"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 const (
@@ -56,6 +57,17 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 			b := action.AllBuilds.Get(phase)
 			if b == nil {
 				return "", errors.Errorf("unknown phase [%s]", phase)
+			}
+			if b.Key == "custom" {
+				if cmd := cfg.GetStringOpt("cmd"); cmd == "" {
+					argRes := util.FieldDescsCollectMap(cfg, gitCustomArgs)
+					if argRes.HasMissing() {
+						ps.SetTitleAndData("Custom Command", argRes)
+						url := fmt.Sprintf("/run/%s/build", prj.Key)
+						page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Hidden: map[string]string{"phase": phase}}
+						return controller.Render(r, as, page, ps, bc...)
+					}
+				}
 			}
 			if b.Expensive {
 				if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running [%s] for [%s]", phase, prj.Title())); page != nil {

@@ -26,3 +26,11 @@
 
   {%= Detail(p.Ctx.Cfg, p.Ctx.Res, false, as, ps) %}
 {% endfunc %}
+
+{% func RenderCmdOutput(o *action.CustomCmdResult, ps *cutil.PageState) %}
+    <div class="right">{%s util.MicrosToMillis(o.Duration) %}</div>
+    <h4>{%s o.Cmd %}</h4>
+    <div class="mt">
+      {%= components.Terminal(o.Cmd, o.Output...) %}
+    </div>
+{% endfunc %}

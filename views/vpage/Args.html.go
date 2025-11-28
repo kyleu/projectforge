@@ -67,7 +67,7 @@ func (p *Args) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vpage/Args.html:29
 	qw422016.N().S(`    <form action="`)
 //line views/vpage/Args.html:30
-	qw422016.E().S(p.URL)
+	qw422016.N().S(p.URL)
 //line views/vpage/Args.html:30
 	qw422016.N().S(`" method="get"`)
 //line views/vpage/Args.html:30

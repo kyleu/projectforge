@@ -156,151 +156,162 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 		components.StreamSVGIcon(qw422016, `mountain`, ps)
 //line views/vaction/Detail.html:60
 		qw422016.N().S(` Data</h3>
+    <div class="mt">
 `)
-//line views/vaction/Detail.html:61
+//line views/vaction/Detail.html:62
 		switch t := res.Data.(type) {
-//line views/vaction/Detail.html:62
+//line views/vaction/Detail.html:63
 		case string:
-//line views/vaction/Detail.html:62
-			qw422016.N().S(`    <pre class="mt">`)
 //line views/vaction/Detail.html:63
+			qw422016.N().S(`    <pre>`)
+//line views/vaction/Detail.html:64
 			qw422016.E().S(t)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:64
 			qw422016.N().S(`</pre>
 `)
-//line views/vaction/Detail.html:64
-		case *action.AuditResult:
-//line views/vaction/Detail.html:64
+//line views/vaction/Detail.html:65
+		case *action.CustomCmdResult:
+//line views/vaction/Detail.html:65
 			qw422016.N().S(`    `)
-//line views/vaction/Detail.html:65
+//line views/vaction/Detail.html:66
+			StreamRenderCmdOutput(qw422016, t, ps)
+//line views/vaction/Detail.html:66
+			qw422016.N().S(`
+`)
+//line views/vaction/Detail.html:67
+		case *action.AuditResult:
+//line views/vaction/Detail.html:67
+			qw422016.N().S(`    `)
+//line views/vaction/Detail.html:68
 			components.StreamPlotAssets(qw422016)
-//line views/vaction/Detail.html:65
+//line views/vaction/Detail.html:68
 			qw422016.N().S(`
     `)
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:69
 			StreamRenderAudit(qw422016, res.Project.Key, t, as, ps)
-//line views/vaction/Detail.html:66
+//line views/vaction/Detail.html:69
 			qw422016.N().S(`
 `)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 		default:
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 			qw422016.N().S(`    `)
-//line views/vaction/Detail.html:68
+//line views/vaction/Detail.html:71
 			components.StreamJSON(qw422016, res.Data)
-//line views/vaction/Detail.html:68
+//line views/vaction/Detail.html:71
 			qw422016.N().S(`
 `)
-//line views/vaction/Detail.html:69
+//line views/vaction/Detail.html:72
 		}
-//line views/vaction/Detail.html:69
-		qw422016.N().S(`  </div>
+//line views/vaction/Detail.html:72
+		qw422016.N().S(`    </div>
+  </div>
 `)
-//line views/vaction/Detail.html:71
+//line views/vaction/Detail.html:75
 	}
-//line views/vaction/Detail.html:72
+//line views/vaction/Detail.html:76
 	for _, mr := range res.Modules {
-//line views/vaction/Detail.html:72
+//line views/vaction/Detail.html:76
 		qw422016.N().S(`    <div class="card">
       <div class="right">`)
-//line views/vaction/Detail.html:74
+//line views/vaction/Detail.html:78
 		qw422016.E().S(util.MicrosToMillis(mr.Duration))
-//line views/vaction/Detail.html:74
+//line views/vaction/Detail.html:78
 		qw422016.N().S(`</div>
       <h3 title="`)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:79
 		qw422016.E().S(util.StringJoin(mr.Keys, `, `))
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:79
 		qw422016.N().S(`">`)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:79
 		components.StreamSVGIcon(qw422016, `archive`, ps)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:79
 		qw422016.N().S(` `)
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:79
 		qw422016.E().S(util.StringPlural(len(mr.Keys), "Module"))
-//line views/vaction/Detail.html:75
+//line views/vaction/Detail.html:79
 		qw422016.N().S(`</h3>
       <div class="right">`)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:80
 		qw422016.N().S(res.StatusLog())
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:80
 		qw422016.N().S(`</div>
       <div class="mts">
         <em>`)
-//line views/vaction/Detail.html:78
+//line views/vaction/Detail.html:82
 		qw422016.E().S(mr.Status)
-//line views/vaction/Detail.html:78
+//line views/vaction/Detail.html:82
 		qw422016.N().S(`</em>
 `)
-//line views/vaction/Detail.html:79
+//line views/vaction/Detail.html:83
 		if len(mr.Actions) > 0 {
-//line views/vaction/Detail.html:79
+//line views/vaction/Detail.html:83
 			qw422016.N().S(`        <h4>Actions</h4>
 `)
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 			for _, a := range mr.Actions {
-//line views/vaction/Detail.html:81
+//line views/vaction/Detail.html:85
 				qw422016.N().S(`          <a href="`)
-//line views/vaction/Detail.html:82
+//line views/vaction/Detail.html:86
 				qw422016.E().S(a.URL())
-//line views/vaction/Detail.html:82
+//line views/vaction/Detail.html:86
 				qw422016.N().S(`"><button>`)
-//line views/vaction/Detail.html:82
+//line views/vaction/Detail.html:86
 				qw422016.E().S(a.Title)
-//line views/vaction/Detail.html:82
+//line views/vaction/Detail.html:86
 				qw422016.N().S(`</button></a>
 `)
-//line views/vaction/Detail.html:83
+//line views/vaction/Detail.html:87
 			}
-//line views/vaction/Detail.html:84
+//line views/vaction/Detail.html:88
 		}
-//line views/vaction/Detail.html:85
+//line views/vaction/Detail.html:89
 		diffs := mr.DiffsFiltered(includeSkipped)
 
-//line views/vaction/Detail.html:86
+//line views/vaction/Detail.html:90
 		if len(diffs) > 0 {
-//line views/vaction/Detail.html:86
+//line views/vaction/Detail.html:90
 			qw422016.N().S(`        <div class="overflow">
         `)
-//line views/vaction/Detail.html:88
+//line views/vaction/Detail.html:92
 			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, cfg, as, ps)
-//line views/vaction/Detail.html:88
+//line views/vaction/Detail.html:92
 			qw422016.N().S(`
         </div>
 `)
-//line views/vaction/Detail.html:90
+//line views/vaction/Detail.html:94
 		}
-//line views/vaction/Detail.html:90
+//line views/vaction/Detail.html:94
 		qw422016.N().S(`      </div>
     </div>
 `)
-//line views/vaction/Detail.html:93
+//line views/vaction/Detail.html:97
 	}
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 }
 
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 func WriteDetail(qq422016 qtio422016.Writer, cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	StreamDetail(qw422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 }
 
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	WriteDetail(qb422016, cfg, res, includeSkipped, as, ps)
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	qs422016 := string(qb422016.B)
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 	return qs422016
-//line views/vaction/Detail.html:94
+//line views/vaction/Detail.html:98
 }

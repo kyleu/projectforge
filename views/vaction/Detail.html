@@ -58,15 +58,19 @@
   {%- if res.Data != nil -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`mountain`, ps) %} Data</h3>
+    <div class="mt">
     {%- switch t := res.Data.(type) -%}
     {%- case string -%}
-    <pre class="mt">{%s t %}</pre>
+    <pre>{%s t %}</pre>
+    {%- case *action.CustomCmdResult -%}
+    {%= RenderCmdOutput(t, ps) %}
     {%- case *action.AuditResult -%}
     {%= components.PlotAssets() %}
     {%= RenderAudit(res.Project.Key, t, as, ps) %}
     {%- default -%}
     {%= components.JSON(res.Data) %}
     {%- endswitch -%}
+    </div>
   </div>
   {%- endif -%}
   {%- for _, mr := range res.Modules -%}

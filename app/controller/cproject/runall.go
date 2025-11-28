@@ -15,6 +15,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views"
 	"projectforge.dev/projectforge/views/vaction"
+	"projectforge.dev/projectforge/views/vpage"
 )
 
 func RunAllActions(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +65,19 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if actT.Matches(action.TypeBuild) {
-			switch cfg.GetStringOpt("phase") {
+			phase := cfg.GetStringOpt("phase")
+			if phase == "custom" {
+				if cmd := cfg.GetStringOpt("cmd"); cmd == "" {
+					argRes := util.FieldDescsCollectMap(cfg, gitCustomArgs)
+					if argRes.HasMissing() {
+						ps.SetTitleAndData("Custom Command", argRes)
+						page := &vpage.Args{URL: "/run/build", Directions: "Enter your commit message", Results: argRes, Hidden: map[string]string{"phase": phase}}
+						return controller.Render(r, as, page, ps, actT.Breadcrumb())
+					}
+				}
+			}
+
+			switch phase {
 			case "":
 				ps.SetTitleAndData("Build All Projects", prjs)
 				page := &vaction.Results{T: actT, Cfg: cfg, Projects: prjs, Ctxs: nil, Tags: tags, IsBuild: true}
