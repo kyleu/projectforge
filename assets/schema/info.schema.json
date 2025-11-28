@@ -61,10 +61,6 @@
       "description": "keychain identity to use for signing binaries",
       "type": "string"
     },
-    "notarizeEmail": {
-      "description": "email address used for Apple notarization, defaults to owner",
-      "type": "string"
-    },
     "databaseEngine": {
       "description": "database engine to prefer",
       "enum": ["mysql", "postgresql", "sqlite", "sqlserver"]

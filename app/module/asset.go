@@ -49,12 +49,12 @@ func loadAssetMap(ctx context.Context, logger util.Logger) error {
 	logger.Infof("loading assets from [%s]", assetURL)
 	req := util.NewHTTPRequest(ctx, http.MethodGet, assetURL)
 	req.Header.Set("Access-Control-Allow-Origin", "*")
-	rsp, b, err := req.WithClient(telemetry.HTTPClient()).RunSimple()
+	st, _, b, err := req.WithClient(telemetry.HTTPClient()).RunSimple()
 	if err != nil {
 		return err
 	}
-	if rsp.StatusCode != 200 {
-		return errors.Errorf("release asset [%s] returned status [%d]", assetURL, rsp.StatusCode)
+	if st != 200 {
+		return errors.Errorf("release asset [%s] returned status [%d]", assetURL, st)
 	}
 	x, err := util.FromJSONObj[*ghRsp](b)
 	if err != nil {

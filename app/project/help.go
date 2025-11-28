@@ -38,7 +38,6 @@ var Helpers = func() map[string][]string {
 	add("homebrew", "Override the URL to download Homebrew assets from")
 	add("bundle", "App bundle used in iOS and macOS applications")
 	add("signingIdentity", "Keychain identity to use for signing binaries")
-	add("notarizeEmail", "Email address used for Apple notarization, defaults to owner")
 	add("databaseEngine", "Primary database engine, used for DDL and seed data")
 	add("slack", "Slack webhook for notifying after successful releases")
 	add("channels", "Various communication channels used by this project")

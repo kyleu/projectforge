@@ -6,8 +6,13 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/project/build"
 	"projectforge.dev/projectforge/app/util"
 )
+
+func onBuildTest(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
+}
 
 func onTest(ctx context.Context, params *Params) *Result {
 	methodName := params.Cfg.GetStringOpt("method")

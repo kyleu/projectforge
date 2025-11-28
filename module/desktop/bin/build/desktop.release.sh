@@ -46,8 +46,8 @@ cp -R "./template/darwin/icons.icns" "./{{{ .Name }}}.app/Contents/Resources/ico
 cp "{{{ .Key }}}.darwin" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 
 echo "signing amd64 desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "{{{ .Info.SigningIdentity }}}" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "{{{ .Info.SigningIdentity }}}" "./{{{ .Name }}}.app"
 
 cp "./template/darwin/appdmg.config.json" "./appdmg.config.json"
 
@@ -59,8 +59,8 @@ zip -r "{{{ .Key }}}_${TGT}_darwin_amd64_desktop.zip" "./{{{ .Name }}}.app"
 cp "{{{ .Key }}}.darwin.arm64" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 
 echo "signing arm64 desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "{{{ .Info.SigningIdentity }}}" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "{{{ .Info.SigningIdentity }}}" "./{{{ .Name }}}.app"
 
 echo "building macOS arm64 DMG..."
 appdmg "appdmg.config.json" "./{{{ .Key }}}_${TGT}_darwin_arm64_desktop.dmg"
@@ -71,8 +71,8 @@ rm "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
 lipo -create -output "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}" {{{ .Key }}}.darwin {{{ .Key }}}.darwin.arm64
 
 echo "signing universal desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s '{{{ .Info.SigningIdentity }}}' "./{{{ .Name }}}.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "{{{ .Info.SigningIdentity }}}" "./{{{ .Name }}}.app/Contents/MacOS/{{{ .Key }}}"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "{{{ .Info.SigningIdentity }}}" "./{{{ .Name }}}.app"
 
 echo "building macOS universal DMG..."
 appdmg "appdmg.config.json" "./{{{ .Key }}}_${TGT}_darwin_all_desktop.dmg"

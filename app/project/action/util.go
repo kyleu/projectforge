@@ -123,7 +123,6 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 		Homebrew:        str("homebrew", i.Homebrew),
 		Bundle:          str("bundle", i.Bundle),
 		SigningIdentity: str("signingIdentity", i.SigningIdentity),
-		NotarizeEmail:   str("notarizeEmail", i.NotarizeEmail),
 		DatabaseEngine:  str("databaseEngine", i.DatabaseEngine),
 		Slack:           str("slack", i.Slack),
 		Channels:        util.StringSplitAndTrim(str("channels", util.StringJoin(i.Channels, ", ")), ","),

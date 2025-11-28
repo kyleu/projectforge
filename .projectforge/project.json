@@ -54,55 +54,13 @@
     "summary": "Build and maintain feature-rich applications using Golang",
     "description": "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.",
     "bundle": "com.kyleu.projectforge",
-    "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
-    "notarizeEmail": "kyle@kyleu.com",
+    "signingIdentity": "${APPLE_SIGNING_IDENTITY}",
     "javaPackage": "dev.projectforge",
     "ignoredFiles": [
       "app/site/handle.go",
       "app/site/menu.go",
       "views/vsite/Index.html"
     ]
-  },
-  "theme": {
-    "base": "#72a0c1",
-    "light": {
-      "brd": "1px solid #cccccc",
-      "ld": "none",
-      "fg": "#000000",
-      "fgm": "#263642",
-      "bg": "#ffffff",
-      "bgm": "#e6ecf1",
-      "lf": "#0c202e",
-      "lvf": "#0c202e",
-      "nf": "#2a2a2a",
-      "nb": "#83a2b9",
-      "mf": "#000000",
-      "msf": "#000000",
-      "mb": "#cdd9e3",
-      "msb": "#9cb4c7",
-      "mbd": "rgba(77, 77, 77, .7)",
-      "ok": "#008000",
-      "err": "#ff0000"
-    },
-    "dark": {
-      "brd": "1px solid #444444",
-      "ld": "none",
-      "fg": "#dddddd",
-      "fgm": "#93a1af",
-      "bg": "#121212",
-      "bgm": "#0d1a24",
-      "lf": "#cdd9e3",
-      "lvf": "#83a2b9",
-      "nf": "#f8f9fa",
-      "nb": "#0a2638",
-      "mf": "#eeeeee",
-      "msf": "#dddddd",
-      "mb": "#0c202e",
-      "msb": "#50677d",
-      "mbd": "rgba(33, 33, 33, .7)",
-      "ok": "#008000",
-      "err": "#ff0000"
-    }
   },
   "build": {
     "changelog": true,

@@ -64,11 +64,8 @@ func load(ctx context.Context, src string, tgt string) (*SVG, error) {
 	test := func(u string) ([]byte, error) {
 		ctx, cancel := context.WithTimeout(ctx, time.Minute)
 		defer cancel()
-		rsp, b, err := util.NewHTTPRequest(ctx, http.MethodGet, u).RunSimple()
-		defer func() {
-			_ = rsp.Body.Close()
-		}()
-		return b, errors.Wrapf(err, "unable to call URL [%s]: %d", u, rsp.StatusCode)
+		st, _, b, err := util.NewHTTPRequest(ctx, http.MethodGet, u).RunSimple()
+		return b, errors.Wrapf(err, "unable to call URL [%s]: %d", u, st)
 	}
 
 	get := func(u string) (*SVG, error) {

@@ -41,7 +41,6 @@ type Info struct {
 	Homebrew        string            `json:"homebrew,omitzero"`
 	Bundle          string            `json:"bundle,omitzero"`
 	SigningIdentity string            `json:"signingIdentity,omitzero"`
-	NotarizeEmail   string            `json:"notarizeEmail,omitzero"`
 	DatabaseEngine  string            `json:"databaseEngine,omitzero"`
 	Slack           string            `json:"slack,omitzero"`
 	Channels        []string          `json:"channels,omitempty"`
@@ -62,10 +61,16 @@ type Info struct {
 }
 
 func (i *Info) SigningIdentityTrimmed() string {
-	if strings.Contains(i.SigningIdentity, "(") && strings.Contains(i.SigningIdentity, ")") {
-		return i.SigningIdentity[strings.LastIndex(i.SigningIdentity, "(")+1 : strings.LastIndex(i.SigningIdentity, ")")]
+	s := i.SigningIdentity
+	if strings.HasPrefix(s, "${") && strings.HasSuffix(s, "}") {
+		if env := util.GetEnv(s[2 : len(s)-1]); env != "" {
+			s = env
+		}
 	}
-	return i.SigningIdentity
+	if strings.Contains(s, "(") && strings.Contains(s, ")") {
+		return s[strings.LastIndex(s, "(")+1 : strings.LastIndex(s, ")")]
+	}
+	return s
 }
 
 func (i *Info) AuthorIDSafe() string {
@@ -85,11 +90,4 @@ func (i *Info) AuthorIDSafe() string {
 		ret.Push(x)
 	})
 	return ret.Join(" ")
-}
-
-func (i *Info) NotarizationEmail() string {
-	if i.NotarizeEmail != "" {
-		return i.NotarizeEmail
-	}
-	return i.AuthorEmail
 }

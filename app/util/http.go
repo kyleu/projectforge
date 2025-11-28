@@ -54,15 +54,15 @@ func (r *HTTPRequest) Run() (*http.Response, error) {
 	return rsp, nil
 }
 
-func (r *HTTPRequest) RunSimple() (*http.Response, []byte, error) {
+func (r *HTTPRequest) RunSimple() (int, http.Header, []byte, error) {
 	rsp, err := r.Run()
 	if err != nil {
-		return nil, nil, err
+		return 0, nil, nil, err
 	}
 	defer func() { _ = rsp.Body.Close() }()
 	b, _ := io.ReadAll(rsp.Body)
 	if rsp.StatusCode != http.StatusOK {
-		return rsp, b, errors.Errorf("response from url [%s] has status [%d], expected [200]", r.URL, rsp.StatusCode)
+		return rsp.StatusCode, rsp.Header, b, errors.Errorf("response from url [%s] has status [%d], expected [200]", r.URL, rsp.StatusCode)
 	}
-	return rsp, b, nil
+	return rsp.StatusCode, rsp.Header, b, nil
 }

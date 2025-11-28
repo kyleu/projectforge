@@ -46,8 +46,8 @@ cp -R "./template/darwin/icons.icns" "./Project Forge.app/Contents/Resources/ico
 cp "projectforge.darwin" "./Project Forge.app/Contents/MacOS/projectforge"
 
 echo "signing amd64 desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app/Contents/MacOS/projectforge"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "${APPLE_SIGNING_IDENTITY}" "./Project Forge.app/Contents/MacOS/projectforge"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "${APPLE_SIGNING_IDENTITY}" "./Project Forge.app"
 
 cp "./template/darwin/appdmg.config.json" "./appdmg.config.json"
 
@@ -59,8 +59,8 @@ zip -r "projectforge_${TGT}_darwin_amd64_desktop.zip" "./Project Forge.app"
 cp "projectforge.darwin.arm64" "./Project Forge.app/Contents/MacOS/projectforge"
 
 echo "signing arm64 desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app/Contents/MacOS/projectforge"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "${APPLE_SIGNING_IDENTITY}" "./Project Forge.app/Contents/MacOS/projectforge"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "${APPLE_SIGNING_IDENTITY}" "./Project Forge.app"
 
 echo "building macOS arm64 DMG..."
 appdmg "appdmg.config.json" "./projectforge_${TGT}_darwin_arm64_desktop.dmg"
@@ -71,8 +71,8 @@ rm "./Project Forge.app/Contents/MacOS/projectforge"
 lipo -create -output "./Project Forge.app/Contents/MacOS/projectforge" projectforge.darwin projectforge.darwin.arm64
 
 echo "signing universal desktop binary..."
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app/Contents/MacOS/projectforge"
-codesign -f --options=runtime --verbose=4 --deep --force --strict -s 'Developer ID Application: Kyle Unverferth (C6S478FYLD)' "./Project Forge.app"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "${APPLE_SIGNING_IDENTITY}" "./Project Forge.app/Contents/MacOS/projectforge"
+codesign -f --options=runtime --verbose=4 --deep --force --strict -s "${APPLE_SIGNING_IDENTITY}" "./Project Forge.app"
 
 echo "building macOS universal DMG..."
 appdmg "appdmg.config.json" "./projectforge_${TGT}_darwin_all_desktop.dmg"
