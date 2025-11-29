@@ -48,7 +48,7 @@ func exportViewEditClass(m *model.Model) *golang.Block {
 }
 
 func exportViewEditBody(m *model.Model, p *project.Project, args *metamodel.Args) (*golang.Block, error) {
-	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.String() %%%%}]?", m.TitleLower())
+	delMsg := fmt.Sprintf("Are you sure you wish to delete %s [{%%%%s p.Model.TitleString() %%%%}]?", m.TitleLower())
 	ret := golang.NewBlock("EditBody", "func")
 	ret.W("{%% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %%}")
 	ret.W("  <div class=\"card\">")
@@ -58,7 +58,7 @@ func exportViewEditBody(m *model.Model, p *project.Project, args *metamodel.Args
 	ret.W("    {%%- else -%%}")
 	delPrefix := "    <div class=\"right\"><a class=\"link-confirm\" href=\"{%%s p.Model.WebPath(p.Paths...) %%}/delete\" data-message=\""
 	ret.W(delPrefix + delMsg + `"><button>{%%= components.SVGButton("times", ps) %%} Delete</button></a></div>`)
-	ret.WF("    %s%s Edit %s [{%%%%s p.Model.String() %%%%}]%s", helper.TextH3Start, iconRef(m), m.Title(), helper.TextH3End)
+	ret.WF("    %s%s Edit %s [{%%%%s p.Model.TitleString() %%%%}]%s", helper.TextH3Start, iconRef(m), m.Title(), helper.TextH3End)
 	ret.W("    " + helper.TextEndIfDash)
 	rt := fmt.Sprintf("{%%%%s util.Choose(p.IsNew, %s.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %%%%}", m.Package)
 	ret.WF("    <form action=%q class=\"mt\" method=\"post\">", rt)

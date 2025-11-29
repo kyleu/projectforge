@@ -10,10 +10,11 @@ func structCollection(e *enum.Enum, identityProper string) ([]*golang.Block, err
 	tBlock.WF("type %s []%s", e.ProperPlural(), e.Proper())
 	ksBlock := blockKeys(e)
 	strBlock := blockString(e)
+	namesSafeBlock := blockNamesSafe(e)
 	fnHelpBlock := blockHelp(e)
 	gBlock := blockGet(e, identityProper)
 	gnBlock := blockGetByName(e)
-	ret := []*golang.Block{tBlock, ksBlock, strBlock, fnHelpBlock, gBlock, gnBlock}
+	ret := []*golang.Block{tBlock, ksBlock, strBlock, namesSafeBlock, fnHelpBlock, gBlock, gnBlock}
 
 	ef := e.ExtraFields()
 	for _, efk := range ef.Order {
@@ -54,6 +55,16 @@ func blockString(e *enum.Enum) *golang.Block {
 	strBlock.WF("func (%s %s) Strings() []string {", e.FirstLetter(), e.ProperPlural())
 	strBlock.WF("\treturn lo.Map(%s, func(x %s, _ int) string {", e.FirstLetter(), e.Proper())
 	strBlock.W("\t\treturn x.String()")
+	strBlock.W("\t})")
+	strBlock.W("}")
+	return strBlock
+}
+
+func blockNamesSafe(e *enum.Enum) *golang.Block {
+	strBlock := golang.NewBlock(e.ProperPlural()+"NamesSafe", "method")
+	strBlock.WF("func (%s %s) NamesSafe() []string {", e.FirstLetter(), e.ProperPlural())
+	strBlock.WF("\treturn lo.Map(%s, func(x %s, _ int) string {", e.FirstLetter(), e.Proper())
+	strBlock.W("\t\treturn x.NameSafe()")
 	strBlock.W("\t})")
 	strBlock.W("}")
 	return strBlock

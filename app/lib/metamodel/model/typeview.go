@@ -61,7 +61,7 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		if e == nil || e.Simple() {
 			return tmplStartV + ToGoString(t, nullable, prop, false) + tmplEnd
 		}
-		ret := tmplStartS + ToGoString(t, nullable, prop, false) + ".String()" + tmplEnd
+		ret := tmplStartS + ToGoString(t, nullable, prop, false) + ".NameSafe()" + tmplEnd
 		if e.HasValueIcons() {
 			ret += " " + tmplStartEQ + "components.SVGIcon(" + ToGoString(t, nullable, prop, false) + ".Icon, ps)" + tmplEnd
 		}

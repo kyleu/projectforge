@@ -10,7 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const msgTextarea, stringsSuffix = `{%%%%= edit.TextareaTable(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`, ".Strings()"
+const msgTextarea, stringsSuffix = `{%%%%= edit.TextareaTable(%q, %q, %q, 8, util.ToJSON(%s), 5, %s) %%%%}`, ".NamesSafe()"
 
 func (c *Column) ToGoString(prefix string) string {
 	return ToGoString(c.Type, c.Nullable, prefix+c.Proper(), false)

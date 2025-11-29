@@ -94,6 +94,16 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a string argument\")", retVal, col.Camel())
 		add("}")
+	case types.KeyTimestamp:
+		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a string argument\")", retVal, col.Camel())
+		add("}")
+		add("%sArgP, err := util.TimeFromRFC3339(%sArgStr)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a valid timestamp\")", retVal, col.Camel())
+		add("}")
+		add("%sArg := *%sArgP", col.Camel(), col.Camel())
 	case types.KeyList:
 		if !types.IsStringList(col.Type) {
 			add("// ERROR: invalid list argument [%s]", col.Type.String())

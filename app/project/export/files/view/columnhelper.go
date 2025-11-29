@@ -24,8 +24,10 @@ func colRow(ind string, col *model.Column, u string, viewString string, link boo
 	if col.HasTag("title") {
 		ret = "<strong>" + ret + "</strong>"
 	}
-	if (col.PK || col.HasTag("link")) && link {
-		ret = fmt.Sprintf("<a href=%q>%s"+helper.TextEndAnchor, u, ret)
+	if link {
+		if col.PK || col.HasTag("link") || col.HasTag("title") {
+			ret = fmt.Sprintf("<a href=%q>%s"+helper.TextEndAnchor, u, ret)
+		}
 	}
 	return ind + "<td>" + ret + helper.TextTDEnd
 }

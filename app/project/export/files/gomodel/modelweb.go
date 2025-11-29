@@ -41,6 +41,8 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 		case types.IsString(pk.Type) && pk.HasTag("path"):
 			g.AddImport(helper.ImpStrings)
 			keys = append(keys, fn+"(strings.ReplaceAll("+goStr+`, "/", "||"))`)
+		case pk.Type.Key() == types.KeyTimestamp:
+			keys = append(keys, fn+"(util.TimeToJS("+goStr+"))")
 		default:
 			keys = append(keys, fn+"("+goStr+")")
 		}
