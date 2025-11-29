@@ -61,8 +61,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		return tmplStartEQ + "components.Icon(" + ToGoString(t, nullable, prop, false) + ", " + size + componentEnd + tmplEnd
 	case FmtImage.Key:
 		size := "128px"
-		msg := `<img style="max-width: %s; max-height: %s" src="{%%%%s %s %%%%}" />`
-		return fmt.Sprintf(msg, size, size, ToGoString(t, nullable, prop, false))
+		return fmt.Sprintf("{%%%%= components.Image(%s, %q, %q) %%%%}", ToGoString(t, nullable, prop, false), size, size)
 	case FmtSelect.Key:
 		return "<strong>" + tmplStart + key + " " + ToGoString(t, nullable, prop, false) + tmplEnd + "</strong>"
 	case FmtURL.Key:

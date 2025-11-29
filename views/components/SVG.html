@@ -77,3 +77,11 @@
     {%- endfor -%}
   </div>
 {%- endfunc -%}
+
+{%- func Image(u string, w string, h string) -%}{% stripspace %}
+  {%- if u == "" -%}
+  <em>no image</em>
+  {%- else -%}
+  <img style="max-width: {%s w %}; max-height: {%s h %}" src="{%s u %}" />
+  {%- endif -%}
+{% endstripspace %}{%- endfunc -%}
