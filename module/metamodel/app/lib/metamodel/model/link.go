@@ -9,17 +9,19 @@ import (
 var LinkFieldDescs = util.FieldDescs{
 	{Key: "title", Title: "Title", Description: "The title of the link"},
 	{Key: "url", Title: "URL", Description: "The href of this link"},
+	{Key: "description", Title: "Description", Description: "The description of this link"},
 	{Key: "icon", Title: "Icon", Description: "The icon of this link"},
 	{Key: "dangerous", Title: "Dangerous", Description: "If set, this link will require confirmation", Type: "bool"},
 	{Key: "tags", Title: "Tags", Description: "The tags that apply to this link", Type: "[]string"},
 }
 
 type Link struct {
-	Title     string   `json:"title,omitzero"`
-	URL       string   `json:"url"`
-	Icon      string   `json:"icon,omitzero"`
-	Dangerous bool     `json:"dangerous,omitzero"`
-	Tags      []string `json:"tags,omitempty"`
+	Title       string   `json:"title,omitzero"`
+	URL         string   `json:"url"`
+	Description string   `json:"description,omitzero"`
+	Icon        string   `json:"icon,omitzero"`
+	Dangerous   bool     `json:"dangerous,omitzero"`
+	Tags        []string `json:"tags,omitempty"`
 }
 
 type Links []*Link

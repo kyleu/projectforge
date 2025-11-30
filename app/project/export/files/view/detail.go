@@ -142,7 +142,11 @@ func exportViewDetailBody(m *model.Model, rrs model.Relations, audit bool) (*gol
 		if link.Icon != "" {
 			icon = fmt.Sprintf("{%%%%= components.SVGButton(%q, ps) %%%%} ", link.Icon)
 		}
-		ret.WF("      <a href=%q><button type=\"button\">%s%s</button></a>", u, icon, link.Title)
+		if link.Description == "" {
+			ret.WF("      <a href=%q><button type=\"button\">%s%s</button></a>", u, icon, link.Title)
+		} else {
+			ret.WF("      <a href=%q title=%q><button type=\"button\">%s%s</button></a>", u, link.Description, icon, link.Title)
+		}
 	}
 	ret.WF(`      <a href="#modal-%s"><button type="button" title="JSON">{%%%%= components.SVGButton("code", ps) %%%%}</button></a>`, m.Camel())
 	ret.W(`      <a href="{%%s p.Model.WebPath(p.Paths...) %%}/edit" title="Edit"><button>{%%= components.SVGButton("edit", ps) %%}</button></a>`)

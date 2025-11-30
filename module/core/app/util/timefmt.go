@@ -89,6 +89,11 @@ func TimeFromYMD(s string) (*time.Time, error) {
 	return TimeFromStringFmt(s, dateFmtYMD)
 }
 
+func TimeFromMillis(ms int) (*time.Time, error) {
+	ret := time.Unix(0, int64(ms)*1000*1000)
+	return &ret, nil
+}
+
 func TimeFromStringFmt(s string, format string) (*time.Time, error) {
 	if s == "" {
 		return nil, nil
