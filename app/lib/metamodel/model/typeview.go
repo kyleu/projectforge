@@ -23,7 +23,9 @@ func ToGoViewString(t *types.Wrapped, prop string, nullable bool, format string,
 		case FmtSI.Key:
 			return tmplStartS + fmt.Sprintf("util.ByteSizeSI(int64(%s))", prop) + tmplEnd
 		case FmtSeconds.Key:
-			return tmplStartS + fmt.Sprintf("view.DurationSeconds(float64(%s))", prop) + tmplEnd
+			return tmplStartEQ + fmt.Sprintf("view.DurationSeconds(float64(%s))", prop) + tmplEnd
+		case FmtMilliseconds.Key:
+			return tmplStartEQ + fmt.Sprintf("view.DurationMilliseconds(float64(%s))", prop) + tmplEnd
 		case "":
 			if types.Bits(t) != 0 {
 				return tmplStart + "d int(" + prop + ")" + tmplEnd

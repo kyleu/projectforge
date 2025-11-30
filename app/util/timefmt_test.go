@@ -96,6 +96,33 @@ func TestFormatSeconds(t *testing.T) {
 	}
 }
 
+func TestFormatMilliseconds(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name            string
+		input           float64
+		includeFraction bool
+		expected        string
+	}{
+		{"HourMinuteSecondFraction", 3_723_456, true, "1:02:03.456"},
+		{"HourZeroMinutes", 3_603_000, false, "1:00:03"},
+		{"MinuteSecondFraction", 123_456, true, "02:03.456"},
+		{"SecondsOnlyFraction", 3_456, true, "3.456"},
+		{"SecondsOnlyNoFraction", 3_000, false, "3"},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			result := util.FormatMilliseconds(tt.input, tt.includeFraction)
+			if result != tt.expected {
+				t.Errorf("FormatMilliseconds(%f, %t) = %s, want %s", tt.input, tt.includeFraction, result, tt.expected)
+			}
+		})
+	}
+}
+
 //nolint:paralleltest,tparallel
 func TestFormatSecondsFull(t *testing.T) {
 	t.Parallel()

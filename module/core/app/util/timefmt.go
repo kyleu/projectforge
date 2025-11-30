@@ -105,6 +105,40 @@ func TimeFromStringFmt(s string, format string) (*time.Time, error) {
 	return &ret, nil
 }
 
+func FormatMilliseconds(x float64, includeFraction bool) string {
+	x /= 1000
+	wholeSeconds := int(x)
+	fractionalPart := x - float64(wholeSeconds)
+	hours := wholeSeconds / 3600
+	minutes := (wholeSeconds % 3600) / 60
+	seconds := wholeSeconds % 60
+	showHours := hours > 0
+	showMinutes := minutes > 0 || showHours
+	var result string
+	if showHours {
+		result += fmt.Sprintf("%d:", hours)
+	}
+	if showMinutes {
+		result += fmt.Sprintf("%02d:", minutes)
+	}
+	secondsWithFraction := float64(seconds) + fractionalPart
+	if fractionalPart > 0 && includeFraction {
+		if showMinutes {
+			result += fmt.Sprintf("%06.3f", secondsWithFraction)
+		} else {
+			result += fmt.Sprintf("%.03f", secondsWithFraction)
+		}
+	} else {
+		if showMinutes {
+			result += fmt.Sprintf("%02d", seconds)
+		} else {
+			result += fmt.Sprintf("%d", seconds)
+		}
+	}
+
+	return result
+}
+
 func FormatSeconds(x float64) string {
 	wholeSeconds := int(x)
 	fractionalPart := x - float64(wholeSeconds)

@@ -34,3 +34,7 @@
 {% func DurationSeconds(seconds float64) %}{% stripspace %}
   <span class="duration" data-seconds="{%f seconds %}" title="{%s util.FormatSecondsFull(seconds) %}">{%s util.FormatSeconds(seconds) %}</span>
 {% endstripspace %}{% endfunc %}
+
+{% func DurationMilliseconds(milliseconds float64) %}{% stripspace %}
+  <span class="duration" data-milliseconds="{%f milliseconds %}" title="{%s util.FormatSecondsFull(milliseconds / 1000) %}">{%s util.FormatMilliseconds(milliseconds, true) %}</span>
+{% endstripspace %}{% endfunc %}

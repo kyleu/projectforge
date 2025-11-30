@@ -7,25 +7,27 @@ import (
 )
 
 var (
-	FmtCode       = Format{Key: "code", Title: "Code", Description: ""}
-	FmtCodeHidden = Format{Key: "codehidden", Title: "Code (hidden)", Description: ""}
-	FmtColor      = Format{Key: "color", Title: "Color", Description: ""}
-	FmtCountry    = Format{Key: "country", Title: "Country", Description: ""}
-	FmtHTML       = Format{Key: "html", Title: "HTML", Description: ""}
-	FmtIcon       = Format{Key: "icon", Title: "Icon", Description: ""}
-	FmtImage      = Format{Key: "image", Title: "Image", Description: ""}
-	FmtJSON       = Format{Key: "json", Title: "JSON", Description: ""}
-	FmtLinebreaks = Format{Key: "linebreaks", Title: "Linebreaks", Description: ""}
-	FmtMarkdown   = Format{Key: "markdown", Title: "Markdown", Description: ""}
-	FmtSelect     = Format{Key: "select", Title: "Select Box", Description: ""}
-	FmtSeconds    = Format{Key: "seconds", Title: "Seconds", Description: ""}
-	FmtSI         = Format{Key: "si", Title: "SI Units", Description: ""}
-	FmtSQL        = Format{Key: "sql", Title: "SQL", Description: ""}
-	FmtTags       = Format{Key: "tags", Title: "Tags", Description: ""}
-	FmtURL        = Format{Key: "url", Title: "URL", Description: ""}
+	FmtCode         = Format{Key: "code", Title: "Code", Description: ""}
+	FmtCodeHidden   = Format{Key: "codehidden", Title: "Code (hidden)", Description: ""}
+	FmtColor        = Format{Key: "color", Title: "Color", Description: ""}
+	FmtCountry      = Format{Key: "country", Title: "Country", Description: ""}
+	FmtHTML         = Format{Key: "html", Title: "HTML", Description: ""}
+	FmtIcon         = Format{Key: "icon", Title: "Icon", Description: ""}
+	FmtImage        = Format{Key: "image", Title: "Image", Description: ""}
+	FmtJSON         = Format{Key: "json", Title: "JSON", Description: ""}
+	FmtLinebreaks   = Format{Key: "linebreaks", Title: "Linebreaks", Description: ""}
+	FmtMarkdown     = Format{Key: "markdown", Title: "Markdown", Description: ""}
+	FmtMilliseconds = Format{Key: "milliseconds", Title: "Milliseconds", Description: ""}
+	FmtSelect       = Format{Key: "select", Title: "Select Box", Description: ""}
+	FmtSeconds      = Format{Key: "seconds", Title: "Seconds", Description: ""}
+	FmtSI           = Format{Key: "si", Title: "SI Units", Description: ""}
+	FmtSQL          = Format{Key: "sql", Title: "SQL", Description: ""}
+	FmtTags         = Format{Key: "tags", Title: "Tags", Description: ""}
+	FmtURL          = Format{Key: "url", Title: "URL", Description: ""}
 
 	AllFormats = Formats{
-		FmtCode, FmtCodeHidden, FmtColor, FmtCountry, FmtHTML, FmtIcon, FmtImage, FmtJSON, FmtMarkdown, FmtSelect, FmtSeconds, FmtSI, FmtSQL, FmtURL,
+		FmtCode, FmtCodeHidden, FmtColor, FmtCountry, FmtHTML, FmtIcon, FmtImage,
+		FmtJSON, FmtMarkdown, FmtMilliseconds, FmtSelect, FmtSeconds, FmtSI, FmtSQL, FmtURL,
 	}
 )
 
