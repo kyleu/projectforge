@@ -195,6 +195,9 @@ func StringFilePath(elems ...string) string {
 }
 
 func CountryFlag(code string) string {
+	if code == "*" {
+		return "🌎"
+	}
 	if len(code) != 2 {
 		return fmt.Sprintf("INVALID: %q", code)
 	}

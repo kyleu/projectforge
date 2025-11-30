@@ -186,6 +186,10 @@
   cursor: pointer;
 }
 
+.default-cursor {
+  cursor: default;
+}
+
 .break-word {
   word-wrap: break-word;
   word-break: break-all;
