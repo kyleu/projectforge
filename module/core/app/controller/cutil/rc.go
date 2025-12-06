@@ -80,6 +80,20 @@ func QueryStringBool(r *http.Request, key string) bool {
 	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
 }
 
+func QueryStringInt(r *http.Request, key string) int {
+	x := r.URL.Query().Get(key)
+	ret, err := strconv.ParseInt(x, 10, 32)
+	if err != nil {
+		return 0
+	}
+	return int(ret)
+}
+
+func QueryStringUUID(r *http.Request, key string) *uuid.UUID {
+	x := r.URL.Query().Get(key)
+	return util.UUIDFromString(x)
+}
+
 func QueryArgsMap(uri *url.URL) util.ValueMap {
 	ret := make(util.ValueMap, len(uri.Query()))
 	for k, v := range uri.Query() {

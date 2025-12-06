@@ -30,7 +30,7 @@
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
   {%= Menu(ps) %}
-  {%- endif -%}
+  {%- endif -%}{%s= ps.Extra(`nav`) %}
 </nav>{%- endif -%}{% endfunc %}
 
 {% func NavItem(link string, title string, icon string, description string, last bool, ps *cutil.PageState) %}{% stripspace %}

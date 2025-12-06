@@ -31,6 +31,8 @@ type Params struct {
 	Offset    int       `json:"offset,omitzero"`
 }
 
+var ParamsNoLimit = &Params{Limit: -1}
+
 func ParamsWithDefaultOrdering(key string, params *Params, orderings ...*Ordering) *Params {
 	if params == nil {
 		return ParamsWithDefaultOrdering(key, &Params{Key: key}, orderings...)
@@ -65,8 +67,18 @@ func (p *Params) Sanitize(key string, defaultOrderings ...*Ordering) *Params {
 	return p
 }
 
+func (p *Params) WithKey(key string) *Params {
+	p.Key = key
+	return p
+}
+
 func (p *Params) WithLimit(n int) *Params {
 	p.Limit = n
+	return p
+}
+
+func (p *Params) WithOffset(n int) *Params {
+	p.Offset = n
 	return p
 }
 

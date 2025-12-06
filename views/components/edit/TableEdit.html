@@ -1,4 +1,33 @@
-{% import "projectforge.dev/projectforge/app/util" %}
+{% import (
+  "net/http"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type TableEditorPage struct {
+  layout.Basic
+  Key string
+  Icon string
+  Description string
+  Action string
+  SaveLabel string
+  FieldDescs util.FieldDescs
+  Values util.ValueMap
+} %}
+
+{% func (p *TableEditorPage) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(util.Choose(p.Icon == "", "edit", p.Icon), ps) %} {%s util.Choose(ps.Title == "", p.Key, ps.Title) %}</h3>
+    {%- if p.Description != "" %}
+    <div class="mts"></div><em>{%s p.Description %}</em></div>
+    {%- endif -%}
+    {%= TableEditor(p.Key, p.FieldDescs, p.Values, p.Action, http.MethodPost, util.Choose(p.SaveLabel == "", p.Key, p.SaveLabel)) %}
+  </div>
+{% endfunc %}
 
 {% func TableEditor(key string, columns util.FieldDescs, values util.ValueMap, action string, method string, title string) %}
   <form action="{%s action %}" method="{%s method %}">

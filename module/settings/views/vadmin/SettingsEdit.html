@@ -1,0 +1,23 @@
+{% import (
+  "net/http"
+
+  "{{{ .Package }}}/app"
+  "{{{ .Package }}}/app/controller/cutil"
+  "{{{ .Package }}}/app/lib/settings"
+  "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/edit"
+  "{{{ .Package }}}/views/layout"
+) %}
+
+{% code type SettingsEdit struct {
+  layout.Basic
+  Settings *settings.Settings
+} %}
+
+{% func (p *SettingsEdit) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon("edit", ps) %} Edit App Settings</h3>
+    <div class="mts"><em>Changes will be saved as <code>settings.json</code> in the configuration directory</em></div>
+    {%= edit.TableEditor("settings", settings.SettingsFieldDescs, p.Settings.ToMap(), "", http.MethodPost, "Save Changes") %}
+  </div>
+{% endfunc %}

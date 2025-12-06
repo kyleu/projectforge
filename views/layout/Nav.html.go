@@ -135,7 +135,10 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Nav.html:33
 		}
 //line views/layout/Nav.html:33
-		qw422016.N().S(`</nav>`)
+		qw422016.N().S(ps.Extra(`nav`))
+//line views/layout/Nav.html:33
+		qw422016.N().S(`
+</nav>`)
 //line views/layout/Nav.html:34
 	}
 //line views/layout/Nav.html:34

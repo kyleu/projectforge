@@ -392,102 +392,104 @@ func StreamMenuItem(qw422016 *qt422016.Writer, i *menu.Item, path []string, brea
 //line views/layout/Menu.html:112
 	}
 //line views/layout/Menu.html:113
+	qw422016.N().S(ps.Extra(`menu`))
+//line views/layout/Menu.html:114
 }
 
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 func WriteMenuItem(qq422016 qtio422016.Writer, i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) {
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	StreamMenuItem(qw422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 }
 
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 func MenuItem(i *menu.Item, path []string, breadcrumbs cmenu.Breadcrumbs, indent int, ps *cutil.PageState) string {
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	WriteMenuItem(qb422016, i, path, breadcrumbs, indent, ps)
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	qs422016 := string(qb422016.B)
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 	return qs422016
-//line views/layout/Menu.html:113
+//line views/layout/Menu.html:114
 }
 
-//line views/layout/Menu.html:115
-func streammenuBadge(qw422016 *qt422016.Writer, i *menu.Item, indent int, ps *cutil.PageState) {
 //line views/layout/Menu.html:116
+func streammenuBadge(qw422016 *qt422016.Writer, i *menu.Item, indent int, ps *cutil.PageState) {
+//line views/layout/Menu.html:117
 	if i.Badge != "" {
-//line views/layout/Menu.html:118
+//line views/layout/Menu.html:119
 		var badgeTitle string
 		if idx := strings.Index(i.Badge, "**"); idx > -1 {
 			badgeTitle = fmt.Sprintf(" title=%q", i.Badge[idx+2:])
 			i.Badge = i.Badge[:idx]
 		}
 
-//line views/layout/Menu.html:124
+//line views/layout/Menu.html:125
 		if strings.HasPrefix(i.Badge, ":") {
-//line views/layout/Menu.html:125
+//line views/layout/Menu.html:126
 			components.StreamIndent(qw422016, true, indent)
-//line views/layout/Menu.html:125
+//line views/layout/Menu.html:126
 			qw422016.N().S(`<div class="badge"`)
-//line views/layout/Menu.html:126
-			qw422016.N().S(badgeTitle)
-//line views/layout/Menu.html:126
-			qw422016.N().S(`>`)
-//line views/layout/Menu.html:126
-			components.StreamSVGSimple(qw422016, i.Badge[1:], 18, ps)
-//line views/layout/Menu.html:126
-			qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:127
-		} else {
-//line views/layout/Menu.html:128
-			components.StreamIndent(qw422016, true, indent)
-//line views/layout/Menu.html:128
-			qw422016.N().S(`<div class="badge"`)
-//line views/layout/Menu.html:129
 			qw422016.N().S(badgeTitle)
-//line views/layout/Menu.html:129
+//line views/layout/Menu.html:127
 			qw422016.N().S(`>`)
-//line views/layout/Menu.html:129
-			qw422016.E().S(i.Badge)
-//line views/layout/Menu.html:129
+//line views/layout/Menu.html:127
+			components.StreamSVGSimple(qw422016, i.Badge[1:], 18, ps)
+//line views/layout/Menu.html:127
 			qw422016.N().S(`</div>`)
+//line views/layout/Menu.html:128
+		} else {
+//line views/layout/Menu.html:129
+			components.StreamIndent(qw422016, true, indent)
+//line views/layout/Menu.html:129
+			qw422016.N().S(`<div class="badge"`)
 //line views/layout/Menu.html:130
-		}
+			qw422016.N().S(badgeTitle)
+//line views/layout/Menu.html:130
+			qw422016.N().S(`>`)
+//line views/layout/Menu.html:130
+			qw422016.E().S(i.Badge)
+//line views/layout/Menu.html:130
+			qw422016.N().S(`</div>`)
 //line views/layout/Menu.html:131
+		}
+//line views/layout/Menu.html:132
 	}
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 }
 
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 func writemenuBadge(qq422016 qtio422016.Writer, i *menu.Item, indent int, ps *cutil.PageState) {
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	streammenuBadge(qw422016, i, indent, ps)
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 }
 
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 func menuBadge(i *menu.Item, indent int, ps *cutil.PageState) string {
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	writemenuBadge(qb422016, i, indent, ps)
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	qs422016 := string(qb422016.B)
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 	return qs422016
-//line views/layout/Menu.html:132
+//line views/layout/Menu.html:133
 }

@@ -36,7 +36,21 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.DefaultNavIcon = "cog"
 		switch path[0] {
-		case "server":
+		{{{ if .HasModule "settings" }}}case "settings":
+			if r.Method == http.MethodPost {
+				frm, err := cutil.ParseForm(r, ps.RequestBody)
+				if err != nil {
+					return "", err
+				}
+				if err := as.Services.Settings.SetMap(frm); err != nil {
+					return "", err
+				}
+				return controller.FlashAndRedir(true, "saved app settings", "/admin", ps)
+			}
+			st := as.Services.Settings.Get()
+			ps.SetTitleAndData("App Settings", st)
+			return controller.Render(r, as, &vadmin.SettingsEdit{Settings: st}, ps, keyAdmin, "App Settings")
+		{{{ end }}}case "server":
 			info := util.DebugGetInfo(as.BuildInfo.Version, as.Started)
 			ps.SetTitleAndData("Server Info", info)
 			return controller.Render(r, as, &vadmin.ServerInfo{Info: info}, ps, keyAdmin, "App Information"){{{ if .HasModule "brands" }}}

@@ -28,21 +28,22 @@ func Array(
 	g.AddImport(imps...)
 
 	g.AddBlocks(ModelArray(m))
-	if len(cols.PKs()) > 0 {
-		ag, err := ModelArrayGet(g, m, cols.PKs(), args, goVersion)
+	pks := cols.PKs()
+	if len(pks) > 0 {
+		ag, err := ModelArrayGet(g, m, pks, args, goVersion)
 		if err != nil {
 			return nil, err
 		}
 		g.AddBlocks(ag)
 	}
-	lo.ForEach(cols.PKs(), func(pk *model.Column, _ int) {
+	lo.ForEach(pks, func(pk *model.Column, _ int) {
 		if pk.Proper() != "Title" {
 			g.AddBlocks(modelArrayCol(m, pk, args.Enums))
 			g.AddBlocks(modelArrayColStrings(m, pk, args.Enums))
 		}
 	})
 	g.AddBlocks(modelArrayTitleStrings(m))
-	if len(cols.PKs()) > 1 {
+	if len(pks) > 1 {
 		g.AddBlocks(modelArrayToPKs(m))
 	}
 	lo.ForEach(importantCols, func(col *model.Column, _ int) {
@@ -53,6 +54,12 @@ func Array(
 			g.AddBlocks(modelArrayGetBySingle(m, col, args.Enums), modelArrayGetByMulti(m, col, args.Enums))
 		}
 	})
+	if len(pks) == 1 {
+		pkt := helper.GoTypeWithRef(pks[0], m.PackageName(), args)
+		g.AddBlocks(ModelArrayToMap(m, pks[0].Proper(), pkt))
+	} else if len(pks) > 1 {
+		g.AddBlocks(ModelArrayToMap(m, "ToPK()", "*PK"))
+	}
 	g.AddBlocks(ModelArrayToMaps(m), ModelArrayToOrderedMaps(m), BlockArrayToCSV(m), BlockArrayRandom(m), BlockArrayClone(m))
 	return g.Render(linebreak)
 }
@@ -84,6 +91,16 @@ func ModelArrayGet(g *golang.File, m metamodel.StringProvider, cols model.Column
 	ret.W("\t})")
 	ret.W("}")
 	return ret, nil
+}
+
+func ModelArrayToMap(m metamodel.StringProvider, pkKey string, pkType string) *golang.Block {
+	ret := golang.NewBlock(m.Proper()+"ArrayToMap", "func")
+	ret.WF("func (%s %s) ToMap() map[%s]*%s {", m.FirstLetter(), m.ProperPlural(), pkType, m.Proper())
+	ret.WF("\treturn lo.SliceToMap(%s, func(xx *%s) (%s, *%s) {", m.FirstLetter(), m.Proper(), pkType, m.Proper())
+	ret.WF("\t\treturn xx.%s, xx", pkKey)
+	ret.W("\t})")
+	ret.W("}")
+	return ret
 }
 
 func ModelArrayToMaps(m metamodel.StringProvider) *golang.Block {

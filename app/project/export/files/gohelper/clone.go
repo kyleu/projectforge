@@ -17,6 +17,9 @@ import (
 func BlockClone(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Clone", "func")
 	ret.WF("func (%s *%s) Clone() *%s {", str.FirstLetter(), str.Proper(), str.Proper())
+	ret.WF("\tif %s == nil {", str.FirstLetter())
+	ret.WF("\t\treturn nil")
+	ret.WF("\t}")
 	calls := lo.Map(cols, func(col *model.Column, _ int) string {
 		switch col.Type.Key() {
 		case types.KeyMap, types.KeyOrderedMap, types.KeyValueMap, types.KeyNumericMap, types.KeyReference:

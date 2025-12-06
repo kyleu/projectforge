@@ -110,6 +110,7 @@
       {% endif %}
     </li>
   {% endif %}
+  {%s= ps.Extra(`menu`) %}
 {% endstripspace %}{% endfunc %}
 
 {% func menuBadge(i *menu.Item, indent int, ps *cutil.PageState) %}{% stripspace %}

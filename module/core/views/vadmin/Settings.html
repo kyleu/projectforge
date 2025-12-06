@@ -41,6 +41,7 @@
 
   {%- if p.CurrentSettings != nil -%}
   <div class="card">
+    <div class="right"><a href="/admin/settings" title="edit settings"><button>{%= components.SVGButton(`edit`, ps) %}</button></a></div>
     <h3>{%= components.SVGIcon(`cog`, ps) %} App Settings</h3>
     <hr />
     <div class="overflow full-width">

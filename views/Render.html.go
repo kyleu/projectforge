@@ -87,6 +87,8 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 //line views/Render.html:28
 	qw422016.N().S(`>`)
 //line views/Render.html:28
+	qw422016.N().S(ps.Extra(`body`))
+//line views/Render.html:28
 	if len(ps.Flashes) > 0 {
 //line views/Render.html:28
 		streamrenderFlashes(qw422016, ps.Flashes)
@@ -112,10 +114,14 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 //line views/Render.html:29
 	page.StreamBody(qw422016, as, ps)
 //line views/Render.html:29
+	qw422016.N().S(ps.Extra(`main`))
+//line views/Render.html:29
 	qw422016.N().S(`</main>
 `)
 //line views/Render.html:30
 	streamrenderIcons(qw422016, ps.Icons)
+//line views/Render.html:30
+	qw422016.N().S(ps.Extra(`body-end`))
 //line views/Render.html:30
 	qw422016.N().S(`</body>
 </html>
