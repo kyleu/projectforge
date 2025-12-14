@@ -1,6 +1,7 @@
 # Brand Icons
 
-The **`brands`** module provides comprehensive brand icon support for [Project Forge](https://projectforge.dev) applications. It integrates thousands of high-quality SVG brand icons from [simple-icons](https://github.com/simple-icons/simple-icons), making it easy to display logos and branding elements in your applications.
+The **`brands`** module provides comprehensive brand icon support for your application.
+It integrates thousands of high-quality SVG brand icons from [simple-icons](https://github.com/simple-icons/simple-icons), making it easy to display logos and branding elements in your applications.
 
 ## Overview
 
@@ -52,7 +53,6 @@ This module offers:
 - Gallery view for browsing all available brand icons
 - Search and filtering capabilities
 - Icon preview and metadata display
-- Integration with Project Forge admin settings
 
 ## Usage
 
@@ -70,7 +70,7 @@ Use the `SVGRef` component helper (and its friends, defined in `SVG.html`) to re
 - **Icon Key**: Brand icon identifier (e.g., "brand-apple", "brand-google")
 - **Width/Height**: Pixel dimensions for the rendered icon
 - **CSS Class**: Custom styling class for the icon
-- **Page State**: Project Forge page state object
+- **Page State**: `*cutil.PageState` object
 
 ### Available Icons
 

@@ -1,6 +1,7 @@
 # Expression
 
-The **`expression`** module provides Common Expression Language (CEL) integration for [Project Forge](https://projectforge.dev) applications. It enables runtime evaluation of arbitrary expressions with high performance and caching capabilities.
+The **`expression`** module provides Common Expression Language (CEL) integration for your application.
+It enables runtime evaluation of arbitrary expressions with high performance and caching capabilities.
 
 ## Overview
 

@@ -132,11 +132,10 @@ Access the web admin interface at `/mcp` to:
 The module includes example tools to demonstrate usage:
 
 - **Random Number Generator** - Generates random numbers within specified ranges
-- **Generated Tools** - Tools created from Project Forge export configurations (if enabled)
 
 ## Configuration
 
-The MCP module uses standard Project Forge configuration patterns:
+The MCP module uses your application's standard configuration patterns:
 
 - **Debug Mode**: Enable detailed logging with `DEBUG=true`
 - **Build Info**: Automatic version and build information integration
@@ -152,5 +151,4 @@ The MCP module uses standard Project Forge configuration patterns:
 
 - [Model Context Protocol Specification](https://modelcontextprotocol.io) - Official MCP documentation
 - [MCP Go Library](https://github.com/mark3labs/mcp-go) - Underlying Go implementation
-- [Project Forge Documentation](https://projectforge.dev) - Complete Project Forge documentation
-- [Customization Guide](../customizing.md) - Advanced customization options
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

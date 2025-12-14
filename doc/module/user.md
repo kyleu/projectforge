@@ -1,13 +1,14 @@
 # User
 
-The **`user`** module provides user management functionality for [Project Forge](https://projectforge.dev) applications. It handles user authentication, profiles, session management, and provides both filesystem-based and database-backed user storage options.
+The **`user`** module provides user management functionality for your application.
+It handles user authentication, profiles, session management, and provides both filesystem-based and database-backed user storage options.
 
 ## Overview
 
 This module provides:
 
 - **User Profile Management**: User account creation, updates, and profile handling
-- **Session Integration**: Seamless integration with Project Forge's session system
+- **Session Integration**: Seamless integration with your application's session system
 - **Flexible Storage**: Support for both filesystem-based and database-backed user storage
 - **Authentication Support**: Works with OAuth and other authentication modules
 - **Customizable Models**: Easily customizable user models through export definitions

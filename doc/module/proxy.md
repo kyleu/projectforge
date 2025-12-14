@@ -1,6 +1,7 @@
 # Proxy
 
-The **`proxy`** module provides secure HTTP proxy functionality for [Project Forge](https://projectforge.dev) applications. It allows your application to proxy requests to external services while maintaining security controls and consistent routing patterns.
+The **`proxy`** module provides secure HTTP proxy functionality for your application.
+It allows your application to proxy requests to external services while maintaining security controls and consistent routing patterns.
 
 ## Overview
 

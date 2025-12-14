@@ -1,6 +1,7 @@
 # JSX
 
-The **`jsx`** module provides a lightweight JSX implementation for [Project Forge](https://projectforge.dev) applications. It enables developers to write TypeScript-based client-side code using familiar JSX syntax without the overhead of React or other heavy frameworks.
+The **`jsx`** module provides a lightweight JSX implementation for your application.
+It enables developers to write TypeScript-based client-side code using familiar JSX syntax without the overhead of React or other heavy frameworks.
 
 ## Overview
 

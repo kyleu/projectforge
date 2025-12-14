@@ -1,6 +1,7 @@
 # Database
 
-The **`database`** module provides foundational database access and management capabilities for [Project Forge](https://projectforge.dev) applications. It serves as the core abstraction layer for relational database operations with support for multiple database engines.
+The **`database`** module provides foundational database access and management capabilities for your application.
+It serves as the core abstraction layer for relational database operations with support for multiple database engines.
 
 ## Overview
 
@@ -123,7 +124,7 @@ SQL files in `queries/` directory are compiled with quicktemplate:
 
 ```sql
 -- queries/user.sql
-SELECT {%s= columns %} FROM users 
+SELECT {%s= columns %} FROM users
 WHERE active = {%v active %}
 {% if search %}AND name LIKE {%v search %}{% endif %}
 ORDER BY created_at DESC

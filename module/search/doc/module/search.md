@@ -1,6 +1,7 @@
 # Search
 
-The **`search`** module provides comprehensive search functionality for [Project Forge](https://projectforge.dev) applications. It adds a powerful, extensible search system with a clean UI integrated into the application navigation.
+The **`search`** module provides comprehensive search functionality for your application.
+It adds a powerful, extensible search system with a clean UI integrated into the application navigation.
 
 ## Overview
 
@@ -20,7 +21,7 @@ This module provides:
 - Type-safe result structures with metadata
 - Configurable result limits and scoring
 
-### User Experience  
+### User Experience
 - Clean, responsive search interface
 - Real-time search suggestions
 - Match highlighting with context
@@ -37,27 +38,27 @@ This module provides:
 
 ### Basic Implementation
 
-1. **Enable the module** in your Project Forge configuration
+1. **Enable the module** in your application's configuration
 
 2. **Implement search providers** by modifying `./app/lib/search/search.go`:
 
 ```go
 func Search(ctx context.Context, params *Params, ps *cutil.PageState, logger util.Logger) *Results {
     ret := NewResults(params)
-    
+
     // Add your search providers
     if params.Q != "" {
         // Search users
         if userResults := searchUsers(ctx, params.Q); len(userResults) > 0 {
             ret.Results = append(ret.Results, userResults...)
         }
-        
+
         // Search content
         if contentResults := searchContent(ctx, params.Q); len(contentResults) > 0 {
             ret.Results = append(ret.Results, contentResults...)
         }
     }
-    
+
     return ret
 }
 ```
@@ -90,7 +91,7 @@ func NewUserResult(user *User, query string) *result.Result {
 ## Source Code
 
 - **Repository**: https://github.com/kyleu/projectforge/tree/main/module/search
-- **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)  
+- **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
 
 ## See Also

@@ -1,6 +1,7 @@
 # HTTP Archive
 
-The **`har`** module provides comprehensive HTTP Archive (HAR) file parsing and management capabilities for [Project Forge](https://projectforge.dev) applications. HAR files are standard JSON-formatted archives that capture detailed information about HTTP transactions, making them invaluable for debugging, performance analysis, and API documentation.
+The **`har`** module provides comprehensive HTTP Archive (HAR) file parsing and management capabilities for your application.
+HAR files are standard JSON-formatted archives that capture detailed information about HTTP transactions, making them invaluable for debugging, performance analysis, and API documentation.
 
 ## Overview
 
@@ -114,11 +115,11 @@ for _, entry := range log.Entries {
 
 ### Search Integration
 
-The module integrates with Project Forge's search system to find HAR files and entries matching specific criteria.
+The module integrates with the application's search system to find HAR files and entries matching specific criteria.
 
 ## Configuration
 
-No additional configuration required beyond standard Project Forge setup. HAR files are stored in the `./har` directory relative to the application root.
+No additional configuration required beyond standard application setup. HAR files are stored in the `./har` directory relative to the application root.
 
 ## File Format Support
 
@@ -139,5 +140,5 @@ Supports the full [HAR 1.2 specification](http://www.softwareishard.com/blog/har
 
 ## See Also
 
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation  
 - [HAR 1.2 Specification](http://www.softwareishard.com/blog/har-12-spec/) - Official HAR format documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

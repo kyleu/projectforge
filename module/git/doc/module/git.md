@@ -1,10 +1,11 @@
 # Git
 
-The **`git`** module provides comprehensive Git repository management and automation capabilities for [Project Forge](https://projectforge.dev) applications. It offers both basic Git operations and intelligent "magic" workflows that automate common development tasks.
+The **`git`** module provides comprehensive Git repository management and automation capabilities for your application.
+It offers both basic Git operations and intelligent "magic" workflows that automate common development tasks.
 
 ## Overview
 
-This module enables applications to:
+This module enables your application to:
 
 - **Repository Management**: Perform standard Git operations (status, commit, push, pull, etc.)
 - **Automated Workflows**: Use "magic" commands that intelligently handle common Git scenarios
@@ -128,11 +129,11 @@ result, err := gitSvc.History(ctx, args, logger)
 
 ## Configuration
 
-The Git module integrates with Project Forge's telemetry system and uses the application's logging framework. No additional configuration is required beyond ensuring Git is available in the system PATH.
+The Git module integrates with the telemetry system and uses the application's logging framework. No additional configuration is required beyond ensuring Git is available in the system PATH.
 
 ### Environment Integration
 
-- Uses Project Forge's `telemetry.RunProcessSimple` for Git command execution
+- Uses `telemetry.RunProcessSimple` for Git command execution
 - Integrates with structured logging for operation tracking
 - Respects application-level timeout and context cancellation
 
@@ -150,6 +151,6 @@ The Git module integrates with Project Forge's telemetry system and uses the app
 
 ## See Also
 
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation
 - [Git Documentation](https://git-scm.com/docs) - Official Git documentation
 - [GitHub CLI Documentation](https://cli.github.com/manual/) - GitHub CLI reference
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

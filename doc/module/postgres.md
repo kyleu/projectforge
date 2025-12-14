@@ -1,10 +1,11 @@
 # PostgreSQL
 
-The **`postgres`** module provides PostgreSQL database integration for [Project Forge](https://projectforge.dev) applications. This module extends the base `database` module with PostgreSQL-specific functionality, including advanced features, driver integration, and PostgreSQL-optimized performance.
+The **`postgres`** module provides PostgreSQL database integration for your application.
+This module extends the base `database` module with PostgreSQL-specific functionality, including advanced features, driver integration, and PostgreSQL-optimized performance.
 
 ## Overview
 
-This module adds **PostgreSQL database support** to Project Forge applications and requires the `database` module. It provides:
+This module adds **PostgreSQL database support** to your application and requires the `database` module. It provides:
 
 - **Advanced SQL Features**: Support for PostgreSQL's extended SQL capabilities
 - **Driver Integration**: High-performance PostgreSQL driver with connection pooling

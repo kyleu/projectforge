@@ -1,10 +1,11 @@
 # Upgrade
 
-The **`upgrade`** module provides automated in-place version upgrades for [Project Forge](https://projectforge.dev) applications using GitHub Releases. It enables applications to update themselves to the latest version without manual intervention.
+The **`upgrade`** module provides automated in-place version upgrades for your application using GitHub Releases.
+It enables applications to update themselves to the latest version without manual intervention.
 
 ## Overview
 
-This module adds self-upgrade capabilities to Project Forge applications by:
+This module adds self-upgrade capabilities to your application by:
 
 - **GitHub Integration**: Automatically checks GitHub Releases for newer versions
 - **In-place Updates**: Downloads and replaces the current binary seamlessly

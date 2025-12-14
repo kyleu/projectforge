@@ -1,6 +1,7 @@
 # Export
 
-The **`export`** module is a code generation module for [Project Forge](https://projectforge.dev) applications. It generates comprehensive Go code based on your project's schema definition, creating standardized service interfaces, model contracts, and data export functionality.
+The **`export`** module is a code generation module for your application.
+It generates comprehensive Go and TypeScript code based on your project's schema definition, creating standardized service interfaces, model contracts, and data export functionality.
 
 ## Overview
 
@@ -64,10 +65,6 @@ This module generates code based on your project's schema configuration. The gen
 - Soft delete settings per model
 - Custom validation rules
 - Export field configurations
-
-## Important Notes
-
-The generated code follows Project Forge conventions and integrates seamlessly with other modules.
 
 ## Source Code
 

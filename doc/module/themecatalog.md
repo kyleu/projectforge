@@ -1,6 +1,7 @@
 # Theme Catalog
 
-The **`themecatalog`** module provides comprehensive theme management and customization capabilities for [Project Forge](https://projectforge.dev) applications. It includes 23 built-in themes with advanced color palette generation and custom theme creation tools.
+The **`themecatalog`** module provides comprehensive theme management and customization capabilities for your application.
+It includes 23 built-in themes with advanced color palette generation and custom theme creation tools.
 
 ## Overview
 
@@ -53,7 +54,7 @@ This module extends the core theming system by providing:
 
 ### Accessing the Theme Catalog
 
-Navigate to `/theme` in your Project Forge application to access the theme management interface.
+Navigate to `/theme` in your application to access the theme management interface.
 
 ### Creating Custom Themes
 
@@ -88,6 +89,4 @@ The module integrates with the core theme system configuration:
 
 ## See Also
 
-- [Core Module Documentation](core.md) - Foundation framework
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation
-- [Customizing Guide](../customizing.md) - Advanced customization options

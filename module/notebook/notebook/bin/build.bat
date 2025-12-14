@@ -1,2 +1,2 @@
 cd ..
-npm run build
+npx npm run build

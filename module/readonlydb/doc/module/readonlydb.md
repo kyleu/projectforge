@@ -1,6 +1,7 @@
 # Read-only Database
 
-The **`readonlydb`** module provides a separate read-only database connection for [Project Forge](https://projectforge.dev) applications. This enables read-heavy operations to be offloaded to a dedicated read replica or separate database instance, improving performance and reducing load on the primary database.
+The **`readonlydb`** module provides a separate read-only database connection for your application.
+This enables read-heavy operations to be offloaded to a dedicated read replica or separate database instance, improving performance and reducing load on the primary database.
 
 ## Overview
 

@@ -103,13 +103,16 @@ button[disabled] {
   margin-top: var(--nav-height);
   margin-left: var(--menu-width);
   transition: margin-left 250ms ease-in-out;
-  min-height: calc(100% - var(--nav-height));
 }
 
 @media (prefers-reduced-motion) {
   #content {
     transition: none;
   }
+}
+
+#content.stretch {
+  min-height: calc(100% - var(--nav-height));
 }
 
 #content.noheader {

@@ -1,6 +1,6 @@
 # Process
 
-The **`process`** module provides comprehensive system process management capabilities for [Project Forge](https://projectforge.dev) applications. It enables spawning, monitoring, and controlling system processes with real-time output streaming and web-based administration.
+The **`process`** module provides comprehensive system process management capabilities for your application. It enables spawning, monitoring, and controlling system processes with real-time output streaming and web-based administration.
 
 ## Overview
 
@@ -73,15 +73,6 @@ Include the `websocket` module to enable live output streaming:
 <!-- Process detail view with WebSocket streaming -->
 {%= components.RenderExecDetail(exec, ps) %}
 ```
-
-## Configuration
-
-The process module uses standard Project Forge configuration patterns:
-
-- Process timeout limits
-- Output buffer sizes
-- WebSocket connection settings
-- Security restrictions for allowed commands
 
 ## Dependencies
 

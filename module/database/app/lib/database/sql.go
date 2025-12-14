@@ -153,10 +153,22 @@ func SQLDelete(table string, where string, _ *DBType) string {
 }
 
 func SQLInClause(column string, numParams int, offset int, dbt *DBType) string {
+	return sqlInClause(column, numParams, offset, false, dbt)
+}
+
+func SQLNotInClause(column string, numParams int, offset int, dbt *DBType) string {
+	return sqlInClause(column, numParams, offset, true, dbt)
+}
+
+func sqlInClause(column string, numParams int, offset int, notIn bool, dbt *DBType) string {
 	resBuilder := strings.Builder{}
 	for index := 0; index < numParams; index++ {
 		if index == 0 {
-			resBuilder.WriteString(column + " in (")
+			if notIn {
+				resBuilder.WriteString(column + " not in (")
+			} else {
+				resBuilder.WriteString(column + " in (")
+			}
 		} else {
 			resBuilder.WriteString(", ")
 		}

@@ -1,6 +1,7 @@
 # OpenAPI
 
-The **`openapi`** module provides Swagger UI integration for [Project Forge](https://projectforge.dev) applications. It embeds the complete Swagger UI interface to visualize, explore, and test OpenAPI specifications.
+The **`openapi`** module provides Swagger UI integration for your application.
+It embeds the complete Swagger UI interface to visualize, explore, and test OpenAPI specifications.
 
 ## Overview
 
@@ -23,12 +24,12 @@ This module provides:
 - Embeds all necessary Swagger UI assets (CSS, JavaScript)
 - Works with any OpenAPI 3.x specification
 - Supports both local and remote specification URLs
-- Integrates with Project Forge's theming system
+- Integrates with your application's theming system
 
 ### Security & Customization
 - Flexible security model - add authentication as needed
 - Customizable base URL and specification location
-- Integration with Project Forge's routing and middleware
+- Integration with your application's routing and middleware
 
 ## Usage
 

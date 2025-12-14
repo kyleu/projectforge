@@ -1,6 +1,7 @@
 # GraphQL
 
-The **`graphql`** module provides comprehensive GraphQL API support for [Project Forge](https://projectforge.dev) applications. It enables you to build modern, type-safe GraphQL APIs with an intuitive development interface.
+The **`graphql`** module provides comprehensive GraphQL API support for your application.
+It enables you to build modern, type-safe GraphQL APIs with an intuitive development interface.
 
 ## Overview
 
@@ -105,5 +106,5 @@ The module works out-of-the-box with no additional configuration required. Schem
 
 ## See Also
 
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation
 - [GraphQL Specification](https://graphql.org) - Official GraphQL documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

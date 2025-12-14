@@ -1,10 +1,11 @@
 # Types
 
-The **`types`** module provides a comprehensive type system for [Project Forge](https://projectforge.dev) applications. It offers a collection of structured data types with built-in validation, serialization, and type safety features.
+The **`types`** module provides a comprehensive type system for your application.
+It offers a collection of structured data types with built-in validation, serialization, and type safety features.
 
 ## Overview
 
-This module provides a unified type system for representing and working with common data types in Go applications. It focuses on:
+This module provides a unified type system for representing and working with common data types in your application. It focuses on:
 
 - **Type Safety**: Strongly typed representations with compile-time guarantees
 - **JSON Serialization**: Built-in support for JSON marshaling and unmarshaling

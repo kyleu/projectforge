@@ -14,6 +14,6 @@
   <div class="card">
     <h3>{%= components.SVGIcon(p.Component.Icon, ps) %} {%s p.Component.Title %}</h3>
     <em>{%s p.Component.Description %}</em>
-    {%s= p.Component.HTML %}
+    <div class="markdown">{%s= p.Component.HTML %}</div>
   </div>
 {% endfunc %}

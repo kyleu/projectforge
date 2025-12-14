@@ -1,6 +1,10 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
 
 const tsFiles = ["**/*.ts", "**/*.tsx"];
 const ignores = ["build.js", "eslint.config.js", "jest.config.js"];
@@ -17,7 +21,7 @@ export default tseslint.config(
       sourceType: "module",
       parserOptions: {
         project: "./tsconfig.json",
-        tsconfigRootDir: import.meta.dirname
+        tsconfigRootDir: tsconfigRootDir
       }
     },
     rules: {

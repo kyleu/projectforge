@@ -1,6 +1,7 @@
 # Android
 
-The **`android`** module enables [Project Forge](https://projectforge.dev) applications to be deployed as native Android applications using a webview-based architecture. It provides a complete Android build pipeline that wraps your web application in a native Android container.
+The **`android`** module enables your application to be deployed as native Android applications using a webview-based architecture.
+It provides a complete Android build pipeline that wraps your web application in a native Android container.
 
 ## Overview
 
@@ -39,7 +40,7 @@ The Android module creates a hybrid application architecture:
 Android App Container
 ├── Native Android Activity
 ├── WebView Component
-│   └── Your Project Forge Web App
+│   └── Your App
 ├── Go Mobile Library (AAR)
 │   └── Core Application Logic
 └── Android Resources
@@ -98,7 +99,7 @@ The module provides a configurable Android manifest template supporting:
 - Icon and theme customization
 
 ### Build Options
-Configure builds through Project Forge settings:
+Configure builds through your application's configuration:
 - Target Android API level
 - Application signing configuration
 - Build variants (debug/release)
@@ -107,7 +108,7 @@ Configure builds through Project Forge settings:
 ## Usage
 
 ### Prerequisites
-Ensure the `android` build option is enabled in your Project Forge configuration.
+Ensure the `android` build option is enabled in your application's configuration.
 
 ### Building Android App
 
@@ -171,3 +172,8 @@ gomobile init
 - **Repository**: https://github.com/kyleu/projectforge/tree/main/module/android
 - **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
+
+## See Also
+
+- [Android Documentation](https://developer.android.com/guide) - Official Android developer documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

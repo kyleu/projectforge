@@ -1,6 +1,7 @@
 # Plot
 
-The **`plot`** module provides data visualization capabilities for [Project Forge](https://projectforge.dev) applications using [Observable Plot](https://observablehq.com/plot). It enables developers to create interactive, responsive charts and graphs with minimal code.
+The **`plot`** module provides data visualization capabilities for your application using [Observable Plot](https://observablehq.com/plot).
+It enables developers to create interactive, responsive charts and graphs with minimal code.
 
 ## Overview
 
@@ -23,7 +24,7 @@ This module provides:
 - Pre-built chart templates for common use cases
 - Simple API for creating custom visualizations
 - Automatic asset loading and script management
-- Integration with Project Forge's templating system
+- Integration with your application's templating system
 
 ### Chart Types
 - Horizontal bar charts with customizable styling
@@ -56,7 +57,7 @@ First, include the plot assets in your template:
 ### Creating a Horizontal Bar Chart
 
 ```html
-{% code 
+{% code
   data := []util.ValueMap{
     {"name": "Category A", "value": 10},
     {"name": "Category B", "value": 20},
@@ -83,7 +84,7 @@ Use the `PlotCall()` function to create custom visualizations:
       ]
     });
   };
-  
+
   {%= PlotCall("custom-chart", "customChart(div)") %}
 </script>
 ```
@@ -94,13 +95,13 @@ The module automatically handles:
 - Asset loading and caching
 - Responsive behavior on window resize
 - Memory cleanup when charts are destroyed
-- Integration with Project Forge's asset pipeline
+- Integration with your application's asset pipeline
 
 ## Dependencies
 
 - **D3.js**: Data manipulation and DOM interaction
 - **Observable Plot**: High-level charting grammar
-- **Project Forge Core**: Template system and utilities
+- **Core Module**: Template system and utilities
 
 ## Source Code
 
@@ -112,4 +113,4 @@ The module automatically handles:
 
 - [Observable Plot Documentation](https://observablehq.com/plot) - Complete Observable Plot reference
 - [D3.js Documentation](https://d3js.org) - D3.js API reference
-- [Project Forge Documentation](https://projectforge.dev) - Complete framework documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

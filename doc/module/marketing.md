@@ -1,6 +1,7 @@
 # Marketing Site
 
-The **`marketing`** module provides a comprehensive marketing website infrastructure for [Project Forge](https://projectforge.dev) applications. It creates a separate marketing site that runs alongside your main application, perfect for showcasing features, providing downloads, and engaging users.
+The **`marketing`** module provides a comprehensive marketing website infrastructure for your application.
+It creates a separate marketing site that runs alongside your main application, perfect for showcasing features, providing downloads, and engaging users.
 
 ## Overview
 
@@ -126,5 +127,4 @@ Configure GitHub repository for downloads:
 
 - [Filesystem Module](filesystem.md) - Required dependency for content management
 - [Configuration Guide](../running.md) - Environment variables and startup options
-- [Customization Guide](../customizing.md) - Theming and layout customization
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation

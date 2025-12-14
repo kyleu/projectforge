@@ -1,6 +1,6 @@
 # Desktop
 
-The **`desktop`** module enables [Project Forge](https://projectforge.dev) applications to run as native desktop applications across Windows, macOS, and Linux using system webviews.
+The **`desktop`** module enables your application to run as a native desktop application, across Windows, macOS, and Linux, using system webviews.
 
 ## Overview
 

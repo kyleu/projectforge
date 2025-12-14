@@ -1,6 +1,7 @@
 # Database Migration
 
-The **`migration`** module provides comprehensive database migration capabilities for [Project Forge](https://projectforge.dev) applications. It enables structured database schema evolution with version control and automated migration execution.
+The **`migration`** module provides comprehensive database migration capabilities for your application.
+It enables structured database schema evolution with version control and automated migration execution.
 
 ## Overview
 

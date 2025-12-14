@@ -2,6 +2,11 @@
 
 This directory contains the TypeScript client code for Project Forge, providing progressive enhancement for this application's UI.
 
+## Requirements
+
+- Node.js `>=18.18`
+- npm (lockfile included)
+
 ## Project Structure
 
 ```
@@ -12,7 +17,7 @@ client/
 │   ├── app.ts             # Custom code for this application (the rest is provided)
 │   ├── *.ts               # Individual modules, included in `client`
 │   ├── style/             # CSS files, add custom rules in `client.css`
-│   └── svg/               # SVG icons, processed by Project Forge
+│   └── svg/               # SVG icons, usually processed by Project Forge
 ```
 
 ## Build System
@@ -27,7 +32,7 @@ The project uses **esbuild** for fast bundling:
 ### Build Configuration
 
 - **TypeScript**: Strict mode, ES2021 target, JSX support
-- **Module system**: ESM with single-file output (`module: "none"`)
+- **Module system**: ESM (bundled by esbuild; `tsc` is typecheck-only)
 - **JSX**: Custom JSX factory for lightweight React-like syntax
 
 ## Development Workflow
@@ -35,11 +40,17 @@ The project uses **esbuild** for fast bundling:
 ### Common Commands
 
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (recommended)
+npm ci
 
-# Build the client bundle
+# Dev build (watch for changes)
+npm run dev
+
+# Build (typecheck + bundle)
 npm run build
+
+# Bundle only (skips typecheck)
+npm run build:bundle
 
 # Run tests
 npm run test
@@ -87,6 +98,8 @@ The TypeScript code builds to `../assets/client.js`, which is:
 - Embedded in the Go binary
 - Served at `/assets/client.js`
 - Included in HTML templates
+
+The CSS imported by `src/client.ts` is emitted as `../assets/client.css`.
 
 ## Performance
 

@@ -1,6 +1,7 @@
 # Audit
 
-The **`audit`** module provides a comprehensive audit framework for [Project Forge](https://projectforge.dev) applications. It enables detailed tracking of user actions, data changes, and system events with minimal performance overhead.
+The **`audit`** module provides a comprehensive audit framework for your application.
+It enables detailed tracking of user actions, data changes, and system events with minimal performance overhead.
 
 ## Overview
 
@@ -67,3 +68,4 @@ The audit module automatically creates the necessary database tables during appl
 - [Database Module](database.md) - Required dependency for data storage
 - [Export Module](export.md) - Recommended for audit log reporting
 - [User Module](user.md) - Provides user context for audit entries
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

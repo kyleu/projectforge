@@ -250,7 +250,7 @@ func process(url string) (any, error) {
 
 ### Controllers (MVC)
 
-Project Forge controllers can serve both HTML pages and API responses using the same handler. The `Act` helper provides authentication, CORS, telemetry, error handling, and request state:
+Controllers can serve both HTML pages and API responses using the same handler. The `Act` helper provides authentication, CORS, telemetry, error handling, and request state:
 
 ```go
 func APIEndpoint(w http.ResponseWriter, r *http.Request) {

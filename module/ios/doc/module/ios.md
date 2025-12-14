@@ -1,6 +1,7 @@
 # iOS
 
-The **`ios`** module enables [Project Forge](https://projectforge.dev) applications to build native iOS applications using a WebView-based approach. It provides the necessary templates, build scripts, and configuration to package your web application as a native iOS app.
+The **`ios`** module enables your application to build native iOS applications using a system WebView-based approach.
+It provides the necessary templates, build scripts, and configuration to package your web application as a native iOS app.
 
 ## Overview
 
@@ -8,7 +9,7 @@ This module provides:
 
 - **Native iOS App Template**: Complete Xcode project template with WebView integration
 - **Build Automation**: Scripts to build and package iOS applications from your web app
-- **Asset Management**: Icon and launch screen configuration through Project Forge UI
+- **Asset Management**: Icon and launch screen configuration through your application's configuration
 - **WebView Bridge**: Seamless integration between your web application and iOS runtime
 
 ## Key Features
@@ -20,11 +21,11 @@ This module provides:
 
 ### Build Integration
 - Automated build process via `./bin/ios.sh` script
-- Integrates with Project Forge's multi-platform build system
+- Integrates with the normal application build system
 - Generates ready-to-submit Xcode projects
 
 ### Asset Configuration
-- Configure app icons through Project Forge UI
+- Configure app icons through the Project Forge UI or CLI
 - Customize launch screens and app metadata
 - Automatic asset generation for multiple iOS device sizes
 
@@ -38,7 +39,7 @@ This module provides:
 ### Build Prerequisites
 - **macOS**: Required for iOS development and Xcode
 - **Xcode**: Latest version with iOS SDK
-- **iOS Build Option**: Must be enabled in Project Forge configuration
+- **iOS Build Option**: Must be enabled in your application's configuration
 
 ### Target Compatibility
 - **iOS 12.0+**: Minimum supported iOS version
@@ -49,11 +50,11 @@ This module provides:
 
 ### 1. Enable iOS Builds
 
-In the Project Forge UI, enable "iOS" in build options, or add the "iOS" build option in your Project Forge configuration file
+In the Project Forge UI, enable "iOS" in build options, or add the "iOS" build option in your application's configuration file
 
 ### 2. Configure App Settings
 
-Set up your iOS app metadata through the Project Forge UI:
+Set up your iOS app metadata through your application's configuration or the Project Forge UI:
 - App name and bundle identifier
 - App icons (various sizes generated automatically)
 - Launch screen configuration
@@ -115,7 +116,7 @@ The iOS template is located at:
 
 ### App Settings
 
-Configure your iOS app through Project Forge:
+Configure your iOS settings:
 
 - **Bundle Identifier**: Unique app identifier (e.g., `com.yourcompany.yourapp`)
 - **Display Name**: App name shown on iOS home screen
@@ -123,7 +124,7 @@ Configure your iOS app through Project Forge:
 ### WebView Configuration
 
 The module automatically configures:
-- **Local Server**: Connects to your Project Forge app server
+- **Local Server**: Starts your server on an available port
 - **Network Access**: Allows external network requests
 - **JavaScript**: Enabled with full API access
 - **Storage**: Persistent local storage support
@@ -156,7 +157,7 @@ The module automatically configures:
 # Ensure Xcode command line tools are installed
 sudo xcode-select --install
 
-# Verify iOS build option is enabled in Project Forge
+# Verify iOS build option is enabled in your application's configuration
 ```
 
 **App crashes on launch:**
@@ -165,17 +166,10 @@ sudo xcode-select --install
 - Review WebView console logs
 
 **Icons not showing:**
-- Ensure icons are configured in Project Forge UI
+- Ensure icons are configured in your application's configuration
 - Check that icon files are generated in Assets.xcassets
 - Verify icon sizes meet iOS requirements
-
-## Dependencies
-
-The `ios` module integrates with:
-
-- **Project Forge Core**: Requires core module for basic functionality
-- **Xcode**: Apple's development environment
-- **iOS SDK**: Target iOS platform SDK
+- Run "Rebuild SVG" in the Project Forge UI
 
 ## Source Code
 

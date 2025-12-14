@@ -1,6 +1,7 @@
 # OAuth
 
-The **`oauth`** module provides comprehensive OAuth 2.0 authentication and session management for [Project Forge](https://projectforge.dev) applications. It supports sozens of OAuth providers and includes flexible permission systems for access control.
+The **`oauth`** module provides comprehensive OAuth 2.0 authentication and session management for your application.
+It supports dozens of OAuth providers and includes flexible permission systems for access control.
 
 ## Overview
 
@@ -73,13 +74,13 @@ Add permission rules to your application initialization:
 user.SetPermissions(false, // default deny
     // Grant admin access to GitHub users from specific domain
     user.Perm("/admin", "github:@projectforge.dev", true),
-    
+
     // Allow specific GitHub organization members
     user.Perm("/admin", "github:org:mycompany", true),
-    
+
     // Deny admin access to others
     user.Perm("/admin", "*", false),
-    
+
     // Allow authenticated users to access main app
     user.Perm("/", "*", true),
 )
@@ -115,7 +116,7 @@ user.SetPermissions(false,
     // Admins: GitHub org members or Google company emails
     user.Perm("/admin", "github:org:mycompany", true),
     user.Perm("/admin", "google:@company.com", true),
-    
+
     // Users: Any authenticated user from approved providers
     user.Perm("/app", "github:*", true),
     user.Perm("/app", "google:*", true),

@@ -1,6 +1,7 @@
 # Queue
 
-The **`queue`** module provides a database-backed message queue system for [Project Forge](https://projectforge.dev) applications. It enables reliable, persistent messaging between application components with topic-based routing and automatic retry mechanisms.
+The **`queue`** module provides a database-backed message queue system for your application.
+It enables reliable, persistent messaging between application components with topic-based routing and automatic retry mechanisms.
 
 ## Overview
 
@@ -176,7 +177,5 @@ The module provides a web-based admin interface accessible at `/admin/queue`:
 
 ## See Also
 
-- [Core Module Documentation](core.md) - Foundation framework
 - [SQLite Module Documentation](sqlite.md) - Database backend
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation
-- [Customizing Guide](../customizing.md) - Advanced customization options

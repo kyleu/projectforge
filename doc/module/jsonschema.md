@@ -1,6 +1,7 @@
 # JSON Schema
 
-The **`jsonschema`** module provides comprehensive [JSON Schema](https://json-schema.org/) support for [Project Forge](https://projectforge.dev) applications. It offers a complete Go representation of JSON Schema Draft 2020-12 with validation utilities and collection management.
+The **`jsonschema`** module provides comprehensive [JSON Schema](https://json-schema.org/) support for your application.
+It offers a complete Go representation of JSON Schema Draft 2020-12 with validation utilities and collection management.
 
 ## Overview
 
@@ -99,4 +100,4 @@ userSchema := collection.Get("user")
 ## See Also
 
 - [JSON Schema Specification](https://json-schema.org/) - Official JSON Schema documentation
-- [Project Forge Documentation](https://projectforge.dev) - Complete Project Forge documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

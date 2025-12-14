@@ -1,6 +1,6 @@
 # Settings
 
-The **`settings`** module provides a framework for managing file-backed application settings for [Project Forge](https://projectforge.dev) applications.
+The **`settings`** module provides a framework for managing file-backed application settings for your application.
 
 ## Overview
 

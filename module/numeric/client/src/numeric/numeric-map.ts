@@ -128,11 +128,11 @@ export class NumericMap implements Iterable<[string, Numeric]> {
   }
 
   min(): Numeric {
-    return this.entries().reduce((min, [_, value]) => (value.lt(min) ? value : min), Numeric.positiveInfinity);
+    return this.entries().reduce((min, [, value]) => (value.lt(min) ? value : min), Numeric.positiveInfinity);
   }
 
   max(): Numeric {
-    return this.entries().reduce((max, [_, value]) => (value.gt(max) ? value : max), Numeric.negativeInfinity);
+    return this.entries().reduce((max, [, value]) => (value.gt(max) ? value : max), Numeric.negativeInfinity);
   }
 
   ln(): NumericMap {

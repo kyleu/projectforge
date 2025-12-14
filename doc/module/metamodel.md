@@ -1,6 +1,7 @@
 # Metamodel
 
-The **`metamodel`** module provides a comprehensive Go representation of database models, enumerations, and type definitions for [Project Forge](https://projectforge.dev) applications. It serves as the foundation for code generation, database schema management, and type-safe data modeling.
+The **`metamodel`** module provides a comprehensive Go representation of database models, enumerations, and type definitions for your application.
+It serves as the foundation for code generation, database schema management, and type-safe data modeling.
 
 ## Overview
 
@@ -89,7 +90,7 @@ enum := &enum.Enum{
 
 ## Configuration
 
-The metamodel module integrates with Project Forge's configuration system and supports:
+The metamodel module integrates with your application's configuration and supports:
 
 - **Schema Validation**: Automatic validation of model definitions
 - **Naming Conventions**: Configurable naming patterns for generated code

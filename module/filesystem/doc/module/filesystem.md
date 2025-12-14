@@ -1,6 +1,7 @@
 # Filesystem
 
-The **`filesystem`** module provides a unified abstraction layer for [Project Forge](https://projectforge.dev) applications to interact with different storage backends. It enables applications to work seamlessly with local disk storage, in-memory filesystems, and remote storage systems through a consistent API.
+The **`filesystem`** module provides a unified abstraction layer for your application to interact with different storage backends.
+It enables your application to work seamlessly with local disk storage, in-memory filesystems, and remote storage systems through a consistent API.
 
 ## Overview
 
@@ -55,7 +56,7 @@ This module provides:
 
 ### File Types and Utilities
 
-- **`FileInfo`** - Enhanced file metadata with Project Forge-specific fields
+- **`FileInfo`** - Enhanced file metadata
 - **`FileMode`** - Type-safe file permission handling
 - **`Reader/Writer`** - Streaming interfaces for large file operations
 - **`Tree`** - Hierarchical file structure representation
@@ -138,5 +139,4 @@ The filesystem can be configured through the `NewFileSystem` constructor:
 ## See Also
 
 - [afero](https://github.com/spf13/afero) - Filesystem abstraction library providing the underlying storage implementations
-- [Core Module](core.md) - Foundation module with basic utilities
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation

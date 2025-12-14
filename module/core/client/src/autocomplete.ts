@@ -77,7 +77,7 @@ function autocomplete(
     if (!proceed) {
       return;
     }
-    if (cache[q] && cache[q].url === dest) {
+    if (cache[q]?.url === dest) {
       datalistUpdate(q);
       return;
     }

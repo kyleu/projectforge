@@ -50,11 +50,11 @@ func (p *ComponentDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
 	qw422016.E().S(p.Component.Description)
 //line views/vsite/ComponentDetail.html:16
 	qw422016.N().S(`</em>
-    `)
+    <div class="markdown">`)
 //line views/vsite/ComponentDetail.html:17
 	qw422016.N().S(p.Component.HTML)
 //line views/vsite/ComponentDetail.html:17
-	qw422016.N().S(`
+	qw422016.N().S(`</div>
   </div>
 `)
 //line views/vsite/ComponentDetail.html:19

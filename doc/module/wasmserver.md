@@ -1,10 +1,11 @@
 # WASM Server
 
-The **`wasmserver`** module for [Project Forge](https://projectforge.dev) enables building your HTTP server application as a WebAssembly module that runs in web browsers using Service Workers. This allows your Go application to run entirely client-side without requiring a traditional server infrastructure.
+The **`wasmserver`** module for your application allows building your HTTP server application as a WebAssembly module that runs in web browsers using Service Workers.
+This allows your Go application to run entirely client-side without requiring a traditional server infrastructure.
 
 ## Overview
 
-This module transforms your Project Forge application into a WebAssembly binary that can be executed in web browsers, enabling:
+This module transforms your application into a WebAssembly binary that can be executed in web browsers, enabling:
 
 - **Client-side execution**: Full application logic runs in the browser
 - **Service Worker integration**: Intercepts HTTP requests within the browser
@@ -113,4 +114,4 @@ Deploy the `tools/wasmserver` directory contents to any static hosting service:
 
 - [WebAssembly Documentation](https://webassembly.org/docs/) - WebAssembly specifications
 - [Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) - MDN Service Worker documentation
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation  
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

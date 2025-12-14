@@ -1,10 +1,11 @@
 # SQLite
 
-The **`sqlite`** module provides SQLite database integration for [Project Forge](https://projectforge.dev) applications. This module extends the base `database` module with SQLite-specific functionality, offering an embedded database solution perfect for development, testing, and lightweight production deployments.
+The **`sqlite`** module provides SQLite database integration for your application.
+This module extends the base `database` module with SQLite-specific functionality, offering an embedded database solution perfect for development, testing, and lightweight production deployments.
 
 ## Overview
 
-This module adds **SQLite embedded database support** to Project Forge applications and requires the `database` module. It provides:
+This module adds **SQLite embedded database support** to your application and requires the `database` module. It provides:
 
 - **Embedded Database**: Zero-configuration embedded database with no external dependencies
 - **File-Based Storage**: Single-file database storage with backup and portability
@@ -168,11 +169,6 @@ rows, err := db.Query(`pragma integrity_check`)
 
 - Database file is created automatically on first connection
 - No manual database creation required
-
-### Schema Migrations
-
-- Use Project Forge migration system
-- SQLite supports most DDL operations in transactions
 
 ### Testing
 

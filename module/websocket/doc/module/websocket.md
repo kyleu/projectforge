@@ -1,6 +1,6 @@
 # WebSocket
 
-This module provides a comprehensive WebSocket service for [Project Forge](https://projectforge.dev) applications, enabling real-time bidirectional communication between clients and the server.
+This module provides a comprehensive WebSocket service for your application, enabling real-time bidirectional communication between clients and the server.
 
 ## Features
 
@@ -319,3 +319,7 @@ The module includes built-in admin pages accessible at:
 - **Repository**: https://github.com/kyleu/projectforge/tree/main/module/websocket
 - **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
+
+## See Also
+
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

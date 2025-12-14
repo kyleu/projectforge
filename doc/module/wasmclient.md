@@ -1,10 +1,11 @@
 # WASM Client
 
-The **`wasmclient`** module provides WebAssembly (WASM) client capabilities for [Project Forge](https://projectforge.dev) applications. It enables you to compile portions of your Go application to WebAssembly and run it in web browsers, providing a bridge between server-side Go code and client-side execution.
+The **`wasmclient`** module provides WebAssembly (WASM) client capabilities for your application.
+It enables you to compile portions of your Go application to WebAssembly and run it in web browsers, providing a bridge between server-side Go code and client-side execution.
 
 ## Overview
 
-This module extends Project Forge applications with:
+This module extends your application with:
 
 - **WebAssembly Compilation**: Compile Go code to WASM for browser execution
 - **JavaScript Bridge**: Seamless interaction between WASM and browser JavaScript
@@ -21,7 +22,7 @@ This module extends Project Forge applications with:
 
 ### Development Experience
 - Hot-reload development server support
-- Integrated with Project Forge build system
+- Integrated with the build system
 - Sandbox testing environment (when `sandbox` module is enabled)
 - Comprehensive error handling and debugging
 
@@ -78,7 +79,7 @@ When the `sandbox` module is enabled, a complete testbed environment is created 
 
 ## Configuration
 
-The module works with standard Project Forge configuration and requires:
+The module works with your application's configuration and requires:
 - Go 1.25+ with WebAssembly support
 - Modern web browser with WASM support
 - `sandbox` module (optional, for testbed environment)

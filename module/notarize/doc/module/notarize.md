@@ -1,6 +1,6 @@
 # Notarize
 
-The **`notarize`** module provides Apple code signing and notarization capabilities for [Project Forge](https://projectforge.dev) applications. It enables seamless distribution of macOS applications through Apple's notarization service, ensuring your applications meet Apple's security requirements for Gatekeeper.
+The **`notarize`** module provides Apple code signing and notarization capabilities for your application. It enables seamless distribution of macOS applications through Apple's notarization service, ensuring your applications meet Apple's security requirements for Gatekeeper.
 
 ## Overview
 
@@ -9,13 +9,13 @@ This module automates the Apple notarization process for macOS builds, providing
 - **Automated Notarization**: Submits built applications to Apple's notarization service
 - **Multi-Architecture Support**: Handles Intel (amd64), Apple Silicon (arm64), and universal builds
 - **DMG Distribution**: Notarizes DMG installers for easy distribution
-- **Build Integration**: Seamlessly integrates with Project Forge's build system
+- **Build Integration**: Seamlessly integrates with your application's build system
 
 ## Key Features
 
 ### Apple Platform Support
 - Intel x64 (darwin_amd64) builds
-- Apple Silicon ARM64 (darwin_arm64) builds  
+- Apple Silicon ARM64 (darwin_arm64) builds
 - Universal (darwin_all) builds combining both architectures
 - DMG installer packages
 
@@ -57,7 +57,7 @@ The module provides a shell script (`notarize.sh`) that automatically submits bu
 ```bash
 # Submits three DMG variants for notarization:
 # - Intel x64 build
-# - Apple Silicon ARM64 build  
+# - Apple Silicon ARM64 build
 # - Universal build (both architectures)
 ```
 
@@ -96,4 +96,4 @@ The module provides a shell script (`notarize.sh`) that automatically submits bu
 ## See Also
 
 - [Apple Developer Documentation](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution) - Official notarization guide
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation  
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

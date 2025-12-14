@@ -1,6 +1,7 @@
 # Database UI
 
-The **`databaseui`** module provides a comprehensive web-based administration interface for [Project Forge](https://projectforge.dev) applications with database connectivity. It offers powerful database exploration, query execution, and monitoring capabilities through a modern, responsive web interface.
+The **`databaseui`** module provides a comprehensive web-based administration interface for your application's database connectivity.
+It offers powerful database exploration, query execution, and monitoring capabilities through a modern, responsive web interface.
 
 ## Overview
 
@@ -108,5 +109,4 @@ Navigate to `/admin/database` in your application to access the database adminis
 ## See Also
 
 - [Database Module](database.md) - Core database connectivity
-- [Configuration Variables](../running.md) - Available environment variables
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation

@@ -1,13 +1,14 @@
 # Playwright
 
-The **`playwright`** module provides comprehensive end-to-end testing capabilities for [Project Forge](https://projectforge.dev) applications using [Playwright](https://playwright.dev). It enables cross-browser testing with support for multiple device configurations, accessibility scenarios, and progressive enhancement validation.
+The **`playwright`** module provides comprehensive end-to-end testing capabilities for your application using [Playwright](https://playwright.dev).
+It enables cross-browser testing with support for multiple device configurations, accessibility scenarios, and progressive enhancement validation.
 
 ## Overview
 
 This module adds a complete Playwright testing setup that validates your application across:
 
 - **Multiple Browsers**: Chrome, Firefox, Safari, and Edge
-- **Device Types**: Desktop and mobile configurations  
+- **Device Types**: Desktop and mobile configurations
 - **Accessibility Features**: Reduced motion and JavaScript-disabled modes
 - **Theme Support**: Light and dark mode testing
 - **Progressive Enhancement**: No-JavaScript functionality validation
@@ -107,14 +108,14 @@ import { expect, test } from '@playwright/test';
 test.describe('feature name', () => {
   test('should validate functionality', async ({ page, browserName }, testInfo) => {
     await page.goto('/your-feature');
-    
+
     // Take screenshots for visual validation
     const screenshot = await page.screenshot({ fullPage: true });
-    await testInfo.attach(`feature/${browserName}`, { 
-      body: screenshot, 
-      contentType: 'image/png' 
+    await testInfo.attach(`feature/${browserName}`, {
+      body: screenshot,
+      contentType: 'image/png'
     });
-    
+
     // Perform assertions
     await expect(page).toHaveTitle(/Expected Title/);
   });
@@ -163,4 +164,4 @@ Modify `playwright.config.ts` to:
 ## See Also
 
 - [Playwright Documentation](https://playwright.dev) - Complete Playwright guide
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation  
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

@@ -1,10 +1,11 @@
 # MySQL
 
-The **`mysql`** module provides MySQL database integration for [Project Forge](https://projectforge.dev) applications. This module extends the base `database` module with MySQL-specific functionality, including driver integration, connection management, and MySQL-optimized features.
+The **`mysql`** module provides MySQL database integration for your application.
+This module extends the base `database` module with MySQL-specific functionality, including driver integration, connection management, and MySQL-optimized features.
 
 ## Overview
 
-This module adds **MySQL/MariaDB database support** to Project Forge applications and requires the `database` module. It provides:
+This module adds **MySQL/MariaDB database support** to your application and requires the `database` module. It provides:
 
 - **Driver Integration**: Official MySQL driver with connection pooling
 - **MySQL Features**: Support for MySQL-specific SQL syntax and features
@@ -95,7 +96,7 @@ MySQL's native JSON data type is fully supported:
 
 ```go
 // Insert JSON data
-_, err := db.Exec(`insert into users (data) values (?)`, 
+_, err := db.Exec(`insert into users (data) values (?)`,
     `{"name": "John", "preferences": {"theme": "dark"}}`)
 
 // Query with JSON functions

@@ -1,13 +1,13 @@
 # Scheduled Jobs
 
-A Project Forge module that provides a scheduled job engine and web UI based on [gocron](https://github.com/go-co-op/gocron).
+The **`schedule`** module provides a scheduled job engine and web UI for your application, based on [gocron](https://github.com/go-co-op/gocron).
 
 ## Overview
 
 The schedule module enables applications to run jobs on a schedule using cron expressions or intervals. It provides:
 
 - **Job scheduling** with cron expressions and interval-based execution
-- **Web UI** for monitoring job status, execution history, and results  
+- **Web UI** for monitoring job status, execution history, and results
 - **Telemetry integration** with distributed tracing support
 - **Error handling** with panic recovery and structured logging
 - **Execution tracking** with run counts and result storage
@@ -124,7 +124,7 @@ The module provides admin pages for job monitoring:
 
 The interface shows:
 - Job ID, name, and tags
-- Last and next execution times  
+- Last and next execution times
 - Total execution count
 - Latest execution result and any errors
 
@@ -151,7 +151,7 @@ When creating jobs, you can specify:
 ### Components
 
 - **`Service`**: Main scheduler service wrapping gocron
-- **`Job`**: Job metadata and execution information  
+- **`Job`**: Job metadata and execution information
 - **`Result`**: Execution results with timing and error data
 - **Controllers**: Web interface for job monitoring
 
@@ -174,3 +174,7 @@ The service uses mutexes to ensure thread-safe access to:
 - **Repository**: https://github.com/kyleu/projectforge/tree/main/module/schedule
 - **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
+
+## See Also
+
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

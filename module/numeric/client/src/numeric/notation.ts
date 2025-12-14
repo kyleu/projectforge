@@ -8,7 +8,7 @@ export const Settings = {
     max: 1000000000
   },
   exponentDefaultPlaces: 0,
-  isInfinite: (x: Numeric) => x.gte(Numeric.maxValue)
+  isInfinite: (x: Numeric) => (Number.isFinite(x.m) ? x.gte(Numeric.maxValue) : x.m === Infinity)
 };
 
 export abstract class Notation {
@@ -18,7 +18,7 @@ export abstract class Notation {
 
   public format(v: NumericSource, places = 0, placesUnder1000 = 0, placesExponent = places): string {
     if (typeof v === "number" && !Number.isFinite(v)) {
-      return this.infinite;
+      return v === -Infinity ? this.negativeInfinite : this.infinite;
     }
     const n = new Numeric(v);
     if (isNaN(n.m)) {

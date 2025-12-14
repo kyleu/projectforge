@@ -1,6 +1,7 @@
 # Sandbox
 
-The **`sandbox`** module provides interactive testing environments for [Project Forge](https://projectforge.dev) applications. It enables developers to create custom playgrounds for experimenting with application features, testing new functionality, and prototyping code in a safe, isolated environment.
+The **`sandbox`** module provides interactive testing environments for your application.
+It enables developers to create custom playgrounds for experimenting with application features, testing new functionality, and prototyping code in a safe, isolated environment.
 
 ## Overview
 
@@ -153,6 +154,4 @@ Supports various parameter types through field descriptors:
 
 ## See Also
 
-- [Core Module Documentation](core.md) - Foundation framework
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation
-- [Customizing Guide](../customizing.md) - Advanced customization options

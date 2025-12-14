@@ -14,4 +14,4 @@ if [ -f ".env" ]; then
   done < ".env"
 fi
 
-npm run build
+npx npm run build

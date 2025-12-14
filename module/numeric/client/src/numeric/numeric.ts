@@ -238,7 +238,7 @@ export class Numeric {
   }
 
   public toInt(): number {
-    return 0 // TODO;
+    return 0; // TODO
   }
 
   public add(v: NumericSource): Numeric {

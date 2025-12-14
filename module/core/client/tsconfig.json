@@ -5,25 +5,23 @@
     "allowUnusedLabels": false,
     "alwaysStrict": true,
     "baseUrl": "./src",
-    "declaration": true,
     "esModuleInterop": true,{{{ if .HasModule "jsx" }}}
     "jsx": "react",
     "jsxFactory": "JSX",{{{ end }}}
     "listFiles": false,
-    "module": "none",
+    "module": "ESNext",
     "moduleResolution": "node",
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outFile": "../assets/client.js",{{{ .TypeScriptPaths }}}
+    "noUnusedParameters": true,{{{ .TypeScriptPaths }}}
     "removeComments": true,
     "preserveConstEnums": true,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "sourceMap": true,
     "strict": true,
     "target": "ES2021",
     "types": []

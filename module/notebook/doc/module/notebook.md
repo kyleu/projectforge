@@ -1,6 +1,6 @@
 # Notebook
 
-The **`notebook`** module provides [Observable Framework](https://observablehq.com/framework) integration for [Project Forge](https://projectforge.dev) applications. It enables embedded data visualization, interactive analysis, and notebook-style development workflows within your application.
+The **`notebook`** module provides [Observable Framework](https://observablehq.com/framework) integration for your application. It enables embedded data visualization, interactive analysis, and notebook-style development workflows within your application.
 
 ## Overview
 
@@ -27,7 +27,7 @@ This module integrates the Observable Framework to provide:
 - Directory navigation and file organization
 
 ### Development Experience
-- Seamless integration with Project Forge development workflow
+- Seamless integration with your application's development workflow
 - Automatic server management and health checking
 - Configurable base URL for flexible deployment
 - Real-time status monitoring
@@ -64,14 +64,14 @@ This module integrates the Observable Framework to provide:
 The module automatically configures Observable Framework with:
 - TypeScript support
 - Development server configuration
-- Integration with Project Forge's build system
+- Integration with your application's build system
 - Proper routing for embedded viewing
 
 ## Usage
 
 ### Basic Setup
 
-1. Add the `notebook` module to your Project Forge application
+1. Add the `notebook` module to your application
 2. The Observable Framework development server can be started automatically upon first use
 3. Access notebooks at `/notebook` in your application
 4. Manage files through `/notebook/files`
@@ -92,4 +92,4 @@ The module automatically configures Observable Framework with:
 ## See Also
 
 - [Observable Framework Documentation](https://observablehq.com/framework) - Complete Observable Framework guide
-- [Project Forge Documentation](https://projectforge.dev) - Main Project Forge documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

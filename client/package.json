@@ -14,14 +14,20 @@
     "url": "https://github.com/kyleu/projectforge/issues"
   },
   "homepage": "https://github.com/kyleu/projectforge/tree/main/client#readme",
+  "engines": {
+    "node": ">=18.18.0"
+  },
   "scripts": {
-    "build": "node build.js",
-    "build:tsc": "tsc --project tsconfig.json",
+    "build": "npm run typecheck && node build.js",
+    "build:bundle": "node build.js",
+    "build:tsc": "npm run typecheck",
+    "dev": "node build.js --watch --dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "jest"
+    "test": "jest --passWithNoTests --no-watchman",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

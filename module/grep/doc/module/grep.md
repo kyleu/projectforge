@@ -1,6 +1,6 @@
 # Grep Search
 
-The **`grep`** module provides fast text search capabilities for [Project Forge](https://projectforge.dev) applications using the high-performance [ripgrep](https://github.com/BurntSushi/ripgrep) command-line tool.
+The **`grep`** module provides fast text search capabilities for your application using the high-performance [ripgrep](https://github.com/BurntSushi/ripgrep) command-line tool.
 
 ## Overview
 
@@ -98,4 +98,4 @@ The module supports extensive search customization:
 
 - [ripgrep Documentation](https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md) - Complete ripgrep usage guide
 - [Search Module](search.md) - Higher-level search abstraction
-- [Project Forge Documentation](https://projectforge.dev) - Complete framework documentation
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

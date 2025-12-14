@@ -1,6 +1,7 @@
 # Task Engine
 
-The **`task`** module provides a comprehensive task execution engine for [Project Forge](https://projectforge.dev) applications. It enables registration, execution, and monitoring of background tasks with real-time progress tracking and a rich web interface.
+The **`task`** module provides a comprehensive task execution engine for your application.
+It enables registration, execution, and monitoring of background tasks with real-time progress tracking and a rich web interface.
 
 ## Overview
 
@@ -176,6 +177,4 @@ Comprehensive error management:
 ## See Also
 
 - [Process Module Documentation](process.md) - Required process management functionality
-- [Core Module Documentation](core.md) - Foundation framework
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation
-- [Customizing Guide](../customizing.md) - Advanced customization options

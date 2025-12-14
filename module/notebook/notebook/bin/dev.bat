@@ -1,2 +1,2 @@
 cd ..
-npm run dev -- --port {{{ .NotebookPort }}}
+npx npm run dev -- --port {{{ .NotebookPort }}}

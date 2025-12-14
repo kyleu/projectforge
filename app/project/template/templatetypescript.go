@@ -17,7 +17,32 @@ func (t *Context) TypeScriptDeployments() []string {
 	})
 }
 
+func (t *Context) TypeScriptProjectWarning() string {
+	tsDeps := t.TypeScriptDeployments()
+	if len(tsDeps) == 0 {
+		return ""
+	}
+	return "// ESBuild watch doesn't work with multiple projects, use `watchman` or another alternative.\n  "
+}
+
 func (t *Context) TypeScriptProjectContent() string {
+	tsDeps := t.TypeScriptDeployments()
+	if len(tsDeps) == 0 {
+		return ""
+	}
+	convert := func(x string, _ int) string {
+		key := x
+		if idx := strings.LastIndex(x, "/"); idx != -1 {
+			key = x[idx+1:]
+		}
+		ss := &util.StringSlice{}
+		ss.Pushf(`  await esbuild.build({...options, entryPoints: ["src/%s/%s.ts"], outfile: "../assets/%s.js"});`, x, key, key)
+		return ss.Join("\n")
+	}
+	return "\n" + util.StringJoin(lo.Map(tsDeps, convert), "\n")
+}
+
+func (t *Context) TypeScriptProjectContentStatic() string {
 	tsDeps := t.TypeScriptDeployments()
 	if len(tsDeps) == 0 {
 		return ""

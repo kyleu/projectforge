@@ -1,10 +1,11 @@
 # SQL Server
 
-The **`sqlserver`** module provides Microsoft SQL Server database integration for [Project Forge](https://projectforge.dev) applications. This module extends the base `database` module with SQL Server-specific functionality, enterprise features, and optimizations for Microsoft SQL Server environments.
+The **`sqlserver`** module provides Microsoft SQL Server database integration for your application.
+This module extends the base `database` module with SQL Server-specific functionality, enterprise features, and optimizations for Microsoft SQL Server environments.
 
 ## Overview
 
-This module adds **Microsoft SQL Server database support** to Project Forge applications and requires the `database` module. It provides:
+This module adds **Microsoft SQL Server database support** to your application and requires the `database` module. It provides:
 
 - **Enterprise Database**: Full support for SQL Server's enterprise features
 - **Driver Integration**: Official Microsoft SQL Server driver with connection pooling
@@ -169,7 +170,7 @@ _, err := db.Exec(`insert into locations (point) values (geometry::Point(?, ?, 4
 
 // Spatial queries
 rows, err := db.Query(`
-    select name from locations 
+    select name from locations
     where point.STDistance(geometry::Point(?, ?, 4326)) < 1000`, userLong, userLat)
 ```
 
@@ -181,7 +182,7 @@ _, err := db.Exec(`
     merge users as target
     using (values (?, ?)) as source (email, name)
     on target.email = source.email
-    when matched then 
+    when matched then
         update set name = source.name, updated_at = getdate()
     when not matched then
         insert (email, name, created_at) values (source.email, source.name, getdate());`,

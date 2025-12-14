@@ -7,7 +7,7 @@ The **`help`** module provides integrated contextual help for [Project Forge](ht
 This module provides:
 
 - **Contextual Help**: Automatic help links based on controller action keys
-- **Markdown Integration**: Rich HTML rendering of Markdown documentation  
+- **Markdown Integration**: Rich HTML rendering of Markdown documentation
 - **Modal Display**: Non-intrusive help content in overlay modals
 - **Customizable Content**: Support for headers, footers, and per-page content
 - **Progressive Enhancement**: Works with or without JavaScript
@@ -25,7 +25,7 @@ This module provides:
 - Fallback to page title when no header is present
 - Support for embedded images, links, and formatting
 
-### Flexible Content Organization  
+### Flexible Content Organization
 - Per-page help files matched to controller keys
 - Global header and footer content via `_header.md` and `_footer.md`
 - Template-based generation with project data interpolation
@@ -54,7 +54,7 @@ Help files are organized in the `help/` directory:
 ```
 help/
 ├── home.md         # Help for "home" action key
-├── about.md        # Help for "about" action key  
+├── about.md        # Help for "about" action key
 ├── _header.md      # Optional global header content
 └── _footer.md      # Optional global footer content
 ```
@@ -87,7 +87,7 @@ Remove the `!` prefix to enable this help file.
 - Include examples and common use cases
 - Provide links to more detailed documentation when appropriate
 
-### Markdown Guidelines  
+### Markdown Guidelines
 - Use clear hierarchical headers (H1, H2, H3)
 - Include code examples in fenced blocks
 - Use lists and tables for structured information
@@ -107,5 +107,5 @@ Remove the `!` prefix to enable this help file.
 
 ## See Also
 
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation  
 - [Markdown Guide](https://www.markdownguide.org) - Markdown syntax reference
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

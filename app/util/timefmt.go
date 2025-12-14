@@ -119,7 +119,11 @@ func FormatMilliseconds(x float64, includeFraction bool) string {
 		result += fmt.Sprintf("%d:", hours)
 	}
 	if showMinutes {
-		result += fmt.Sprintf("%02d:", minutes)
+		if showHours {
+			result += fmt.Sprintf("%02d:", minutes)
+		} else {
+			result += fmt.Sprintf("%d:", minutes)
+		}
 	}
 	secondsWithFraction := float64(seconds) + fractionalPart
 	if fractionalPart > 0 && includeFraction {

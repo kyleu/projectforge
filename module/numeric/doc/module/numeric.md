@@ -1,6 +1,7 @@
 # Numeric
 
-The **`numeric`** module for [Project Forge](https://projectforge.dev) provides high-precision arithmetic operations for handling arbitrarily large numbers that exceed the limits of standard floating-point types. It implements mantissa-exponent representation for both Go and TypeScript environments.
+The **`numeric`** module for your application provides high-precision arithmetic operations for handling arbitrarily large numbers that exceed the limits of standard floating-point types.
+It implements mantissa-exponent representation for both Go and TypeScript environments.
 
 ## Overview
 

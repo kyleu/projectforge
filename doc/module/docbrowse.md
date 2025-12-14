@@ -1,6 +1,7 @@
 # Doc Browser
 
-The **`docbrowse`** module provides a comprehensive documentation browser for [Project Forge](https://projectforge.dev) applications. It automatically converts Markdown files into a navigable web interface with hierarchical organization and responsive navigation.
+The **`docbrowse`** module provides a comprehensive documentation browser for your application.
+It automatically converts Markdown files into a navigable web interface with hierarchical organization and responsive navigation.
 
 ## Overview
 
@@ -28,7 +29,7 @@ This module transforms your `./doc` directory into a fully-featured documentatio
 ### Developer Experience
 - Zero configuration required
 - Supports standard Markdown syntax
-- Integrates with Project Forge theming system
+- Integrates with theming system
 - Content negotiation for API access
 
 ## Package Structure
@@ -121,5 +122,5 @@ No configuration required. The module automatically:
 
 ## See Also
 
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation
 - [Markdown Guide](https://www.markdownguide.org) - Markdown syntax reference
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation

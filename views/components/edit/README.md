@@ -1,6 +1,7 @@
 # Edit Component Helpers
 
-This directory contains quicktemplate functions for various form input components used throughout the Project Forge application. All functions are defined as quicktemplate components in `.html` files.
+This directory contains quicktemplate functions for various form input components used throughout Project Forge.
+All functions are defined as quicktemplate components in `.html` files.
 
 ## AnyByType.html
 
@@ -157,7 +158,7 @@ Most input components come in three layout variants:
 - `placeholder`: Optional placeholder text for inputs
 
 ### Integration
-These components are designed to work with the Project Forge MVC architecture and integrate with:
+These components are designed to work with the MVC architecture and integrate with:
 - `cutil.PageState` for managing page state and assets
 - `util.FieldDescs` for dynamic form field descriptions
 - The application's CSS framework for consistent styling

@@ -1,6 +1,6 @@
 # Scripting
 
-This module provides server-side JavaScript execution capabilities for [Project Forge](https://projectforge.dev) applications using the [Goja](https://github.com/dop251/goja) JavaScript runtime.
+This module provides server-side JavaScript execution capabilities for your application using the [Goja](https://github.com/dop251/goja) JavaScript runtime.
 
 ## Features
 
@@ -8,7 +8,7 @@ This module provides server-side JavaScript execution capabilities for [Project 
 - **Web-based Script Management**: Create, edit, and execute scripts through a web UI at `/admin/scripting`
 - **Automatic Testing**: Scripts can include example test cases that are automatically executed
 - **Filesystem Integration**: Scripts are stored as `.js` files and managed through the filesystem module
-- **Search Integration**: Scripts are indexed and searchable within Project Forge applications
+- **Search Integration**: Scripts are indexed and searchable within your application
 
 ## Installation
 
@@ -105,7 +105,7 @@ Scripts are executed in isolated VMs with comprehensive error handling:
 
 ## API Endpoints
 
-When included in a Project Forge application, the module provides these routes:
+The module provides these routes:
 
 - `GET /admin/scripting` - List all scripts
 - `GET /admin/scripting/{path}` - View specific script and run examples
@@ -126,3 +126,7 @@ When included in a Project Forge application, the module provides these routes:
 - **Repository**: https://github.com/kyleu/projectforge/tree/main/module/scripting
 - **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
+
+## See Also
+
+- [Project Forge Documentation](https://projectforge.dev) - Complete documentation
