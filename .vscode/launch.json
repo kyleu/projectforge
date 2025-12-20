@@ -5,6 +5,12 @@
       "name": "Attach to Project Forge",
       "processId": "projectforge",
       "request": "attach",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/views",
+          "to": "views"
+        }
+      ],
       "type": "go"
     },
     {
@@ -12,6 +18,12 @@
       "name": "Start Project Forge",
       "program": "main.go",
       "request": "launch",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/views",
+          "to": "views"
+        }
+      ],
       "type": "go"
     },
     {
@@ -21,6 +33,19 @@
       "mode": "auto",
       "name": "Upgrade Project Forge",
       "program": "main.go",
+      "request": "launch",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/views",
+          "to": "views"
+        }
+      ],
+      "type": "go"
+    },
+    {
+      "mode": "auto",
+      "name": "Debug file",
+      "program": "${file}",
       "request": "launch",
       "type": "go"
     }
