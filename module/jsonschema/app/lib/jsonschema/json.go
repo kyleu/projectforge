@@ -54,7 +54,7 @@ func schemaFromJSON(msg []byte) (*Schema, error) {
 		if len(x) == 1 {
 			return x[0], nil
 		}
-		return &Schema{data: data{dataValidations: dataValidations{dataArrayValidations: dataArrayValidations{PrefixItems: x}}}}, nil
+		return &Schema{data: data{dataValidations: dataValidations{dataArrayValidations: dataArrayValidations{PrefixItems: x}}}, bytes: msg}, nil
 	}
 	if trimmed[0] != '{' {
 		return nil, errors.Errorf("invalid JSON schema root [%c], expected object or boolean", trimmed[0])
@@ -63,5 +63,5 @@ func schemaFromJSON(msg []byte) (*Schema, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Schema{data: ret}, nil
+	return &Schema{data: ret, bytes: msg}, nil
 }

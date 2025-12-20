@@ -1,6 +1,4 @@
 {% import (
-  "fmt"
-
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/jsonschema"
   "projectforge.dev/projectforge/app/util"
@@ -11,12 +9,7 @@
   {% if v == nil %}
     <em>-</em>
   {% else %}
-    {% switch t := v.(type) %}
-    {% case string %}
-      {%s t %}
-    {% case *jsonschema.Schema %}
-      {%= JSONSchema(t, full, ps) %}
-    {% case *util.OrderedMap[*jsonschema.Schema] %}
+    {% if t, ok := v.(*util.OrderedMap[*jsonschema.Schema]); ok %}
       {% if t.Length() == 0 %}
         <em>-</em>
       {% else %}
@@ -28,13 +21,7 @@
               <input id="accordion-{%s itemKey %}" type="checkbox" hidden />
               <label for="accordion-{%s itemKey %}">
                 <div class="right"><em>{%s x.Summary() %}</em></div>
-                {%= components.ExpandCollapse(3, ps) %}
-                {%- if key == "Definitions" %}
-                {% space %}{%= components.SVGRef("gift", 16, 16, "icon", ps) %}{% space %}
-                {%- elseif key == "Properties" %}
-                {% space %}{%= components.SVGRef("list", 16, 16, "icon", ps) %}{% space %}
-                {% endif %}
-                <code>{% space %}{%s k %}</code>
+                {%= components.ExpandCollapse(3, ps) %} <code>{% space %}{%s k %}</code>
               </label>
               <div class="bd"><div><div>
                 {%= JSONSchema(x, full, ps) %}
@@ -43,21 +30,9 @@
           {%- endfor -%}
         </ul>
       {% endif %}
-    {% case *util.OrderedMap[bool] %}
-      {% if t.Length() == 0 %}
-        <em>-</em>
-      {% else %}
-        {% code
-          ret := util.NewStringSlice()
-          for _, k := range t.Keys() {
-            ret.Push(k + ": " + fmt.Sprint(t.GetSimple(k)))
-          }
-        %}
-        {%s ret.Join(", ") %}
-      {% endif %}
-    {% default %}
+    {% else %}
       {%= Any(v, ps) %}
-    {% endswitch %}
+    {% endif %}
   {% endif %}
 {% endstripspace %}{% endfunc %}
 

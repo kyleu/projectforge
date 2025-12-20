@@ -25,6 +25,8 @@ func (s *Schema) SchemaType() SchemaType {
 		return SchemaTypeString
 	case "integer":
 		return SchemaTypeInteger
+	case "number":
+		return SchemaTypeNumber
 	case "object":
 		if s.Ref != "" && s.Not == nil {
 			return SchemaTypeRef

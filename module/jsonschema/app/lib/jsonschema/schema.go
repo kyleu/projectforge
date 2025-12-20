@@ -13,6 +13,7 @@ import (
 
 type Schema struct {
 	data
+	bytes []byte
 }
 
 func NewRefSchema(s string) *Schema {
@@ -23,7 +24,7 @@ func (s *Schema) Clone() *Schema {
 	if s == nil {
 		return nil
 	}
-	return &Schema{data: s.data.Clone()}
+	return &Schema{data: s.data.Clone(), bytes: s.bytes}
 }
 
 func (s *Schema) IsEmpty() bool {
@@ -95,6 +96,13 @@ func (s *Schema) GetMetadata() util.ValueMap {
 		ret[key] = util.FromJSONAnyOK(v)
 	}
 	return ret
+}
+
+func (s *Schema) OriginalBytes() []byte {
+	if len(s.bytes) == 0 {
+		return util.ToJSONBytes(s, true)
+	}
+	return s.bytes
 }
 
 func (s *Schema) IsDeprecated() (bool, string) {

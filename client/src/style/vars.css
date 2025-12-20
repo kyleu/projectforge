@@ -6,6 +6,7 @@
   --text-height: 24px;
   --nav-height: 48px;
   --menu-width: 256px;
+  --body-height: calc(100vh - var(--nav-height) - 4px)
 }
 
 .only-light {
