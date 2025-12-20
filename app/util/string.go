@@ -91,7 +91,7 @@ func StringSplitLines(s string) []string {
 func StringSplitLinesIndented(s string, indent int, indentFirstLine bool, includeEmptyLines bool) []string {
 	ind := StringRepeat("  ", indent)
 	lines := StringSplitLines(s)
-	ret := NewStringSlice(make([]string, 0, len(lines)))
+	ret := NewStringSliceWithSize(len(lines))
 	for idx, line := range lines {
 		if (!includeEmptyLines) && strings.TrimSpace(line) == "" {
 			continue

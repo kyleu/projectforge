@@ -293,7 +293,7 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
           <th>Description</th>
 `)
 //line views/vexport/EnumDetail.html:80
-		for _, x := range ef.Order {
+		for _, x := range ef.Keys() {
 //line views/vexport/EnumDetail.html:80
 			qw422016.N().S(`          <th>`)
 //line views/vexport/EnumDetail.html:81
@@ -334,7 +334,7 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
 			qw422016.N().S(`</td>
 `)
 //line views/vexport/EnumDetail.html:92
-			for _, x := range ef.Order {
+			for _, x := range ef.Keys() {
 //line views/vexport/EnumDetail.html:93
 				if v.Extra == nil {
 //line views/vexport/EnumDetail.html:93

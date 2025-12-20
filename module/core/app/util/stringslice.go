@@ -10,12 +10,20 @@ type StringSlice struct {
 	Slice []string
 }
 
-func NewStringSlice(a []string) *StringSlice {
+func NewStringSlice(a ...string) *StringSlice {
 	return &StringSlice{Slice: a}
+}
+
+func NewStringSliceWithSize(size int) *StringSlice {
+	return &StringSlice{Slice: make([]string, 0, size)}
 }
 
 func (s *StringSlice) Empty() bool {
 	return len(s.Slice) == 0
+}
+
+func (s *StringSlice) Length() int {
+	return len(s.Slice)
 }
 
 func (s *StringSlice) SliceSafe() []string {

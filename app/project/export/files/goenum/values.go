@@ -51,7 +51,7 @@ func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
 		msg += fmt.Sprintf(", Icon: %q", v.Icon)
 	}
 	ef := e.ExtraFields()
-	for _, extraKey := range ef.Order {
+	for _, extraKey := range ef.Keys() {
 		var t string
 		if v.Extra != nil {
 			t = fmt.Sprint(v.Extra.GetSimple(extraKey))

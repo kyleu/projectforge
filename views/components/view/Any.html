@@ -6,6 +6,7 @@
   "github.com/google/uuid"
 
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/jsonschema"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
 ) %}
@@ -17,22 +18,40 @@
     {% switch t := x.(type) %}
     {% case bool %}
       {%= Bool(t) %}
+    {% case *bool %}
+      {%= Bool(*t) %}
     {% case util.Diffs %}
       {%= Diffs(t) %}
     {% case float32 %}
       {%= Float(t) %}
+    {% case *float32 %}
+      {%= Float(*t) %}
     {% case float64 %}
       {%= Float(t) %}
+    {% case *float64 %}
+      {%= Float(*t) %}
     {% case int %}
       {%= Int(t) %}
+    {% case *int %}
+      {%= Int(*t) %}
     {% case int32 %}
       {%= Int(t) %}
+    {% case *int32 %}
+      {%= Int(*t) %}
     {% case int64 %}
       {%= Int(t) %}
+    {% case *int64 %}
+      {%= Int(*t) %}
+    {% case *jsonschema.Schema %}
+      {%= JSONSchema(t, true, ps) %}
+    {% case jsonschema.Schemas %}
+      {%= Any(util.ArrayToAnyArray(t), ps) %}
     {% case util.ToOrderedMap[any] %}
       {%= OrderedMap(false, t.ToOrderedMap(), ps) %}
     {% case *util.OrderedMap[any] %}
       {%= OrderedMap(false, t, ps) %}
+    {% case util.ToOrderedMapAny %}
+      {%= OrderedMap(false, t.ToOrderedMapAny(), ps) %}
     {% case util.ToOrderedMaps[any] %}
       {%= OrderedMapArray(false, ps, t.ToOrderedMaps()...) %}
     {% case []*util.OrderedMap[any] %}
@@ -51,6 +70,8 @@
       {%= Package(t) %}
     {% case string %}
       {%= String(t) %}
+    {% case *string %}
+      {%= String(*t) %}
     {% case []string %}
       {%= StringArray(t) %}
     {% case time.Time %}
@@ -60,7 +81,7 @@
     {% case url.URL %}
       {%= URL(t, "", true, ps) %}
     {% case *url.URL %}
-      {%= URL(t, "", true, ps) %}
+      {%= URL(*t, "", true, ps) %}
     {% case uuid.UUID %}
       {%= UUID(&t) %}
     {% case *uuid.UUID %}

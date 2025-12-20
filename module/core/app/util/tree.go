@@ -30,7 +30,7 @@ func (n *Node[T]) Flatten(curr string) []string {
 type Nodes[T any] []*Node[T]
 
 func (n Nodes[T]) Flatten(curr string) []string {
-	ret := NewStringSlice(make([]string, 0, len(n)))
+	ret := NewStringSliceWithSize(len(n))
 	for _, node := range n {
 		ret.Push(node.Flatten(curr)...)
 	}

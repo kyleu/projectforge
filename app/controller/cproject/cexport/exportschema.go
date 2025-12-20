@@ -12,7 +12,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
 	"projectforge.dev/projectforge/app/util"
-	"projectforge.dev/projectforge/views/vexport"
+	"projectforge.dev/projectforge/views/vjsonschema"
 )
 
 func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +30,7 @@ func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
-		page := &vexport.JSONSchemaCollection{Project: prj, Args: prj.ExportArgs, Collection: schCollection, Results: results}
+		page := &vjsonschema.CollectionDetail{BaseURL: prj.WebPath(), Args: prj.ExportArgs, Collection: schCollection, Results: results}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, "JSON Schema")
 	})
 }
@@ -86,7 +86,7 @@ func ProjectExportModelJSONSchema(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
-		page := &vexport.JSONSchemaModel{Project: prj, Model: x, Collection: schCollection, Result: tgt}
+		page := &vjsonschema.ModelDetail{BaseURL: prj.WebPath() + "/export/models", Model: x, Collection: schCollection, Result: tgt}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, x.Title()+" JSON Schema")
 	})
 }
@@ -107,7 +107,7 @@ func ProjectExportEnumJSONSchema(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
-		page := &vexport.JSONSchemaEnum{Project: prj, Enum: x, Collection: schCollection, Result: tgt}
+		page := &vjsonschema.EnumDetail{BaseURL: prj.WebPath() + "/export/enums", Enum: x, Collection: schCollection, Result: tgt}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, x.Title()+" JSON Schema")
 	})
 }

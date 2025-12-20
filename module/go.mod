@@ -1,4 +1,4 @@
-module projectforge.dev/projectforge/module
+module {{{ .Package }}}/module
 
 go 1.25.0
 

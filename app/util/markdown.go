@@ -20,7 +20,7 @@ func MarkdownTable(header []string, rows [][]string, linebreak string) (string, 
 		})
 	}
 
-	ret := NewStringSlice(make([]string, 0, len(rows)))
+	ret := NewStringSliceWithSize(len(rows) + 2)
 	add := func(x []string) {
 		line := "| "
 		lo.ForEach(x, func(v string, vi int) {

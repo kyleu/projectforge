@@ -51,7 +51,7 @@ func (t *Context) ExtraFilesContent() string {
 	if t.Info == nil || len(t.Info.ExtraFiles) == 0 {
 		return ""
 	}
-	ret := util.NewStringSlice([]string{"\n    extra_files:"})
+	ret := util.NewStringSlice("\n    extra_files:")
 	lo.ForEach(t.Info.ExtraFiles, func(ef string, _ int) {
 		ret.Push("      - " + ef)
 	})

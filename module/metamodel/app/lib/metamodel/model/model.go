@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -99,7 +98,7 @@ func (m *Model) PackageWithGroup(prefix string) string {
 }
 
 func (m *Model) GroupAndPackage() []string {
-	return append(slices.Clone(m.Group), m.Package)
+	return append(util.ArrayCopy(m.Group), m.Package)
 }
 
 func (m *Model) ID() string {
@@ -123,7 +122,7 @@ func (m *Model) GroupString(prefix string, dflt string) string {
 func (m *Model) Breadcrumbs() string {
 	ret := util.NewStringSlice(lo.Map(m.Group, func(g string, _ int) string {
 		return fmt.Sprintf("%q", strings.ToLower(g))
-	}))
+	})...)
 	ret.Pushf("%q", m.Package)
 	return ret.Join(", ")
 }
@@ -154,7 +153,7 @@ func (m *Model) AllSearches(db string) []string {
 	if !m.HasTag("search") {
 		return m.Search
 	}
-	ret := util.NewStringSlice(util.ArrayCopy(m.Search))
+	ret := util.NewStringSlice(m.Search...)
 	lo.ForEach(m.Columns, func(c *Column, _ int) {
 		if c.Search {
 			x := fmt.Sprintf("%q", c.SQL())

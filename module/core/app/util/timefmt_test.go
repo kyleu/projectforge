@@ -106,7 +106,7 @@ func TestFormatMilliseconds(t *testing.T) {
 	}{
 		{"HourMinuteSecondFraction", 3_723_456, true, "1:02:03.456"},
 		{"HourZeroMinutes", 3_603_000, false, "1:00:03"},
-		{"MinuteSecondFraction", 123_456, true, "02:03.456"},
+		{"MinuteSecondFraction", 123_456, true, "2:03.456"},
 		{"SecondsOnlyFraction", 3_456, true, "3.456"},
 		{"SecondsOnlyNoFraction", 3_000, false, "3"},
 	}

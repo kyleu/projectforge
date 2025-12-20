@@ -57,7 +57,7 @@ func (i Imports) Render(linebreak string) string {
 	if len(i) == 1 {
 		return fmt.Sprintf("import %s", i[0].Render())
 	}
-	ret := util.NewStringSlice([]string{"import ("})
+	ret := util.NewStringSlice("import (")
 	ret.Push(i.toStrings("\t")...)
 	ret.Push(")")
 	return ret.Join(linebreak)
@@ -67,7 +67,7 @@ func (i Imports) RenderHTML(linebreak string) string {
 	if len(i) == 1 {
 		return fmt.Sprintf("{%% import %s %%}", i[0].Render())
 	}
-	ret := util.NewStringSlice([]string{"{%% import ("})
+	ret := util.NewStringSlice("{%% import (")
 	ret.Push(i.toStrings("  ")...)
 	ret.Push(") %%}")
 	return ret.Join(linebreak)

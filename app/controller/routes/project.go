@@ -56,7 +56,4 @@ func projectRoutes(r *mux.Router) {
 
 	makeRoute(r, http.MethodGet, "/run/{act}", cproject.RunAllActions)
 	makeRoute(r, http.MethodGet, "/run/{key}/{act}", cproject.RunAction)
-
-	makeRoute(r, http.MethodGet, "/test", cproject.TestList)
-	makeRoute(r, http.MethodGet, "/test/{key}", cproject.TestRun)
 }

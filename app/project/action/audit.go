@@ -3,7 +3,6 @@ package action
 import (
 	"context"
 	"fmt"
-	"slices"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -53,7 +52,7 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 
 	var audits diff.Diffs
 
-	ign := slices.Clone(pm.Prj.Ignore)
+	ign := util.ArrayCopy(pm.Prj.Ignore)
 	if pm.Prj.HasModule("notebook") {
 		ign = append(ign, "notebook")
 	}
@@ -117,7 +116,7 @@ func getEmptyFolders(tgt filesystem.FileLoader, ignore []string, logger util.Log
 		ret.Push(pStr)
 	}
 	for _, d := range ds {
-		p := append(slices.Clone(pth), d)
+		p := append(util.ArrayCopy(pth), d)
 		childRes, err := getEmptyFolders(tgt, ignore, logger, p...)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to get empty folders for [%s/%s]", util.StringPath(p...), d)

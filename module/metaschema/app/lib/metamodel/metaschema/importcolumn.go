@@ -20,47 +20,48 @@ func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 	}
 	nullable := !slices.Contains(parent.Required, key)
 	col := &model.Column{Name: key, Type: typ, Nullable: nullable}
-	if prop.Metadata != nil {
-		for _, k := range prop.Metadata.Keys() {
+	md := prop.GetMetadata()
+	if md != nil {
+		for _, k := range md.Keys() {
 			switch k {
 			case "pk":
-				col.PK = prop.Metadata.GetBoolOpt(k)
+				col.PK = md.GetBoolOpt(k)
 			case "search":
-				col.Search = prop.Metadata.GetBoolOpt(k)
+				col.Search = md.GetBoolOpt(k)
 			case "indexed":
-				col.Indexed = prop.Metadata.GetBoolOpt(k)
+				col.Indexed = md.GetBoolOpt(k)
 			case "display":
-				col.Display = prop.Metadata.GetStringOpt(k)
+				col.Display = md.GetStringOpt(k)
 			case "format":
-				col.Format = prop.Metadata.GetStringOpt(k)
+				col.Format = md.GetStringOpt(k)
 			case "json":
-				col.JSON = prop.Metadata.GetStringOpt(k)
+				col.JSON = md.GetStringOpt(k)
 			case "sql":
-				col.SQLOverride = prop.Metadata.GetStringOpt(k)
+				col.SQLOverride = md.GetStringOpt(k)
 			case "title":
-				col.TitleOverride = prop.Metadata.GetStringOpt(k)
+				col.TitleOverride = md.GetStringOpt(k)
 			case "plural":
-				col.PluralOverride = prop.Metadata.GetStringOpt(k)
+				col.PluralOverride = md.GetStringOpt(k)
 			case "proper":
-				col.ProperOverride = prop.Metadata.GetStringOpt(k)
+				col.ProperOverride = md.GetStringOpt(k)
 			case "example":
-				col.Example = prop.Metadata.GetStringOpt(k)
+				col.Example = md.GetStringOpt(k)
 			case "validation":
-				col.Validation = prop.Metadata.GetStringOpt(k)
+				col.Validation = md.GetStringOpt(k)
 			case "values":
-				col.Values = prop.Metadata.GetStringArrayOpt(k)
+				col.Values = md.GetStringArrayOpt(k)
 			case "tags":
-				col.Tags = prop.Metadata.GetStringArrayOpt(k)
+				col.Tags = md.GetStringArrayOpt(k)
 			case "comment":
-				col.Comment = prop.Metadata.GetStringOpt(k)
+				col.Comment = md.GetStringOpt(k)
 			case "help":
-				col.Help = prop.Metadata.GetStringOpt(k)
+				col.Help = md.GetStringOpt(k)
 			case "bits":
 				switch t := col.Type.T.(type) {
 				case *types.Int:
-					t.Bits = prop.Metadata.GetIntOpt(k)
+					t.Bits = md.GetIntOpt(k)
 				case *types.Float:
-					t.Bits = prop.Metadata.GetIntOpt(k)
+					t.Bits = md.GetIntOpt(k)
 				default:
 					return nil, errors.Errorf("incorrect [bits] metadata for type [%s]", col.Type.String())
 				}

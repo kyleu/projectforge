@@ -71,7 +71,7 @@ func (t *Context) NPMDependencies() string {
 	if t.Info == nil || len(t.Info.Dependencies) == 0 {
 		return ""
 	}
-	ss := util.NewStringSlice([]string{"", `  "dependencies": {`})
+	ss := util.NewStringSlice("", `  "dependencies": {`)
 	keys := lo.Keys(t.Info.Dependencies)
 	lo.ForEach(lo.Filter(keys, func(x string, _ int) bool {
 		return strings.HasPrefix(x, "npm:")
@@ -99,7 +99,7 @@ func (t *Context) TypeScriptPaths() string {
 	if len(paths) == 0 {
 		return ""
 	}
-	ret := util.NewStringSlice([]string{"", `    "paths": {`})
+	ret := util.NewStringSlice("", `    "paths": {`)
 	for _, k := range util.ArraySorted(lo.Keys(paths)) {
 		ret.Pushf("      %q: [%q]%s", k, paths[k], util.Choose(len(ret.Slice) == len(paths)+1, "", ","))
 	}

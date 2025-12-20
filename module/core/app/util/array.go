@@ -29,7 +29,7 @@ func StringArrayQuoted(a []string) []string {
 }
 
 func StringArrayFromAny(a []any, maxLength int) []string {
-	ret := NewStringSlice(make([]string, 0, len(a)))
+	ret := NewStringSliceWithSize(Choose(len(a) > maxLength, maxLength, len(a)))
 	lo.ForEach(a, func(x any, _ int) {
 		var v string
 		switch t := x.(type) {
@@ -53,6 +53,14 @@ func ArrayCopy[S ~[]T, T any](x S) S {
 		return nil
 	}
 	return append(S{}, x...)
+}
+
+func ArrayToAnyArray[T any](x []T) []any {
+	ret := make([]any, 0, len(x))
+	for _, v := range x {
+		ret = append(ret, v)
+	}
+	return ret
 }
 
 func ArrayRemoveDuplicates[T comparable](x []T) []T {

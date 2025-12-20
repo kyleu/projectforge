@@ -20,7 +20,8 @@ func ImportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	n, pkg, grp := parseID(sch.ID())
 	ret := &enum.Enum{Name: n, Package: pkg, Group: grp, Description: sch.Description}
 
-	extra := sch.Metadata.GetMapOpt("values")
+	md := sch.GetMetadata()
+	extra := md.GetMapOpt("values")
 	for _, x := range sch.Enum {
 		v, e := ValueFromAny(x)
 		if e != nil {
@@ -39,25 +40,25 @@ func ImportEnum(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 		ret.Values = append(ret.Values, v)
 	}
 
-	if x := sch.Metadata.GetStringOpt("schema"); x != "" {
+	if x := md.GetStringOpt("schema"); x != "" {
 		ret.Schema = x
 	}
-	if x := sch.Metadata.GetStringOpt("icon"); x != "" {
+	if x := md.GetStringOpt("icon"); x != "" {
 		ret.Icon = x
 	}
-	if x := sch.Metadata.GetStringArrayOpt("tags"); len(x) > 0 {
+	if x := md.GetStringArrayOpt("tags"); len(x) > 0 {
 		ret.Tags = x
 	}
-	if x := sch.Metadata.GetStringOpt("title"); x != "" {
+	if x := md.GetStringOpt("title"); x != "" {
 		ret.TitleOverride = x
 	}
-	if x := sch.Metadata.GetStringOpt("proper"); x != "" {
+	if x := md.GetStringOpt("proper"); x != "" {
 		ret.ProperOverride = x
 	}
-	if x := sch.Metadata.GetStringOpt("route"); x != "" {
+	if x := md.GetStringOpt("route"); x != "" {
 		ret.RouteOverride = x
 	}
-	if x := sch.Metadata.GetMapOpt("config"); len(x) > 0 {
+	if x := md.GetMapOpt("config"); len(x) > 0 {
 		ret.Config = x
 	}
 

@@ -45,11 +45,12 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 	case KeyEnum:
 		ret = types.NewEnum(sch.Ref)
 	case KeyInteger:
-		ret = types.NewInt(sch.Metadata.GetIntOpt("bits"))
+		ret = types.NewInt(sch.GetMetadata().GetIntOpt("bits"))
 	case KeyNumber:
-		ret = types.NewFloat(sch.Metadata.GetIntOpt("bits"))
+		ret = types.NewFloat(sch.GetMetadata().GetIntOpt("bits"))
 	case KeyObject:
-		if sch.Metadata != nil && sch.Metadata["type"] == util.KeyJSON {
+		md := sch.GetMetadata()
+		if md != nil && md["type"] == util.KeyJSON {
 			ret = types.NewJSON()
 		} else {
 			ret = types.NewMap(types.NewString(), types.NewAny())
@@ -59,7 +60,8 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 		case KeyDate:
 			ret = types.NewDate()
 		case KeyDateTime:
-			if sch.Metadata != nil && sch.Metadata["type"] == types.KeyTimestampZoned {
+			md := sch.GetMetadata()
+			if md != nil && md["type"] == types.KeyTimestampZoned {
 				ret = types.NewTimestampZoned()
 			} else {
 				ret = types.NewTimestamp()
@@ -89,29 +91,11 @@ func importArrayType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *
 		return types.NewList(types.NewAny()), nil
 	}
 
-	switch itemType := sch.Items.(type) {
-	case string:
-		return types.NewList(FromJSONType(itemType, sch.Ref)), nil
-	case map[string]any:
-		b := util.ToJSONBytes(itemType, true)
-		itemSch, e := jsonschema.FromJSON(b)
-		if e != nil {
-			return nil, errors.Wrapf(e, "invalid array item subschema [%s] for schema [%s]", util.ToJSON(itemType), sch.String())
-		}
-		itemT, e := ImportType(itemSch, coll, args)
-		if e != nil {
-			return nil, errors.Wrapf(e, "error processing item subschema [%s] for schema [%s]", util.ToJSON(itemType), sch.String())
-		}
-		return types.NewList(itemT), nil
-	case *jsonschema.Schema:
-		itemT, e := ImportType(itemType, coll, args)
-		if e != nil {
-			return nil, errors.Wrapf(e, "error processing item subschema [%s] for schema [%s]", itemType.String(), sch.String())
-		}
-		return types.NewList(itemT), nil
-	default:
-		return nil, errors.Errorf("invalid array item type [%T] for schema [%s]", itemType, sch.String())
+	itemT, e := ImportType(sch.Items, coll, args)
+	if e != nil {
+		return nil, errors.Wrapf(e, "error processing item subschema [%s] for schema [%s]", sch.Items.String(), sch.String())
 	}
+	return types.NewList(itemT), nil
 }
 
 func exportGetType(sch *jsonschema.Schema, expected ...string) (string, error) {

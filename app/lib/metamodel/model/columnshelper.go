@@ -24,7 +24,7 @@ func (c Columns) ZeroVals() []string {
 }
 
 func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
-	ret := util.NewStringSlice(make([]string, 0, len(c)))
+	ret := util.NewStringSliceWithSize(len(c))
 	for _, x := range c {
 		gt, err := x.ToGoType(pkg, enums)
 		if err != nil {
@@ -36,7 +36,7 @@ func (c Columns) GoTypes(pkg string, enums enum.Enums) ([]string, error) {
 }
 
 func (c Columns) GoRowTypes(pkg string, enums enum.Enums, database string) ([]string, error) {
-	ret := util.NewStringSlice(make([]string, 0, len(c)))
+	ret := util.NewStringSliceWithSize(len(c))
 	for _, x := range c {
 		gdt, err := x.ToGoRowType(pkg, enums, database)
 		if err != nil {

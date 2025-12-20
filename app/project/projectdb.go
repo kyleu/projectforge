@@ -3,7 +3,7 @@ package project
 import "projectforge.dev/projectforge/app/util"
 
 func (p *Project) DatabaseEngines() []string {
-	ret := util.NewStringSlice(make([]string, 0, 4))
+	ret := util.NewStringSliceWithSize(4)
 	if p.HasModule(util.DatabaseMySQL) {
 		ret.Push(util.DatabaseMySQL)
 	}

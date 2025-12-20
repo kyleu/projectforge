@@ -18,7 +18,7 @@ func List() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := util.NewStringSlice(make([]string, 0, len(files)))
+	ret := util.NewStringSliceWithSize(len(files))
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), util.ExtMarkdown) {
 			ret.Push(strings.TrimSuffix(f.Name(), util.ExtMarkdown))

@@ -7,12 +7,19 @@ import (
 )
 
 func (s *Schema) Validate() error {
+	if err := validateChildren(s); err != nil {
+		return err
+	}
 	if err := validateType(s); err != nil {
 		return err
 	}
 	if err := validateRequired(s); err != nil {
 		return err
 	}
+	return nil
+}
+
+func validateChildren(s *Schema) error {
 	return nil
 }
 

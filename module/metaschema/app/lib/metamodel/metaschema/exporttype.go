@@ -37,7 +37,9 @@ func ExportType(typ types.Type, coll *jsonschema.Collection, args *metamodel.Arg
 	case *types.List:
 		ret.Type = KeyArray
 		if t.V.Scalar() && t.V.EnumKey() == "" {
-			ret.Items = ToJSONType(t.V)
+			sch := &jsonschema.Schema{}
+			sch.Type = ToJSONType(t.V)
+			ret.Items = sch
 		} else {
 			itemSchema, e := ExportType(t.V, coll, args)
 			if e != nil {

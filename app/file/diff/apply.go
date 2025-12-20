@@ -45,7 +45,7 @@ func ApplyInverse(b []byte, d *Diff) ([]byte, error) {
 }
 
 func applyCmds(lines []string, cmds ...*cmd) ([]string, error) {
-	ret := util.NewStringSlice(make([]string, 0, len(lines)))
+	ret := util.NewStringSliceWithSize(len(lines))
 	var currIdx int
 	lo.ForEach(cmds, func(c *cmd, _ int) {
 		for ; currIdx <= c.From+1; currIdx++ {

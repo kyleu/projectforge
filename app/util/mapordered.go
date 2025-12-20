@@ -61,9 +61,38 @@ func (o *OrderedMap[V]) Set(k string, v V) {
 	}
 }
 
+func (o *OrderedMap[V]) Merge(defs *OrderedMap[V]) *OrderedMap[V] {
+	ret := o.Clone()
+	if defs == nil {
+		return ret
+	}
+	for k, v := range defs.Map {
+		ret.Set(k, v)
+	}
+	return ret
+}
+
+func (o *OrderedMap[V]) Keys() []string {
+	if o == nil {
+		return nil
+	}
+	return ArrayCopy(o.Order)
+}
+
+func (o *OrderedMap[V]) Length() int {
+	if o == nil {
+		return 0
+	}
+	return len(o.Order)
+}
+
+func (o *OrderedMap[V]) Empty() bool {
+	return o.Length() == 0
+}
+
 func (o *OrderedMap[V]) ToMap() ValueMap {
 	ret := make(ValueMap, len(o.Order))
-	for _, k := range o.Order {
+	for _, k := range o.Keys() {
 		ret[k] = o.Map[k]
 	}
 	return ret
@@ -71,6 +100,14 @@ func (o *OrderedMap[V]) ToMap() ValueMap {
 
 func (o *OrderedMap[V]) ToOrderedMap() *OrderedMap[V] {
 	return o
+}
+
+func (o *OrderedMap[V]) ToOrderedMapAny() *OrderedMap[any] {
+	ret := NewOrderedMap[any](o.Lexical, len(o.Order))
+	for k, v := range o.Map {
+		ret.Set(k, v)
+	}
+	return ret
 }
 
 func (o *OrderedMap[V]) HasKey(k string) bool {
@@ -129,7 +166,7 @@ func (o OrderedMap[V]) MarshalXML(e *xml.Encoder, start xml.StartElement) error 
 		return err
 	}
 
-	for _, key := range o.Order {
+	for _, key := range o.Keys() {
 		n := xml.Name{Local: key}
 		t := xml.StartElement{Name: n}
 
@@ -178,8 +215,8 @@ func (o OrderedMap[V]) MarshalJSON() ([]byte, error) {
 	var b []byte
 	buf := bytes.NewBuffer(b)
 	buf.WriteByte('{')
-	l := len(o.Order)
-	for i, key := range o.Order {
+	l := o.Length()
+	for i, key := range o.Keys() {
 		buf.Write(ToJSONBytes(key, false))
 		buf.WriteByte(':')
 		buf.Write(ToJSONBytes(o.Map[key], false))
@@ -195,6 +232,10 @@ type OrderedMaps[V any] []*OrderedMap[V]
 
 type ToOrderedMap[T any] interface {
 	ToOrderedMap() *OrderedMap[T]
+}
+
+type ToOrderedMapAny interface {
+	ToOrderedMapAny() *OrderedMap[any]
 }
 
 type ToOrderedMaps[T any] interface {

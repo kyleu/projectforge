@@ -34,9 +34,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	// $PF_SECTION_START(routes)$
 	moduleRoutes(r)
 	projectRoutes(r)
-
-	makeRoute(r, http.MethodGet, "/testbed", controller.Testbed)
-	makeRoute(r, http.MethodPost, "/testbed", controller.Testbed)
+	testRoutes(r)
 	// $PF_SECTION_END(routes)$
 
 	makeRoute(r, http.MethodGet, "/docs", clib.Docs)

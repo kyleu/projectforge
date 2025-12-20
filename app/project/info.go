@@ -81,7 +81,7 @@ func (i *Info) AuthorIDSafe() string {
 		return i.AuthorEmail
 	}
 	spl := util.StringSplitAndTrim(i.AuthorID, " ")
-	ret := util.NewStringSlice(make([]string, 0, len(spl)))
+	ret := util.NewStringSliceWithSize(len(spl))
 	lo.ForEach(spl, func(x string, _ int) {
 		x = strings.ReplaceAll(x, ",", "")
 		if !strings.HasPrefix(x, "@") {

@@ -1,9 +1,8 @@
 package enum
 
 import (
-	"slices"
-
 	"github.com/samber/lo"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func (e *Enum) SkipDatabase() bool {
@@ -27,5 +26,5 @@ func (e Enums) WithTypeScript() Enums {
 }
 
 func (e *Enum) GroupAndPackage() []string {
-	return append(slices.Clone(e.Group), e.Package)
+	return append(util.ArrayCopy(e.Group), e.Package)
 }

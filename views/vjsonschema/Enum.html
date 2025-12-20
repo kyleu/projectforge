@@ -3,21 +3,20 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/jsonschema"
   "projectforge.dev/projectforge/app/lib/metamodel/enum"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
-{% code type JSONSchemaEnum struct {
+{% code type EnumDetail struct {
   layout.Basic
-  Project *project.Project
+  BaseURL string
   Enum *enum.Enum
   Collection *jsonschema.Collection
   Result *enum.Enum
 } %}
 
-{% func (p *JSONSchemaEnum) Body(as *app.State, ps *cutil.PageState) %}
+{% func (p *EnumDetail) Body(as *app.State, ps *cutil.PageState) %}
   {%- code x := p.Enum -%}
   <div class="card">
     {%- code sch := p.Collection.GetSchema(x.ID()) -%}
@@ -27,15 +26,15 @@
       {%s util.StringPlural(len(df), "difference") %}
     </div>
     {%- endif -%}
-    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Key %} / {%s x.Name %}] JSON Schema</h3>
-    {%= renderJSONSchemaEnum(p.Project, x, sch, p.Result, df, ps) %}
+    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s x.Name %}] JSON Schema</h3>
+    {%= RenderEnum(p.BaseURL, x, sch, p.Result, df, ps) %}
   </div>
 {% endfunc %}
 
-{% func renderJSONSchemaEnum(prj *project.Project, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) %}
+{% func RenderEnum(baseURL string, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) %}
   <div class="flex" style="">
     <div class="flex-item">
-      <a href="{%s prj.WebPath() %}/export/enums/{%s x.Name %}"><strong>Original</strong></a>
+      <a href="{%s baseURL %}/{%s x.Name %}"><strong>Original</strong></a>
       <pre class="mt">{%s util.ToJSON(x) %}</pre>
     </div>
     <div class="flex-item">

@@ -153,7 +153,7 @@ func processList(cell any, cellStr string) string {
 			return "'[\"error:invalid_type\"]'"
 		}
 	}
-	ret := util.NewStringSlice(make([]string, 0, len(a)))
+	ret := util.NewStringSliceWithSize(len(a))
 	lo.ForEach(a, func(x any, _ int) {
 		switch t := x.(type) {
 		case string:

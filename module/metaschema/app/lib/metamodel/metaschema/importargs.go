@@ -41,9 +41,9 @@ func ImportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.A
 
 func ExportAny(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metamodel.Args) (any, error) {
 	switch sch.Type {
-	case "object":
+	case KeyObject:
 		return ImportModel(sch, coll, args)
-	case "enum":
+	case KeyEnum:
 		return ImportEnum(sch, coll, args)
 	default:
 		return nil, errors.Errorf("invalid type [%v] for schema [%s]", sch.Type, sch.String())
@@ -55,6 +55,8 @@ func parseID(id string) (string, string, []string) {
 	var pid, pkg string
 	var grp []string
 	switch len(parts) {
+	case 0:
+		// noop
 	case 1:
 		pid = id
 	case 2:

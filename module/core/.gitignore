@@ -2,9 +2,9 @@
 .DS_Store
 /.env
 /.idea
-/.scannerwork
 /build
 /cfg
 /client/node_modules
 /tmp{{{ if .HasModule "sqlite" }}}
-/{{{ .Exec }}}.sqlite{{{ end }}}
+/{{{ .Exec }}}.sqlite{{{ end }}}{{{ if .HasModule "wasmclient" }}}
+/assets/wasm/*.wasm{{{ end }}}

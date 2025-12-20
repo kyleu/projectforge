@@ -83,7 +83,7 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 		if v.Extra == nil {
 			continue
 		}
-		for _, k := range v.Extra.Order {
+		for _, k := range v.Extra.Keys() {
 			x := v.Extra.GetSimple(k)
 			if _, exists := ret.Get(k); exists {
 				continue

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -53,7 +52,7 @@ func menuBlockV(models model.Models, args *metamodel.Args, groups map[string][]s
 		i := menuSerialize(menuItemForModel(m, models, args.Acronyms), "", true)
 		return fmt.Sprintf("\t%s%s = %s", helper.TextMenuItem, n, util.StringJoin(i, "\n"))
 	})
-	slices.Sort(lines)
+	lines = util.ArraySorted(lines)
 
 	flatGroups := args.Groups.Flatten()
 	maxGroupLength := util.StringArrayMaxLength(flatGroups.Strings(""))
@@ -74,7 +73,7 @@ func menuBlockV(models model.Models, args *metamodel.Args, groups map[string][]s
 			msg += fmt.Sprintf(", Route: %q", grp.Route)
 		}
 		if len(grp.Children) > 0 || len(g) > 0 {
-			items := append(slices.Clone(g), grp.Children.Strings("menuGroup")...)
+			items := append(util.ArrayCopy(g), grp.Children.Strings("menuGroup")...)
 			msg += fmt.Sprintf(", Children: menu.Items{%s}", util.StringJoin(items, ", "))
 		}
 		msg += "}"
@@ -126,7 +125,7 @@ func menuItemForModel(m *model.Model, models model.Models, acronyms []string) *m
 	ret := &menu.Item{
 		Key: m.Package, Title: m.TitlePlural(), Description: m.Description, Icon: m.Icon, Route: m.Route(), Hidden: m.HasTag("menu-hidden"), Warning: w,
 	}
-	lo.ForEach(models.ForGroup(append(slices.Clone(m.Group), m.Package)...), func(x *model.Model, _ int) {
+	lo.ForEach(models.ForGroup(append(util.ArrayCopy(m.Group), m.Package)...), func(x *model.Model, _ int) {
 		kid := menuItemForModel(x, models, acronyms)
 		ret.Children = append(ret.Children, kid)
 	})

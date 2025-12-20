@@ -31,7 +31,7 @@ func SetDepsMap(ctx context.Context, projects project.Projects, dep *Dependency,
 		}
 		str := string(bytes)
 		lines := util.StringSplitLines(str)
-		ret := util.NewStringSlice(make([]string, 0, len(lines)))
+		ret := util.NewStringSliceWithSize(len(lines))
 		for _, line := range lines {
 			if strings.Contains(line, dep.Key+" ") {
 				start := strings.Index(line, " v")
@@ -99,7 +99,7 @@ func SetDepsProject(ctx context.Context, prjs project.Projects, key string, pSvc
 	}
 	str := string(bytes)
 	lines := util.StringSplitLines(str)
-	ret := util.NewStringSlice(make([]string, 0, len(lines)))
+	ret := util.NewStringSliceWithSize(len(lines))
 	for _, line := range lines {
 		hit, pline, errChild := setDepProcessLine(line, curr, key)
 		if errChild != nil {

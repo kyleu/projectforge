@@ -1,0 +1,115 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/jsonschema"
+	"projectforge.dev/projectforge/app/lib/metamodel"
+	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type SchemaDetail struct {
+  layout.Basic
+  Schema *metaschema.SchemaTestFile
+  ShowContent bool
+} %}
+
+{% func (p *SchemaDetail) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code sch := p.Schema -%}
+  <div class="card">
+    <div class="right"><a href="#modal-schema"><button type="button">{%= components.SVGButton("code", ps) %} Schema JSON</button></a></div>
+    <h3>{%= components.SVGIcon(`paperclip`, ps) %} {%s sch.Filename %}</h3>
+    {%- if sch.Error != "" -%}
+    <div class="mt error">{%s sch.Error %}</div>
+    {%- endif -%}
+    <div class="mt">
+      <ul class="accordion">
+        {%= renderSchemaPanel(as, sch.Schema, ps) %}
+        {%= renderContentPanel(as, sch.Content, ps) %}
+        {%= renderCollectionPanel(as, sch.Collection, ps) %}
+        {%= renderArgsPanel(as, sch.Args, sch.ArgsError, ps) %}
+      </ul>
+    </div>
+  </div>
+  {%= components.JSONModal("schema", "Schema", sch.Schema, 1) %}
+{% endfunc %}
+
+{% func renderSchemaPanel(as *app.State, sch *jsonschema.Schema, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-schema" type="checkbox" hidden />
+    <label for="accordion-schema">
+      {%- if sch != nil -%}
+      <div class="right"><em>{%s sch.Summary() %}</em></div>
+      {%- endif -%}
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("paperclip", 16, 16, "icon", ps) %} Schema
+    </label>
+    <div class="bd"><div><div>
+      {%- if sch == nil -%}
+      <em>no schema found</em>
+      {%- else -%}
+      {%= view.JSONSchema(sch, true, ps) %}
+      {%- endif -%}
+    </div></div></div>
+  </li>
+{% endfunc %}
+
+{% func renderContentPanel(as *app.State, c string, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-content" type="checkbox" hidden />
+    <label for="accordion-content">
+      <div class="right"><em>{%s util.ByteSizeSI(int64(len(c))) %}</em></div>
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("code", 16, 16, "icon", ps) %} Content
+    </label>
+    <div class="bd"><div><div>
+      {%= components.JSON([]byte(c)) %}
+    </div></div></div>
+  </li>
+{% endfunc %}
+
+{% func renderCollectionPanel(as *app.State, coll *jsonschema.Collection, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-collection" type="checkbox" hidden />
+    <label for="accordion-collection">
+      {%- if coll.Expanded -%}
+      <div class="right"><em>Expanded</em></div>
+      {%- endif -%}
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} Collection
+    </label>
+    <div class="bd"><div><div>
+      <ul class="accordion bl">
+        {%- for _, x := range coll.Schemas -%}
+        <li>
+          {%- code itemKey := util.RandomString(16) %}
+          <input id="accordion-collection-{%s itemKey %}" type="checkbox" hidden />
+          <label for="accordion-collection-{%s itemKey %}">
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} {%s x.ID() %}
+          </label>
+          <div class="bd"><div><div>
+            {%= view.JSONSchema(x, true, ps) %}
+          </div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div></div></div>
+  </li>
+{% endfunc %}
+
+{% func renderArgsPanel(as *app.State, args *metamodel.Args, argsErr string, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-args" type="checkbox" hidden />
+    <label for="accordion-args">
+      {%- if argsErr != "" -%}
+      <div class="right"><em>error</em></div>
+      {%- endif -%}
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} Args
+    </label>
+    <div class="bd"><div><div>
+      {%- if argsErr != "" -%}
+      <div class="mb error">{%s argsErr %}</div>
+      {%- endif -%}
+      {%= components.JSON(args) %}
+    </div></div></div>
+  </li>
+{% endfunc %}

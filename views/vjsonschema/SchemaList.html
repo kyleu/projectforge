@@ -1,0 +1,78 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type SchemaList struct {
+  layout.Basic
+  Schemata metaschema.SchemaTestFiles
+  ShowContent bool
+} %}
+
+{% func (p *SchemaList) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code errs := p.Schemata.WithError() -%}
+  {%- if len(errs) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`paperclip`, ps) %} {%s util.StringPlural(len(errs), "Error") %}</h3>
+    {%= JSONSchemaTable(errs, p.ShowContent) %}
+  </div>
+  {%- endif -%}
+  {%- code oks := p.Schemata.WithoutError() -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`paperclip`, ps) %} {%s util.StringPlural(len(oks), "Success") %}</h3>
+    {%= JSONSchemaTable(oks, p.ShowContent) %}
+  </div>
+{% endfunc %}
+
+{% func JSONSchemaTable(schemata metaschema.SchemaTestFiles, showContent bool) %}
+  <div class="mt overflow full-width">
+    <table>
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Size</th>
+          <th>Validation</th>
+          <th>Error</th>
+          <th>Logs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, sch := range schemata -%}
+        <tr>
+          <td><a href="/test/jsonschema/{%s sch.Filename %}">{%s sch.Filename %}</a></td>
+          {%- if showContent -%}
+          <td><pre>{%s sch.Content %}</pre></td>
+          {%- else -%}
+          <td>{%s sch.Size() %}</td>
+          {%- endif -%}
+          <td>
+            {%- if sch.Schema == nil -%}
+            <em>-</em>
+            {%- elseif valErr := sch.Schema.Validate(); valErr == nil -%}
+            <em>-</em>
+            {%- else -%}
+            <div class="error">{%s valErr.Error() %}</div>
+            {%- endif -%}
+          </td>
+          <td>
+            {%- if sch.Error == "" -%}
+            <em>-</em>
+            {%- else -%}
+            <div class="error">{%s sch.Error %}</div>
+            {%- endif -%}
+          </td>
+          <td>
+            {%- for _, log := range sch.Logs -%}
+            <div>{%s log %}</div>
+            {%- endfor -%}
+          </td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

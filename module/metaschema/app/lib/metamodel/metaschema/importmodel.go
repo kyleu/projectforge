@@ -14,14 +14,14 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 	if sch == nil {
 		return nil, errors.New("nil schema provided for model")
 	}
-	_, err := exportGetType(sch, "object")
+	_, err := exportGetType(sch, KeyObject)
 	if err != nil {
 		return nil, err
 	}
 	n, pkg, grp := parseID(sch.ID())
 	ret := &model.Model{Name: n, Package: pkg, Group: grp, Description: sch.Description}
 
-	for _, propKey := range sch.Properties.Order {
+	for _, propKey := range sch.Properties.Keys() {
 		col, e := ImportColumn(propKey, sch, coll, args)
 		if e != nil {
 			return nil, e
@@ -29,50 +29,51 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 		ret.Columns = append(ret.Columns, col)
 	}
 
-	if x := sch.Metadata.GetMapOpt("config"); len(x) > 0 {
+	md := sch.GetMetadata()
+	if x := md.GetMapOpt("config"); len(x) > 0 {
 		ret.Config = x
 	}
-	if x := sch.Metadata.GetStringOpt("icon"); x != "" {
+	if x := md.GetStringOpt("icon"); x != "" {
 		ret.Icon = x
 	}
-	if x := sch.Metadata["ordering"]; x != nil {
+	if x := md["ordering"]; x != nil {
 		var ords filter.Orderings
 		if e := util.CycleJSON(x, &ords); e != nil {
 			return nil, e
 		}
 		ret.Ordering = ords
 	}
-	if x := sch.Metadata.GetStringOpt("plural"); x != "" {
+	if x := md.GetStringOpt("plural"); x != "" {
 		ret.PluralOverride = x
 	}
-	if x := sch.Metadata.GetStringOpt("route"); x != "" {
+	if x := md.GetStringOpt("route"); x != "" {
 		ret.RouteOverride = x
 	}
-	if x := sch.Metadata.GetStringOpt("schema"); x != "" {
+	if x := md.GetStringOpt("schema"); x != "" {
 		ret.Schema = x
 	}
-	if x := sch.Metadata.GetStringArrayOpt("search"); len(x) > 0 {
+	if x := md.GetStringArrayOpt("search"); len(x) > 0 {
 		ret.Search = x
 	}
-	if x := sch.Metadata.GetIntOpt("sortIndex"); x != 0 {
+	if x := md.GetIntOpt("sortIndex"); x != 0 {
 		ret.SortIndex = x
 	}
-	if x := sch.Metadata.GetStringOpt("table"); x != "" {
+	if x := md.GetStringOpt("table"); x != "" {
 		ret.TableOverride = x
 	}
-	if x := sch.Metadata.GetStringArrayOpt("tags"); len(x) > 0 {
+	if x := md.GetStringArrayOpt("tags"); len(x) > 0 {
 		ret.Tags = x
 	}
 	if sch.Title != "" && sch.Title != n {
 		ret.TitleOverride = sch.Title
 	}
-	if x := sch.Metadata.GetStringOpt("view"); x != "" {
+	if x := md.GetStringOpt("view"); x != "" {
 		ret.View = x
 	}
 	if len(sch.Examples) > 0 {
 		ret.SeedData = util.ArrayFromAny[[]any](sch.Examples)
 	}
-	if e := parseExtra(sch.Metadata, ret); e != nil {
+	if e := parseExtra(md, ret); e != nil {
 		return nil, e
 	}
 	return ret, nil

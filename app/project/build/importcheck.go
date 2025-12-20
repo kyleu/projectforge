@@ -107,7 +107,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 }
 
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {
-	ret := util.NewStringSlice(make([]string, 0, len(first)+len(third)+len(self)))
+	ret := util.NewStringSliceWithSize(len(first) + len(third) + len(self))
 	lo.ForEach(first.Keys(), func(k string, _ int) {
 		ret.Push(first.GetStringOpt(k))
 	})

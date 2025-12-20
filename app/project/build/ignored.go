@@ -11,7 +11,7 @@ import (
 )
 
 func Ignored(prj *project.Project, fs filesystem.FileLoader, logger util.Logger) ([]string, error) {
-	ign := append(slices.Clone(prj.Ignore), "^tmp")
+	ign := append(util.ArrayCopy(prj.Ignore), "^tmp")
 	files, err := fs.ListFilesRecursive(".", ign, logger)
 	if err != nil {
 		return nil, err

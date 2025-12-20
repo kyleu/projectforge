@@ -32,7 +32,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 		return "<div class=\"prewsl\">" + tmplStartS + ToGoString(t, nullable, prop, false) + tmplEnd + "</div>"
 	case FmtCodeHidden.Key:
 		_, p := util.StringSplitLast(prop, '.', true)
-		ret := util.NewStringSlice(make([]string, 0, 30))
+		ret := util.NewStringSliceWithSize(30)
 		ret.Push(
 			"<ul class=\"accordion\">",
 			"<li>",

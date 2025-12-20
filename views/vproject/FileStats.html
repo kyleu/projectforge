@@ -1,6 +1,4 @@
 {% import (
-  "slices"
-
   "github.com/samber/lo"
 
   "projectforge.dev/projectforge/app"
@@ -93,7 +91,7 @@
       {%- if len(f.Kids) > 0 -%}
       <ul class="accordion">
         {%- for _, k := range f.Kids -%}
-        {%= renderFileStat(append(slices.Clone(pth), f.Name), k, ext, as, ps) %}
+        {%= renderFileStat(append(util.ArrayCopy(pth), f.Name), k, ext, as, ps) %}
         {%- endfor -%}
       </ul>
     </div></div></div>

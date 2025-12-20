@@ -1,7 +1,6 @@
 package model
 
 import (
-	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -61,7 +60,7 @@ func (e *Event) PackageWithGroup(prefix string) string {
 }
 
 func (e *Event) GroupAndPackage() []string {
-	return append(slices.Clone(e.Group), e.Package)
+	return append(util.ArrayCopy(e.Group), e.Package)
 }
 
 func (e *Event) ID() string {

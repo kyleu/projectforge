@@ -1,6 +1,6 @@
+.DS_Store
 /.idea
 /.projectforge/additional-projects.json
-/.scannerwork
 /assets/module
 /build
 /client/node_modules

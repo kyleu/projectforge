@@ -31,12 +31,14 @@
 
 {% func JSON(v any) %}{% stripspace %}
   {% code
+    var json []byte
     b, ok := v.([]byte)
     if ok {
-      v, _ = util.FromJSONAny(b)
+      json = b
+    } else {
+      json = util.ToJSONBytes(v, true)
     }
   %}
-  {% code json := util.ToJSONBytes(v, true) %}
   {% if len(json) > (1024 * 256) %}
     <div><em>This JSON is too large (<strong>{%s util.ByteSizeSI(int64(len(json))) %}</strong>), highlighting is disabled</em></div>
     <div class="overflow full-width">

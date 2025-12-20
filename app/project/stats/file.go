@@ -2,7 +2,6 @@ package stats
 
 import (
 	"path/filepath"
-	"slices"
 	"strings"
 
 	"github.com/samber/lo"
@@ -20,7 +19,7 @@ type FileStat struct {
 }
 
 func newFileStat(pth []string, name string, isDir bool) *FileStat {
-	fp := util.StringFilePath(append(slices.Clone(pth), name)...)
+	fp := util.StringFilePath(append(util.ArrayCopy(pth), name)...)
 	ext := strings.TrimPrefix(filepath.Ext(name), ".")
 	return &FileStat{Name: name, IsDir: isDir, fullPath: fp, extension: ext}
 }

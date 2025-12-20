@@ -60,7 +60,7 @@ func (t TSImports) Paths() []string {
 }
 
 func (t TSImports) Strings() []string {
-	ret := util.NewStringSlice(nil)
+	ret := util.NewStringSliceWithSize(len(t.Paths()))
 	for _, pth := range t.Paths() {
 		matches := t.ByPath(pth)
 		ret.Pushf("import { %s } from %q;", strings.Join(matches.RefStrings(), ", "), pth)

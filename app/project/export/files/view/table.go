@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/samber/lo"
 
@@ -47,7 +46,7 @@ func exportViewTableRowFunc(m *model.Model, acronyms []string, models model.Mode
 	xCols := m.Columns.ForDisplay("summary")
 	firstCols := xCols.WithTag("list-first")
 	restCols := xCols.WithoutTags("list-first")
-	summCols := append(slices.Clone(firstCols), restCols...)
+	summCols := append(util.ArrayCopy(firstCols), restCols...)
 	ret := golang.NewBlock("Table", "func")
 	var suffix string
 	lo.ForEach(m.Relations, func(rel *model.Relation, _ int) {
@@ -73,7 +72,7 @@ func exportViewTableFunc(m *model.Model, acronyms []string, models model.Models,
 	xCols := m.Columns.ForDisplay("summary")
 	firstCols := xCols.WithTag("list-first")
 	restCols := xCols.WithoutTags("list-first")
-	summCols := append(slices.Clone(firstCols), restCols...)
+	summCols := append(util.ArrayCopy(firstCols), restCols...)
 	ret := golang.NewBlock("Table", "func")
 	var suffix string
 	var callSuffix string

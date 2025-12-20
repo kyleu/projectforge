@@ -56,7 +56,7 @@ func (t *Context) ServicesDefinition() string {
 	if len(svcs) == 0 {
 		return "type CoreServices struct{}"
 	}
-	ret := util.NewStringSlice([]string{"type CoreServices struct {"})
+	ret := util.NewStringSlice("type CoreServices struct {")
 	types := lo.Map(svcs, func(svc string, _ int) string {
 		return "*" + templateServicesKeys[svc] + ".Service"
 	})
@@ -89,7 +89,7 @@ func (t *Context) ServicesConstructor() string {
 	if len(svcs) == 0 {
 		return "CoreServices{}"
 	}
-	ret := util.NewStringSlice([]string{"CoreServices{"})
+	ret := util.NewStringSlice("CoreServices{")
 	refs := lo.Map(svcs, func(svc string, _ int) string {
 		return templateServicesRefs[svc]
 	})

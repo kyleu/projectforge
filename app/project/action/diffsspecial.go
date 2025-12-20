@@ -67,10 +67,13 @@ func parseLaunch(fs filesystem.FileLoader, name string, ex string, upgrade bool)
 			config = append(config, l)
 		}
 	}
-	add(util.ValueMap{"name": "Attach to " + name, "type": "go", "request": "attach", "mode": "local", "processId": ex})
-	add(util.ValueMap{"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": name})
+	sub := []any{util.ValueMap{"from": "${workspaceFolder}/views", "to": "views"}}
+	add(util.ValueMap{"name": "Attach to " + name, "type": "go", "request": "attach", "mode": "local", "processId": ex, "substitutePath": sub})
+	add(util.ValueMap{"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": name, "substitutePath": sub})
 	if upgrade {
-		add(util.ValueMap{"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": name, "args": []string{"upgrade"}})
+		add(util.ValueMap{
+			"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": name, "args": []string{"upgrade"}, "substitutePath": sub,
+		})
 	}
 	ret["configurations"] = config
 	if ret.GetStringOpt("version") == "" {

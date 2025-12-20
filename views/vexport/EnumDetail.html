@@ -77,7 +77,7 @@
           <th>Name</th>
           <th>Icon</th>
           <th>Description</th>
-          {%- for _, x := range ef.Order -%}
+          {%- for _, x := range ef.Keys() -%}
           <th>{%s x %}</th>
           {%- endfor -%}
         </tr>
@@ -89,7 +89,7 @@
           <td>{%s v.Name %}</td>
           <td>{%= components.SVGIcon(v.IconSafe(), ps) %}</td>
           <td>{%s v.Description %}</td>
-          {%- for _, x := range ef.Order -%}
+          {%- for _, x := range ef.Keys() -%}
           {%- if v.Extra == nil -%}
           <td></td>
           {%- else -%}

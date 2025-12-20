@@ -17,7 +17,7 @@ func structCollection(e *enum.Enum, identityProper string) ([]*golang.Block, err
 	ret := []*golang.Block{tBlock, ksBlock, strBlock, namesSafeBlock, fnHelpBlock, gBlock, gnBlock}
 
 	ef := e.ExtraFields()
-	for _, efk := range ef.Order {
+	for _, efk := range ef.Keys() {
 		f := ef.GetSimple(efk)
 		_, unique := e.ExtraFieldValues(efk)
 		if unique {

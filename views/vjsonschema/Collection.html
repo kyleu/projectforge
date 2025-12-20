@@ -3,28 +3,27 @@
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/jsonschema"
   "projectforge.dev/projectforge/app/lib/metamodel"
-  "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
-{% code type JSONSchemaCollection struct {
+{% code type CollectionDetail struct {
   layout.Basic
-  Project *project.Project
+  BaseURL string
   Args *metamodel.Args
   Collection *jsonschema.Collection
   Results *metamodel.Args
 } %}
 
-{% func (p *JSONSchemaCollection) Body(as *app.State, ps *cutil.PageState) %}
+{% func (p *CollectionDetail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
-      <a href="{%s p.Project.WebPath() %}/export/jsonschema/write">
+      <a href="{%s p.BaseURL %}/export/jsonschema/write">
         <button>{%= components.SVGButton("file", ps) %} Write Schema</button>
       </a>
     </div>
-    <h3>{%= components.SVGIcon(`table`, ps) %} [{%s p.Project.Title() %}] JSON Schema</h3>
+    <h3>{%= components.SVGIcon(`table`, ps) %} {%s ps.Title %}</h3>
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
@@ -45,7 +44,7 @@
             {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%= renderJSONSchemaEnum(p.Project, x, sch, res, df, ps) %}
+            {%= RenderEnum(p.BaseURL + "/export/enums", x, sch, res, df, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -71,7 +70,7 @@
             {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%= renderJSONSchemaModel(p.Project, x, sch, res, df, ps) %}
+            {%= RenderModel(p.BaseURL + "/export/models", x, sch, res, df, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -86,11 +85,11 @@
       <ul class="accordion">
         {%- for _, sch := range ex -%}
         <li>
-          <input id="accordion-model-{%s sch.ID() %}" type="checkbox" hidden="hidden" />
-          <label for="accordion-model-{%s sch.ID() %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID() %}</label>
+          <input id="accordion-extra-{%s sch.ID() %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-extra-{%s sch.ID() %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID() %}</label>
           <div class="bd"><div><div>
             {%- code res := p.Results.Models.Get(sch.ID()) -%}
-            {%= renderJSONSchemaExtra(as, sch, res, ps) %}
+            {%= RenderExtra(as, sch, res, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -100,7 +99,7 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func renderJSONSchemaExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) %}
+{% func RenderExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) %}
   <div class="flex" style="">
     <div class="flex-item">
       <strong>Original</strong>
