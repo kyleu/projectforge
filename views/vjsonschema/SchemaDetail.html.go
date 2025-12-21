@@ -74,7 +74,7 @@ func (p *SchemaDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vjsonschema/SchemaDetail.html:26
 	}
 //line views/vjsonschema/SchemaDetail.html:27
-	if valErr := sch.Schema.Validate(); valErr != nil {
+	if _, valErr := sch.Schema.Validate(); valErr != nil {
 //line views/vjsonschema/SchemaDetail.html:27
 		qw422016.N().S(`    <div class="mt error">`)
 //line views/vjsonschema/SchemaDetail.html:28

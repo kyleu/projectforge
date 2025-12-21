@@ -71,7 +71,10 @@ func parseExtraPath(ctx context.Context, pth string, coll *jsonschema.Collection
 		if err != nil {
 			return err
 		}
-		coll.AddSchema(sch)
+		err = coll.AddSchema(true, sch)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

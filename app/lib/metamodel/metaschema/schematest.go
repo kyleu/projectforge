@@ -59,7 +59,7 @@ func (s SchemaTestFiles) WithoutError() SchemaTestFiles {
 
 func LoadSchemaTestFile(filename string, fs filesystem.FileLoader, logger util.Logger) *SchemaTestFile {
 	ret := &SchemaTestFile{Filename: filename}
-
+	t := util.TimerStart()
 	json, err := fs.ReadFile(fmt.Sprintf("schemas/json/%s.json", filename))
 	if err != nil {
 		return ret.WithError(err, true)
@@ -85,6 +85,6 @@ func LoadSchemaTestFile(filename string, fs filesystem.FileLoader, logger util.L
 	}
 	ret.Args = args
 
-	ret.Logs = append(ret.Logs, fmt.Sprintf("loaded [%s] from [%s]", util.ByteSizeSI(int64(len(json))), filename))
+	ret.Logs = append(ret.Logs, fmt.Sprintf("loaded [%s] from [%s] in [%s]", util.ByteSizeSI(int64(len(json))), filename, t.EndString()))
 	return ret
 }

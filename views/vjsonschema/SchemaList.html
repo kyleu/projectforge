@@ -15,15 +15,25 @@
 
 {% func (p *SchemaList) Body(as *app.State, ps *cutil.PageState) %}
   {%- code errs := p.Schemata.WithError() -%}
-  {%- if len(errs) > 0 -%}
+  {%- code oks := p.Schemata.WithoutError() -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`paperclip`, ps) %} {%s util.StringPlural(len(errs), "Error") %}</h3>
+    <div class="mt">
+      <em>
+        Successfully processed <a href="#anchor-ok">{%s util.StringPlural(len(oks), "schema") %}</a>,
+        with <a href="#anchor-error">{%s util.StringPlural(len(errs), "error") %}</a>
+      </em>
+    </div>
+  </div>
+
+  {%- if len(errs) > 0 -%}
+  <div class="card">
+    <h3 id="anchor-error">{%= components.SVGIcon(`check`, ps) %} {%s util.StringPlural(len(errs), "Error") %}</h3>
     {%= JSONSchemaTable(errs, p.ShowContent) %}
   </div>
   {%- endif -%}
-  {%- code oks := p.Schemata.WithoutError() -%}
   <div class="card">
-    <h3>{%= components.SVGIcon(`paperclip`, ps) %} {%s util.StringPlural(len(oks), "Success") %}</h3>
+    <h3 id="anchor-ok">{%= components.SVGIcon(`error`, ps) %} {%s util.StringPlural(len(oks), "Success") %}</h3>
     {%= JSONSchemaTable(oks, p.ShowContent) %}
   </div>
 {% endfunc %}
@@ -52,7 +62,7 @@
           <td>
             {%- if sch.Schema == nil -%}
             <em>-</em>
-            {%- elseif valErr := sch.Schema.Validate(); valErr == nil -%}
+            {%- elseif _, valErr := sch.Schema.Validate(); valErr == nil -%}
             <em>-</em>
             {%- else -%}
             <div class="error">{%s valErr.Error() %}</div>

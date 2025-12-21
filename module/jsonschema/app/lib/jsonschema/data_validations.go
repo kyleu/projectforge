@@ -1,8 +1,6 @@
 package jsonschema
 
-import (
-	"{{{ .Package }}}/app/util"
-)
+import "{{{ .Package }}}/app/util"
 
 type dataValidations struct {
 	// generic
@@ -34,25 +32,6 @@ func (d dataValidations) Clone() dataValidations {
 	}
 }
 
-type dataNumberValidations struct {
-	MultipleOf       *float64 `json:"multipleOf,omitzero"`       // instance must be divisible by this number (strictly positive)
-	Maximum          *float64 `json:"maximum,omitzero"`          // maximum inclusive value
-	ExclusiveMaximum *float64 `json:"exclusiveMaximum,omitzero"` // maximum exclusive value
-	Minimum          *float64 `json:"minimum,omitzero"`          // minimum inclusive value
-	ExclusiveMinimum *float64 `json:"exclusiveMinimum,omitzero"` // minimum exclusive value
-}
-
-func (d dataNumberValidations) IsEmpty() bool {
-	return d.MultipleOf == nil && d.Maximum == nil && d.ExclusiveMaximum == nil && d.Minimum == nil && d.ExclusiveMinimum == nil
-}
-
-func (d dataNumberValidations) Clone() dataNumberValidations {
-	return dataNumberValidations{
-		MultipleOf: d.MultipleOf, Maximum: d.Maximum, ExclusiveMaximum: d.ExclusiveMaximum,
-		Minimum: d.Minimum, ExclusiveMinimum: d.ExclusiveMinimum,
-	}
-}
-
 type dataStringValidations struct {
 	MaxLength        *uint64 `json:"maxLength,omitzero"`        // maximum length (non-negative integer)
 	MinLength        *uint64 `json:"minLength,omitzero"`        // minimum length (non-negative integer, default 0)
@@ -72,6 +51,25 @@ func (d dataStringValidations) Clone() dataStringValidations {
 	return dataStringValidations{
 		MaxLength: d.MaxLength, MinLength: d.MinLength, Pattern: d.Pattern, Format: d.Format,
 		ContentEncoding: d.ContentEncoding, ContentMediaType: d.ContentMediaType, ContentSchema: d.ContentSchema.Clone(),
+	}
+}
+
+type dataNumberValidations struct {
+	MultipleOf       *float64 `json:"multipleOf,omitzero"`       // instance must be divisible by this number (strictly positive)
+	Maximum          *float64 `json:"maximum,omitzero"`          // maximum inclusive value
+	ExclusiveMaximum *float64 `json:"exclusiveMaximum,omitzero"` // maximum exclusive value
+	Minimum          *float64 `json:"minimum,omitzero"`          // minimum inclusive value
+	ExclusiveMinimum *float64 `json:"exclusiveMinimum,omitzero"` // minimum exclusive value
+}
+
+func (d dataNumberValidations) IsEmpty() bool {
+	return d.MultipleOf == nil && d.Maximum == nil && d.ExclusiveMaximum == nil && d.Minimum == nil && d.ExclusiveMinimum == nil
+}
+
+func (d dataNumberValidations) Clone() dataNumberValidations {
+	return dataNumberValidations{
+		MultipleOf: d.MultipleOf, Maximum: d.Maximum, ExclusiveMaximum: d.ExclusiveMaximum,
+		Minimum: d.Minimum, ExclusiveMinimum: d.ExclusiveMinimum,
 	}
 }
 
@@ -122,6 +120,7 @@ func (d dataObjectValidations) IsEmpty() bool {
 
 func (d dataObjectValidations) Clone() dataObjectValidations {
 	return dataObjectValidations{
+		Properties: d.Properties.Clone(), PatternProperties: d.PatternProperties.Clone(),
 		AdditionalProperties: d.AdditionalProperties.Clone(), AllowTrailingCommas: d.AllowTrailingCommas,
 		UnevaluatedProperties: d.UnevaluatedProperties, Required: util.ArrayCopy(d.Required),
 		PropertyNames: d.PropertyNames.Clone(), MaxProperties: d.MaxProperties, MinProperties: d.MinProperties,

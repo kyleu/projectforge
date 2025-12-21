@@ -24,7 +24,7 @@
     {%- if sch.Error != "" -%}
     <div class="mt error">{%s sch.Error %}</div>
     {%- endif -%}
-    {%- if valErr := sch.Schema.Validate(); valErr != nil -%}
+    {%- if _, valErr := sch.Schema.Validate(); valErr != nil -%}
     <div class="mt error">{%s valErr.Error() %}</div>
     {%- endif -%}
     <div class="mt">

@@ -18,14 +18,15 @@ type Schema struct {
 }
 
 func NewRefSchema(s string) *Schema {
-	return &Schema{data: data{dataCore: dataCore{Ref: s}}}
+	r := util.Choose(strings.HasPrefix(s, "ref:"), s, "ref:"+s)
+	return &Schema{data: data{dataCore: dataCore{Ref: r}}}
 }
 
 func (s *Schema) Clone() *Schema {
 	if s == nil {
 		return nil
 	}
-	return &Schema{data: s.data.Clone(), bytes: s.bytes}
+	return &Schema{Key: s.Key, data: s.data.Clone(), bytes: s.bytes}
 }
 
 func (s *Schema) IsEmpty() bool {
@@ -63,6 +64,9 @@ func (s *Schema) Hash() uuid.UUID {
 }
 
 func (s *Schema) String() string {
+	if id := s.ID(); id != "" {
+		return id
+	}
 	ret := fmt.Sprint(s.Type)
 	if s.Format != "" {
 		ret += "; format=" + s.Format
@@ -71,7 +75,10 @@ func (s *Schema) String() string {
 }
 
 func (s *Schema) Summary() string {
-	st := s.DetectSchemaType()
+	if s == nil {
+		return "<nil>"
+	}
+	st, err := s.Validate()
 
 	ret := util.NewStringSlice("[" + st.String() + "]")
 	if l := s.Properties.Length(); l > 0 {
@@ -82,6 +89,18 @@ func (s *Schema) Summary() string {
 	}
 	if l := len(s.AnyOf); l > 0 {
 		ret.Push(util.StringPlural(l, "any-of item"))
+	}
+	if l := len(s.AllOf); l > 0 {
+		ret.Push(util.StringPlural(l, "all-of item"))
+	}
+	if l := len(s.Required); l > 0 {
+		ret.Push(util.StringPlural(l, "required field"))
+	}
+	if l := len(s.Enum); l > 0 {
+		ret.Push(util.StringPlural(l, "enum value"))
+	}
+	if err != nil {
+		ret.Push("validation error")
 	}
 	return ret.Join(", ")
 }

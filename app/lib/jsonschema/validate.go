@@ -6,26 +6,62 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (s *Schema) Validate() error {
-	t := s.DetectSchemaType()
-	if t == SchemaTypeObject {
-
-	} else {
-
-	}
-	if err := validateRequired(s, t); err != nil {
-		return err
-	}
-	return nil
+func (s *Schema) DetectSchemaType() SchemaType {
+	ret, _ := s.Validate()
+	return ret
 }
 
-func validateRequired(s *Schema, t SchemaType) error {
-	if t != SchemaTypeObject && len(s.Required) > 0 {
-		return errors.Errorf("schema [%s] has required fields, but isn't an object", s.String())
+func (s *Schema) Validate() (SchemaType, error) {
+	if s == nil {
+		return SchemaTypeNull, nil
+	}
+	sendErr := func(msg string, args ...any) (SchemaType, error) {
+		return SchemaTypeUnknown, errors.Errorf(msg, args...)
 	}
 	if len(s.Required) > 0 && (s.Properties.Empty()) {
-		return errors.Errorf("schema [%s] has required fields, but no properties", s.String())
+		return sendErr("schema [%s] has required fields, but no properties", s.String())
 	}
+
+	switch s.Type {
+	case "string":
+		if len(s.Enum) > 0 {
+			return SchemaTypeEnum, validateEnum(s)
+		}
+		return SchemaTypeString, validateString(s)
+	case "integer":
+		return SchemaTypeInteger, validateInt(s)
+	case "array":
+		return SchemaTypeArray, validateArray(s)
+	case "number":
+		return SchemaTypeNumber, validateNumber(s)
+	case "boolean":
+		return SchemaTypeBoolean, validateBoolean(s)
+	case "null":
+		return SchemaTypeNull, validateNull(s)
+	default:
+		if !s.Properties.Empty() {
+			return SchemaTypeObject, validateObject(s)
+		}
+		if len(s.Required) > 0 {
+			return SchemaTypeObject, validateObject(s)
+		}
+		if len(s.Enum) > 0 {
+			return SchemaTypeEnum, validateEnum(s)
+		}
+		if s.Ref != "" && s.Not == nil {
+			return SchemaTypeRef, validateRef(s)
+		}
+		if s.Not != nil && s.Ref == "" {
+			return SchemaTypeNot, validateNot(s)
+		}
+		if len(s.OneOf) > 0 || len(s.AnyOf) > 0 && len(s.AllOf) > 0 {
+			return SchemaTypeUnion, validateUnion(s)
+		}
+		return SchemaTypeUnknown, nil
+	}
+}
+
+func validateObject(s *Schema) error {
 	for _, x := range s.Required {
 		if !slices.Contains(s.Properties.Order, x) {
 			return errors.Errorf("schema [%s] has required field [%s], but isn't in properties", s.String(), x)
@@ -34,45 +70,52 @@ func validateRequired(s *Schema, t SchemaType) error {
 	return nil
 }
 
-func (s *Schema) DetectSchemaType() SchemaType {
-	if s == nil {
-		return SchemaTypeNull
+func validateNonObject(s *Schema) error {
+	if len(s.Required) > 0 {
+		return errors.Errorf("schema [%s] has required fields, but isn't an object", s.String())
 	}
-	switch s.Type {
-	case "string":
-		if len(s.Enum) > 0 {
-			return SchemaTypeEnum
-		}
-		return SchemaTypeString
-	case "integer":
-		return SchemaTypeInteger
-	case "array":
-		return SchemaTypeArray
-	case "number":
-		return SchemaTypeNumber
-	case "boolean":
-		return SchemaTypeBoolean
-	case "null":
-		return SchemaTypeNull
-	default:
-		if !s.Properties.Empty() {
-			return SchemaTypeObject
-		}
-		if len(s.Required) > 0 {
-			return SchemaTypeObject
-		}
-		if len(s.Enum) > 0 {
-			return SchemaTypeEnum
-		}
-		if s.Ref != "" && s.Not == nil {
-			return SchemaTypeRef
-		}
-		if s.Not != nil && s.Ref == "" {
-			return SchemaTypeNot
-		}
-		if len(s.OneOf) > 0 || len(s.AnyOf) > 0 && len(s.AllOf) > 0 {
-			// return SchemaTypeUnion
-		}
-		return SchemaTypeUnknown
+	return nil
+}
+
+func validateEnum(s *Schema) error {
+	if len(s.Enum) > 0 && (!s.Properties.Empty() || len(s.Required) > 0) {
+		return errors.Errorf("schema [%s] is an enum, but has properties or required fields", s.String())
 	}
+	return validateNonObject(s)
+}
+
+func validateString(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateInt(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateArray(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateNumber(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateBoolean(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateNull(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateRef(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateNot(s *Schema) error {
+	return validateNonObject(s)
+}
+
+func validateUnion(s *Schema) error {
+	return validateNonObject(s)
 }

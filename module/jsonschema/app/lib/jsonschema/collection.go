@@ -17,6 +17,7 @@ const (
 
 type Collection struct {
 	SchemaMap map[string]*Schema `json:"schemas,omitempty"`
+	Roots     []string           `json:"roots,omitempty"`
 }
 
 func NewCollection() *Collection {
@@ -63,14 +64,22 @@ func (c *Collection) NewSchema(id string) *Schema {
 	}
 	comment := fmt.Sprintf("managed by %s", util.AppName)
 	ret := &Schema{data: data{dataCore: dataCore{Schema: CurrentSchemaVersion, MetaID: u, Comment: comment}}}
-	c.AddSchema(ret)
+	_ = c.AddSchema(true, ret)
 	return ret
 }
 
-func (c *Collection) AddSchema(sch ...*Schema) {
+func (c *Collection) AddSchema(root bool, sch ...*Schema) error {
 	for _, x := range sch {
-		c.SchemaMap[x.ID()] = x
+		id := x.ID()
+		if _, ok := c.SchemaMap[id]; ok {
+			return errors.Errorf("schema with id [%s] already exists", id)
+		}
+		c.SchemaMap[id] = x
+		if root {
+			c.Roots = append(c.Roots, id)
+		}
 	}
+	return nil
 }
 
 func (c *Collection) AddSchemaExpanded(sch ...*Schema) error {
@@ -79,31 +88,51 @@ func (c *Collection) AddSchemaExpanded(sch ...*Schema) error {
 		if err != nil {
 			return err
 		}
-		c.AddSchema(exp...)
+		if len(exp) > 0 {
+			if err := c.AddSchema(true, exp[0]); err != nil {
+				return err
+			}
+			if err := c.AddSchema(false, exp[1:]...); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
 
-func shouldExpand(k string, sch *Schema) *Schema {
+func shouldExpand(k string, sch *Schema, key string) *Schema {
 	if sch.Type == "object" {
 		if sch.ID() == "" {
 			sch.MetaID = k
 		}
-		return NewRefSchema(k)
+		ret := NewRefSchema(key)
+		ret.Key = key + "--expanded-ref"
+		return ret
 	}
 	return nil
 }
 
-func expandSchema(sch *Schema, path ...string) (Schemas, error) {
-	if len(path) > 100 {
-		return nil, errors.Errorf("recursion limit reached")
+// "https://json.schemastore.org/cloudify.json#definitions/nodeTypeCloudifyAzureNodesNetworkLoadBalancerProbeInterfaces#properties/cloudify.interfaces.lifecycle#properties/delete--enum"
+func expandSchema(sch *Schema, key string) (Schemas, error) {
+	if len(key) > 1024 {
+		return nil, errors.Errorf("recursion limit reached for key [%s]", key)
 	}
 	orig := sch.Clone()
+	if orig.Key == "" {
+		orig.Key = key
+	}
+	t := orig.DetectSchemaType()
+	if t.Matches(SchemaTypeEnum) {
+		orig.Key += "--enum"
+		ref := NewRefSchema(orig.Key)
+		ref.Key = key + "--expanded-ref"
+		ret := Schemas{ref, orig}
+		return ret, nil
+	}
 	ret := Schemas{orig}
-	process := func(x *Schema, n ...string) error {
-		p := append(util.ArrayCopy(path), n...)
-		x.Key = strings.Join(p, "/")
-		exp, err := expandSchema(x, p...)
+	process := func(x *Schema, key string) error {
+		x.Key = key
+		exp, err := expandSchema(x, key)
 		if err != nil {
 			return err
 		}
@@ -112,9 +141,10 @@ func expandSchema(sch *Schema, path ...string) (Schemas, error) {
 	}
 	for _, k := range orig.Properties.Keys() {
 		x := orig.Properties.GetSimple(k)
-		if n := shouldExpand(k, x); n != nil {
+		newKey := key + "#properties/" + k
+		if n := shouldExpand(k, x, newKey); n != nil {
 			orig.Properties.Set(k, n)
-			if err := process(x, "properties", k); err != nil {
+			if err := process(x, newKey); err != nil {
 				return nil, err
 			}
 		}
@@ -122,9 +152,10 @@ func expandSchema(sch *Schema, path ...string) (Schemas, error) {
 	defs := orig.Definitions()
 	for _, k := range defs.Keys() {
 		x := defs.GetSimple(k)
-		if n := shouldExpand(k, x); n != nil {
+		newKey := key + "#definitions/" + k
+		if n := shouldExpand(k, x, newKey); n != nil {
 			defs.Set(k, n)
-			if err := process(x, "definitions", k); err != nil {
+			if err := process(x, newKey); err != nil {
 				return nil, err
 			}
 		}
