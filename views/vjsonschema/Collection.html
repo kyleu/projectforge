@@ -13,6 +13,7 @@
   BaseURL string
   Args *metamodel.Args
   Collection *jsonschema.Collection
+  Unrelated jsonschema.Schemas
   Results *metamodel.Args
 } %}
 
@@ -77,7 +78,7 @@
       </ul>
     </div>
   </div>
-  {%- code ex := p.Collection.Extra() -%}
+  {%- code ex := p.Unrelated -%}
   {%- if len(ex) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} {%s util.StringPlural(len(ex), "Extra") %}</h3>

@@ -32,8 +32,8 @@ func (x *List) String() string {
 }
 
 func (x *List) From(v any) any {
-	if x, err := util.ParseArray(v, "", true, true); err == nil {
-		return x
+	if ret, err := util.ParseArray(v, "", true, true); err == nil {
+		return ret
 	}
 	return invalidInput(x.Key(), v)
 }

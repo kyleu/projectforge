@@ -15,7 +15,7 @@ import (
 func LoadSchemas(
 	ctx context.Context, key string, args *metamodel.Args, extraPaths []string, logger util.Logger, filter ...string,
 ) (*jsonschema.Collection, error) {
-	ret := jsonschema.NewCollection(false)
+	ret := jsonschema.NewCollection()
 	for _, x := range args.Enums {
 		if len(filter) > 0 && !slices.Contains(filter, x.Name) {
 			continue
@@ -71,9 +71,7 @@ func parseExtraPath(ctx context.Context, pth string, coll *jsonschema.Collection
 		if err != nil {
 			return err
 		}
-		if err := coll.AddSchema(sch); err != nil {
-			return err
-		}
+		coll.AddSchema(sch)
 	}
 	return nil
 }

@@ -99,3 +99,27 @@ func jsonHandleError(src any, err error) {
 		RootLogger.Warnf("error [%s] encountered serializing JSON for type [%T]", err.Error(), src)
 	}
 }
+
+func FromJSONBytesArray[T any](vs ...jsontext.Value) ([]T, error) {
+	tgt := make([]T, 0, len(vs))
+	for _, v := range vs {
+		x, err := FromJSONObj[T](v)
+		if err != nil {
+			return nil, err
+		}
+		tgt = append(tgt, x)
+	}
+	return tgt, nil
+}
+
+func FromJSONBytesMap[T any](m map[string]jsontext.Value) (map[string]T, error) {
+	tgt := make(map[string]T, len(m))
+	for k, v := range m {
+		x, err := FromJSONObj[T](v)
+		if err != nil {
+			return nil, err
+		}
+		tgt[k] = x
+	}
+	return tgt, nil
+}

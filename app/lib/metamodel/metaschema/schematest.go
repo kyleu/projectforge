@@ -72,8 +72,8 @@ func LoadSchemaTestFile(filename string, fs filesystem.FileLoader, logger util.L
 	}
 	ret.Schema = sch
 
-	coll := jsonschema.NewCollection(true)
-	if err := coll.AddSchema(sch); err != nil {
+	coll := jsonschema.NewCollection()
+	if err := coll.AddSchemaExpanded(sch); err != nil {
 		return ret.WithError(err, false)
 	}
 	ret.Collection = coll

@@ -16,12 +16,11 @@ const (
 )
 
 type Collection struct {
-	Expanded bool    `json:"expand,omitempty"`
-	Schemas  Schemas `json:"schemas,omitempty"`
+	SchemaMap map[string]*Schema `json:"schemas,omitempty"`
 }
 
-func NewCollection(expand bool) *Collection {
-	return &Collection{Expanded: expand}
+func NewCollection() *Collection {
+	return &Collection{SchemaMap: map[string]*Schema{}}
 }
 
 func (c *Collection) GetSchema(id string) *Schema {
@@ -31,11 +30,30 @@ func (c *Collection) GetSchema(id string) *Schema {
 		big += KeyExtension
 	}
 	medium := strings.TrimPrefix(big, "/")
-	ret := lo.FindOrElse(c.Schemas, nil, func(x *Schema) bool {
-		chk := x.ID()
-		return chk == little || chk == medium || chk == big
+
+	if ret, ok := c.SchemaMap[id]; ok {
+		return ret
+	}
+	if ret, ok := c.SchemaMap[little]; ok {
+		return ret
+	}
+	if ret, ok := c.SchemaMap[medium]; ok {
+		return ret
+	}
+	if ret, ok := c.SchemaMap[big]; ok {
+		return ret
+	}
+	return nil
+}
+
+func (c *Collection) Keys() []string {
+	return util.ArraySorted(lo.Keys(c.SchemaMap))
+}
+
+func (c *Collection) Schemas() Schemas {
+	return lo.Map(util.ArraySorted(lo.Keys(c.SchemaMap)), func(x string, _ int) *Schema {
+		return c.GetSchema(x)
 	})
-	return ret
 }
 
 func (c *Collection) NewSchema(id string) *Schema {
@@ -45,57 +63,25 @@ func (c *Collection) NewSchema(id string) *Schema {
 	}
 	comment := fmt.Sprintf("managed by %s", util.AppName)
 	ret := &Schema{data: data{dataCore: dataCore{Schema: CurrentSchemaVersion, MetaID: u, Comment: comment}}}
-	_ = c.AddSchema(ret)
+	c.AddSchema(ret)
 	return ret
 }
 
-func (c *Collection) AddSchema(sch ...*Schema) error {
-	if c.Expanded {
-		ret := make(Schemas, 0, len(sch))
-		for _, x := range sch {
-			exp, err := expandSchema(x, 0)
-			if err != nil {
-				return err
-			}
-			ret = append(ret, exp...)
-		}
-		c.Schemas = ret
-	} else {
-		c.Schemas = append(c.Schemas, sch...)
+func (c *Collection) AddSchema(sch ...*Schema) {
+	for _, x := range sch {
+		c.SchemaMap[x.ID()] = x
 	}
-	return nil
 }
 
-func expandSchema(sch *Schema, recursionLevel int) (Schemas, error) {
-	if recursionLevel > 100 {
-		return nil, errors.Errorf("recursion limit reached")
-	}
-	orig := sch.Clone()
-	ret := Schemas{orig}
-	for _, k := range orig.Properties.Keys() {
-		x := orig.Properties.GetSimple(k)
-		if n := shouldExpand(k, x); n != nil {
-			orig.Properties.Set(k, n)
-			exp, err := expandSchema(x, recursionLevel+1)
-			if err != nil {
-				return nil, err
-			}
-			ret = append(ret, exp...)
+func (c *Collection) AddSchemaExpanded(sch ...*Schema) error {
+	for _, x := range sch {
+		exp, err := expandSchema(x, x.ID())
+		if err != nil {
+			return err
 		}
+		c.AddSchema(exp...)
 	}
-	defs := orig.Definitions()
-	for _, k := range defs.Keys() {
-		x := defs.GetSimple(k)
-		if n := shouldExpand(k, x); n != nil {
-			defs.Set(k, n)
-			exp, err := expandSchema(x, recursionLevel+1)
-			if err != nil {
-				return nil, err
-			}
-			ret = append(ret, exp...)
-		}
-	}
-	return ret, nil
+	return nil
 }
 
 func shouldExpand(k string, sch *Schema) *Schema {
@@ -108,8 +94,40 @@ func shouldExpand(k string, sch *Schema) *Schema {
 	return nil
 }
 
-func (c *Collection) Extra() Schemas {
-	return lo.Reject(c.Schemas, func(x *Schema, _ int) bool {
-		return strings.Contains(x.Comment, util.AppName)
-	})
+func expandSchema(sch *Schema, path ...string) (Schemas, error) {
+	if len(path) > 100 {
+		return nil, errors.Errorf("recursion limit reached")
+	}
+	orig := sch.Clone()
+	ret := Schemas{orig}
+	process := func(x *Schema, n ...string) error {
+		p := append(util.ArrayCopy(path), n...)
+		x.Key = strings.Join(p, "/")
+		exp, err := expandSchema(x, p...)
+		if err != nil {
+			return err
+		}
+		ret = append(ret, exp...)
+		return nil
+	}
+	for _, k := range orig.Properties.Keys() {
+		x := orig.Properties.GetSimple(k)
+		if n := shouldExpand(k, x); n != nil {
+			orig.Properties.Set(k, n)
+			if err := process(x, "properties", k); err != nil {
+				return nil, err
+			}
+		}
+	}
+	defs := orig.Definitions()
+	for _, k := range defs.Keys() {
+		x := defs.GetSimple(k)
+		if n := shouldExpand(k, x); n != nil {
+			defs.Set(k, n)
+			if err := process(x, "definitions", k); err != nil {
+				return nil, err
+			}
+		}
+	}
+	return ret, nil
 }

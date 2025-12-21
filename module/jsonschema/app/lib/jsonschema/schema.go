@@ -12,6 +12,7 @@ import (
 )
 
 type Schema struct {
+	Key string `json:"-"`
 	data
 	bytes []byte
 }
@@ -42,6 +43,9 @@ func (s *Schema) IsEmptyExceptNot() bool {
 }
 
 func (s *Schema) ID() string {
+	if s.Key != "" {
+		return s.Key
+	}
 	if s.MetaID != "" {
 		return s.MetaID
 	}
@@ -67,7 +71,7 @@ func (s *Schema) String() string {
 }
 
 func (s *Schema) Summary() string {
-	st := s.SchemaType()
+	st := s.DetectSchemaType()
 
 	ret := util.NewStringSlice("[" + st.String() + "]")
 	if l := s.Properties.Length(); l > 0 {

@@ -62,6 +62,8 @@
     {%= Default(x, t.String(), ps) %}
   {% case types.KeyTimestampZoned %}
     {%= Default(x, t.String(), ps) %}
+  {% case types.KeyUnion %}
+    {%= Default(x, t.String(), ps) %}
   {% case types.KeyUnknown %}
     {%= Default(x, t.String(), ps) %}
   {% case types.KeyUUID %}

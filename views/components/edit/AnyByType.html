@@ -56,6 +56,8 @@
     {%= Default(key, id, x, t) %}
   {% case types.KeyTimestampZoned %}
     {%= Default(key, id, x, t) %}
+  {% case types.KeyUnion %}
+    {%= Default(key, id, x, t) %}
   {% case types.KeyUnknown %}
     {%= Default(key, id, x, t) %}
   {% case types.KeyUUID %}

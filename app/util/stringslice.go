@@ -74,3 +74,16 @@ func (s *StringSlice) String() string {
 func (s *StringSlice) Sort() {
 	sort.Strings(s.Slice)
 }
+
+func (s *StringSlice) UnmarshalJSON(data []byte) error {
+	slc, err := FromJSONObj[[]string](data)
+	if err != nil {
+		return err
+	}
+	s.Slice = slc
+	return nil
+}
+
+func (s *StringSlice) MarshalJSON() ([]byte, error) {
+	return ToJSONBytes(s.Slice, true), nil
+}

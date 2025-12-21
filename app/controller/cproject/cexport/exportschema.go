@@ -5,11 +5,14 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cproject"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vjsonschema"
@@ -29,8 +32,13 @@ func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		unrelated := lo.Reject(schCollection.Schemas(), func(x *jsonschema.Schema, _ int) bool {
+			return strings.Contains(x.Comment, util.AppName)
+		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
-		page := &vjsonschema.CollectionDetail{BaseURL: prj.WebPath(), Args: prj.ExportArgs, Collection: schCollection, Results: results}
+		page := &vjsonschema.CollectionDetail{
+			BaseURL: prj.WebPath(), Args: prj.ExportArgs, Collection: schCollection, Results: results, Unrelated: unrelated,
+		}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, "JSON Schema")
 	})
 }
@@ -55,7 +63,7 @@ func ProjectExportWriteJSONSchema(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 		}
-		for _, sch := range schCollection.Schemas {
+		for _, sch := range schCollection.SchemaMap {
 			id := sch.ID()
 			if strings.Contains(id, "/") {
 				_, id = util.StringSplitLast(id, '/', true)

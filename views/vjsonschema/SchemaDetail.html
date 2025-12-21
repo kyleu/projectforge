@@ -24,6 +24,9 @@
     {%- if sch.Error != "" -%}
     <div class="mt error">{%s sch.Error %}</div>
     {%- endif -%}
+    {%- if valErr := sch.Schema.Validate(); valErr != nil -%}
+    <div class="mt error">{%s valErr.Error() %}</div>
+    {%- endif -%}
     <div class="mt">
       <ul class="accordion">
         {%= renderSchemaPanel(as, sch.Schema, ps) %}
@@ -72,14 +75,11 @@
   <li>
     <input id="accordion-collection" type="checkbox" hidden />
     <label for="accordion-collection">
-      {%- if coll.Expanded -%}
-      <div class="right"><em>Expanded</em></div>
-      {%- endif -%}
       {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} Collection
     </label>
     <div class="bd"><div><div>
       <ul class="accordion bl">
-        {%- for _, x := range coll.Schemas -%}
+        {%- for _, x := range coll.Schemas() -%}
         <li>
           {%- code itemKey := util.RandomString(16) %}
           <input id="accordion-collection-{%s itemKey %}" type="checkbox" hidden />

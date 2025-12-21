@@ -11,11 +11,11 @@ import (
 )
 
 func ImportArgs(coll *jsonschema.Collection, args *metamodel.Args) (*metamodel.Args, error) {
-	if coll == nil || len(coll.Schemas) == 0 {
+	if coll == nil || len(coll.SchemaMap) == 0 {
 		return nil, errors.New("empty collection provided for arguments")
 	}
 	ret := &metamodel.Args{}
-	for _, sch := range coll.Schemas {
+	for _, sch := range coll.SchemaMap {
 		switch sch.Type {
 		case KeyObject:
 			x, err := ImportModel(sch, coll, args)

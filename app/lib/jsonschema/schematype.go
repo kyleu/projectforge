@@ -25,10 +25,11 @@ var (
 	SchemaTypeInteger = SchemaType{Key: "integer", Name: "Integer", Icon: "cog"}
 	SchemaTypeNumber  = SchemaType{Key: "number", Name: "Number", Icon: "cog"}
 	SchemaTypeDate    = SchemaType{Key: "date", Name: "Date", Icon: "cog"}
+	SchemaTypeUnion   = SchemaType{Key: "union", Name: "Union", Icon: "cog"}
 	SchemaTypeNull    = SchemaType{Key: "null", Name: "Null", Icon: "cog"}
 	SchemaTypeUnknown = SchemaType{Key: "unknown", Name: "Unknown", Icon: "cog"}
 
-	AllSchemaTypes = SchemaTypes{SchemaTypeObject, SchemaTypeEnum, SchemaTypeArray, SchemaTypeRef, SchemaTypeEmpty, SchemaTypeNot, SchemaTypeString, SchemaTypeBoolean, SchemaTypeInteger, SchemaTypeNumber, SchemaTypeDate, SchemaTypeNull, SchemaTypeUnknown}
+	AllSchemaTypes = SchemaTypes{SchemaTypeObject, SchemaTypeEnum, SchemaTypeArray, SchemaTypeRef, SchemaTypeEmpty, SchemaTypeNot, SchemaTypeString, SchemaTypeBoolean, SchemaTypeInteger, SchemaTypeNumber, SchemaTypeDate, SchemaTypeUnion, SchemaTypeNull, SchemaTypeUnknown}
 )
 
 type SchemaType struct {

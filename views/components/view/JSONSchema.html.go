@@ -184,106 +184,89 @@ func jsonSchemaTR(key string, source string, v any, full bool, ps *cutil.PageSta
 
 //line views/components/view/JSONSchema.html:48
 func StreamJSONSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, full bool, ps *cutil.PageState) {
-//line views/components/view/JSONSchema.html:49
-	switch sch.SchemaType().Key {
-//line views/components/view/JSONSchema.html:50
-	case "nil":
-//line views/components/view/JSONSchema.html:50
-		qw422016.N().S(`<em>nil</em>`)
-//line views/components/view/JSONSchema.html:52
-	case "ref":
-//line views/components/view/JSONSchema.html:52
-		qw422016.N().S(`<code>ref:`)
-//line views/components/view/JSONSchema.html:53
-		qw422016.E().S(sch.Ref)
-//line views/components/view/JSONSchema.html:53
-		qw422016.N().S(`</code>`)
+//line views/components/view/JSONSchema.html:48
+	qw422016.N().S(`<div class="overflow full-width bl"><table class="expanded"><tbody><tr><th><em title="derived field">ID</em></th><td>`)
 //line views/components/view/JSONSchema.html:54
-	case "empty":
+	qw422016.E().S(sch.ID())
 //line views/components/view/JSONSchema.html:54
-		qw422016.N().S(`<em>true</em>`)
-//line views/components/view/JSONSchema.html:56
-	case "not":
-//line views/components/view/JSONSchema.html:56
-		qw422016.N().S(`<em>false</em>`)
+	qw422016.N().S(`</td></tr><tr><th class="nowrap"><em title="derived field">Schema Type</em></th><td>`)
 //line views/components/view/JSONSchema.html:58
-	default:
-//line views/components/view/JSONSchema.html:59
-		StreamRenderFullSchema(qw422016, sch, full, ps)
+	qw422016.E().S(sch.DetectSchemaType().String())
+//line views/components/view/JSONSchema.html:58
+	qw422016.N().S(`</td></tr>`)
 //line views/components/view/JSONSchema.html:60
-	}
-//line views/components/view/JSONSchema.html:61
+	StreamRenderFullSchema(qw422016, sch, full, ps)
+//line views/components/view/JSONSchema.html:60
+	qw422016.N().S(`</tbody></table></div>`)
+//line views/components/view/JSONSchema.html:64
 }
 
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 func WriteJSONSchema(qq422016 qtio422016.Writer, sch *jsonschema.Schema, full bool, ps *cutil.PageState) {
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	StreamJSONSchema(qw422016, sch, full, ps)
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 }
 
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 func JSONSchema(sch *jsonschema.Schema, full bool, ps *cutil.PageState) string {
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	WriteJSONSchema(qb422016, sch, full, ps)
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	qs422016 := string(qb422016.B)
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 	return qs422016
-//line views/components/view/JSONSchema.html:61
+//line views/components/view/JSONSchema.html:64
 }
 
-//line views/components/view/JSONSchema.html:63
+//line views/components/view/JSONSchema.html:66
 func StreamRenderFullSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, full bool, ps *cutil.PageState) {
-//line views/components/view/JSONSchema.html:63
+//line views/components/view/JSONSchema.html:66
 	qw422016.N().S(`
-  <div class="overflow full-width bl">
-    <table class="expanded">
-      <tbody>
-        `)
+  `)
 //line views/components/view/JSONSchema.html:67
-	streamjsonSchemaTR(qw422016, "Schema", "$schema", sch.Schema, full, ps, sch.Schema == "")
+	streamjsonSchemaTR(qw422016, "$Schema", "$schema", sch.Schema, full, ps, sch.Schema == "")
 //line views/components/view/JSONSchema.html:67
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:68
-	streamjsonSchemaTR(qw422016, "ID", "$id", sch.MetaID, full, ps, sch.MetaID == "")
+	streamjsonSchemaTR(qw422016, "$ID", "$id", sch.MetaID, full, ps, sch.MetaID == "")
 //line views/components/view/JSONSchema.html:68
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:69
 	streamjsonSchemaTR(qw422016, "Anchor", "$anchor", sch.Anchor, full, ps, sch.Anchor == "")
 //line views/components/view/JSONSchema.html:69
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:70
 	streamjsonSchemaTR(qw422016, "Ref", "$ref", sch.Ref, full, ps, sch.Ref == "")
 //line views/components/view/JSONSchema.html:70
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:71
 	streamjsonSchemaTR(qw422016, "Dynamic Ref", "$dynamicRef", sch.DynamicRef, full, ps, sch.DynamicRef == "")
 //line views/components/view/JSONSchema.html:71
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:72
 	streamjsonSchemaTR(qw422016, "Dynamic Anchor", "$dynamicAnchor", sch.DynamicAnchor, full, ps, sch.DynamicAnchor == "")
 //line views/components/view/JSONSchema.html:72
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:73
 	streamjsonSchemaTR(qw422016, "Vocabulary", "$vocabulary", sch.Vocabulary, full, ps, sch.Vocabulary.Length() == 0)
 //line views/components/view/JSONSchema.html:73
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:74
 	streamjsonSchemaTR(qw422016, "Comment", "$comment", sch.Comment, full, ps, sch.Comment == "")
 //line views/components/view/JSONSchema.html:74
@@ -293,162 +276,162 @@ func StreamRenderFullSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, f
 	defs := sch.Definitions()
 
 //line views/components/view/JSONSchema.html:75
-	qw422016.N().S(`        `)
+	qw422016.N().S(`  `)
 //line views/components/view/JSONSchema.html:76
 	streamjsonSchemaTR(qw422016, "Definitions", "$defs", defs, full, ps, defs.Length() == 0)
 //line views/components/view/JSONSchema.html:76
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:78
 	streamjsonSchemaTR(qw422016, "Title", "title", sch.Title, full, ps, sch.Title == "")
 //line views/components/view/JSONSchema.html:78
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:79
 	streamjsonSchemaTR(qw422016, "Description", "description", sch.Description, full, ps, sch.Description == "")
 //line views/components/view/JSONSchema.html:79
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:80
 	streamjsonSchemaTR(qw422016, "Default", "default", sch.Default, full, ps, sch.Default == nil)
 //line views/components/view/JSONSchema.html:80
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:81
 	streamjsonSchemaTR(qw422016, "Deprecated", "deprecated", sch.Deprecated, full, ps, sch.Deprecated == nil)
 //line views/components/view/JSONSchema.html:81
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:82
 	streamjsonSchemaTR(qw422016, "Read Only", "readOnly", sch.ReadOnly, full, ps, !sch.ReadOnly)
 //line views/components/view/JSONSchema.html:82
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:83
 	streamjsonSchemaTR(qw422016, "Write Only", "writeOnly", sch.WriteOnly, full, ps, !sch.WriteOnly)
 //line views/components/view/JSONSchema.html:83
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:85
 	streamjsonSchemaTR(qw422016, "Type", "type", sch.Type, full, ps, sch.Type == nil)
 //line views/components/view/JSONSchema.html:85
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:86
 	streamjsonSchemaTR(qw422016, "Enum", "enum", sch.Enum, full, ps, len(sch.Enum) == 0)
 //line views/components/view/JSONSchema.html:86
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:87
 	streamjsonSchemaTR(qw422016, "Const", "const", sch.Const, full, ps, sch.Const == nil)
 //line views/components/view/JSONSchema.html:87
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:89
 	streamjsonSchemaTR(qw422016, "Multiple Of", "multipleOf", sch.MultipleOf, full, ps, sch.MultipleOf == nil)
 //line views/components/view/JSONSchema.html:89
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:90
 	streamjsonSchemaTR(qw422016, "Maximum", "maximum", sch.Maximum, full, ps, sch.Maximum == nil)
 //line views/components/view/JSONSchema.html:90
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:91
 	streamjsonSchemaTR(qw422016, "Exclusive Maximum", "exclusiveMaximum", sch.ExclusiveMaximum, full, ps, sch.ExclusiveMaximum == nil)
 //line views/components/view/JSONSchema.html:91
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:92
 	streamjsonSchemaTR(qw422016, "Minimum", "minimum", sch.Minimum, full, ps, sch.Minimum == nil)
 //line views/components/view/JSONSchema.html:92
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:93
 	streamjsonSchemaTR(qw422016, "Exclusive Minimum", "exclusiveMinimum", sch.ExclusiveMinimum, full, ps, sch.ExclusiveMinimum == nil)
 //line views/components/view/JSONSchema.html:93
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:95
 	streamjsonSchemaTR(qw422016, "MaxLength", "maxLength", sch.MaxLength, full, ps, sch.MaxLength == nil)
 //line views/components/view/JSONSchema.html:95
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:96
 	streamjsonSchemaTR(qw422016, "MinLength", "minLength", sch.MinLength, full, ps, sch.MinLength == nil)
 //line views/components/view/JSONSchema.html:96
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:97
 	streamjsonSchemaTR(qw422016, "Pattern", "pattern", sch.Pattern, full, ps, sch.Pattern == "")
 //line views/components/view/JSONSchema.html:97
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:98
 	streamjsonSchemaTR(qw422016, "Format", "format", sch.Format, full, ps, sch.Format == "")
 //line views/components/view/JSONSchema.html:98
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:99
 	streamjsonSchemaTR(qw422016, "Content Encoding", "contentEncoding", sch.ContentEncoding, full, ps, sch.ContentEncoding == "")
 //line views/components/view/JSONSchema.html:99
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:100
 	streamjsonSchemaTR(qw422016, "Content Media Type", "contentMediaType", sch.ContentMediaType, full, ps, sch.ContentMediaType == "")
 //line views/components/view/JSONSchema.html:100
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:101
 	streamjsonSchemaTR(qw422016, "Content Schema", "contentSchema", sch.ContentSchema, full, ps, sch.ContentSchema == nil)
 //line views/components/view/JSONSchema.html:101
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:103
 	streamjsonSchemaTR(qw422016, "Items", "items", sch.Items, full, ps, sch.Items == nil)
 //line views/components/view/JSONSchema.html:103
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:104
 	streamjsonSchemaTR(qw422016, "Prefix Items", "prefixItems", sch.PrefixItems, full, ps, sch.PrefixItems == nil)
 //line views/components/view/JSONSchema.html:104
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:105
 	streamjsonSchemaTR(qw422016, "Unevaluated Items", "unevaluatedItems", sch.UnevaluatedItems, full, ps, sch.UnevaluatedItems == nil)
 //line views/components/view/JSONSchema.html:105
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:106
 	streamjsonSchemaTR(qw422016, "Max Items", "maxItems", sch.MaxItems, full, ps, sch.MaxItems == nil)
 //line views/components/view/JSONSchema.html:106
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:107
 	streamjsonSchemaTR(qw422016, "Min Items", "minItems", sch.MinItems, full, ps, sch.MinItems == nil)
 //line views/components/view/JSONSchema.html:107
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:108
 	streamjsonSchemaTR(qw422016, "Unique Items", "uniqueItems", sch.UniqueItems, full, ps, sch.UniqueItems == nil)
 //line views/components/view/JSONSchema.html:108
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:109
 	streamjsonSchemaTR(qw422016, "Contains", "contains", sch.Contains, full, ps, sch.Contains == nil)
 //line views/components/view/JSONSchema.html:109
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:110
 	streamjsonSchemaTR(qw422016, "Max Contains", "maxContains", sch.MaxContains, full, ps, sch.MaxContains == nil)
 //line views/components/view/JSONSchema.html:110
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:111
 	streamjsonSchemaTR(qw422016, "Min Contains", "minContains", sch.MinContains, full, ps, sch.MinContains == nil)
 //line views/components/view/JSONSchema.html:111
@@ -458,7 +441,7 @@ func StreamRenderFullSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, f
 //line views/components/view/JSONSchema.html:113
 	if full {
 //line views/components/view/JSONSchema.html:113
-		qw422016.N().S(`        `)
+		qw422016.N().S(`  `)
 //line views/components/view/JSONSchema.html:114
 		streamjsonSchemaTR(qw422016, "Properties", "properties", sch.Properties, full, ps, sch.Properties.Length() == 0)
 //line views/components/view/JSONSchema.html:114
@@ -467,7 +450,7 @@ func StreamRenderFullSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, f
 //line views/components/view/JSONSchema.html:115
 	} else {
 //line views/components/view/JSONSchema.html:115
-		qw422016.N().S(`        `)
+		qw422016.N().S(`  `)
 //line views/components/view/JSONSchema.html:116
 		streamjsonSchemaTR(qw422016, "Properties", "properties", sch.Properties.Keys(), full, ps, sch.Properties.Length() == 0)
 //line views/components/view/JSONSchema.html:116
@@ -476,133 +459,130 @@ func StreamRenderFullSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, f
 //line views/components/view/JSONSchema.html:117
 	}
 //line views/components/view/JSONSchema.html:117
-	qw422016.N().S(`        `)
+	qw422016.N().S(`  `)
 //line views/components/view/JSONSchema.html:118
 	streamjsonSchemaTR(qw422016, "Pattern Properties", "patternProperties", sch.PatternProperties, full, ps, sch.PatternProperties.Length() == 0)
 //line views/components/view/JSONSchema.html:118
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:119
 	streamjsonSchemaTR(qw422016, "Additional Properties", "additionalProperties", sch.AdditionalProperties, full, ps, sch.AdditionalProperties == nil)
 //line views/components/view/JSONSchema.html:119
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:120
 	streamjsonSchemaTR(qw422016, "Allow Trailing Commas", "allowTrailingCommas", sch.AllowTrailingCommas, full, ps, !sch.AllowTrailingCommas)
 //line views/components/view/JSONSchema.html:120
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:121
 	streamjsonSchemaTR(qw422016, "Unevaluated Properties", "unevaluatedProperties", sch.UnevaluatedProperties, full, ps, sch.UnevaluatedProperties == nil)
 //line views/components/view/JSONSchema.html:121
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:122
 	streamjsonSchemaTR(qw422016, "Required", "required", sch.Required, full, ps, len(sch.Required) == 0)
 //line views/components/view/JSONSchema.html:122
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:123
 	streamjsonSchemaTR(qw422016, "Property Names", "propertyNames", sch.PropertyNames, full, ps, sch.PropertyNames == nil)
 //line views/components/view/JSONSchema.html:123
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:124
 	streamjsonSchemaTR(qw422016, "Max Properties", "maxProperties", sch.MaxProperties, full, ps, sch.MaxProperties == nil)
 //line views/components/view/JSONSchema.html:124
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:125
 	streamjsonSchemaTR(qw422016, "Min Properties", "minProperties", sch.MinProperties, full, ps, sch.MinProperties == nil)
 //line views/components/view/JSONSchema.html:125
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:126
 	streamjsonSchemaTR(qw422016, "Dependent Required", "dependentRequired", sch.DependentRequired, full, ps, sch.DependentRequired.Length() == 0)
 //line views/components/view/JSONSchema.html:126
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:127
 	streamjsonSchemaTR(qw422016, "Dependent Schemas", "dependentSchemas", sch.DependentSchemas, full, ps, sch.DependentSchemas.Length() == 0)
 //line views/components/view/JSONSchema.html:127
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:129
 	streamjsonSchemaTR(qw422016, "If", "if", sch.If, full, ps, sch.If == nil)
 //line views/components/view/JSONSchema.html:129
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:130
 	streamjsonSchemaTR(qw422016, "Then", "then", sch.Then, full, ps, sch.Then == nil)
 //line views/components/view/JSONSchema.html:130
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:131
 	streamjsonSchemaTR(qw422016, "Else", "else", sch.Else, full, ps, sch.Else == nil)
 //line views/components/view/JSONSchema.html:131
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:133
 	streamjsonSchemaTR(qw422016, "All Of", "allOf", sch.AllOf, full, ps, len(sch.AllOf) == 0)
 //line views/components/view/JSONSchema.html:133
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:134
 	streamjsonSchemaTR(qw422016, "Any Of", "anyOf", sch.AnyOf, full, ps, len(sch.AnyOf) == 0)
 //line views/components/view/JSONSchema.html:134
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:135
 	streamjsonSchemaTR(qw422016, "One Of", "oneOf", sch.OneOf, full, ps, len(sch.OneOf) == 0)
 //line views/components/view/JSONSchema.html:135
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:136
 	streamjsonSchemaTR(qw422016, "Not", "not", sch.Not, full, ps, sch.Not == nil)
 //line views/components/view/JSONSchema.html:136
 	qw422016.N().S(`
 
-        `)
+  `)
 //line views/components/view/JSONSchema.html:138
 	streamjsonSchemaTR(qw422016, "Examples", "examples", sch.Examples, full, ps, len(sch.Examples) == 0)
 //line views/components/view/JSONSchema.html:138
 	qw422016.N().S(`
-        `)
+  `)
 //line views/components/view/JSONSchema.html:139
 	streamjsonSchemaTR(qw422016, "Unknown", "unknown", sch.Unknown, full, ps, len(sch.Unknown) == 0)
 //line views/components/view/JSONSchema.html:139
 	qw422016.N().S(`
-      </tbody>
-    </table>
-  </div>
 `)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 }
 
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 func WriteRenderFullSchema(qq422016 qtio422016.Writer, sch *jsonschema.Schema, full bool, ps *cutil.PageState) {
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	StreamRenderFullSchema(qw422016, sch, full, ps)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 }
 
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 func RenderFullSchema(sch *jsonschema.Schema, full bool, ps *cutil.PageState) string {
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	WriteRenderFullSchema(qb422016, sch, full, ps)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	qs422016 := string(qb422016.B)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 	return qs422016
-//line views/components/view/JSONSchema.html:143
+//line views/components/view/JSONSchema.html:140
 }

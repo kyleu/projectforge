@@ -124,6 +124,8 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 		t, err = util.FromJSONObj[*Timestamp](wu.T)
 	case KeyTimestampZoned:
 		t, err = util.FromJSONObj[*TimestampZoned](wu.T)
+	case KeyUnion:
+		t, err = util.FromJSONObj[*Union](wu.T)
 	case KeyUnknown:
 		t, err = util.FromJSONObj[*Unknown](wu.T)
 	case KeyUUID:

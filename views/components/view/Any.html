@@ -1,4 +1,5 @@
 {% import (
+  "encoding/json/jsontext"
   "fmt"
   "net/url"
   "time"
@@ -46,6 +47,9 @@
       {%= JSONSchema(t, true, ps) %}
     {% case jsonschema.Schemas %}
       {%= Any(util.ArrayToAnyArray(t), ps) %}
+    {% case jsontext.Value %}
+      {% code x, _ := util.FromJSONAny(t) %}
+      {%= Any(x, ps) %}
     {% case util.ToOrderedMap[any] %}
       {%= OrderedMap(false, t.ToOrderedMap(), ps) %}
     {% case *util.OrderedMap[any] %}
@@ -56,6 +60,9 @@
       {%= OrderedMapArray(false, ps, t.ToOrderedMaps()...) %}
     {% case []*util.OrderedMap[any] %}
       {%= OrderedMapArray(false, ps, t...) %}
+    {% case map[string]jsontext.Value %}
+      {% code m, _ := util.FromJSONBytesMap[any](t) %}
+      {%= Map(false, m, ps) %}
     {% case util.ToMap %}
       {%= Map(false, t.ToMap(), ps) %}
     {% case util.ValueMap %}
@@ -94,7 +101,7 @@
         {%- for idx, e := range arr -%}
           <div class="flex bb">
             <div class="mts mrs mbs"><em>{%d idx + 1 %}</em></div>
-            <div class="mts mbs">{%= Any(e, ps) %}</div>
+            <div class="mts mbs full-width">{%= Any(e, ps) %}</div>
           </div>
         {%- endfor -%}
         {% if extra > 0 %}
