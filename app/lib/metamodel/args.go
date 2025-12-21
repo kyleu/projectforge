@@ -95,5 +95,5 @@ func (a *Args) ApplyAcronyms(acronyms ...string) {
 }
 
 func (a *Args) Empty() bool {
-	return a == nil || (len(a.Enums) == 0 && len(a.Events) == 0 && len(a.Models) == 0)
+	return a == nil || (a.Config.Empty() && len(a.Enums) == 0 && len(a.Events) == 0 && len(a.Models) == 0 && len(a.Groups) == 0 && len(a.ExtraTypes) == 0)
 }

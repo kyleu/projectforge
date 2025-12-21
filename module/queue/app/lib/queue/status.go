@@ -1,10 +1,6 @@
 package queue
 
-import (
-	"maps"
-
-	"{{{ .Package }}}/app/util"
-)
+import "{{{ .Package }}}/app/util"
 
 type Status struct {
 	Name     string         `json:"name"`
@@ -23,7 +19,7 @@ func (q *Queue) Status() *Status {
 		Timeout:  util.MicrosToMillis(int(q.timeout / 1000)),
 		Table:    q.table,
 		Started:  util.TimeRelative(&q.started),
-		Sent:     maps.Clone(q.sent),
-		Received: maps.Clone(q.received),
+		Sent:     util.MapClone(q.sent),
+		Received: util.MapClone(q.received),
 	}
 }

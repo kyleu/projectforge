@@ -57,6 +57,12 @@ func (s *Schema) Validate() (SchemaType, error) {
 		if len(s.OneOf) > 0 || len(s.AnyOf) > 0 && len(s.AllOf) > 0 {
 			return SchemaTypeUnion, validateUnion(s)
 		}
+		if s.IsEmpty() {
+			return SchemaTypeEmpty, nil
+		}
+		if s.IsEmptyExceptNot() {
+			return SchemaTypeNot, nil
+		}
 		return SchemaTypeUnknown, nil
 	}
 }

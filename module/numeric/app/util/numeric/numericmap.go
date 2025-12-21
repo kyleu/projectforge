@@ -1,8 +1,6 @@
 package numeric
 
 import (
-	"maps"
-
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
@@ -26,7 +24,7 @@ func FromMap(m util.ValueMap) (NumericMap, []string) {
 }
 
 func (n NumericMap) Clone() NumericMap {
-	return maps.Clone(n)
+	return util.MapClone(n)
 }
 
 func (n NumericMap) Negate() NumericMap {

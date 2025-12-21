@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"encoding/xml"
 	"fmt"
-	"maps"
 	"strings"
 
 	"github.com/samber/lo"
@@ -39,7 +38,7 @@ func (s *Set[T]) Clone() *Set[T] {
 	if s == nil {
 		return nil
 	}
-	return &Set[T]{Map: maps.Clone(s.Map)}
+	return &Set[T]{Map: MapClone(s.Map)}
 }
 
 func (s Set[T]) MarshalYAML() (any, error) {

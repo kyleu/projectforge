@@ -57,6 +57,15 @@ func (c *Collection) Schemas() Schemas {
 	})
 }
 
+func (c Collection) Validate() error {
+	for _, sch := range c.SchemaMap {
+		if _, err := sch.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (c *Collection) NewSchema(id string) *Schema {
 	u := id
 	if !strings.HasSuffix(u, KeyExtension) {

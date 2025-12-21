@@ -51,7 +51,7 @@ func schemaTest(ps *cutil.PageState) (layout.Page, error) {
 	filenames := util.ArraySorted(fs.ListJSON("schemas/json", nil, true, ps.Logger))
 	var ret metaschema.SchemaTestFiles
 	ret, _ = util.AsyncCollect(filenames, func(f string) (*metaschema.SchemaTestFile, error) {
-		return metaschema.LoadSchemaTestFile(f, fs, ps.Logger), nil
+		return metaschema.LoadSchemaTestFile(ps.Context, f, fs, ps.Logger), nil
 	}, ps.Logger)
 	ret.Sort()
 	ps.SetTitleAndData("JSON Schema Test", ret)
@@ -69,7 +69,7 @@ func JSONSchemaTestFile(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		ret := metaschema.LoadSchemaTestFile(filename, fs, ps.Logger)
+		ret := metaschema.LoadSchemaTestFile(ps.Context, filename, fs, ps.Logger)
 		ps.SetTitleAndData("["+filename+"] JSON Schema Test", ret)
 		return controller.Render(r, as, &vjsonschema.SchemaDetail{Schema: ret}, ps, "Tests||/test", "JSON Schema||/test/jsonschema-test", filename)
 	})

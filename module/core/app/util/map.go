@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"encoding/xml"
 	"fmt"
+	"maps"
 	"net/url"
 	"strings"
 
@@ -87,6 +88,14 @@ func (m ValueMap) Overwrite(sourceMap ValueMap) ValueMap {
 		destMap[key] = data
 	}
 	return destMap
+}
+
+func (m ValueMap) Length() int {
+	return len(m)
+}
+
+func (m ValueMap) Empty() bool {
+	return len(m) == 0
 }
 
 func (m ValueMap) HasKey(key string) bool {
@@ -238,6 +247,10 @@ type ToMaps interface {
 
 func MapKeys[K comparable, V any](m map[K]V) []K {
 	return lo.Keys(m)
+}
+
+func MapClone[K comparable, V any](m map[K]V) map[K]V {
+	return maps.Clone(m)
 }
 
 func MapKeysSorted[K cmp.Ordered, V any](m map[K]V) []K {

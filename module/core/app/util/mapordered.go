@@ -3,7 +3,6 @@ package util
 import (
 	"bytes"
 	"encoding/xml"
-	"maps"
 	"slices"
 	"strings"
 
@@ -145,7 +144,7 @@ func (o *OrderedMap[V]) Clone() *OrderedMap[V] {
 	if o == nil {
 		return nil
 	}
-	return &OrderedMap[V]{Lexical: o.Lexical, Order: ArrayCopy(o.Order), Map: maps.Clone(o.Map)}
+	return &OrderedMap[V]{Lexical: o.Lexical, Order: ArrayCopy(o.Order), Map: MapClone(o.Map)}
 }
 
 func (o *OrderedMap[V]) Clear() {

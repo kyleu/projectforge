@@ -69,6 +69,8 @@ func (p *Migrations) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vproject/Migrations.html:25
 		components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vproject/Migrations.html:25
+		qw422016.N().S(` `)
+//line views/vproject/Migrations.html:25
 		qw422016.E().S(m.Filename)
 //line views/vproject/Migrations.html:25
 		qw422016.N().S(`</label>

@@ -16,7 +16,7 @@ func TestSchemaType(t *testing.T) {
 		json string
 	}{
 		{name: "empty", sch: &jsonschema.Schema{}, typ: "empty", json: "true"},
-		{name: "ref", sch: jsonschema.NewRefSchema("test"), typ: "ref", json: `{"$ref":"test"}`},
+		{name: "ref", sch: jsonschema.NewRefSchema("test"), typ: "ref", json: `{"$ref":"ref:test"}`},
 		{name: "true", sch: jsonschema.NewTrueSchema(), typ: "empty", json: "true"},
 		{name: "false", sch: jsonschema.NewFalseSchema(), typ: "not", json: "false"},
 	}
@@ -24,8 +24,8 @@ func TestSchemaType(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if st := tt.sch.SchemaType(); st.Key != tt.typ {
-				t.Errorf("SchemaType() = %v, want %v", st.Key, tt.typ)
+			if st := tt.sch.DetectSchemaType(); st.Key != tt.typ {
+				t.Errorf("DetectSchemaType() = %v, want %v", st.Key, tt.typ)
 			}
 			if js := util.ToJSONCompact(tt.sch); js != tt.json {
 				t.Errorf("ToJSONCompact() = %v, want %v", js, tt.json)

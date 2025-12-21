@@ -1,6 +1,7 @@
 package metaschema
 
 import (
+	"context"
 	"fmt"
 	"slices"
 	"strings"
@@ -10,6 +11,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
+	"projectforge.dev/projectforge/app/lib/metamodel/jsonload"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -21,7 +23,7 @@ type SchemaTestFile struct {
 	Logs       []string               `json:"logs,omitempty"`
 	Error      string                 `json:"error,omitempty"`
 	Args       *metamodel.Args        `json:"args,omitempty"`
-	ArgsError  string                 `json:"argsError,omitempty"`
+	ArgsLogs   []string               `json:"argsLogs,omitempty"`
 }
 
 func (s *SchemaTestFile) WithError(err error, showStack bool) *SchemaTestFile {
@@ -57,7 +59,7 @@ func (s SchemaTestFiles) WithoutError() SchemaTestFiles {
 	})
 }
 
-func LoadSchemaTestFile(filename string, fs filesystem.FileLoader, logger util.Logger) *SchemaTestFile {
+func LoadSchemaTestFile(ctx context.Context, filename string, fs filesystem.FileLoader, logger util.Logger) *SchemaTestFile {
 	ret := &SchemaTestFile{Filename: filename}
 	t := util.TimerStart()
 	json, err := fs.ReadFile(fmt.Sprintf("schemas/json/%s.json", filename))
@@ -78,11 +80,12 @@ func LoadSchemaTestFile(filename string, fs filesystem.FileLoader, logger util.L
 	}
 	ret.Collection = coll
 
-	args := &metamodel.Args{}
-	args, err = ImportArgs(coll, args)
+	loader := jsonload.Validation{Collection: coll}
+	logs, args, err := loader.Export(ctx, logger)
 	if err != nil {
-		ret.ArgsError = err.Error()
+		ret.ArgsLogs = append(ret.ArgsLogs, "[error] "+err.Error())
 	}
+	ret.ArgsLogs = append(ret.ArgsLogs, logs...)
 	ret.Args = args
 
 	ret.Logs = append(ret.Logs, fmt.Sprintf("loaded [%s] from [%s] in [%s]", util.ByteSizeSI(int64(len(json))), filename, t.EndString()))

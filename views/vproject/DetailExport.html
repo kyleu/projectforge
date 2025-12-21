@@ -1,49 +1,14 @@
 {% import (
-  "fmt"
-
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
-  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/vexport"
 ) %}
 
 {% func DetailExport(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) %}
   <a href="/p/{%s key %}/export"><button>{%= components.SVGButton("wrench", ps) %} Manage</button></a>
-  <hr />
-  {%- if ea.Config != nil && util.ToJSONCompact(ea.Config) != "{}" -%}
-  <h3>{%= components.SVGIcon(`print`, ps) %} Export Configuration</h3>
-  <div class="clear"></div>
-  {%= view.Map(true, ea.Config, ps) %}
-  <hr />
-  {%- endif -%}
-  {%- if len(ea.Groups) > 0 -%}
-  <h3>{%= components.SVGIcon(`users`, ps) %} {%s util.StringPlural(len(ea.Groups), "Group") %}</h3>
-  <div class="mt clear"></div>
-  {%= vexport.GroupList(ea.Groups, 4) %}
-  <hr />
-  {%- endif -%}
-  {%- if len(ea.Enums) > 0 -%}
-  <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(ea.Enums), "Enum") %}</h3>
-  <div class="mt clear"></div>
-  {%= vexport.EnumList(ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), as, ps) %}
-  <hr />
-  {%- endif -%}
-  {%- if len(ea.Events) > 0 -%}
-  <h3 class="mt">{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(ea.Events), "Event") %}</h3>
-  <div class="clear"></div>
-  {%= vexport.EventList(ea.Events, fmt.Sprintf("/p/%s/export/events", key), as, ps) %}
-  {%- endif -%}
-  {%- if len(ea.Models) > 0 -%}
-  <h3 class="mt">{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(ea.Models), "Model") %}</h3>
-  <div class="clear"></div>
-  {%= vexport.ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", key), as, ps) %}
-  {%- endif -%}
-  {%- if len(ea.ExtraTypes) > 0 -%}
-  <h3 class="mt">{%= components.SVGIcon(`file`, ps) %} {%s util.StringPlural(len(ea.ExtraTypes), "Extra Types") %}</h3>
-  <div class="clear"></div>
-  {%= vexport.ModelList(ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), as, ps) %}
-  {%- endif -%}
+  <div class="mt">
+    {%= vexport.ArgsDetail(key, ea, as, ps) %}
+  </div>
 {%- endfunc -%}

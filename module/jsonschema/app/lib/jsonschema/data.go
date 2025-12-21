@@ -2,9 +2,8 @@ package jsonschema
 
 import (
 	"encoding/json/jsontext"
-	"maps"
 
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type data struct {
@@ -34,6 +33,6 @@ func (d data) Clone() data {
 		dataValidations: d.dataValidations.Clone(),
 		dataApplicators: d.dataApplicators.Clone(),
 		Examples:        util.ArrayCopy(d.Examples),
-		Unknown:         maps.Clone(d.Unknown),
+		Unknown:         util.MapClone(d.Unknown),
 	}
 }

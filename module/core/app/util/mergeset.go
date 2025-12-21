@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"encoding/xml"
 	"fmt"
-	"maps"
 	"strings"
 
 	"github.com/samber/lo"
@@ -75,7 +74,7 @@ func (m *MergeSet[K, T]) Clone() *MergeSet[K, T] {
 	if m == nil {
 		return nil
 	}
-	return &MergeSet[K, T]{Map: maps.Clone(m.Map)}
+	return &MergeSet[K, T]{Map: MapClone(m.Map)}
 }
 
 func (m *MergeSet[K, T]) MarshalYAML() (any, error) {

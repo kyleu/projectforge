@@ -8,6 +8,7 @@
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vexport"
 ) %}
 
 {% code type SchemaDetail struct {
@@ -32,7 +33,7 @@
         {%= renderSchemaPanel(as, sch.Schema, ps) %}
         {%= renderContentPanel(as, sch.Content, ps) %}
         {%= renderCollectionPanel(as, sch.Collection, ps) %}
-        {%= renderArgsPanel(as, sch.Args, sch.ArgsError, ps) %}
+        {%= renderArgsPanel(as, sch.Args, sch.ArgsLogs, ps) %}
       </ul>
     </div>
   </div>
@@ -96,20 +97,15 @@
   </li>
 {% endfunc %}
 
-{% func renderArgsPanel(as *app.State, args *metamodel.Args, argsErr string, ps *cutil.PageState) %}
+{% func renderArgsPanel(as *app.State, args *metamodel.Args, argsLogs []string, ps *cutil.PageState) %}
   <li>
     <input id="accordion-args" type="checkbox" hidden />
     <label for="accordion-args">
-      {%- if argsErr != "" -%}
-      <div class="right"><em>error</em></div>
-      {%- endif -%}
       {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} Args
     </label>
     <div class="bd"><div><div>
-      {%- if argsErr != "" -%}
-      <div class="mb error">{%s argsErr %}</div>
-      {%- endif -%}
-      {%= components.JSON(args) %}
+      {%= vexport.ArgsDetail(util.RandomString(16), args, as, ps) %}
+      {%= components.Terminal("argsLogs", argsLogs...) %}
     </div></div></div>
   </li>
 {% endfunc %}

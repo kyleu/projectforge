@@ -13,7 +13,9 @@ func (s *Schema) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	*s = *str
+	if str != nil {
+		*s = *str
+	}
 	return nil
 }
 
