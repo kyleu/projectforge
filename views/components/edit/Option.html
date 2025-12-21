@@ -1,6 +1,4 @@
-{% import (
-  "projectforge.dev/projectforge/app/lib/types"
-) %}
+{% import "projectforge.dev/projectforge/app/lib/types" %}
 
 {% func Option(key string, id string, x any, t *types.Option) %}{% stripspace %}
   {% switch t.V.Key() %}

@@ -102,7 +102,7 @@ func (s *Schema) Summary() string {
 	if err != nil {
 		ret.Push("validation error")
 	}
-	return ret.Join(", ")
+	return ret.JoinCommas()
 }
 
 func (s *Schema) AddMetadata(k string, v any) {

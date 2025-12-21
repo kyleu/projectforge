@@ -1,8 +1,6 @@
 package auth
 
-import (
-	"{{{ .Package }}}/app/util"
-)
+import "{{{ .Package }}}/app/util"
 
 type Service struct {
 	baseURL   string

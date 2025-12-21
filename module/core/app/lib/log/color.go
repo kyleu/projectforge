@@ -1,8 +1,6 @@
 package log
 
-import (
-	"fmt"
-)
+import "fmt"
 
 const (
 	Black Color = iota + 30

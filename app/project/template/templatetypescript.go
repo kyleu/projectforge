@@ -37,7 +37,7 @@ func (t *Context) TypeScriptProjectContent() string {
 		}
 		ss := &util.StringSlice{}
 		ss.Pushf(`  await esbuild.build({...options, entryPoints: ["src/%s/%s.ts"], outfile: "../assets/%s.js"});`, x, key, key)
-		return ss.Join("\n")
+		return ss.String()
 	}
 	return "\n" + util.StringJoin(lo.Map(tsDeps, convert), "\n")
 }
@@ -62,7 +62,7 @@ func (t *Context) TypeScriptProjectContentStatic() string {
 		ss.Pushf(`  outfile: "../assets/%s.js",`, key)
 		ss.Push(`  logLevel: "info"`)
 		ss.Push("});")
-		return ss.Join("\n")
+		return ss.String()
 	}
 	return "\n" + util.StringJoin(lo.Map(tsDeps, convert), "\n")
 }
@@ -81,7 +81,7 @@ func (t *Context) NPMDependencies() string {
 		ss.Pushf("    %q: %q%s", x, v, util.Choose(idx == len(keys)-1, "", ","))
 	})
 	ss.Push("  },")
-	return ss.Join("\n")
+	return ss.String()
 }
 
 func (t *Context) TypeScriptPaths() string {
@@ -104,5 +104,5 @@ func (t *Context) TypeScriptPaths() string {
 		ret.Pushf("      %q: [%q]%s", k, paths[k], util.Choose(len(ret.Slice) == len(paths)+1, "", ","))
 	}
 	ret.Push("    },")
-	return ret.Join("\n")
+	return ret.String()
 }

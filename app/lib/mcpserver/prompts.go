@@ -1,8 +1,6 @@
 package mcpserver
 
-import (
-	"projectforge.dev/projectforge/app/util"
-)
+import "projectforge.dev/projectforge/app/util"
 
 var ProjectPrompt = &Prompt{
 	Name:        "project_usage",

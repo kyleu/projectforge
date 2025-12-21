@@ -89,5 +89,5 @@ func (i *Info) AuthorIDSafe() string {
 		}
 		ret.Push(x)
 	})
-	return ret.Join(" ")
+	return ret.JoinSpace()
 }

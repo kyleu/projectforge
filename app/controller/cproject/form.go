@@ -2,7 +2,6 @@ package cproject
 
 import (
 	"fmt"
-	"strconv"
 
 	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project"
@@ -10,31 +9,38 @@ import (
 )
 
 func projectFromForm(frm util.ValueMap, prj *project.Project) error {
-	get := func(k string, def string) string {
-		return util.OrDefault(frm.GetStringOpt(k), def)
+	get := func(k string, def string) util.RichString {
+		return frm.GetRichStringOpt(k).OrDefault(def)
 	}
-	prj.Name = get("name", prj.Name)
-	prj.Icon = get("icon", prj.Icon)
-	prj.Version = get("version", prj.Version)
-	prj.Package = util.OrDefault(get("package", prj.Package), "github.com/org/"+prj.Key)
-	prj.Args = get("args", prj.Args)
-	prt, _ := strconv.ParseInt(get("port", fmt.Sprintf("%d", prj.Port)), 10, 32)
+	getSplit := func(k string, def []string, delimOpt ...string) util.RichStrings {
+		delim := ","
+		if len(delimOpt) > 0 {
+			delim = delimOpt[0]
+		}
+		return get(k, util.StringJoin(def, delim)).SplitAndTrim(delim)
+	}
+	prj.Name = get("name", prj.Name).String()
+	prj.Icon = get("icon", prj.Icon).String()
+	prj.Version = get("version", prj.Version).String()
+	prj.Package = get("package", prj.Package).OrDefault("github.com/org/" + prj.Key).String()
+	prj.Args = get("args", prj.Args).String()
+	prt, _ := get("port", fmt.Sprintf("%d", prj.Port)).ParseInt()
 	prj.Port = int(prt)
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}
-	prj.Modules = util.StringSplitAndTrim(get("modules", util.StringJoin(prj.Modules, dblpipe)), dblpipe)
+	prj.Modules = getSplit("modules", prj.Modules, dblpipe).Strings()
 	if len(prj.Modules) == 0 {
 		prj.Modules = []string{"core"}
 	}
-	prj.Ignore = util.StringSplitAndTrim(get("ignore", util.StringJoin(prj.Ignore, ",")), ",")
-	prj.Tags = util.StringSplitAndTrim(get("tags", util.StringJoin(prj.Tags, ",")), ",")
-	prj.Path = get("path", prj.Path)
+	prj.Ignore = getSplit("ignore", prj.Ignore).Strings()
+	prj.Tags = getSplit("tags", prj.Tags).Strings()
+	prj.Path = get("path", prj.Path).String()
 
 	if prj.Info == nil {
 		prj.Info = &project.Info{}
 	}
-	prj.Info.Org = get("org", prj.Info.Org)
+	prj.Info.Org = get("org", prj.Info.Org).String()
 	if prj.Info.Org == "" {
 		prj.Info.Org = prj.Key
 		if prj.Info.Org == "" {
@@ -42,31 +48,31 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 		}
 	}
 
-	prj.Info.AuthorID = get("authorID", prj.Info.AuthorID)
-	prj.Info.AuthorName = get("authorName", prj.Info.AuthorName)
-	prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail)
-	prj.Info.Team = get("team", prj.Info.Team)
-	prj.Info.License = get("license", prj.Info.License)
-	prj.Info.Homepage = get("homepage", prj.Info.Homepage)
-	prj.Info.Sourcecode = get("sourcecode", prj.Info.Sourcecode)
-	prj.Info.Summary = get("summary", prj.Info.Summary)
-	prj.Info.Description = get("description", prj.Info.Description)
-	prj.Info.CI = get("ci", prj.Info.CI)
-	prj.Info.Homebrew = get("homebrew", prj.Info.Homebrew)
-	prj.Info.Bundle = get("bundle", prj.Info.Bundle)
-	prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity)
-	prj.Info.DatabaseEngine = get("databaseEngine", prj.Info.DatabaseEngine)
-	prj.Info.Slack = get("slack", prj.Info.Slack)
-	prj.Info.Channels = util.StringSplitAndTrim(get("channels", util.StringJoin(prj.Info.Channels, ", ")), ",")
-	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage)
-	prj.Info.GoVersion = get("goVersion", prj.Info.GoVersion)
-	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary)
-	prj.Info.ExtraFiles = util.StringSplitAndTrim(get("extraFiles", util.StringJoin(prj.Info.ExtraFiles, ", ")), ",")
-	prj.Info.IgnoredFiles = util.StringSplitAndTrim(get("ignoredFiles", util.StringJoin(prj.Info.IgnoredFiles, ", ")), ",")
-	prj.Info.Deployments = util.StringSplitAndTrim(get("deployments", util.StringJoin(prj.Info.Deployments, ", ")), ",")
-	prj.Info.Acronyms = util.StringSplitAndTrim(get("acronyms", util.StringJoin(prj.Info.Acronyms, ", ")), ",")
+	prj.Info.AuthorID = get("authorID", prj.Info.AuthorID).String()
+	prj.Info.AuthorName = get("authorName", prj.Info.AuthorName).String()
+	prj.Info.AuthorEmail = get("authorEmail", prj.Info.AuthorEmail).String()
+	prj.Info.Team = get("team", prj.Info.Team).String()
+	prj.Info.License = get("license", prj.Info.License).String()
+	prj.Info.Homepage = get("homepage", prj.Info.Homepage).String()
+	prj.Info.Sourcecode = get("sourcecode", prj.Info.Sourcecode).String()
+	prj.Info.Summary = get("summary", prj.Info.Summary).String()
+	prj.Info.Description = get("description", prj.Info.Description).String()
+	prj.Info.CI = get("ci", prj.Info.CI).String()
+	prj.Info.Homebrew = get("homebrew", prj.Info.Homebrew).String()
+	prj.Info.Bundle = get("bundle", prj.Info.Bundle).String()
+	prj.Info.SigningIdentity = get("signingIdentity", prj.Info.SigningIdentity).String()
+	prj.Info.DatabaseEngine = get("databaseEngine", prj.Info.DatabaseEngine).String()
+	prj.Info.Slack = get("slack", prj.Info.Slack).String()
+	prj.Info.Channels = getSplit("channels", prj.Info.Channels).Strings()
+	prj.Info.JavaPackage = get("javaPackage", prj.Info.JavaPackage).String()
+	prj.Info.GoVersion = get("goVersion", prj.Info.GoVersion).String()
+	prj.Info.GoBinary = get("goBinary", prj.Info.GoBinary).String()
+	prj.Info.ExtraFiles = getSplit("extraFiles", prj.Info.ExtraFiles).Strings()
+	prj.Info.IgnoredFiles = getSplit("ignoredFiles", prj.Info.IgnoredFiles).Strings()
+	prj.Info.Deployments = getSplit("deployments", prj.Info.Deployments).Strings()
+	prj.Info.Acronyms = getSplit("acronyms", prj.Info.Acronyms).Strings()
 
-	cv := get("configVars", util.ToJSON(prj.Info.ConfigVars))
+	cv := get("configVars", util.ToJSON(prj.Info.ConfigVars)).String()
 	if err := util.FromJSON([]byte(cv), &prj.Info.ConfigVars); err != nil {
 		return err
 	}

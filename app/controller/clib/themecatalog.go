@@ -3,7 +3,6 @@ package clib
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/muesli/gamut"
 	"github.com/pkg/errors"
@@ -21,31 +20,31 @@ import (
 
 func ThemeColor(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.color", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		col, err := cutil.PathString(r, "color", false)
+		c, err := cutil.PathRichString(r, "color", false)
 		if err != nil {
 			return "", err
 		}
-		col = strings.ToLower(col)
-		if !strings.HasPrefix(col, "#") {
+		col := c.ToLower()
+		if !col.HasPrefix("#") {
 			col = "#" + col
 		}
-		th := theme.ColorTheme(col, gamut.Hex(col))
+		th := theme.ColorTheme(col.String(), gamut.Hex(col.String()))
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Theme", col), th)
 		ps.DefaultNavIcon = themeIcon
-		return controller.Render(r, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col)
+		return controller.Render(r, as, &vtheme.Edit{Theme: th, Icon: "app"}, ps, "Themes||/theme", col.String())
 	})
 }
 
 func ThemeColorEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.color.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		color := r.URL.Query().Get("color")
-		if color == "" {
+		color := util.RS(r.URL.Query().Get("color"))
+		if color.Empty() {
 			return "", errors.New("must provide color in query string")
 		}
-		if !strings.HasPrefix(color, "#") {
+		if !color.HasPrefix("#") {
 			return "", errors.New("provided color must be a hex string")
 		}
-		t := theme.ColorTheme(strings.TrimPrefix(color, "#"), gamut.Hex(color))
+		t := theme.ColorTheme(color.TrimPrefix("#").String(), gamut.Hex(color.String()))
 		ps.SetTitleAndData("Edit theme colors ["+t.Key+"]", t)
 		ps.DefaultNavIcon = themeIcon
 		page := &vtheme.Edit{Theme: t, Icon: "app", Exists: as.Themes.FileExists(t.Key)}

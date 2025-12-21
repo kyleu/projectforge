@@ -1,8 +1,6 @@
 package project
 
-import (
-	"strings"
-)
+import "strings"
 
 var Helpers = func() map[string][]string {
 	ret := map[string][]string{}

@@ -28,7 +28,7 @@ func StringToTitle(s string, extraAcronyms ...string) string {
 }
 
 func StringToInitials(s string, extraAcronyms ...string) string {
-	return strings.Join(lo.Map(strings.Split(StringToSnake(s, extraAcronyms...), "_"), func(s string, _ int) string {
+	return StringJoin(lo.Map(strings.Split(StringToSnake(s, extraAcronyms...), "_"), func(s string, _ int) string {
 		return strings.ToLower(s[0:1])
 	}), "")
 }

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"runtime"{{{ if .DangerousOK }}}
 	"runtime/pprof"{{{ end }}}
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -23,10 +22,10 @@ import (
 const keyAdmin = "admin"
 
 func Admin(w http.ResponseWriter, r *http.Request) {
-	path := util.StringSplitAndTrim(strings.TrimPrefix(r.URL.Path, "/admin"), "/")
+	path := util.RS(r.URL.Path).TrimPrefix("/admin").SplitAndTrim("/")
 	key := keyAdmin
 	if len(path) > 0 {
-		key += "." + util.StringJoin(path, ".")
+		key += "." + path.Join(".").String()
 	}
 	controller.Act(key, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		if len(path) == 0 {
@@ -111,7 +110,7 @@ func Admin(w http.ResponseWriter, r *http.Request) {
 			ps.SetTitleAndData("Sitemap", ps.Menu)
 			return controller.Render(r, as, &vadmin.Sitemap{}, ps, keyAdmin, "Sitemap**graph"){{{ if .HasModule "websocket" }}}
 		case "sockets":
-			return socketRoute(w, r, as, ps, path[1:]...){{{ end }}}{{{ if .HasModule "system" }}}
+			return socketRoute(w, r, as, ps, path[1:].Strings()...){{{ end }}}{{{ if .HasModule "system" }}}
 		case "system":
 			st, err := as.Services.System.Status(ps.Context, ps.Logger)
 			if err != nil {

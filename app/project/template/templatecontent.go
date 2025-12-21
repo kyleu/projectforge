@@ -145,5 +145,5 @@ func (t *Context) CoreStruct() string {
 	if t.HasModule("") {
 		ret.Push("...")
 	}
-	return ret.Join("\n")
+	return ret.String()
 }

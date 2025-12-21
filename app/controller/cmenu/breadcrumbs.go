@@ -1,8 +1,6 @@
 package cmenu
 
-import (
-	"projectforge.dev/projectforge/app/lib/menu"
-)
+import "projectforge.dev/projectforge/app/lib/menu"
 
 type Breadcrumbs []string
 

@@ -1,6 +1,4 @@
-{% import (
-  "{{{ .Package }}}/app/lib/types"
-) %}
+{% import "{{{ .Package }}}/app/lib/types" %}
 
 {% func Option(key string, id string, x any, t *types.Option) %}{% stripspace %}
   {% switch t.V.Key() %}

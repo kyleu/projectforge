@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -36,7 +35,7 @@ func (x *Union) String() string {
 	for _, v := range x.V {
 		ss.Push(v.String())
 	}
-	return fmt.Sprintf("[%s]", strings.Join(ss.Slice, ", "))
+	return fmt.Sprintf("[%s]", ss.JoinCommas())
 }
 
 func (x *Union) From(v any) any {

@@ -63,12 +63,24 @@ func (s *StringSlice) PushfUnlessNil(msg string, args ...any) {
 	}
 }
 
+func (s *StringSlice) String() string {
+	return s.Join("\n")
+}
+
 func (s *StringSlice) Join(x string) string {
 	return StringJoin(s.Slice, x)
 }
 
-func (s *StringSlice) String() string {
-	return s.Join("\n")
+func (s *StringSlice) JoinSimple() string {
+	return s.Join("")
+}
+
+func (s *StringSlice) JoinSpace() string {
+	return s.Join(" ")
+}
+
+func (s *StringSlice) JoinCommas() string {
+	return s.Join(", ")
 }
 
 func (s *StringSlice) Sort() {

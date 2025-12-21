@@ -1,8 +1,6 @@
 package menu
 
-import (
-	"github.com/samber/lo"
-)
+import "github.com/samber/lo"
 
 type Items []*Item
 

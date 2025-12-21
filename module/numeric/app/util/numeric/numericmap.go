@@ -1,9 +1,7 @@
 package numeric
 
 import (
-	"fmt"
 	"maps"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -59,7 +57,7 @@ func (n NumericMap) Matching(tgt NumericMap) (NumericMap, error) {
 	for k := range n {
 		x, ok := tgt[k]
 		if !ok {
-			return nil, errors.Errorf("can't find [%s] among NumericMap keys [%s]", k, strings.Join(util.MapKeysSorted(tgt), ", "))
+			return nil, errors.Errorf("can't find [%s] among NumericMap keys [%s]", k, util.StringJoin(util.MapKeysSorted(tgt), ", "))
 		}
 		ret[k] = x
 	}
@@ -89,11 +87,11 @@ func (n NumericMap) String() string {
 	if len(n) == 0 {
 		return "[none]"
 	}
-	ret := make([]string, 0, len(n))
+	ret := util.NewStringSliceWithSize(len(n))
 	for k, v := range n {
-		ret = append(ret, fmt.Sprintf("%s: %s", k, v.String()))
+		ret.Pushf("%s: %s", k, v.String())
 	}
-	return "[" + strings.Join(ret, ", ") + "]"
+	return "[" + ret.JoinCommas() + "]"
 }
 
 func (n NumericMap) merge(x NumericMap, fn func(v Numeric, k string) Numeric) NumericMap {

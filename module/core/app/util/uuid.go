@@ -1,22 +1,17 @@
 package util
 
-import (
-	"github.com/google/uuid"
-)
+import "github.com/google/uuid"
 
 var UUIDDefault = uuid.UUID{}
 
 func UUIDFromString(s string) *uuid.UUID {
-	var retID *uuid.UUID
-
 	if s != "" {
 		s, err := uuid.Parse(s)
 		if err == nil {
-			retID = &s
+			return &s
 		}
 	}
-
-	return retID
+	return nil
 }
 
 func UUIDFromStringOK(s string) uuid.UUID {

@@ -170,7 +170,7 @@ func (p *PageState) ClassDecl() string {
 	if ret.Empty() {
 		return ""
 	}
-	classes := ret.Join(" ")
+	classes := ret.JoinSpace()
 	return fmt.Sprintf(` class=%q`, classes)
 }
 

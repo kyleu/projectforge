@@ -1,8 +1,6 @@
 package util
 
-import (
-	"time"
-)
+import "time"
 
 type Timer struct {
 	Started   int64 `json:"started"`

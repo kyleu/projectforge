@@ -33,13 +33,18 @@ func RequestCtxToMap(r *http.Request, {{{ if .HasModule "help" }}}as{{{ else }}}
 func PathString(r *http.Request, key string, allowEmpty bool) (string, error) {
 	v := mux.Vars(r)[key]
 	if (!allowEmpty) && v == "" {
-		return v, errors.Errorf("must provide [%s] in path", key)
+		return "", errors.Errorf("must provide [%s] in path", key)
 	}
 	v, err := url.QueryUnescape(v)
 	if err != nil {
 		return "", err
 	}
 	return v, nil
+}
+
+func PathRichString(r *http.Request, key string, allowEmpty bool) (util.RichString, error) {
+	ret, err := PathString(r, key, allowEmpty)
+	return util.RS(ret), err
 }
 
 func PathBool(r *http.Request, key string) (bool, error) {
@@ -60,19 +65,19 @@ func PathInt(r *http.Request, key string) (int, error) {
 }
 
 func PathUUID(r *http.Request, key string) (*uuid.UUID, error) {
-	ret, err := PathString(r, key, true)
+	ret, err := PathRichString(r, key, true)
 	if err != nil {
 		return nil, err
 	}
-	return util.UUIDFromString(ret), nil
+	return ret.ParseUUID(), nil
 }
 
-func PathArray(r *http.Request, key string) ([]string, error) {
-	ret, err := PathString(r, key, true)
+func PathArray(r *http.Request, key string) (util.RichStrings, error) {
+	ret, err := PathRichString(r, key, true)
 	if err != nil {
 		return nil, err
 	}
-	return util.StringSplitAndTrim(ret, ","), nil
+	return ret.SplitAndTrim(","), nil
 }
 
 func QueryStringBool(r *http.Request, key string) bool {

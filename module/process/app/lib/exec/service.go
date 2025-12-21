@@ -1,8 +1,6 @@
 package exec
 
-import (
-	"sync"
-)
+import "sync"
 
 type Service struct {
 	Execs Execs

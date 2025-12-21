@@ -5,66 +5,64 @@
 package edit
 
 //line views/components/edit/Option.html:1
-import (
-	"projectforge.dev/projectforge/app/lib/types"
-)
+import "projectforge.dev/projectforge/app/lib/types"
 
-//line views/components/edit/Option.html:5
+//line views/components/edit/Option.html:3
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/edit/Option.html:5
+//line views/components/edit/Option.html:3
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/edit/Option.html:5
+//line views/components/edit/Option.html:3
 func StreamOption(qw422016 *qt422016.Writer, key string, id string, x any, t *types.Option) {
-//line views/components/edit/Option.html:6
+//line views/components/edit/Option.html:4
 	switch t.V.Key() {
-//line views/components/edit/Option.html:7
+//line views/components/edit/Option.html:5
 	case types.KeyBool:
-//line views/components/edit/Option.html:8
+//line views/components/edit/Option.html:6
 		StreamBool(qw422016, key, id, x.(bool), true)
-//line views/components/edit/Option.html:9
+//line views/components/edit/Option.html:7
 	default:
-//line views/components/edit/Option.html:9
+//line views/components/edit/Option.html:7
 		qw422016.N().S(`<div class="two-pane"><div class="l">`)
-//line views/components/edit/Option.html:11
+//line views/components/edit/Option.html:9
 		StreamAnyByType(qw422016, key, id, x, t.V)
-//line views/components/edit/Option.html:11
+//line views/components/edit/Option.html:9
 		qw422016.N().S(`</div><div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div></div>`)
-//line views/components/edit/Option.html:14
+//line views/components/edit/Option.html:12
 	}
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 }
 
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 func WriteOption(qq422016 qtio422016.Writer, key string, id string, x any, t *types.Option) {
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	StreamOption(qw422016, key, id, x, t)
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 }
 
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 func Option(key string, id string, x any, t *types.Option) string {
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	WriteOption(qb422016, key, id, x, t)
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	qs422016 := string(qb422016.B)
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 	return qs422016
-//line views/components/edit/Option.html:15
+//line views/components/edit/Option.html:13
 }

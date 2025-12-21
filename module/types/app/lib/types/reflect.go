@@ -1,8 +1,6 @@
 package types
 
-import (
-	"reflect"
-)
+import "reflect"
 
 func FromReflect(t reflect.Type) *Wrapped {
 	switch t.Kind() {

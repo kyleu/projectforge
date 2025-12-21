@@ -64,7 +64,7 @@ func (t *Context) ServicesDefinition() string {
 		ret.Pushf("\t%s %s", util.StringPad(names[idx], maxNameLength), types[idx])
 	}
 	ret.Push("}")
-	return ret.Join("\n")
+	return ret.String()
 }
 
 func (t *Context) ServicesImports() string {
@@ -81,7 +81,7 @@ func (t *Context) ServicesImports() string {
 		ret.Pushf("\t\"%s/app/user\"", t.Package)
 	}
 	ret.Pushf("\t\"%s/app/util\"", t.Package)
-	return strings.TrimPrefix(ret.Join("\n"), "\t")
+	return strings.TrimPrefix(ret.String(), "\t")
 }
 
 func (t *Context) ServicesConstructor() string {
@@ -100,5 +100,5 @@ func (t *Context) ServicesConstructor() string {
 		ret.Pushf("\t\t%s %s,", util.StringPad(names[idx]+":", maxNameLength+1), refs[idx])
 	}
 	ret.Push("\t}")
-	return ret.Join("\n")
+	return ret.String()
 }

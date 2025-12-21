@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -28,13 +27,14 @@ func extractConfig(args []string) util.ValueMap {
 	var retArgs []string
 	retMap := util.ValueMap{}
 	lo.ForEach(args, func(arg string, _ int) {
-		l, r := util.StringSplit(arg, '=', true)
-		l = strings.TrimSpace(l)
-		r = strings.TrimSpace(r)
-		if r == "" {
-			retArgs = append(retArgs, l)
+		rs := util.RS(arg)
+		l, r := rs.Split('=', true)
+		l = l.TrimSpace()
+		r = r.TrimSpace()
+		if r.Empty() {
+			retArgs = append(retArgs, l.String())
 		} else {
-			retMap[l] = r
+			retMap[l.String()] = r.String()
 		}
 	})
 	if len(retArgs) > 0 {

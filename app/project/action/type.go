@@ -1,8 +1,6 @@
 package action
 
-import (
-	"projectforge.dev/projectforge/app/util"
-)
+import "projectforge.dev/projectforge/app/util"
 
 type Type struct {
 	Key         string

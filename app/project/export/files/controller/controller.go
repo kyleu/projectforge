@@ -109,10 +109,11 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 			add("// ERROR: invalid list argument [%s]", col.Type.String())
 			break
 		}
-		add("%sArg, err := cutil.PathArray(r, %q)", col.Camel(), col.Camel())
+		add("%sStringsArg, err := cutil.PathArray(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an comma-separated argument\")", retVal, col.Camel())
 		add("}")
+		add("%sArg := %sStringsArg.Strings()", col.Camel(), col.Camel())
 	case types.KeyUUID:
 		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")

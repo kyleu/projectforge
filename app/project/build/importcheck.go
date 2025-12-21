@@ -12,8 +12,8 @@ import (
 
 const sepKey, firstKey, thirdKey, selfKey = "sep", "1st", "3rd", "self"
 
-func check(imports []string, orig []string) ([]string, []string, error) {
-	var err error
+func check(imports []string, orig []string, origLines []string) ([]string, []string, error) {
+	var errs []error
 	var state int
 	var lastLine string
 	var observed []string
@@ -25,7 +25,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 	observe := func(key string, i string) {
 		lo.ForEach(observed, func(ob string, _ int) {
 			if ob > i {
-				err = errors.Errorf("%s sorting", key)
+				errs = append(errs, errors.Errorf("%s sorting", key))
 			}
 		})
 		observed = append(observed, i)
@@ -36,14 +36,14 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 	chk := func(tgt int, msg string) {
 		if state != tgt {
 			if !lastSep && len(first) > 0 {
-				err = errors.New("missing separator")
+				errs = append(errs, errors.New("missing separator"))
 			}
 			state = tgt
 			clr()
 		}
 		lastSep = false
 		if state > tgt {
-			err = errors.New(msg)
+			errs = append(errs, errors.New(msg))
 		}
 	}
 
@@ -58,7 +58,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 			lastSep = true
 		case firstKey:
 			if state > 1 {
-				err = errors.New("invalid ordering")
+				errs = append(errs, errors.New("invalid ordering"))
 			}
 			if state != 1 {
 				state = 1
@@ -66,7 +66,7 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 			}
 			lastSep = false
 			if state > 1 {
-				err = errors.New("1st party")
+				errs = append(errs, errors.New("1st party"))
 			}
 			chk(1, "1st party")
 			first[i] = orig[idx]
@@ -91,19 +91,27 @@ func check(imports []string, orig []string) ([]string, []string, error) {
 		lastLine = l
 	}
 	if !slices.IsSorted(firsts) {
-		err = errors.New("first-party imports are not sorted")
+		errs = append(errs, errors.New("first-party imports are not sorted"))
 	}
 	if !slices.IsSorted(thirds) {
-		err = errors.New("third-party imports are not sorted")
+		errs = append(errs, errors.New("third-party imports are not sorted"))
 	}
 	if !slices.IsSorted(selfs) {
-		err = errors.New("this app's imports are not sorted")
+		errs = append(errs, errors.New("this app's imports are not sorted"))
 	}
 	mr := makeResult(first, third, self)
-	if err == nil && len(orig) != len(mr) {
-		err = errors.Errorf("invalid whitespace; found [%d] lines, expected [%d]", len(orig), len(mr))
+	if len(orig) != len(mr) {
+		errs = append(errs, errors.Errorf("invalid whitespace; found [%d] lines, expected [%d]", len(orig), len(mr)))
 	}
-	return imps, mr, err
+	if len(imps) == 1 && len(origLines) > 1 {
+		funky := lo.ContainsBy(imps, func(item string) bool {
+			return strings.Contains(item, "_") || strings.Contains(item, "//") || strings.Contains(item, "/*")
+		})
+		if !funky {
+			errs = append(errs, errors.New("imports include unnecessary parentheses"))
+		}
+	}
+	return imps, mr, util.ErrorMerge(errs...)
 }
 
 func makeResult(first util.ValueMap, third util.ValueMap, self util.ValueMap) []string {

@@ -42,7 +42,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 			"</li>",
 			"</ul>",
 		)
-		return ret.Join("")
+		return ret.JoinSimple()
 	case FmtJSON.Key, FmtHTML.Key, FmtSQL.Key, FmtMarkdown.Key:
 		return tmplStartEQ + fmt.Sprintf("view.FormatLang(%s, %q", ToGoString(t, nullable, prop, false), format) + tmplEndP
 	case FmtColor.Key:

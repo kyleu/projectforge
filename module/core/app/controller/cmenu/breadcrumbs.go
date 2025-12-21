@@ -1,8 +1,6 @@
 package cmenu
 
-import (
-	"{{{ .Package }}}/app/lib/menu"
-)
+import "{{{ .Package }}}/app/lib/menu"
 
 type Breadcrumbs []string
 

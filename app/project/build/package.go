@@ -60,5 +60,5 @@ func (p Pkgs) ToGraph(prefix string) string {
 			add("\t%s --> %s", strings.TrimPrefix(pkg.Path, prefix), strings.TrimPrefix(d, prefix))
 		})
 	})
-	return ret.Join("\n")
+	return ret.String()
 }

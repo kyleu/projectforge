@@ -1,8 +1,6 @@
 package typescript
 
 import (
-	"strings"
-
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
@@ -17,7 +15,7 @@ func tsEventConstructor(evt *model.Event, enums enum.Enums, ret *golang.Block) {
 		optional := util.Choose(col.Nullable || col.HasTag("optional-json"), " | undefined", "")
 		s.Pushf("%s: %s%s", col.Camel(), tsType(col.Type, enums), optional)
 	}
-	args := strings.Join(s.Slice, ", ")
+	args := s.JoinCommas()
 	if len(args) < 106 {
 		ret.WF("  constructor(%s) {", args)
 	} else {

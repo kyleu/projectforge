@@ -1,8 +1,6 @@
 package diff
 
-import (
-	"github.com/hexops/gotextdiff"
-)
+import "github.com/hexops/gotextdiff"
 
 type Edits []gotextdiff.TextEdit
 

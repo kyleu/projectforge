@@ -124,7 +124,7 @@ func (m *Model) Breadcrumbs() string {
 		return fmt.Sprintf("%q", strings.ToLower(g))
 	})...)
 	ret.Pushf("%q", m.Package)
-	return ret.Join(", ")
+	return ret.JoinCommas()
 }
 
 func (m *Model) IndexedColumns(includePK bool) Columns {

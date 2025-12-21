@@ -3,7 +3,6 @@ package clib
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -39,18 +38,18 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		cmd := strings.TrimSpace(frm.GetStringOpt("cmd"))
+		cmd := util.RS(frm.GetStringOpt("cmd")).TrimSpace()
 		if cmd == "" {
 			return "", errors.New("must provide non-empty [cmd]")
 		}
-		key := strings.TrimSpace(frm.GetStringOpt("key"))
+		key := util.RS(frm.GetStringOpt("key")).TrimSpace()
 		if key == "" {
-			key, _ = util.StringSplit(cmd, ' ', true)
+			key, _ = cmd.Split(' ', true)
 		}
-		path := util.OrDefault(strings.TrimSpace(frm.GetStringOpt("path")), ".")
-		env := util.StringSplitAndTrim(strings.TrimSpace(frm.GetStringOpt("env")), ",")
+		path := frm.GetRichStringOpt("path").TrimSpace().OrDefault(".")
+		env := frm.GetRichStringOpt("env").TrimSpace().SplitAndTrim(",")
 		dbg := frm.GetBoolOpt("debug")
-		x := as.Services.Exec.NewExec(key, cmd, path, dbg, env...)
+		x := as.Services.Exec.NewExec(key.String(), cmd.String(), path.String(), dbg, env.Strings()...)
 		err = x.Start(as.Services.Socket.Terminal(x.String(), ps.Logger))
 		if err != nil {
 			return "", err

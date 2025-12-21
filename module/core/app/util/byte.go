@@ -1,8 +1,6 @@
 package util
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func ByteSizeSI(b int64) string {
 	const unit = 1000

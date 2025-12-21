@@ -2,7 +2,6 @@ package clib
 
 import (
 	"net/http"
-	"strings"
 
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/assets"
@@ -19,12 +18,12 @@ func RobotsTxt(w http.ResponseWriter, _ *http.Request) {
 }
 
 func Static(w http.ResponseWriter, r *http.Request) {
-	p, _ := cutil.PathString(r, "path", false)
-	if strings.Contains(p, "../") {
+	p, _ := cutil.PathRichString(r, "path", false)
+	if p.Contains("../") {
 		w.WriteHeader(http.StatusNotFound)
 		_, _ = w.Write([]byte("invalid path"))
 	} else {
-		e, err := assets.Embed(p)
+		e, err := assets.Embed(p.String())
 		assetResponse(w, e, err)
 	}
 }

@@ -1,8 +1,6 @@
 package model
 
-import (
-	"projectforge.dev/projectforge/app/lib/types"
-)
+import "projectforge.dev/projectforge/app/lib/types"
 
 var (
 	ExampleColumns = Columns{

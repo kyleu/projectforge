@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/lib/filesystem"
@@ -110,17 +111,32 @@ func processFileImports(fn string, lines []string, self string) ([]string, []str
 		}
 	}
 
-	_, ordered, chkErr := check(imports, orig)
+	_, ordered, chkErr := check(imports, orig, lines)
 	if chkErr == nil {
 		return imports, lines, ret, nil
 	}
 
 	ret = append(ret, &diff.Diff{Path: fn, Status: diff.StatusDifferent, Patch: fmt.Sprintf("%s: %s", fn, chkErr.Error())})
 
-	fixed := make([]string, 0, len(lines))
-	fixed = append(fixed, lines[:start+1]...)
-	fixed = append(fixed, ordered...)
-	fixed = append(fixed, lines[end:]...)
+	funky := lo.ContainsBy(ordered, func(item string) bool {
+		return strings.Contains(item, "_") || strings.Contains(item, "//") || strings.Contains(item, "/*")
+	})
 
+	fixed := make([]string, 0, len(lines))
+	if len(ordered) == 1 && !funky {
+		fixed = append(fixed, lines[:start]...)
+		if util.RS(lines[start]).Contains("{%") {
+			fixed = append(fixed, util.RS(ordered[0]).TrimSpace().WithPrefix("{% import ").WithSuffix(" %}").String())
+		} else {
+			fixed = append(fixed, util.RS(ordered[0]).TrimSpace().WithPrefix("import ").String())
+		}
+		fixed = append(fixed, lines[end+1:]...)
+	} else {
+		fixed = append(fixed, lines[:start]...)
+		fixed = append(fixed, "import (")
+		fixed = append(fixed, ordered...)
+		fixed = append(fixed, ")")
+		fixed = append(fixed, lines[end+1:]...)
+	}
 	return imports, fixed, ret, nil
 }

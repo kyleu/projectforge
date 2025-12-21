@@ -1,8 +1,6 @@
 package model
 
-import (
-	"{{{ .Package }}}/app/lib/types"
-)
+import "{{{ .Package }}}/app/lib/types"
 
 var (
 	ExampleColumns = Columns{

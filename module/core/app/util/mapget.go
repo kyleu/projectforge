@@ -202,6 +202,16 @@ func (m ValueMap) GetStringPtr(key string) *string {
 	return &ret
 }
 
+func (m ValueMap) GetRichString(key string, allowEmpty bool) (RichString, error) {
+	ret, err := m.ParseString(key, false, allowEmpty)
+	return RS(ret), err
+}
+
+func (m ValueMap) GetRichStringOpt(key string) RichString {
+	ret, _ := m.GetRichString(key, true)
+	return ret
+}
+
 func (m ValueMap) GetTime(key string, allowEmpty bool) (*time.Time, error) {
 	return m.ParseTime(key, false, allowEmpty)
 }

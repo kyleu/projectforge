@@ -162,7 +162,7 @@ func processList(cell any, cellStr string) string {
 			ret.Push(fmt.Sprint(t))
 		}
 	})
-	return "'[" + clean(ret.Join(", ")) + "]'"
+	return "'[" + clean(ret.JoinCommas()) + "]'"
 }
 
 var cleanRpl *strings.Replacer
