@@ -98,7 +98,7 @@
   </div>
   {%= components.JSONModal("channel", "Channel [" + p.Channel.Key + "] JSON", p.Channel, 1) %}
   {%- for _, m := range p.Members -%}
-  {%= ConnectionCard(m, as, ps) %}
+  {%= ConnectionCard(as, m, ps) %}
   {%- endfor -%}
 {% endfunc %}
 
@@ -108,7 +108,7 @@
 } %}
 
 {% func (p *Connection) Body(as *app.State, ps *cutil.PageState) %}
-  {%= ConnectionCard(p.Connection, as, ps) %}
+  {%= ConnectionCard(as, p.Connection, ps) %}
   <div class="card">
     <h3>Send Message</h3>
     <form action="/admin/sockets/conn/{%s p.Connection.ID.String() %}/send" method="post">
@@ -127,7 +127,7 @@
   </div>
 {% endfunc %}
 
-{% func ConnectionCard(c *websocket.Connection, as *app.State, ps *cutil.PageState) %}
+{% func ConnectionCard(as *app.State, c *websocket.Connection, ps *cutil.PageState) %}
   <div class="card">
     <div class="right"><a href="#modal-connection-{%s c.ID.String() %}"><button type="button">JSON</button></a></div>
     <h3>{%s c.ID.String() %} ({%s c.Username() %})</h3>

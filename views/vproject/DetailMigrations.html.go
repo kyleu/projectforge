@@ -24,7 +24,7 @@ var (
 )
 
 //line views/vproject/DetailMigrations.html:6
-func StreamDetailMigrations(qw422016 *qt422016.Writer, key string, ea any, as *app.State, ps *cutil.PageState) {
+func StreamDetailMigrations(qw422016 *qt422016.Writer, as *app.State, key string, ea any, ps *cutil.PageState) {
 //line views/vproject/DetailMigrations.html:6
 	qw422016.N().S(`
   TODO
@@ -33,22 +33,22 @@ func StreamDetailMigrations(qw422016 *qt422016.Writer, key string, ea any, as *a
 }
 
 //line views/vproject/DetailMigrations.html:8
-func WriteDetailMigrations(qq422016 qtio422016.Writer, key string, ea any, as *app.State, ps *cutil.PageState) {
+func WriteDetailMigrations(qq422016 qtio422016.Writer, as *app.State, key string, ea any, ps *cutil.PageState) {
 //line views/vproject/DetailMigrations.html:8
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailMigrations.html:8
-	StreamDetailMigrations(qw422016, key, ea, as, ps)
+	StreamDetailMigrations(qw422016, as, key, ea, ps)
 //line views/vproject/DetailMigrations.html:8
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/DetailMigrations.html:8
 }
 
 //line views/vproject/DetailMigrations.html:8
-func DetailMigrations(key string, ea any, as *app.State, ps *cutil.PageState) string {
+func DetailMigrations(as *app.State, key string, ea any, ps *cutil.PageState) string {
 //line views/vproject/DetailMigrations.html:8
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailMigrations.html:8
-	WriteDetailMigrations(qb422016, key, ea, as, ps)
+	WriteDetailMigrations(qb422016, as, key, ea, ps)
 //line views/vproject/DetailMigrations.html:8
 	qs422016 := string(qb422016.B)
 //line views/vproject/DetailMigrations.html:8

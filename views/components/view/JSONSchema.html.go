@@ -46,7 +46,7 @@ func streamjsonSchemaTD(qw422016 *qt422016.Writer, key string, source string, v 
 //line views/components/view/JSONSchema.html:17
 				for _, k := range t.Keys() {
 //line views/components/view/JSONSchema.html:18
-					itemKey := util.RandomString(16)
+					itemKey := util.RandomID()
 
 //line views/components/view/JSONSchema.html:19
 					x := t.GetSimple(k)

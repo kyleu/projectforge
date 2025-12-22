@@ -8,15 +8,15 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Tree(t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+{% func Tree(as *app.State, t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState) %}{% stripspace %}
   {%= components.Indent(true, 2) %}
   <ul class="accordion">
-    {%= treeNodes(t.Nodes, "", urlPrefix, actions, as, ps, 2) %}
+    {%= treeNodes(as, t.Nodes, "", urlPrefix, actions, ps, 2) %}
   {%= components.Indent(true, 2) %}
   </ul>
 {% endstripspace %}{% endfunc %}
 
-{% func treeNode(n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) %}{% stripspace %}
+{% func treeNode(as *app.State, n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) %}{% stripspace %}
   {% code
     pathID := n.Name
     if pth != "" {
@@ -61,7 +61,7 @@
       {%- else -%}
         {%= components.Indent(true, indent + 2) %}
         <ul class="accordion" style="margin-left: {%d (indent / 3) * 6 %}px; margin-bottom: 0;">
-          {%= treeNodes(n.Children, util.StringPath(pth, n.Name), urlPrefix, actions, as, ps, indent + 3) %}
+          {%= treeNodes(as, n.Children, util.StringPath(pth, n.Name), urlPrefix, actions, ps, indent + 3) %}
         {%= components.Indent(true, indent + 2) %}
         </ul>
       {%- endif -%}
@@ -71,8 +71,8 @@
   </li>
 {% endstripspace %}{% endfunc %}
 
-{% func treeNodes(nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) %}{% stripspace %}
+{% func treeNodes(as *app.State, nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) %}{% stripspace %}
   {%- for _, n := range nodes -%}
-  {%= treeNode(n, pth, urlPrefix, actions, as, ps, indent + 1) %}
+  {%= treeNode(as, n, pth, urlPrefix, actions, ps, indent + 1) %}
   {%- endfor -%}
 {% endstripspace %}{% endfunc %}

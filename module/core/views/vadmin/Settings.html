@@ -95,7 +95,7 @@
 
   {%= vauth.Authentication(as, ps) %}
 
-  {%= vauth.Permissions(p.Perms, as) %}{{{ end }}}
+  {%= vauth.Permissions(as, p.Perms) %}{{{ end }}}
 {% endfunc %}
 
 {% func settingsLink(href string, icon string, title string, description string, ps *cutil.PageState) %}{% stripspace %}

@@ -29,7 +29,7 @@
   </div>
   {%- endif -%}
   {%- for _, res := range p.Results -%}
-  {%= Result(res, p.Params, as, ps) %}
+  {%= Result(as, res, p.Params, ps) %}
   {%- endfor -%}
   {% if len(p.Errors) > 0 %}
   <div class="card">

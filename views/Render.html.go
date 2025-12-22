@@ -31,7 +31,7 @@ var (
 )
 
 //line views/Render.html:13
-func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
+func StreamRender(qw422016 *qt422016.Writer, as *app.State, page layout.Page, ps *cutil.PageState) {
 //line views/Render.html:14
 	ctx, span, _ := telemetry.StartSpan(ps.Context, "html:"+strings.TrimPrefix(fmt.Sprintf("%T", page), "*"), ps.Logger)
 	ps.Context = ctx
@@ -130,22 +130,22 @@ func StreamRender(qw422016 *qt422016.Writer, page layout.Page, as *app.State, ps
 }
 
 //line views/Render.html:32
-func WriteRender(qq422016 qtio422016.Writer, page layout.Page, as *app.State, ps *cutil.PageState) {
+func WriteRender(qq422016 qtio422016.Writer, as *app.State, page layout.Page, ps *cutil.PageState) {
 //line views/Render.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/Render.html:32
-	StreamRender(qw422016, page, as, ps)
+	StreamRender(qw422016, as, page, ps)
 //line views/Render.html:32
 	qt422016.ReleaseWriter(qw422016)
 //line views/Render.html:32
 }
 
 //line views/Render.html:32
-func Render(page layout.Page, as *app.State, ps *cutil.PageState) string {
+func Render(as *app.State, page layout.Page, ps *cutil.PageState) string {
 //line views/Render.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/Render.html:32
-	WriteRender(qb422016, page, as, ps)
+	WriteRender(qb422016, as, page, ps)
 //line views/Render.html:32
 	qs422016 := string(qb422016.B)
 //line views/Render.html:32

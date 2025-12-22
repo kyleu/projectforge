@@ -5,7 +5,7 @@
   "projectforge.dev/projectforge/views/vtheme"
 ) %}
 
-{% func DetailTheme(key string, t *theme.Theme, title string, icon string, as *app.State, ps *cutil.PageState) %}
+{% func DetailTheme(as *app.State, key string, t *theme.Theme, title string, icon string, ps *cutil.PageState) %}
   {%- code
     if t == nil {
       t = theme.Default

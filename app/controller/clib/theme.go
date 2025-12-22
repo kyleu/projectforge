@@ -77,7 +77,7 @@ func ThemeSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		if newKey == theme.KeyNew {
-			newKey = util.RandomString(12)
+			newKey = util.RandomID()
 		}
 
 		l := orig.Light.Clone().ApplyMap(frm, "light-")

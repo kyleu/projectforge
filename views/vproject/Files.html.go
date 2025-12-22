@@ -79,7 +79,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 		qw422016.N().S(`"><button>File Stats</button></a></div>
     `)
 //line views/vproject/Files.html:31
-		vfile.StreamList(qw422016, p.Path, files, p.FS, u, as, ps)
+		vfile.StreamList(qw422016, as, p.Path, files, p.FS, u, ps)
 //line views/vproject/Files.html:31
 		qw422016.N().S(`
   </div>
@@ -102,7 +102,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/vproject/Files.html:44
 		qw422016.N().S(`    `)
 //line views/vproject/Files.html:45
-		vfile.StreamDetail(qw422016, p.Path, b, u, links, as, ps, lineNumLink, "View line {} on GitHub")
+		vfile.StreamDetail(qw422016, as, p.Path, b, u, links, ps, lineNumLink, "View line {} on GitHub")
 //line views/vproject/Files.html:45
 		qw422016.N().S(`
   </div>

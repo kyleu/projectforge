@@ -4,7 +4,7 @@
   "projectforge.dev/projectforge/app/project"
 ) %}
 
-{% func DetailBuild(build *project.Build, as *app.State, ps *cutil.PageState) %}
+{% func DetailBuild(as *app.State, build *project.Build, ps *cutil.PageState) %}
   {%- code buildMap := build.ToMap() -%}
   <div class="overflow full-width">
     <table class="min-200 expanded">

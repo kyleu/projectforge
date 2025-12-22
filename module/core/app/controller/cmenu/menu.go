@@ -13,7 +13,7 @@ import (
 )
 
 func MenuFor(
-	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger,
+	ctx context.Context, as *app.State, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, logger util.Logger,
 ) (menu.Items, any, error) {
 	ctx, sp, _ := telemetry.StartSpan(ctx, "menu", logger)
 	defer sp.Complete()

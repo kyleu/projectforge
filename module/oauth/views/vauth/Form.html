@@ -5,7 +5,7 @@
   "{{{ .Package }}}/app/util"
 ) %}
 
-{% func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) %}
+{% func SigninTable(as *app.State, prvs auth.Providers, referrer string, ps *cutil.PageState) %}
   {%- if len(prvs) > 0 -%}
   <div class="card">
     <h3>Sign in to {%s util.AppName %}</h3>

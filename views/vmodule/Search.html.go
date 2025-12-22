@@ -67,7 +67,7 @@ func (p *Search) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vmodule/Search.html:28
 		qw422016.N().S(`  `)
 //line views/vmodule/Search.html:29
-		vsearch.StreamResult(qw422016, res, p.Params, as, ps)
+		vsearch.StreamResult(qw422016, as, res, p.Params, ps)
 //line views/vmodule/Search.html:29
 		qw422016.N().S(`
 `)

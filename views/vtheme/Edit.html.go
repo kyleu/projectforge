@@ -95,7 +95,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </div>
     `)
 //line views/vtheme/Edit.html:39
-	StreamEditor(qw422016, "Theme ["+p.Theme.Key+"]", util.AppName, p.Theme, p.Icon, as, ps)
+	StreamEditor(qw422016, as, "Theme ["+p.Theme.Key+"]", util.AppName, p.Theme, p.Icon, ps)
 //line views/vtheme/Edit.html:39
 	qw422016.N().S(`
     <div class="card">

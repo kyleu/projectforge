@@ -16,7 +16,7 @@ import (
 
 type Provider func(context.Context, *Params, *app.State, *cutil.PageState, util.Logger) (result.Results, error)
 
-func Search(ctx context.Context, params *Params, as *app.State, page *cutil.PageState) (result.Results, []error) {
+func Search(ctx context.Context, as *app.State, params *Params, page *cutil.PageState) (result.Results, []error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "search", page.Logger)
 	defer span.Complete()
 

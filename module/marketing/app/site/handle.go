@@ -14,7 +14,7 @@ import (
 	"{{{ .Package }}}/views/vsite"
 )
 
-func Handle(path []string, as *app.State, ps *cutil.PageState) (string, layout.Page, []string, error) {
+func Handle(as *app.State, path []string, ps *cutil.PageState) (string, layout.Page, []string, error) {
 	{{{ if .HasModule "search" }}}ps.SearchPath = "-"
 	{{{ end }}}if len(path) == 0 {
 		ps.Data = siteData("Welcome to the marketing site!")

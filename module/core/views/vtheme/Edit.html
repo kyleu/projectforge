@@ -36,7 +36,7 @@
         </table>
       </div>
     </div>
-    {%= Editor("Theme [" + p.Theme.Key + "]", util.AppName, p.Theme, p.Icon, as, ps) %}
+    {%= Editor(as, "Theme [" + p.Theme.Key + "]", util.AppName, p.Theme, p.Icon, ps) %}
     <div class="card">
       <button type="submit">Save All Changes</button>
       <a href="/theme/{%u p.Theme.Key %}"><button type="button">Reset</button></a>

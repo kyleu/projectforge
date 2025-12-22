@@ -25,7 +25,7 @@ var (
 )
 
 //line views/vproject/DetailBuild.html:7
-func StreamDetailBuild(qw422016 *qt422016.Writer, build *project.Build, as *app.State, ps *cutil.PageState) {
+func StreamDetailBuild(qw422016 *qt422016.Writer, as *app.State, build *project.Build, ps *cutil.PageState) {
 //line views/vproject/DetailBuild.html:7
 	qw422016.N().S(`
 `)
@@ -68,22 +68,22 @@ func StreamDetailBuild(qw422016 *qt422016.Writer, build *project.Build, as *app.
 }
 
 //line views/vproject/DetailBuild.html:23
-func WriteDetailBuild(qq422016 qtio422016.Writer, build *project.Build, as *app.State, ps *cutil.PageState) {
+func WriteDetailBuild(qq422016 qtio422016.Writer, as *app.State, build *project.Build, ps *cutil.PageState) {
 //line views/vproject/DetailBuild.html:23
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailBuild.html:23
-	StreamDetailBuild(qw422016, build, as, ps)
+	StreamDetailBuild(qw422016, as, build, ps)
 //line views/vproject/DetailBuild.html:23
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/DetailBuild.html:23
 }
 
 //line views/vproject/DetailBuild.html:23
-func DetailBuild(build *project.Build, as *app.State, ps *cutil.PageState) string {
+func DetailBuild(as *app.State, build *project.Build, ps *cutil.PageState) string {
 //line views/vproject/DetailBuild.html:23
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailBuild.html:23
-	WriteDetailBuild(qb422016, build, as, ps)
+	WriteDetailBuild(qb422016, as, build, ps)
 //line views/vproject/DetailBuild.html:23
 	qs422016 := string(qb422016.B)
 //line views/vproject/DetailBuild.html:23

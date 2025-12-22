@@ -39,10 +39,7 @@ func (s *Schema) Validate() (SchemaType, error) {
 	case "null":
 		return SchemaTypeNull, validateNull(s)
 	default:
-		if !s.Properties.Empty() {
-			return SchemaTypeObject, validateObject(s)
-		}
-		if len(s.Required) > 0 {
+		if s.HasProperties() {
 			return SchemaTypeObject, validateObject(s)
 		}
 		if len(s.Enum) > 0 {

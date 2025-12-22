@@ -170,3 +170,7 @@ func (s *Schema) Definitions() *util.OrderedMap[*Schema] {
 	}
 	return s.ExplicitDefs.Merge(s.Defs)
 }
+
+func (s *Schema) HasProperties() bool {
+	return !s.Properties.Empty() || !s.PatternProperties.Empty() || s.AdditionalProperties != nil
+}

@@ -27,7 +27,7 @@ var (
 )
 
 //line views/vaction/Detail.html:9
-func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) {
+func StreamDetail(qw422016 *qt422016.Writer, as *app.State, cfg util.ValueMap, res *action.Result, includeSkipped bool, ps *cutil.PageState) {
 //line views/vaction/Detail.html:9
 	qw422016.N().S(`
 `)
@@ -188,7 +188,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 			qw422016.N().S(`
     `)
 //line views/vaction/Detail.html:69
-			StreamRenderAudit(qw422016, res.Project.Key, t, as, ps)
+			StreamRenderAudit(qw422016, as, res.Project.Key, t, ps)
 //line views/vaction/Detail.html:69
 			qw422016.N().S(`
 `)
@@ -274,7 +274,7 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 			qw422016.N().S(`        <div class="overflow">
         `)
 //line views/vaction/Detail.html:92
-			streamrenderDiffs(qw422016, res.Project.Key, res.Action, diffs, cfg, as, ps)
+			streamrenderDiffs(qw422016, as, res.Project.Key, res.Action, diffs, cfg, ps)
 //line views/vaction/Detail.html:92
 			qw422016.N().S(`
         </div>
@@ -291,22 +291,22 @@ func StreamDetail(qw422016 *qt422016.Writer, cfg util.ValueMap, res *action.Resu
 }
 
 //line views/vaction/Detail.html:98
-func WriteDetail(qq422016 qtio422016.Writer, cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) {
+func WriteDetail(qq422016 qtio422016.Writer, as *app.State, cfg util.ValueMap, res *action.Result, includeSkipped bool, ps *cutil.PageState) {
 //line views/vaction/Detail.html:98
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vaction/Detail.html:98
-	StreamDetail(qw422016, cfg, res, includeSkipped, as, ps)
+	StreamDetail(qw422016, as, cfg, res, includeSkipped, ps)
 //line views/vaction/Detail.html:98
 	qt422016.ReleaseWriter(qw422016)
 //line views/vaction/Detail.html:98
 }
 
 //line views/vaction/Detail.html:98
-func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) string {
+func Detail(as *app.State, cfg util.ValueMap, res *action.Result, includeSkipped bool, ps *cutil.PageState) string {
 //line views/vaction/Detail.html:98
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vaction/Detail.html:98
-	WriteDetail(qb422016, cfg, res, includeSkipped, as, ps)
+	WriteDetail(qb422016, as, cfg, res, includeSkipped, ps)
 //line views/vaction/Detail.html:98
 	qs422016 := string(qb422016.B)
 //line views/vaction/Detail.html:98

@@ -78,7 +78,7 @@ func (s *Settings) ToData() []any {
 func RandomSettings() *Settings {
 	return &Settings{
 		ExampleBool:   util.RandomBool(),
-		ExampleString: util.RandomString(12),
+		ExampleString: util.RandomID(),
 	}
 }
 

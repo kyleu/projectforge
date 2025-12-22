@@ -24,7 +24,7 @@ func New(id uuid.UUID) *User {
 func Random() *User {
 	return &User{
 		ID:      util.UUID(),
-		Name:    util.RandomString(12),
+		Name:    util.RandomID(),
 		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
 		Created: util.TimeCurrent(),
 		Updated: util.TimeCurrentP(),

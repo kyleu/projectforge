@@ -49,7 +49,7 @@ func (p *Search) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
   `)
 //line views/vproject/Search.html:22
-	streamsearchResults(qw422016, p.Project, p.Params, p.Results, p.Errors, as, ps)
+	streamsearchResults(qw422016, as, p.Project, p.Params, p.Results, p.Errors, ps)
 //line views/vproject/Search.html:22
 	qw422016.N().S(`
 `)
@@ -83,7 +83,7 @@ func (p *Search) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vproject/Search.html:25
-func streamsearchResults(qw422016 *qt422016.Writer, prj *project.Project, params *search.Params, results result.Results, errors []error, as *app.State, ps *cutil.PageState) {
+func streamsearchResults(qw422016 *qt422016.Writer, as *app.State, prj *project.Project, params *search.Params, results result.Results, errors []error, ps *cutil.PageState) {
 //line views/vproject/Search.html:25
 	qw422016.N().S(`
 `)
@@ -101,7 +101,7 @@ func streamsearchResults(qw422016 *qt422016.Writer, prj *project.Project, params
 //line views/vproject/Search.html:31
 		qw422016.N().S(`  `)
 //line views/vproject/Search.html:32
-		vsearch.StreamResult(qw422016, res, params, as, ps)
+		vsearch.StreamResult(qw422016, as, res, params, ps)
 //line views/vproject/Search.html:32
 		qw422016.N().S(`
 `)
@@ -145,22 +145,22 @@ func streamsearchResults(qw422016 *qt422016.Writer, prj *project.Project, params
 }
 
 //line views/vproject/Search.html:44
-func writesearchResults(qq422016 qtio422016.Writer, prj *project.Project, params *search.Params, results result.Results, errors []error, as *app.State, ps *cutil.PageState) {
+func writesearchResults(qq422016 qtio422016.Writer, as *app.State, prj *project.Project, params *search.Params, results result.Results, errors []error, ps *cutil.PageState) {
 //line views/vproject/Search.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/Search.html:44
-	streamsearchResults(qw422016, prj, params, results, errors, as, ps)
+	streamsearchResults(qw422016, as, prj, params, results, errors, ps)
 //line views/vproject/Search.html:44
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/Search.html:44
 }
 
 //line views/vproject/Search.html:44
-func searchResults(prj *project.Project, params *search.Params, results result.Results, errors []error, as *app.State, ps *cutil.PageState) string {
+func searchResults(as *app.State, prj *project.Project, params *search.Params, results result.Results, errors []error, ps *cutil.PageState) string {
 //line views/vproject/Search.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/Search.html:44
-	writesearchResults(qb422016, prj, params, results, errors, as, ps)
+	writesearchResults(qb422016, as, prj, params, results, errors, ps)
 //line views/vproject/Search.html:44
 	qs422016 := string(qb422016.B)
 //line views/vproject/Search.html:44

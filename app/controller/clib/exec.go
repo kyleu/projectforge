@@ -60,7 +60,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 
 func ExecDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("exec.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ex, err := getExecPath(r, as)
+		ex, err := getExecPath(as, r)
 		if err != nil {
 			return "", err
 		}
@@ -72,7 +72,7 @@ func ExecDetail(w http.ResponseWriter, r *http.Request) {
 
 func ExecSocket(w http.ResponseWriter, r *http.Request) {
 	controller.Act("exec.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ex, err := getExecPath(r, as)
+		ex, err := getExecPath(as, r)
 		if err != nil {
 			return "", err
 		}
@@ -87,7 +87,7 @@ func ExecSocket(w http.ResponseWriter, r *http.Request) {
 
 func ExecKill(w http.ResponseWriter, r *http.Request) {
 	controller.Act("exec.kill", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		proc, err := getExecPath(r, as)
+		proc, err := getExecPath(as, r)
 		if err != nil {
 			return "", err
 		}
@@ -99,7 +99,7 @@ func ExecKill(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func getExecPath(r *http.Request, as *app.State) (*exec.Exec, error) {
+func getExecPath(as *app.State, r *http.Request) (*exec.Exec, error) {
 	key, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, err

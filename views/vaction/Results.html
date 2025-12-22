@@ -45,7 +45,7 @@
         </label>
         <div class="bd"><div><div>
           {%= vproject.Summary(x.Prj, x.Title(), nil, &x.Res.Action, nil, ps) %}
-          {%= Detail(x.Cfg, x.Res, false, as, ps) %}
+          {%= Detail(as, x.Cfg, x.Res, false, ps) %}
         </div></div></div>
       </li>
       {%- endfor -%}

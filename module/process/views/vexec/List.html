@@ -16,6 +16,6 @@
   <div class="card">
     <div class="right"><a href="/admin/exec/new" title="start a new process">{%= components.SVGIcon(`plus`, ps) %}</a></div>
     <h3>{%= components.SVGIcon(`desktop`, ps) %} {%s util.StringPlural(len(p.Execs), "Process") %}</h3>
-    {%= Table(p.Execs, as, ps) %}
+    {%= Table(as, p.Execs, ps) %}
   </div>
 {% endfunc %}

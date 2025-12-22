@@ -28,7 +28,7 @@ func RandomRecord() *Record {
 		ID:       util.UUID(),
 		AuditID:  util.UUID(),
 		T:        util.RandomString(8),
-		PK:       util.RandomString(12),
+		PK:       util.RandomID(),
 		Changes:  util.RandomDiffs(2),
 		Metadata: util.RandomValueMap(4),
 		Occurred: util.TimeCurrent(),

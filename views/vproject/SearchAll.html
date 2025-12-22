@@ -38,7 +38,7 @@
         </label>
         <div class="bd"><div><div>
           {%= Summary(prj, "Search", nil, nil, nil, ps) %}
-          {%= searchResults(prj, p.Params, res, nil, as, ps) %}
+          {%= searchResults(as, prj, p.Params, res, nil, ps) %}
         </div></div></div>
       </li>
       {%- endfor -%}

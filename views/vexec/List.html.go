@@ -54,7 +54,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`</h3>
     `)
 //line views/vexec/List.html:19
-	StreamTable(qw422016, p.Execs, as, ps)
+	StreamTable(qw422016, as, p.Execs, ps)
 //line views/vexec/List.html:19
 	qw422016.N().S(`
   </div>

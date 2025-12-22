@@ -3,7 +3,7 @@
   "{{{ .Package }}}/app/lib/user"
 ) %}
 
-{% func Permissions(perms user.Permissions, as *app.State) %}
+{% func Permissions(as *app.State, perms user.Permissions) %}
   {%- if len(perms) > 0 -%}
   <div class="card">
     <h3>Permissions</h3>

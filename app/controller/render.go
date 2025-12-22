@@ -35,10 +35,10 @@ func Render(r *http.Request, as *app.State, page layout.Page, ps *cutil.PageStat
 				}
 				_, err := Render(r, as, &verror.Error{Err: ed}, ps, breadcrumbs...)
 				if err != nil {
-					verror.WriteDetail(ps.W, ed, as, ps)
+					verror.WriteDetail(ps.W, as, ed, ps)
 				}
 			} else {
-				verror.WriteDetail(ps.W, ed, as, ps)
+				verror.WriteDetail(ps.W, as, ed, ps)
 			}
 		}
 	}()
@@ -91,7 +91,7 @@ func Render(r *http.Request, as *app.State, page layout.Page, ps *cutil.PageStat
 		ps.HideHeader = true
 		ps.HideMenu = true
 	}
-	views.WriteRender(ps.W, page, as, ps)
+	views.WriteRender(ps.W, as, page, ps)
 	ps.RenderElapsed = float64((util.TimeCurrentNanos()-startNanos)/int64(time.Microsecond)) / float64(1000)
 	return "", nil
 }

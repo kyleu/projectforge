@@ -128,7 +128,7 @@ func (p *PageState) Clean(_ *http.Request, as *app.State) error {
 		p.ProfilePath = DefaultProfilePath
 	}
 	if len(p.Menu) == 0 {
-		m, data, err := cmenu.MenuFor(p.Context, p.Authed, p.Admin, p.Profile, p.Params, as, p.Logger)
+		m, data, err := cmenu.MenuFor(p.Context, as, p.Authed, p.Admin, p.Profile, p.Params, p.Logger)
 		if err != nil {
 			return err
 		}

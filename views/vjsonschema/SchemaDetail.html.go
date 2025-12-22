@@ -308,12 +308,12 @@ func streamrenderCollectionPanel(qw422016 *qt422016.Writer, as *app.State, coll 
       <ul class="accordion bl">
 `)
 //line views/vjsonschema/SchemaDetail.html:83
-	for _, x := range coll.Schemas() {
+	for idx, x := range coll.Schemas() {
 //line views/vjsonschema/SchemaDetail.html:83
 		qw422016.N().S(`        <li>
 `)
 //line views/vjsonschema/SchemaDetail.html:85
-		itemKey := util.RandomString(16)
+		itemKey := util.RandomID()
 
 //line views/vjsonschema/SchemaDetail.html:85
 		qw422016.N().S(`
@@ -327,121 +327,131 @@ func streamrenderCollectionPanel(qw422016 *qt422016.Writer, as *app.State, coll 
 		qw422016.E().S(itemKey)
 //line views/vjsonschema/SchemaDetail.html:87
 		qw422016.N().S(`">
+            <div class="right"><em>`)
+//line views/vjsonschema/SchemaDetail.html:88
+		qw422016.E().S(x.Summary())
+//line views/vjsonschema/SchemaDetail.html:88
+		qw422016.N().S(`</em></div>
             `)
-//line views/vjsonschema/SchemaDetail.html:88
+//line views/vjsonschema/SchemaDetail.html:89
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vjsonschema/SchemaDetail.html:88
+//line views/vjsonschema/SchemaDetail.html:89
 		qw422016.N().S(` `)
-//line views/vjsonschema/SchemaDetail.html:88
+//line views/vjsonschema/SchemaDetail.html:89
 		components.StreamSVGRef(qw422016, "cog", 16, 16, "icon", ps)
-//line views/vjsonschema/SchemaDetail.html:88
-		qw422016.N().S(` `)
-//line views/vjsonschema/SchemaDetail.html:88
+//line views/vjsonschema/SchemaDetail.html:89
+		qw422016.N().S(`
+            <code>`)
+//line views/vjsonschema/SchemaDetail.html:90
+		qw422016.N().D(idx)
+//line views/vjsonschema/SchemaDetail.html:90
+		qw422016.N().S(`</code> `)
+//line views/vjsonschema/SchemaDetail.html:90
 		qw422016.E().S(x.ID())
-//line views/vjsonschema/SchemaDetail.html:88
+//line views/vjsonschema/SchemaDetail.html:90
 		qw422016.N().S(`
           </label>
           <div class="bd"><div><div>
             `)
-//line views/vjsonschema/SchemaDetail.html:91
+//line views/vjsonschema/SchemaDetail.html:93
 		view.StreamJSONSchema(qw422016, x, true, ps)
-//line views/vjsonschema/SchemaDetail.html:91
+//line views/vjsonschema/SchemaDetail.html:93
 		qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vjsonschema/SchemaDetail.html:94
+//line views/vjsonschema/SchemaDetail.html:96
 	}
-//line views/vjsonschema/SchemaDetail.html:94
+//line views/vjsonschema/SchemaDetail.html:96
 	qw422016.N().S(`      </ul>
     </div></div></div>
   </li>
 `)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 }
 
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 func writerenderCollectionPanel(qq422016 qtio422016.Writer, as *app.State, coll *jsonschema.Collection, ps *cutil.PageState) {
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	streamrenderCollectionPanel(qw422016, as, coll, ps)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 }
 
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 func renderCollectionPanel(as *app.State, coll *jsonschema.Collection, ps *cutil.PageState) string {
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	writerenderCollectionPanel(qb422016, as, coll, ps)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	qs422016 := string(qb422016.B)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 	return qs422016
-//line views/vjsonschema/SchemaDetail.html:98
+//line views/vjsonschema/SchemaDetail.html:100
 }
 
-//line views/vjsonschema/SchemaDetail.html:100
+//line views/vjsonschema/SchemaDetail.html:102
 func streamrenderArgsPanel(qw422016 *qt422016.Writer, as *app.State, args *metamodel.Args, argsLogs []string, ps *cutil.PageState) {
-//line views/vjsonschema/SchemaDetail.html:100
+//line views/vjsonschema/SchemaDetail.html:102
 	qw422016.N().S(`
   <li>
     <input id="accordion-args" type="checkbox" hidden />
     <label for="accordion-args">
       `)
-//line views/vjsonschema/SchemaDetail.html:104
+//line views/vjsonschema/SchemaDetail.html:106
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vjsonschema/SchemaDetail.html:104
+//line views/vjsonschema/SchemaDetail.html:106
 	qw422016.N().S(` `)
-//line views/vjsonschema/SchemaDetail.html:104
+//line views/vjsonschema/SchemaDetail.html:106
 	components.StreamSVGRef(qw422016, "cog", 16, 16, "icon", ps)
-//line views/vjsonschema/SchemaDetail.html:104
+//line views/vjsonschema/SchemaDetail.html:106
 	qw422016.N().S(` Args
     </label>
     <div class="bd"><div><div>
       `)
-//line views/vjsonschema/SchemaDetail.html:107
-	vexport.StreamArgsDetail(qw422016, util.RandomString(16), args, as, ps)
-//line views/vjsonschema/SchemaDetail.html:107
+//line views/vjsonschema/SchemaDetail.html:109
+	vexport.StreamArgsDetail(qw422016, as, util.RandomID(), args, true, ps)
+//line views/vjsonschema/SchemaDetail.html:109
 	qw422016.N().S(`
       `)
-//line views/vjsonschema/SchemaDetail.html:108
+//line views/vjsonschema/SchemaDetail.html:110
 	components.StreamTerminal(qw422016, "argsLogs", argsLogs...)
-//line views/vjsonschema/SchemaDetail.html:108
+//line views/vjsonschema/SchemaDetail.html:110
 	qw422016.N().S(`
     </div></div></div>
   </li>
 `)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 }
 
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 func writerenderArgsPanel(qq422016 qtio422016.Writer, as *app.State, args *metamodel.Args, argsLogs []string, ps *cutil.PageState) {
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	streamrenderArgsPanel(qw422016, as, args, argsLogs, ps)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 }
 
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 func renderArgsPanel(as *app.State, args *metamodel.Args, argsLogs []string, ps *cutil.PageState) string {
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	writerenderArgsPanel(qb422016, as, args, argsLogs, ps)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	qs422016 := string(qb422016.B)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 	return qs422016
-//line views/vjsonschema/SchemaDetail.html:111
+//line views/vjsonschema/SchemaDetail.html:113
 }

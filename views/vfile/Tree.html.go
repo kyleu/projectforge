@@ -29,13 +29,13 @@ var (
 )
 
 //line views/vfile/Tree.html:11
-func StreamTree(qw422016 *qt422016.Writer, t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState) {
+func StreamTree(qw422016 *qt422016.Writer, as *app.State, t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState) {
 //line views/vfile/Tree.html:12
 	components.StreamIndent(qw422016, true, 2)
 //line views/vfile/Tree.html:12
 	qw422016.N().S(`<ul class="accordion">`)
 //line views/vfile/Tree.html:14
-	streamtreeNodes(qw422016, t.Nodes, "", urlPrefix, actions, as, ps, 2)
+	streamtreeNodes(qw422016, as, t.Nodes, "", urlPrefix, actions, ps, 2)
 //line views/vfile/Tree.html:15
 	components.StreamIndent(qw422016, true, 2)
 //line views/vfile/Tree.html:15
@@ -44,22 +44,22 @@ func StreamTree(qw422016 *qt422016.Writer, t *filesystem.Tree, urlPrefix string,
 }
 
 //line views/vfile/Tree.html:17
-func WriteTree(qq422016 qtio422016.Writer, t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState) {
+func WriteTree(qq422016 qtio422016.Writer, as *app.State, t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState) {
 //line views/vfile/Tree.html:17
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/Tree.html:17
-	StreamTree(qw422016, t, urlPrefix, actions, as, ps)
+	StreamTree(qw422016, as, t, urlPrefix, actions, ps)
 //line views/vfile/Tree.html:17
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/Tree.html:17
 }
 
 //line views/vfile/Tree.html:17
-func Tree(t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState) string {
+func Tree(as *app.State, t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState) string {
 //line views/vfile/Tree.html:17
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/Tree.html:17
-	WriteTree(qb422016, t, urlPrefix, actions, as, ps)
+	WriteTree(qb422016, as, t, urlPrefix, actions, ps)
 //line views/vfile/Tree.html:17
 	qs422016 := string(qb422016.B)
 //line views/vfile/Tree.html:17
@@ -70,7 +70,7 @@ func Tree(t *filesystem.Tree, urlPrefix string, actions func(p string, n *filesy
 }
 
 //line views/vfile/Tree.html:19
-func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) {
+func streamtreeNode(qw422016 *qt422016.Writer, as *app.State, n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) {
 //line views/vfile/Tree.html:21
 	pathID := n.Name
 	if pth != "" {
@@ -179,7 +179,7 @@ func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, u
 //line views/vfile/Tree.html:63
 		qw422016.N().S(`px; margin-bottom: 0;">`)
 //line views/vfile/Tree.html:64
-		streamtreeNodes(qw422016, n.Children, util.StringPath(pth, n.Name), urlPrefix, actions, as, ps, indent+3)
+		streamtreeNodes(qw422016, as, n.Children, util.StringPath(pth, n.Name), urlPrefix, actions, ps, indent+3)
 //line views/vfile/Tree.html:65
 		components.StreamIndent(qw422016, true, indent+2)
 //line views/vfile/Tree.html:65
@@ -198,22 +198,22 @@ func streamtreeNode(qw422016 *qt422016.Writer, n *filesystem.Node, pth string, u
 }
 
 //line views/vfile/Tree.html:72
-func writetreeNode(qq422016 qtio422016.Writer, n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) {
+func writetreeNode(qq422016 qtio422016.Writer, as *app.State, n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) {
 //line views/vfile/Tree.html:72
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/Tree.html:72
-	streamtreeNode(qw422016, n, pth, urlPrefix, actions, as, ps, indent)
+	streamtreeNode(qw422016, as, n, pth, urlPrefix, actions, ps, indent)
 //line views/vfile/Tree.html:72
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/Tree.html:72
 }
 
 //line views/vfile/Tree.html:72
-func treeNode(n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) string {
+func treeNode(as *app.State, n *filesystem.Node, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) string {
 //line views/vfile/Tree.html:72
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/Tree.html:72
-	writetreeNode(qb422016, n, pth, urlPrefix, actions, as, ps, indent)
+	writetreeNode(qb422016, as, n, pth, urlPrefix, actions, ps, indent)
 //line views/vfile/Tree.html:72
 	qs422016 := string(qb422016.B)
 //line views/vfile/Tree.html:72
@@ -224,33 +224,33 @@ func treeNode(n *filesystem.Node, pth string, urlPrefix string, actions func(p s
 }
 
 //line views/vfile/Tree.html:74
-func streamtreeNodes(qw422016 *qt422016.Writer, nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) {
+func streamtreeNodes(qw422016 *qt422016.Writer, as *app.State, nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) {
 //line views/vfile/Tree.html:75
 	for _, n := range nodes {
 //line views/vfile/Tree.html:76
-		streamtreeNode(qw422016, n, pth, urlPrefix, actions, as, ps, indent+1)
+		streamtreeNode(qw422016, as, n, pth, urlPrefix, actions, ps, indent+1)
 //line views/vfile/Tree.html:77
 	}
 //line views/vfile/Tree.html:78
 }
 
 //line views/vfile/Tree.html:78
-func writetreeNodes(qq422016 qtio422016.Writer, nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) {
+func writetreeNodes(qq422016 qtio422016.Writer, as *app.State, nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) {
 //line views/vfile/Tree.html:78
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/Tree.html:78
-	streamtreeNodes(qw422016, nodes, pth, urlPrefix, actions, as, ps, indent)
+	streamtreeNodes(qw422016, as, nodes, pth, urlPrefix, actions, ps, indent)
 //line views/vfile/Tree.html:78
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/Tree.html:78
 }
 
 //line views/vfile/Tree.html:78
-func treeNodes(nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, as *app.State, ps *cutil.PageState, indent int) string {
+func treeNodes(as *app.State, nodes filesystem.Nodes, pth string, urlPrefix string, actions func(p string, n *filesystem.Node) map[string]string, ps *cutil.PageState, indent int) string {
 //line views/vfile/Tree.html:78
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/Tree.html:78
-	writetreeNodes(qb422016, nodes, pth, urlPrefix, actions, as, ps, indent)
+	writetreeNodes(qb422016, as, nodes, pth, urlPrefix, actions, ps, indent)
 //line views/vfile/Tree.html:78
 	qs422016 := string(qb422016.B)
 //line views/vfile/Tree.html:78

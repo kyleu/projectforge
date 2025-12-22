@@ -37,7 +37,7 @@
   {%- if isDir -%}
   {%- code files := p.FS.ListFiles(editPath, nil, ps.Logger) -%}
   <div class="card">
-    {%= vfile.List(p.Path, files, p.FS, u, as, ps) %}
+    {%= vfile.List(as, p.Path, files, p.FS, u, ps) %}
   </div>
   {%- else -%}
   {%- code
@@ -48,7 +48,7 @@
   -%}
   <div class="card">
     {%- code links := map[string]string{"Download": "?download=true"} -%}
-    {%= vfile.Detail(p.Path, b, u, links, as, ps) %}
+    {%= vfile.Detail(as, p.Path, b, u, links, ps) %}
   </div>
   {%- endif -%}
 {% endfunc %}

@@ -140,7 +140,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 		qw422016.N().S(`
           `)
 //line views/vaction/Results.html:48
-		StreamDetail(qw422016, x.Cfg, x.Res, false, as, ps)
+		StreamDetail(qw422016, as, x.Cfg, x.Res, false, ps)
 //line views/vaction/Results.html:48
 		qw422016.N().S(`
         </div></div></div>

@@ -25,7 +25,7 @@ var (
 )
 
 //line views/vtheme/Editor.html:7
-func StreamEditor(qw422016 *qt422016.Writer, title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) {
+func StreamEditor(qw422016 *qt422016.Writer, as *app.State, title string, navTitle string, t *theme.Theme, icon string, ps *cutil.PageState) {
 //line views/vtheme/Editor.html:7
 	qw422016.N().S(`
   <div class="card" id="theme">
@@ -224,22 +224,22 @@ func StreamEditor(qw422016 *qt422016.Writer, title string, navTitle string, t *t
 }
 
 //line views/vtheme/Editor.html:89
-func WriteEditor(qq422016 qtio422016.Writer, title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) {
+func WriteEditor(qq422016 qtio422016.Writer, as *app.State, title string, navTitle string, t *theme.Theme, icon string, ps *cutil.PageState) {
 //line views/vtheme/Editor.html:89
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtheme/Editor.html:89
-	StreamEditor(qw422016, title, navTitle, t, icon, as, ps)
+	StreamEditor(qw422016, as, title, navTitle, t, icon, ps)
 //line views/vtheme/Editor.html:89
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtheme/Editor.html:89
 }
 
 //line views/vtheme/Editor.html:89
-func Editor(title string, navTitle string, t *theme.Theme, icon string, as *app.State, ps *cutil.PageState) string {
+func Editor(as *app.State, title string, navTitle string, t *theme.Theme, icon string, ps *cutil.PageState) string {
 //line views/vtheme/Editor.html:89
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtheme/Editor.html:89
-	WriteEditor(qb422016, title, navTitle, t, icon, as, ps)
+	WriteEditor(qb422016, as, title, navTitle, t, icon, ps)
 //line views/vtheme/Editor.html:89
 	qs422016 := string(qb422016.B)
 //line views/vtheme/Editor.html:89

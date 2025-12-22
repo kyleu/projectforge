@@ -15,7 +15,7 @@
       {% else %}
         <ul class="accordion">
           {% for _, k := range t.Keys() %}
-            {%- code itemKey := util.RandomString(16) %}
+            {%- code itemKey := util.RandomID() %}
             {%- code x := t.GetSimple(k) %}
             <li>
               <input id="accordion-{%s itemKey %}" type="checkbox" hidden />

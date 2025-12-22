@@ -23,7 +23,7 @@ func Act(key string, w http.ResponseWriter, r *http.Request, f ActFn) {
 	if err := initAppRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}
-	actComplete(key, as, ps, wc, r, f)
+	actComplete(as, key, ps, wc, r, f)
 }
 
 func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.State, ps *cutil.PageState) (string, error)) {
@@ -34,10 +34,10 @@ func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.
 	if err := initSiteRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
 	}
-	actComplete(key, as, ps, ps.W, r, f)
+	actComplete(as, key, ps, ps.W, r, f)
 }
 
-func actComplete(key string, as *app.State, ps *cutil.PageState, w *cutil.WriteCounter, r *http.Request, f ActFn) {
+func actComplete(as *app.State, key string, ps *cutil.PageState, w *cutil.WriteCounter, r *http.Request, f ActFn) {
 	err := ps.Clean(r, as)
 	if err != nil {
 		ps.Logger.Warnf("error while cleaning request, somehow: %+v", err)
@@ -56,9 +56,9 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, w *cutil.WriteC
 	ps.Context = ctx
 
 	if ps.ForceRedirect == "" || ps.ForceRedirect == r.URL.Path {
-		redir, err = safeRun(f, as, ps)
+		redir, err = safeRun(as, f, ps)
 		if err != nil {
-			redir, err = handleError(key, as, ps, r, err)
+			redir, err = handleError(as, key, ps, r, err)
 			if err != nil {
 				ps.Logger.Warnf("unable to handle error: %+v", err)
 			}
@@ -82,7 +82,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, w *cutil.WriteC
 	}
 }
 
-func safeRun(f func(as *app.State, ps *cutil.PageState) (string, error), as *app.State, ps *cutil.PageState) (s string, e error) {
+func safeRun(as *app.State, f func(as *app.State, ps *cutil.PageState) (string, error), ps *cutil.PageState) (s string, e error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if recoverErr, ok := rec.(error); ok {

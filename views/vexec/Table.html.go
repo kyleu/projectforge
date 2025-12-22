@@ -26,7 +26,7 @@ var (
 )
 
 //line views/vexec/Table.html:8
-func StreamTable(qw422016 *qt422016.Writer, execs exec.Execs, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, as *app.State, execs exec.Execs, ps *cutil.PageState) {
 //line views/vexec/Table.html:8
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -139,22 +139,22 @@ func StreamTable(qw422016 *qt422016.Writer, execs exec.Execs, as *app.State, ps 
 }
 
 //line views/vexec/Table.html:36
-func WriteTable(qq422016 qtio422016.Writer, execs exec.Execs, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, as *app.State, execs exec.Execs, ps *cutil.PageState) {
 //line views/vexec/Table.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexec/Table.html:36
-	StreamTable(qw422016, execs, as, ps)
+	StreamTable(qw422016, as, execs, ps)
 //line views/vexec/Table.html:36
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexec/Table.html:36
 }
 
 //line views/vexec/Table.html:36
-func Table(execs exec.Execs, as *app.State, ps *cutil.PageState) string {
+func Table(as *app.State, execs exec.Execs, ps *cutil.PageState) string {
 //line views/vexec/Table.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexec/Table.html:36
-	WriteTable(qb422016, execs, as, ps)
+	WriteTable(qb422016, as, execs, ps)
 //line views/vexec/Table.html:36
 	qs422016 := string(qb422016.B)
 //line views/vexec/Table.html:36

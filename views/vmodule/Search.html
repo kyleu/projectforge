@@ -26,7 +26,7 @@
   </div>
   {%- endif -%}
   {%- for _, res := range p.Results -%}
-  {%= vsearch.Result(res, p.Params, as, ps) %}
+  {%= vsearch.Result(as, res, p.Params, ps) %}
   {%- endfor -%}
   {% if len(p.Errors) > 0 %}
   <div class="card">

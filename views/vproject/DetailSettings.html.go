@@ -28,7 +28,7 @@ var (
 )
 
 //line views/vproject/DetailSettings.html:10
-func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *app.State, ps *cutil.PageState) {
+func StreamDetailSettings(qw422016 *qt422016.Writer, as *app.State, prj *project.Project, ps *cutil.PageState) {
 //line views/vproject/DetailSettings.html:10
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -175,22 +175,22 @@ func StreamDetailSettings(qw422016 *qt422016.Writer, prj *project.Project, as *a
 }
 
 //line views/vproject/DetailSettings.html:70
-func WriteDetailSettings(qq422016 qtio422016.Writer, prj *project.Project, as *app.State, ps *cutil.PageState) {
+func WriteDetailSettings(qq422016 qtio422016.Writer, as *app.State, prj *project.Project, ps *cutil.PageState) {
 //line views/vproject/DetailSettings.html:70
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailSettings.html:70
-	StreamDetailSettings(qw422016, prj, as, ps)
+	StreamDetailSettings(qw422016, as, prj, ps)
 //line views/vproject/DetailSettings.html:70
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/DetailSettings.html:70
 }
 
 //line views/vproject/DetailSettings.html:70
-func DetailSettings(prj *project.Project, as *app.State, ps *cutil.PageState) string {
+func DetailSettings(as *app.State, prj *project.Project, ps *cutil.PageState) string {
 //line views/vproject/DetailSettings.html:70
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailSettings.html:70
-	WriteDetailSettings(qb422016, prj, as, ps)
+	WriteDetailSettings(qb422016, as, prj, ps)
 //line views/vproject/DetailSettings.html:70
 	qs422016 := string(qb422016.B)
 //line views/vproject/DetailSettings.html:70

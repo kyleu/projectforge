@@ -26,7 +26,7 @@ var (
 )
 
 //line views/vaction/Audit.html:8
-func StreamRenderAudit(qw422016 *qt422016.Writer, key string, res *action.AuditResult, as *app.State, ps *cutil.PageState) {
+func StreamRenderAudit(qw422016 *qt422016.Writer, as *app.State, key string, res *action.AuditResult, ps *cutil.PageState) {
 //line views/vaction/Audit.html:8
 	qw422016.N().S(`
 `)
@@ -45,22 +45,22 @@ func StreamRenderAudit(qw422016 *qt422016.Writer, key string, res *action.AuditR
 }
 
 //line views/vaction/Audit.html:12
-func WriteRenderAudit(qq422016 qtio422016.Writer, key string, res *action.AuditResult, as *app.State, ps *cutil.PageState) {
+func WriteRenderAudit(qq422016 qtio422016.Writer, as *app.State, key string, res *action.AuditResult, ps *cutil.PageState) {
 //line views/vaction/Audit.html:12
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vaction/Audit.html:12
-	StreamRenderAudit(qw422016, key, res, as, ps)
+	StreamRenderAudit(qw422016, as, key, res, ps)
 //line views/vaction/Audit.html:12
 	qt422016.ReleaseWriter(qw422016)
 //line views/vaction/Audit.html:12
 }
 
 //line views/vaction/Audit.html:12
-func RenderAudit(key string, res *action.AuditResult, as *app.State, ps *cutil.PageState) string {
+func RenderAudit(as *app.State, key string, res *action.AuditResult, ps *cutil.PageState) string {
 //line views/vaction/Audit.html:12
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vaction/Audit.html:12
-	WriteRenderAudit(qb422016, key, res, as, ps)
+	WriteRenderAudit(qb422016, as, key, res, ps)
 //line views/vaction/Audit.html:12
 	qs422016 := string(qb422016.B)
 //line views/vaction/Audit.html:12

@@ -80,12 +80,14 @@
     </label>
     <div class="bd"><div><div>
       <ul class="accordion bl">
-        {%- for _, x := range coll.Schemas() -%}
+        {%- for idx, x := range coll.Schemas() -%}
         <li>
-          {%- code itemKey := util.RandomString(16) %}
+          {%- code itemKey := util.RandomID() %}
           <input id="accordion-collection-{%s itemKey %}" type="checkbox" hidden />
           <label for="accordion-collection-{%s itemKey %}">
-            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} {%s x.ID() %}
+            <div class="right"><em>{%s x.Summary() %}</em></div>
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %}
+            <code>{%d idx %}</code> {%s x.ID() %}
           </label>
           <div class="bd"><div><div>
             {%= view.JSONSchema(x, true, ps) %}
@@ -104,7 +106,7 @@
       {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} Args
     </label>
     <div class="bd"><div><div>
-      {%= vexport.ArgsDetail(util.RandomString(16), args, as, ps) %}
+      {%= vexport.ArgsDetail(as, util.RandomID(), args, true, ps) %}
       {%= components.Terminal("argsLogs", argsLogs...) %}
     </div></div></div>
   </li>

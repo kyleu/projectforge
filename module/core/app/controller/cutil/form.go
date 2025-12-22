@@ -111,7 +111,7 @@ func parseHTTPForm(r *http.Request) (util.ValueMap, error) {
 
 func CleanID(key string, id string) string {
 	if id == "" {
-		return key + "-" + util.RandomString(6)
+		return key + "-" + util.RandomID()
 	}
 	return id
 }

@@ -32,6 +32,6 @@
     <div class="right"><em>{%s br.Status %} [{%s util.MicrosToMillis(br.Duration) %}]</em></div>
     <h3>Result</h3>
   </div>
-  {%= vaction.Detail(p.Cfg, br, false, as, ps) %}
+  {%= vaction.Detail(as, p.Cfg, br, false, ps) %}
   {%- endif -%}
 {% endfunc %}

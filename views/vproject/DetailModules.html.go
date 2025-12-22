@@ -26,7 +26,7 @@ var (
 )
 
 //line views/vproject/DetailModules.html:8
-func StreamDetailModules(qw422016 *qt422016.Writer, modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) {
+func StreamDetailModules(qw422016 *qt422016.Writer, as *app.State, modKeys []string, mods module.Modules, ps *cutil.PageState) {
 //line views/vproject/DetailModules.html:8
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -99,22 +99,22 @@ func StreamDetailModules(qw422016 *qt422016.Writer, modKeys []string, mods modul
 }
 
 //line views/vproject/DetailModules.html:29
-func WriteDetailModules(qq422016 qtio422016.Writer, modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) {
+func WriteDetailModules(qq422016 qtio422016.Writer, as *app.State, modKeys []string, mods module.Modules, ps *cutil.PageState) {
 //line views/vproject/DetailModules.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailModules.html:29
-	StreamDetailModules(qw422016, modKeys, mods, as, ps)
+	StreamDetailModules(qw422016, as, modKeys, mods, ps)
 //line views/vproject/DetailModules.html:29
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/DetailModules.html:29
 }
 
 //line views/vproject/DetailModules.html:29
-func DetailModules(modKeys []string, mods module.Modules, as *app.State, ps *cutil.PageState) string {
+func DetailModules(as *app.State, modKeys []string, mods module.Modules, ps *cutil.PageState) string {
 //line views/vproject/DetailModules.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailModules.html:29
-	WriteDetailModules(qb422016, modKeys, mods, as, ps)
+	WriteDetailModules(qb422016, as, modKeys, mods, ps)
 //line views/vproject/DetailModules.html:29
 	qs422016 := string(qb422016.B)
 //line views/vproject/DetailModules.html:29

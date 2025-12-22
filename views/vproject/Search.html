@@ -19,17 +19,17 @@
 
 {% func (p *Search) Body(as *app.State, ps *cutil.PageState) %}
   {%= Summary(p.Project, "Search", util.ValueMap{"q": p.Params.Q}, nil, nil, ps) %}
-  {%= searchResults(p.Project, p.Params, p.Results, p.Errors, as, ps) %}
+  {%= searchResults(as, p.Project, p.Params, p.Results, p.Errors, ps) %}
 {% endfunc %}
 
-{% func searchResults(prj *project.Project, params *search.Params, results result.Results, errors []error, as *app.State, ps *cutil.PageState) %}
+{% func searchResults(as *app.State, prj *project.Project, params *search.Params, results result.Results, errors []error, ps *cutil.PageState) %}
   {%- if len(results) == 0 -%}
   <div class="card">
     <h3>No results</h3>
   </div>
   {%- endif -%}
   {%- for _, res := range results -%}
-  {%= vsearch.Result(res, params, as, ps) %}
+  {%= vsearch.Result(as, res, params, ps) %}
   {%- endfor -%}
   {% if len(errors) > 0 %}
   <div class="card">

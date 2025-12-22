@@ -27,7 +27,7 @@ var (
 )
 
 //line views/vproject/DetailExport.html:9
-func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
+func StreamDetailExport(qw422016 *qt422016.Writer, as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) {
 //line views/vproject/DetailExport.html:9
 	qw422016.N().S(`
   <a href="/p/`)
@@ -42,7 +42,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *metamodel.Arg
   <div class="mt">
     `)
 //line views/vproject/DetailExport.html:12
-	vexport.StreamArgsDetail(qw422016, key, ea, as, ps)
+	vexport.StreamArgsDetail(qw422016, as, key, ea, false, ps)
 //line views/vproject/DetailExport.html:12
 	qw422016.N().S(`
   </div>
@@ -51,22 +51,22 @@ func StreamDetailExport(qw422016 *qt422016.Writer, key string, ea *metamodel.Arg
 }
 
 //line views/vproject/DetailExport.html:14
-func WriteDetailExport(qq422016 qtio422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
+func WriteDetailExport(qq422016 qtio422016.Writer, as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) {
 //line views/vproject/DetailExport.html:14
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailExport.html:14
-	StreamDetailExport(qw422016, key, ea, as, ps)
+	StreamDetailExport(qw422016, as, key, ea, ps)
 //line views/vproject/DetailExport.html:14
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/DetailExport.html:14
 }
 
 //line views/vproject/DetailExport.html:14
-func DetailExport(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) string {
+func DetailExport(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) string {
 //line views/vproject/DetailExport.html:14
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailExport.html:14
-	WriteDetailExport(qb422016, key, ea, as, ps)
+	WriteDetailExport(qb422016, as, key, ea, ps)
 //line views/vproject/DetailExport.html:14
 	qs422016 := string(qb422016.B)
 //line views/vproject/DetailExport.html:14

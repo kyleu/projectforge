@@ -5,6 +5,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -22,6 +23,40 @@ func (s *Validation) Export(ctx context.Context, logger util.Logger) ([]string, 
 	if err := s.Collection.Validate(); err != nil {
 		return nil, nil, err
 	}
+	schemata := s.Collection.Schemas()
+	for _, sch := range schemata {
+		t, err := sch.Validate()
+		if err != nil {
+			return nil, nil, err
+		}
+		switch {
+		case t.Matches(jsonschema.SchemaTypeObject):
+			if err := exportObject(ctx, sch, ret, s.Collection, logs); err != nil {
+				return nil, nil, err
+			}
+		case t.Matches(jsonschema.SchemaTypeEnum):
+			if err := exportEnum(ctx, sch, ret, s.Collection, logs); err != nil {
+				return nil, nil, err
+			}
+		default:
+			logs.Pushf("unsupported type [%s] for schema [%s]", t, sch.ID())
+		}
+	}
 	logs.Push("OK!")
 	return logs.Slice, ret, nil
+}
+
+func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Args, s *jsonschema.Collection, logs *util.StringSlice) error {
+	logs.Pushf("exporting object schema [%s]", sch.ID())
+	return nil
+}
+
+func exportEnum(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Args, s *jsonschema.Collection, logs *util.StringSlice) error {
+	e := &enum.Enum{
+		Name: util.UUID().String(),
+	}
+
+	ret.Enums = append(ret.Enums, e)
+	logs.Pushf("exporting enum schema [%s]", sch.ID())
+	return nil
 }

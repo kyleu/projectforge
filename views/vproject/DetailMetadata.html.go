@@ -27,7 +27,7 @@ var (
 )
 
 //line views/vproject/DetailMetadata.html:9
-func StreamDetailMetadata(qw422016 *qt422016.Writer, info *project.Info, as *app.State, ps *cutil.PageState) {
+func StreamDetailMetadata(qw422016 *qt422016.Writer, as *app.State, info *project.Info, ps *cutil.PageState) {
 //line views/vproject/DetailMetadata.html:9
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -605,22 +605,22 @@ func StreamDetailMetadata(qw422016 *qt422016.Writer, info *project.Info, as *app
 }
 
 //line views/vproject/DetailMetadata.html:266
-func WriteDetailMetadata(qq422016 qtio422016.Writer, info *project.Info, as *app.State, ps *cutil.PageState) {
+func WriteDetailMetadata(qq422016 qtio422016.Writer, as *app.State, info *project.Info, ps *cutil.PageState) {
 //line views/vproject/DetailMetadata.html:266
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vproject/DetailMetadata.html:266
-	StreamDetailMetadata(qw422016, info, as, ps)
+	StreamDetailMetadata(qw422016, as, info, ps)
 //line views/vproject/DetailMetadata.html:266
 	qt422016.ReleaseWriter(qw422016)
 //line views/vproject/DetailMetadata.html:266
 }
 
 //line views/vproject/DetailMetadata.html:266
-func DetailMetadata(info *project.Info, as *app.State, ps *cutil.PageState) string {
+func DetailMetadata(as *app.State, info *project.Info, ps *cutil.PageState) string {
 //line views/vproject/DetailMetadata.html:266
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vproject/DetailMetadata.html:266
-	WriteDetailMetadata(qb422016, info, as, ps)
+	WriteDetailMetadata(qb422016, as, info, ps)
 //line views/vproject/DetailMetadata.html:266
 	qs422016 := string(qb422016.B)
 //line views/vproject/DetailMetadata.html:266

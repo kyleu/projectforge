@@ -10,7 +10,7 @@
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) %}
+{% func Detail(as *app.State, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, ps *cutil.PageState, lineNumLinkAndTitle ...string) %}
   {%- if additionalLinks != nil && len(additionalLinks) > 0 -%}
   <div class="right">
     {%- for k, v := range additionalLinks -%}

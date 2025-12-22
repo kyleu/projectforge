@@ -27,7 +27,7 @@ var (
 )
 
 //line views/vfile/List.html:9
-func StreamList(qw422016 *qt422016.Writer, path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
+func StreamList(qw422016 *qt422016.Writer, as *app.State, path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, ps *cutil.PageState) {
 //line views/vfile/List.html:9
 	qw422016.N().S(`
   <h3><a href="`)
@@ -94,22 +94,22 @@ func StreamList(qw422016 *qt422016.Writer, path []string, files filesystem.FileI
 }
 
 //line views/vfile/List.html:23
-func WriteList(qq422016 qtio422016.Writer, path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) {
+func WriteList(qq422016 qtio422016.Writer, as *app.State, path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, ps *cutil.PageState) {
 //line views/vfile/List.html:23
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/List.html:23
-	StreamList(qw422016, path, files, fl, urlPrefix, as, ps)
+	StreamList(qw422016, as, path, files, fl, urlPrefix, ps)
 //line views/vfile/List.html:23
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/List.html:23
 }
 
 //line views/vfile/List.html:23
-func List(path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, as *app.State, ps *cutil.PageState) string {
+func List(as *app.State, path []string, files filesystem.FileInfos, fl filesystem.FileLoader, urlPrefix string, ps *cutil.PageState) string {
 //line views/vfile/List.html:23
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/List.html:23
-	WriteList(qb422016, path, files, fl, urlPrefix, as, ps)
+	WriteList(qb422016, as, path, files, fl, urlPrefix, ps)
 //line views/vfile/List.html:23
 	qs422016 := string(qb422016.B)
 //line views/vfile/List.html:23

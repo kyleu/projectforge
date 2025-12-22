@@ -7,7 +7,7 @@
   "{{{ .Package }}}/views/components/view"
 ) %}
 
-{% func RecordTable(models audit.Records, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func RecordTable(as *app.State, models audit.Records, params filter.ParamSet, ps *cutil.PageState) %}
   {%- code prms := params.Get("audit_record", nil, ps.Logger) -%}
   <div class="overflow full-width">
     <table class="mt">

@@ -127,7 +127,7 @@ func StreamResult(qw422016 *qt422016.Writer, as *app.State, res *task.Result, ps
     <div class="mt">
       `)
 //line views/vtask/Result.html:39
-	streamrenderResult(qw422016, res, as, ps)
+	streamrenderResult(qw422016, as, res, ps)
 //line views/vtask/Result.html:39
 	qw422016.N().S(`
     </div>
@@ -238,7 +238,7 @@ func StreamResultSummary(qw422016 *qt422016.Writer, as *app.State, res *task.Res
     <div class="mt">
       `)
 //line views/vtask/Result.html:67
-	streamrenderResult(qw422016, res, as, ps)
+	streamrenderResult(qw422016, as, res, ps)
 //line views/vtask/Result.html:67
 	qw422016.N().S(`
     </div>
@@ -279,7 +279,7 @@ func ResultSummary(as *app.State, res *task.Result, ps *cutil.PageState) string 
 }
 
 //line views/vtask/Result.html:73
-func streamrenderResult(qw422016 *qt422016.Writer, res *task.Result, as *app.State, ps *cutil.PageState) {
+func streamrenderResult(qw422016 *qt422016.Writer, as *app.State, res *task.Result, ps *cutil.PageState) {
 //line views/vtask/Result.html:74
 	if res.Data == nil {
 //line views/vtask/Result.html:74
@@ -294,22 +294,22 @@ func streamrenderResult(qw422016 *qt422016.Writer, res *task.Result, as *app.Sta
 }
 
 //line views/vtask/Result.html:79
-func writerenderResult(qq422016 qtio422016.Writer, res *task.Result, as *app.State, ps *cutil.PageState) {
+func writerenderResult(qq422016 qtio422016.Writer, as *app.State, res *task.Result, ps *cutil.PageState) {
 //line views/vtask/Result.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vtask/Result.html:79
-	streamrenderResult(qw422016, res, as, ps)
+	streamrenderResult(qw422016, as, res, ps)
 //line views/vtask/Result.html:79
 	qt422016.ReleaseWriter(qw422016)
 //line views/vtask/Result.html:79
 }
 
 //line views/vtask/Result.html:79
-func renderResult(res *task.Result, as *app.State, ps *cutil.PageState) string {
+func renderResult(as *app.State, res *task.Result, ps *cutil.PageState) string {
 //line views/vtask/Result.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vtask/Result.html:79
-	writerenderResult(qb422016, res, as, ps)
+	writerenderResult(qb422016, as, res, ps)
 //line views/vtask/Result.html:79
 	qs422016 := string(qb422016.B)
 //line views/vtask/Result.html:79

@@ -17,7 +17,7 @@ func Site(w http.ResponseWriter, r *http.Request) {
 		action += "." + util.StringJoin(path, ".")
 	}
 	ActSite(action, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		redir, page, bc, err := site.Handle(path, as, ps)
+		redir, page, bc, err := site.Handle(as, path, ps)
 		if err != nil {
 			return "", err
 		}

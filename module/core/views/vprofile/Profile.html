@@ -20,7 +20,7 @@
 } %}
 
 {% func (p *Profile) Body(as *app.State, ps *cutil.PageState) %}{{{ if .HasAccount }}}
-  {%= vauth.SigninTable(p.Providers, p.Referrer, as, ps) %}{{{ end }}}
+  {%= vauth.SigninTable(as, p.Providers, p.Referrer, ps) %}{{{ end }}}
   <form action="" method="post">
     <input name="referrer" type="hidden" value="{%s p.Referrer %}" />
     <div class="card">

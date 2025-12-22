@@ -6,9 +6,9 @@
   "projectforge.dev/projectforge/views/vexport"
 ) %}
 
-{% func DetailExport(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) %}
+{% func DetailExport(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
   <a href="/p/{%s key %}/export"><button>{%= components.SVGButton("wrench", ps) %} Manage</button></a>
   <div class="mt">
-    {%= vexport.ArgsDetail(key, ea, as, ps) %}
+    {%= vexport.ArgsDetail(as, key, ea, false, ps) %}
   </div>
 {%- endfunc -%}

@@ -83,7 +83,7 @@ func (p *BuildResult) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
   </div>
   `)
 //line views/vbuild/BuildResult.html:35
-		vaction.StreamDetail(qw422016, p.Cfg, br, false, as, ps)
+		vaction.StreamDetail(qw422016, as, p.Cfg, br, false, ps)
 //line views/vbuild/BuildResult.html:35
 		qw422016.N().S(`
 `)

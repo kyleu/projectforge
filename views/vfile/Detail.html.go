@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vfile/Detail.html:13
-func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
+func StreamDetail(qw422016 *qt422016.Writer, as *app.State, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
 //line views/vfile/Detail.html:13
 	qw422016.N().S(`
 `)
@@ -222,22 +222,22 @@ func StreamDetail(qw422016 *qt422016.Writer, path []string, b []byte, urlPrefix 
 }
 
 //line views/vfile/Detail.html:75
-func WriteDetail(qq422016 qtio422016.Writer, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
+func WriteDetail(qq422016 qtio422016.Writer, as *app.State, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, ps *cutil.PageState, lineNumLinkAndTitle ...string) {
 //line views/vfile/Detail.html:75
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vfile/Detail.html:75
-	StreamDetail(qw422016, path, b, urlPrefix, additionalLinks, as, ps, lineNumLinkAndTitle...)
+	StreamDetail(qw422016, as, path, b, urlPrefix, additionalLinks, ps, lineNumLinkAndTitle...)
 //line views/vfile/Detail.html:75
 	qt422016.ReleaseWriter(qw422016)
 //line views/vfile/Detail.html:75
 }
 
 //line views/vfile/Detail.html:75
-func Detail(path []string, b []byte, urlPrefix string, additionalLinks map[string]string, as *app.State, ps *cutil.PageState, lineNumLinkAndTitle ...string) string {
+func Detail(as *app.State, path []string, b []byte, urlPrefix string, additionalLinks map[string]string, ps *cutil.PageState, lineNumLinkAndTitle ...string) string {
 //line views/vfile/Detail.html:75
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vfile/Detail.html:75
-	WriteDetail(qb422016, path, b, urlPrefix, additionalLinks, as, ps, lineNumLinkAndTitle...)
+	WriteDetail(qb422016, as, path, b, urlPrefix, additionalLinks, ps, lineNumLinkAndTitle...)
 //line views/vfile/Detail.html:75
 	qs422016 := string(qb422016.B)
 //line views/vfile/Detail.html:75

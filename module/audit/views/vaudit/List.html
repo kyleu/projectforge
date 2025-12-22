@@ -20,7 +20,7 @@
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No audits available</em></div>
     {%- else -%}
-    {%= Table(p.Models, p.Params, as, ps) %}
+    {%= Table(as, p.Models, p.Params, ps) %}
     {%- endif -%}
   </div>
 {% endfunc %}

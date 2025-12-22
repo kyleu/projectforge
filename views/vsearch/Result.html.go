@@ -29,7 +29,7 @@ var (
 )
 
 //line views/vsearch/Result.html:11
-func StreamResult(qw422016 *qt422016.Writer, res *result.Result, params *search.Params, as *app.State, ps *cutil.PageState) {
+func StreamResult(qw422016 *qt422016.Writer, as *app.State, res *result.Result, params *search.Params, ps *cutil.PageState) {
 //line views/vsearch/Result.html:11
 	qw422016.N().S(`
   <div class="card">
@@ -137,22 +137,22 @@ func StreamResult(qw422016 *qt422016.Writer, res *result.Result, params *search.
 }
 
 //line views/vsearch/Result.html:27
-func WriteResult(qq422016 qtio422016.Writer, res *result.Result, params *search.Params, as *app.State, ps *cutil.PageState) {
+func WriteResult(qq422016 qtio422016.Writer, as *app.State, res *result.Result, params *search.Params, ps *cutil.PageState) {
 //line views/vsearch/Result.html:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vsearch/Result.html:27
-	StreamResult(qw422016, res, params, as, ps)
+	StreamResult(qw422016, as, res, params, ps)
 //line views/vsearch/Result.html:27
 	qt422016.ReleaseWriter(qw422016)
 //line views/vsearch/Result.html:27
 }
 
 //line views/vsearch/Result.html:27
-func Result(res *result.Result, params *search.Params, as *app.State, ps *cutil.PageState) string {
+func Result(as *app.State, res *result.Result, params *search.Params, ps *cutil.PageState) string {
 //line views/vsearch/Result.html:27
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vsearch/Result.html:27
-	WriteResult(qb422016, res, params, as, ps)
+	WriteResult(qb422016, as, res, params, ps)
 //line views/vsearch/Result.html:27
 	qs422016 := string(qb422016.B)
 //line views/vsearch/Result.html:27

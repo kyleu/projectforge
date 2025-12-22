@@ -30,7 +30,7 @@ func SetSiteState(ctx context.Context, a *app.State, logger util.Logger) error {
 	return initSite(ctx, a, logger)
 }
 
-func handleError(key string, as *app.State, ps *cutil.PageState, r *http.Request, err error) (string, error) {
+func handleError(as *app.State, key string, ps *cutil.PageState, r *http.Request, err error) (string, error) {
 	ps.W.WriteHeader(http.StatusInternalServerError)
 
 	ps.LogError("error running action [%s]: %+v", key, err)

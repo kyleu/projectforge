@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vaction/Diff.html:13
-func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) {
+func streamrenderDiffs(qw422016 *qt422016.Writer, as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) {
 //line views/vaction/Diff.html:13
 	qw422016.N().S(`<h4 class="mt">Diffs</h4>`)
 //line views/vaction/Diff.html:15
@@ -181,7 +181,7 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 //line views/vaction/Diff.html:85
 		qw422016.N().S(`</td><td>`)
 //line views/vaction/Diff.html:87
-		streamrenderPatch(qw422016, d.Patch, as, ps)
+		streamrenderPatch(qw422016, as, d.Patch, ps)
 //line views/vaction/Diff.html:87
 		qw422016.N().S(`</td></tr>`)
 //line views/vaction/Diff.html:89
@@ -192,22 +192,22 @@ func streamrenderDiffs(qw422016 *qt422016.Writer, prjKey string, act action.Type
 }
 
 //line views/vaction/Diff.html:93
-func writerenderDiffs(qq422016 qtio422016.Writer, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) {
+func writerenderDiffs(qq422016 qtio422016.Writer, as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) {
 //line views/vaction/Diff.html:93
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vaction/Diff.html:93
-	streamrenderDiffs(qw422016, prjKey, act, diffs, cfg, as, ps)
+	streamrenderDiffs(qw422016, as, prjKey, act, diffs, cfg, ps)
 //line views/vaction/Diff.html:93
 	qt422016.ReleaseWriter(qw422016)
 //line views/vaction/Diff.html:93
 }
 
 //line views/vaction/Diff.html:93
-func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) string {
+func renderDiffs(as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) string {
 //line views/vaction/Diff.html:93
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vaction/Diff.html:93
-	writerenderDiffs(qb422016, prjKey, act, diffs, cfg, as, ps)
+	writerenderDiffs(qb422016, as, prjKey, act, diffs, cfg, ps)
 //line views/vaction/Diff.html:93
 	qs422016 := string(qb422016.B)
 //line views/vaction/Diff.html:93
@@ -218,7 +218,7 @@ func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.Valu
 }
 
 //line views/vaction/Diff.html:95
-func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
+func streamrenderPatch(qw422016 *qt422016.Writer, as *app.State, patch string, ps *cutil.PageState) {
 //line views/vaction/Diff.html:96
 	lines := util.StringSplitLines(patch)
 
@@ -288,22 +288,22 @@ func streamrenderPatch(qw422016 *qt422016.Writer, patch string, as *app.State, p
 }
 
 //line views/vaction/Diff.html:113
-func writerenderPatch(qq422016 qtio422016.Writer, patch string, as *app.State, ps *cutil.PageState) {
+func writerenderPatch(qq422016 qtio422016.Writer, as *app.State, patch string, ps *cutil.PageState) {
 //line views/vaction/Diff.html:113
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vaction/Diff.html:113
-	streamrenderPatch(qw422016, patch, as, ps)
+	streamrenderPatch(qw422016, as, patch, ps)
 //line views/vaction/Diff.html:113
 	qt422016.ReleaseWriter(qw422016)
 //line views/vaction/Diff.html:113
 }
 
 //line views/vaction/Diff.html:113
-func renderPatch(patch string, as *app.State, ps *cutil.PageState) string {
+func renderPatch(as *app.State, patch string, ps *cutil.PageState) string {
 //line views/vaction/Diff.html:113
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vaction/Diff.html:113
-	writerenderPatch(qb422016, patch, as, ps)
+	writerenderPatch(qb422016, as, patch, ps)
 //line views/vaction/Diff.html:113
 	qs422016 := string(qb422016.B)
 //line views/vaction/Diff.html:113

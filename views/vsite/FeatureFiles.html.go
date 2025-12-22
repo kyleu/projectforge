@@ -66,7 +66,7 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 		qw422016.N().S(`</h3>
     `)
 //line views/vsite/FeatureFiles.html:28
-		vfile.StreamList(qw422016, p.Path, files, fs, u, as, ps)
+		vfile.StreamList(qw422016, as, p.Path, files, fs, u, ps)
 //line views/vsite/FeatureFiles.html:28
 		qw422016.N().S(`
   </div>
@@ -92,7 +92,7 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 		qw422016.N().S(`</h3>
     `)
 //line views/vsite/FeatureFiles.html:39
-		vfile.StreamDetail(qw422016, p.Path, b, u, nil, as, ps)
+		vfile.StreamDetail(qw422016, as, p.Path, b, u, nil, ps)
 //line views/vsite/FeatureFiles.html:39
 		qw422016.N().S(`
   </div>

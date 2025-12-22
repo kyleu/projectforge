@@ -28,7 +28,7 @@
   {%- if p.FS.IsDir(util.StringFilePath(p.Path...)) -%}
   {%- code files := p.FS.ListFiles(util.StringFilePath(p.Path...), nil, ps.Logger) -%}
   <div class="card">
-    {%= vfile.List(p.Path, files, p.FS, u, as, ps) %}
+    {%= vfile.List(as, p.Path, files, p.FS, u, ps) %}
   </div>
   {%- else -%}
   {%- code
@@ -42,7 +42,7 @@
       links := map[string]string{"Download": "?download=true"}
       lineNumLink := fmt.Sprintf("%s/%s#L{}", p.Module.Sourcecode, util.StringPath(p.Path...))
     -%}
-    {%= vfile.Detail(p.Path, b, u, links, as, ps, lineNumLink, "View line {} on GitHub") %}
+    {%= vfile.Detail(as, p.Path, b, u, links, ps, lineNumLink, "View line {} on GitHub") %}
   </div>
   {%- endif -%}
 {% endfunc %}

@@ -36,7 +36,7 @@
     {%- endif -%}
     <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
     <div class="mt">
-      {%= renderResult(res, as, ps) %}
+      {%= renderResult(as, res, ps) %}
     </div>
   </div>
   {%= components.JSONModal("result-" + res.ID.String(), "Result [" + res.String() + "] JSON", res, 1) %}
@@ -64,13 +64,13 @@
     {%- endif -%}
     <div><em>{%= view.TimestampRelative(&res.Started, false) %}</em></div>
     <div class="mt">
-      {%= renderResult(res, as, ps) %}
+      {%= renderResult(as, res, ps) %}
     </div>
   </div>
   {%= components.JSONModal("result", "Result [" + res.String() + "] JSON", res, 1) %}
 {% endfunc %}
 
-{% func renderResult(res *task.Result, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+{% func renderResult(as *app.State, res *task.Result, ps *cutil.PageState) %}{% stripspace %}
   {%- if res.Data == nil -%}
     <em>no data</em>
   {%- else -%}

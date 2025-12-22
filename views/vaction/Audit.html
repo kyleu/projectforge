@@ -5,7 +5,7 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func RenderAudit(key string, res *action.AuditResult, as *app.State, ps *cutil.PageState) %}
+{% func RenderAudit(as *app.State, key string, res *action.AuditResult, ps *cutil.PageState) %}
   {%- if res.Stats != nil -%}
   {%= RenderCodeStats(key, res.Stats, ps) %}
   {%- endif -%}

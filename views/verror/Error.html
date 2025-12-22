@@ -34,10 +34,10 @@
 } %}
 
 {% func (p *Error) Body(as *app.State, ps *cutil.PageState) %}
-  {%= Detail(p.Err, as, ps) %}
+  {%= Detail(as, p.Err, ps) %}
 {% endfunc %}
 
-{% func Detail(ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) %}
+{% func Detail(as *app.State, ed *util.ErrorDetail, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%s ed.Message %}</h3>
     <em>Internal Server Error</em>

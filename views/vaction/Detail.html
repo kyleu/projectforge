@@ -6,7 +6,7 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Detail(cfg util.ValueMap, res *action.Result, includeSkipped bool, as *app.State, ps *cutil.PageState) %}
+{% func Detail(as *app.State, cfg util.ValueMap, res *action.Result, includeSkipped bool, ps *cutil.PageState) %}
   {%- code trimmedCfg := cfg.WithoutKeys("hasloaded") -%}
   {%- if len(trimmedCfg) > 0 -%}
   <div class="card">
@@ -66,7 +66,7 @@
     {%= RenderCmdOutput(t, ps) %}
     {%- case *action.AuditResult -%}
     {%= components.PlotAssets() %}
-    {%= RenderAudit(res.Project.Key, t, as, ps) %}
+    {%= RenderAudit(as, res.Project.Key, t, ps) %}
     {%- default -%}
     {%= components.JSON(res.Data) %}
     {%- endswitch -%}
@@ -89,7 +89,7 @@
         {%- code diffs := mr.DiffsFiltered(includeSkipped) -%}
         {%- if len(diffs) > 0 -%}
         <div class="overflow">
-        {%= renderDiffs(res.Project.Key, res.Action, diffs, cfg, as, ps) %}
+        {%= renderDiffs(as, res.Project.Key, res.Action, diffs, cfg, ps) %}
         </div>
         {%- endif -%}
       </div>

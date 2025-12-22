@@ -17,7 +17,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	controller.Act(searchKey, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := r.URL.Query().Get("q")
 		params := &search.Params{Q: q, PS: ps.Params}
-		results, errs := search.Search(ps.Context, params, as, ps)
+		results, errs := search.Search(ps.Context, as, params, ps)
 		ps.SetTitleAndData("Search Results", results)
 		if q != "" {
 			ps.Title = fmt.Sprintf("[%s] %s", q, ps.Title)

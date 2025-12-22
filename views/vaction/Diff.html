@@ -10,7 +10,7 @@
   "projectforge.dev/projectforge/views/components/view"
 ) %}
 
-{% func renderDiffs(prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+{% func renderDiffs(as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) %}{% stripspace %}
     <h4 class="mt">Diffs</h4>
     {%- switch act.Key -%}
     {%- case "audit" -%}
@@ -84,7 +84,7 @@
                 {%- endswitch -%}
               {%- endswitch -%}
             </td>
-            <td>{%= renderPatch(d.Patch, as, ps) %}</td>
+            <td>{%= renderPatch(as, d.Patch, ps) %}</td>
           </tr>
         {%- endfor -%}
         </tbody>
@@ -92,7 +92,7 @@
     </div>
 {% endstripspace %}{% endfunc %}
 
-{% func renderPatch(patch string, as *app.State, ps *cutil.PageState) %}{% stripspace %}
+{% func renderPatch(as *app.State, patch string, ps *cutil.PageState) %}{% stripspace %}
   {% code lines := util.StringSplitLines(patch) %}
   <pre>
     {% for _, line := range lines %}

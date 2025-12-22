@@ -31,13 +31,13 @@ func New(act string, client string, server string, user string, md util.ValueMap
 func Random() *Audit {
 	return &Audit{
 		ID:        util.UUID(),
-		App:       util.RandomString(12),
-		Act:       util.RandomString(12),
-		Client:    util.RandomString(12),
-		Server:    util.RandomString(12),
-		User:      util.RandomString(12),
+		App:       util.RandomID(),
+		Act:       util.RandomID(),
+		Client:    util.RandomID(),
+		Server:    util.RandomID(),
+		User:      util.RandomID(),
 		Metadata:  util.RandomValueMap(4),
-		Message:   util.RandomString(12),
+		Message:   util.RandomID(),
 		Started:   util.TimeCurrent(),
 		Completed: util.TimeCurrent(),
 	}

@@ -40,7 +40,7 @@ func (s *Service) Save(t *Theme, originalKey string, logger util.Logger) error {
 		return errors.New("can't overwrite default theme")
 	}
 	if t.Key == "" || t.Key == KeyNew {
-		t.Key = util.RandomString(12)
+		t.Key = util.RandomID()
 	}
 	if originalKey != t.Key {
 		err := s.Remove(originalKey, logger)

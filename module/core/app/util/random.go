@@ -14,6 +14,10 @@ import (
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 
+func RandomID() string {
+	return RandomString(16)
+}
+
 func RandomString(length int) string {
 	b := make([]byte, length)
 	lo.ForEach(b, func(_ byte, i int) {
@@ -113,7 +117,7 @@ func RandomElement[T any](slice []T) T {
 
 func RandomDiffs(size int) Diffs {
 	return lo.Times(size, func(_ int) *Diff {
-		return &Diff{Path: RandomString(8), Old: RandomString(12), New: RandomString(12)}
+		return &Diff{Path: RandomString(8), Old: RandomID(), New: RandomID()}
 	})
 }
 

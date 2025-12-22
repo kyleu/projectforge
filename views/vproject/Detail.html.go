@@ -93,7 +93,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-settings" class="label">Settings</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:38
-	StreamDetailSettings(qw422016, prj, as, ps)
+	StreamDetailSettings(qw422016, as, prj, ps)
 //line views/vproject/Detail.html:38
 	qw422016.N().S(`</div>
 
@@ -105,7 +105,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-metadata" class="label">Metadata</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:43
-		StreamDetailMetadata(qw422016, prj.Info, as, ps)
+		StreamDetailMetadata(qw422016, as, prj.Info, ps)
 //line views/vproject/Detail.html:43
 		qw422016.N().S(`</div>
 `)
@@ -121,7 +121,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-modulearg-export" class="label">Export</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:49
-		StreamDetailExport(qw422016, prj.Key, p.Project.ExportArgs, as, ps)
+		StreamDetailExport(qw422016, as, prj.Key, p.Project.ExportArgs, ps)
 //line views/vproject/Detail.html:49
 		qw422016.N().S(`</div>
 `)
@@ -142,7 +142,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vproject/Detail.html:55
 		qw422016.N().S(`    <div class="panel">`)
 //line views/vproject/Detail.html:56
-		StreamDetailMigrations(qw422016, prj.Key, migs, as, ps)
+		StreamDetailMigrations(qw422016, as, prj.Key, migs, ps)
 //line views/vproject/Detail.html:56
 		qw422016.N().S(`</div>
 `)
@@ -154,7 +154,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-theme" class="label">Theme</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:61
-	StreamDetailTheme(qw422016, prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), as, ps)
+	StreamDetailTheme(qw422016, as, prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), ps)
 //line views/vproject/Detail.html:61
 	qw422016.N().S(`</div>
 
@@ -162,7 +162,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-modules" class="label">Modules</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:65
-	StreamDetailModules(qw422016, prj.Modules, p.Modules, as, ps)
+	StreamDetailModules(qw422016, as, prj.Modules, p.Modules, ps)
 //line views/vproject/Detail.html:65
 	qw422016.N().S(`</div>
 
@@ -174,7 +174,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-execs" class="label">Processes</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:70
-		vexec.StreamTable(qw422016, p.Execs, as, ps)
+		vexec.StreamTable(qw422016, as, p.Execs, ps)
 //line views/vproject/Detail.html:70
 		qw422016.N().S(`</div>
 `)
@@ -190,7 +190,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <label for="tab-builds" class="label">Builds</label>
     <div class="panel">`)
 //line views/vproject/Detail.html:76
-		StreamDetailBuild(qw422016, prj.Build, as, ps)
+		StreamDetailBuild(qw422016, as, prj.Build, ps)
 //line views/vproject/Detail.html:76
 		qw422016.N().S(`</div>
 `)

@@ -10,7 +10,7 @@
   "{{{ .Package }}}/views/layout"
 ) %}
 
-{% func Render(page layout.Page, as *app.State, ps *cutil.PageState) %}{% code
+{% func Render(as *app.State, page layout.Page, ps *cutil.PageState) %}{% code
   ctx, span, _ := telemetry.StartSpan(ps.Context, "html:" + strings.TrimPrefix(fmt.Sprintf("%T", page), "*"), ps.Logger)
   ps.Context = ctx
 	defer func() {

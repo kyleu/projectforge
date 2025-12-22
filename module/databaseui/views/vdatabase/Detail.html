@@ -45,15 +45,15 @@
   </div>
   {%- switch p.Mode -%}
   {%- case "recent" -%}
-  {%= recentStatements(p.Recent, p.Svc, as, ps) %}
+  {%= recentStatements(as, p.Recent, p.Svc, ps) %}
   {%- case "tables" -%}
-  {%= tableSizes(p.Svc.Key, p.Sizes, as, ps) %}
+  {%= tableSizes(as, p.Svc.Key, p.Sizes, ps) %}
   {%- case "sql" -%}
-  {%= sqlEditor(p.SQL, p.Svc, p.Commit, p.Columns, p.Results, p.Timing, as, ps) %}
+  {%= sqlEditor(as, p.SQL, p.Svc, p.Commit, p.Columns, p.Results, p.Timing, ps) %}
   {%- endswitch -%}
 {% endfunc %}
 
-{% func recentStatements(recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) %}
+{% func recentStatements(as *app.State, recent database.DebugStatements, svc *database.Service, ps *cutil.PageState) %}
   <div class="card">
     <h3>Recent Activity</h3>
     {%- if len(recent) == 0 -%}
@@ -101,7 +101,7 @@
   </div>
 {% endfunc %}
 
-{% func tableSizes(key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) %}
+{% func tableSizes(as *app.State, key string, sizes database.TableSizes, ps *cutil.PageState) %}
   <div class="card">
     <h3>Table Sizes</h3>
     <div class="overflow full-width">
@@ -130,7 +130,7 @@
   </div>
 {% endfunc %}
 
-{% func sqlEditor(sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) %}
+{% func sqlEditor(as *app.State, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, ps *cutil.PageState) %}
   <div class="card">
     <h3>SQL Editor</h3>
     <form method="post" action="/admin/database/{%s svc.Key %}/sql">

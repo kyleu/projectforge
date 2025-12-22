@@ -8,7 +8,7 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Result(res *result.Result, params *search.Params, as *app.State, ps *cutil.PageState) %}
+{% func Result(as *app.State, res *result.Result, params *search.Params, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       {%- if res.Data == nil -%}

@@ -35,45 +35,45 @@
   <div class="tabs padded">
     <input name="type" type="radio" id="tab-settings" class="input" checked="checked" />
     <label for="tab-settings" class="label">Settings</label>
-    <div class="panel">{%= DetailSettings(prj, as, ps) %}</div>
+    <div class="panel">{%= DetailSettings(as, prj, ps) %}</div>
 
     {%- if prj.Info != nil -%}
     <input name="type" type="radio" id="tab-metadata" class="input"/>
     <label for="tab-metadata" class="label">Metadata</label>
-    <div class="panel">{%= DetailMetadata(prj.Info, as, ps) %}</div>
+    <div class="panel">{%= DetailMetadata(as, prj.Info, ps) %}</div>
     {%- endif -%}
 
     {%- if p.Project.ExportArgs != nil -%}
     <input name="type" type="radio" id="tab-modulearg-export" class="input"/>
     <label for="tab-modulearg-export" class="label">Export</label>
-    <div class="panel">{%= DetailExport(prj.Key, p.Project.ExportArgs, as, ps) %}</div>
+    <div class="panel">{%= DetailExport(as, prj.Key, p.Project.ExportArgs, ps) %}</div>
     {%- endif -%}
 
     {%- if p.Project.HasModule("migration") -%}
     <input name="type" type="radio" id="tab-migration" class="input"/>
     <label for="tab-migration" class="label">Migrations</label>
     {%- code migs, _ := as.Services.Projects.MigrationList(ps.Context, prj, ps.Logger) -%}
-    <div class="panel">{%= DetailMigrations(prj.Key, migs, as, ps) %}</div>
+    <div class="panel">{%= DetailMigrations(as, prj.Key, migs, ps) %}</div>
     {%- endif -%}
 
     <input name="type" type="radio" id="tab-theme" class="input"/>
     <label for="tab-theme" class="label">Theme</label>
-    <div class="panel">{%= DetailTheme(prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), as, ps) %}</div>
+    <div class="panel">{%= DetailTheme(as, prj.Key, prj.Theme, prj.Title(), prj.IconSafe(), ps) %}</div>
 
     <input name="type" type="radio" id="tab-modules" class="input"/>
     <label for="tab-modules" class="label">Modules</label>
-    <div class="panel">{%= DetailModules(prj.Modules, p.Modules, as, ps) %}</div>
+    <div class="panel">{%= DetailModules(as, prj.Modules, p.Modules, ps) %}</div>
 
     {%- if len(p.Execs) > 0 -%}
     <input name="type" type="radio" id="tab-execs" class="input"/>
     <label for="tab-execs" class="label">Processes</label>
-    <div class="panel">{%= vexec.Table(p.Execs, as, ps) %}</div>
+    <div class="panel">{%= vexec.Table(as, p.Execs, ps) %}</div>
     {%- endif -%}
 
     {%- if prj.Build != nil && !prj.Build.Empty() -%}
     <input name="type" type="radio" id="tab-builds" class="input"/>
     <label for="tab-builds" class="label">Builds</label>
-    <div class="panel">{%= DetailBuild(prj.Build, as, ps) %}</div>
+    <div class="panel">{%= DetailBuild(as, prj.Build, ps) %}</div>
     {%- endif -%}
   </div>
 {% endfunc %}

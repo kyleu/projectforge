@@ -74,7 +74,7 @@
   {%- if len(p.Records) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} Audit Records</h3>
-    {%= RecordTable(p.Records, p.Params, as, ps) %}
+    {%= RecordTable(as, p.Records, p.Params, ps) %}
   </div>
   {%- endif -%}
   {%= components.JSONModal("audit", "Audit JSON", p.Model, 1) %}
