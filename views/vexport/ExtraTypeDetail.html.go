@@ -55,7 +55,7 @@ func (p *ExtraTypeDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
     <em>export model</em>
     `)
 //line views/vexport/ExtraTypeDetail.html:20
-	streammodelSummary(qw422016, p.BaseURL, m, as, ps)
+	streammodelSummary(qw422016, as, p.BaseURL, m, ps)
 //line views/vexport/ExtraTypeDetail.html:20
 	qw422016.N().S(`
   </div>
@@ -67,7 +67,7 @@ func (p *ExtraTypeDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
 	qw422016.N().S(` Columns</h3>
     `)
 //line views/vexport/ExtraTypeDetail.html:24
-	streammodelColumns(qw422016, m, as, ps)
+	streammodelColumns(qw422016, as, m, ps)
 //line views/vexport/ExtraTypeDetail.html:24
 	qw422016.N().S(`
   </div>

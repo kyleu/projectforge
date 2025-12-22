@@ -1,0 +1,28 @@
+{% import (
+  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func GroupList(groups model.Groups, indent int) %}{% stripspace %}
+  {%= components.Indent(true, indent) %}
+  <ul>
+    {%- for _, g := range groups -%}
+    {%= components.Indent(true, indent+1) %}
+    <li>
+      {%= components.Indent(true, indent+2) %}
+      {%s g.String() %}
+      {% if g.Description != "" %}
+      :{% space %}{%s g.Description %}
+      {% endif %}
+      {% if g.Route != "" %}
+      :{% space %}<em><code>{%s g.Route %}</code></em>
+      {% endif %}
+      {% if len(g.Children) > 0 %}
+        {%= GroupList(g.Children, indent + 3) %}
+      {% endif %}
+    {%= components.Indent(true, indent+1) %}
+    </li>
+    {%- endfor -%}
+  {%= components.Indent(true, indent) %}
+  </ul>
+{% endstripspace %}{% endfunc %}

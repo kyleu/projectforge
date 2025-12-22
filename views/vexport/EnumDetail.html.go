@@ -86,7 +86,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     <em>export enum</em>
     `)
 //line views/vexport/EnumDetail.html:27
-	streamenumSummary(qw422016, e, as, ps)
+	streamenumSummary(qw422016, as, e, ps)
 //line views/vexport/EnumDetail.html:27
 	qw422016.N().S(`
   </div>
@@ -98,7 +98,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	qw422016.N().S(` Values</h3>
     `)
 //line views/vexport/EnumDetail.html:31
-	streamenumValues(qw422016, e, as, ps)
+	streamenumValues(qw422016, as, e, ps)
 //line views/vexport/EnumDetail.html:31
 	qw422016.N().S(`
   </div>`)
@@ -113,7 +113,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 		qw422016.N().S(` Exported Files</h3>
     `)
 //line views/vexport/EnumDetail.html:35
-		streamenumFiles(qw422016, e, p.File, as, ps)
+		streamenumFiles(qw422016, as, e, p.File, ps)
 //line views/vexport/EnumDetail.html:35
 		qw422016.N().S(`
   </div>`)
@@ -149,7 +149,7 @@ func (p *EnumDetail) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/EnumDetail.html:39
-func streamenumSummary(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State, ps *cutil.PageState) {
+func streamenumSummary(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:39
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -242,22 +242,22 @@ func streamenumSummary(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State
 }
 
 //line views/vexport/EnumDetail.html:65
-func writeenumSummary(qq422016 qtio422016.Writer, enum *enum.Enum, as *app.State, ps *cutil.PageState) {
+func writeenumSummary(qq422016 qtio422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:65
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/EnumDetail.html:65
-	streamenumSummary(qw422016, enum, as, ps)
+	streamenumSummary(qw422016, as, enum, ps)
 //line views/vexport/EnumDetail.html:65
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/EnumDetail.html:65
 }
 
 //line views/vexport/EnumDetail.html:65
-func enumSummary(enum *enum.Enum, as *app.State, ps *cutil.PageState) string {
+func enumSummary(as *app.State, enum *enum.Enum, ps *cutil.PageState) string {
 //line views/vexport/EnumDetail.html:65
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/EnumDetail.html:65
-	writeenumSummary(qb422016, enum, as, ps)
+	writeenumSummary(qb422016, as, enum, ps)
 //line views/vexport/EnumDetail.html:65
 	qs422016 := string(qb422016.B)
 //line views/vexport/EnumDetail.html:65
@@ -268,7 +268,7 @@ func enumSummary(enum *enum.Enum, as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/EnumDetail.html:67
-func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State, ps *cutil.PageState) {
+func streamenumValues(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:67
 	qw422016.N().S(`
 `)
@@ -369,22 +369,22 @@ func streamenumValues(qw422016 *qt422016.Writer, enum *enum.Enum, as *app.State,
 }
 
 //line views/vexport/EnumDetail.html:105
-func writeenumValues(qq422016 qtio422016.Writer, enum *enum.Enum, as *app.State, ps *cutil.PageState) {
+func writeenumValues(qq422016 qtio422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:105
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/EnumDetail.html:105
-	streamenumValues(qw422016, enum, as, ps)
+	streamenumValues(qw422016, as, enum, ps)
 //line views/vexport/EnumDetail.html:105
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/EnumDetail.html:105
 }
 
 //line views/vexport/EnumDetail.html:105
-func enumValues(enum *enum.Enum, as *app.State, ps *cutil.PageState) string {
+func enumValues(as *app.State, enum *enum.Enum, ps *cutil.PageState) string {
 //line views/vexport/EnumDetail.html:105
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/EnumDetail.html:105
-	writeenumValues(qb422016, enum, as, ps)
+	writeenumValues(qb422016, as, enum, ps)
 //line views/vexport/EnumDetail.html:105
 	qs422016 := string(qb422016.B)
 //line views/vexport/EnumDetail.html:105
@@ -395,7 +395,7 @@ func enumValues(enum *enum.Enum, as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/EnumDetail.html:107
-func streamenumFiles(qw422016 *qt422016.Writer, enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) {
+func streamenumFiles(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:107
 	qw422016.N().S(`
   <div class="mt">
@@ -447,22 +447,22 @@ func streamenumFiles(qw422016 *qt422016.Writer, enum *enum.Enum, f *file.File, a
 }
 
 //line views/vexport/EnumDetail.html:120
-func writeenumFiles(qq422016 qtio422016.Writer, enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) {
+func writeenumFiles(qq422016 qtio422016.Writer, as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:120
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/EnumDetail.html:120
-	streamenumFiles(qw422016, enum, f, as, ps)
+	streamenumFiles(qw422016, as, enum, f, ps)
 //line views/vexport/EnumDetail.html:120
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/EnumDetail.html:120
 }
 
 //line views/vexport/EnumDetail.html:120
-func enumFiles(enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) string {
+func enumFiles(as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) string {
 //line views/vexport/EnumDetail.html:120
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/EnumDetail.html:120
-	writeenumFiles(qb422016, enum, f, as, ps)
+	writeenumFiles(qb422016, as, enum, f, ps)
 //line views/vexport/EnumDetail.html:120
 	qs422016 := string(qb422016.B)
 //line views/vexport/EnumDetail.html:120

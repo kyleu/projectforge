@@ -36,11 +36,11 @@
     </form>
   </div>
   {%- if p.Result != nil -%}
-  {%= DeriveResult(p.Result, as, ps) %}
+  {%= DeriveResult(as, p.Result, ps) %}
   {%- endif -%}
 {% endfunc %}
 
-{% func DeriveResult(r derive.Result, as *app.State, ps *cutil.PageState) %}
+{% func DeriveResult(as *app.State, r derive.Result, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`play`, ps) %} Results</h3>
     {%= components.JSON(r) %}

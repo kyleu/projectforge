@@ -25,19 +25,19 @@
     </div>
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
     <em>export event</em>
-    {%= eventSummary(p.BaseURL, m, as, ps) %}
+    {%= eventSummary(as, p.BaseURL, m, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
-    {%= eventColumns(m, as, ps) %}
+    {%= eventColumns(as, m, ps) %}
   </div>{%- if len(p.Files) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
-    {%= eventFiles(m, p.Files, as, ps) %}
+    {%= eventFiles(as, m, p.Files, ps) %}
   </div>{%- endif -%}
 {% endfunc %}
 
-{% func eventSummary(baseURL string, evt *model.Event, as *app.State, ps *cutil.PageState) %}
+{% func eventSummary(as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <tbody>
@@ -73,7 +73,7 @@
   </div>
 {% endfunc %}
 
-{% func eventColumns(evt *model.Event, as *app.State, ps *cutil.PageState) %}
+{% func eventColumns(as *app.State, evt *model.Event, ps *cutil.PageState) %}
   {%- if len(evt.Columns) == 0 -%}
   <p><em>no columns</em></p>
   {%- else -%}
@@ -112,7 +112,7 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func eventFiles(evt *model.Event, fls file.Files, as *app.State, ps *cutil.PageState) %}
+{% func eventFiles(as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) %}
   <div class="mt">
     <ul class="accordion">
       {%- for _, f := range fls -%}

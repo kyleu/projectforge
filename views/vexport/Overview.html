@@ -4,8 +4,6 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/metamodel"
-  "projectforge.dev/projectforge/app/lib/metamodel/enum"
-  "projectforge.dev/projectforge/app/lib/metamodel/model"
   "projectforge.dev/projectforge/app/project"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
@@ -48,7 +46,7 @@
       {%- if len(p.Args.Enums) == 0 -%}
       <em>no enums defined</em>
       {%- else -%}
-      {%= EnumList(p.Args.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), as, ps) %}
+      {%= EnumList(as, p.Args.Enums, fmt.Sprintf("/p/%s/export/enums", p.Project.Key), ps) %}
       {%- endif -%}
     </div>
   </div>
@@ -61,7 +59,7 @@
       {%- if len(p.Args.Events) == 0 -%}
       <em>no events defined</em>
       {%- else -%}
-      {%= EventList(p.Args.Events, fmt.Sprintf("/p/%s/export/events", p.Project.Key), as, ps) %}
+      {%= EventList(as, p.Args.Events, fmt.Sprintf("/p/%s/export/events", p.Project.Key), ps) %}
       {%- endif -%}
     </div>
   </div>
@@ -75,7 +73,7 @@
       {%- if len(p.Args.Models) == 0 -%}
       <em>no models defined</em>
       {%- else -%}
-      {%= ModelList(p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), as, ps) %}
+      {%= ModelList(as, p.Args.Models, fmt.Sprintf("/p/%s/export/models", p.Project.Key), ps) %}
       {%- endif -%}
     </div>
   </div>
@@ -83,101 +81,8 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} {%s util.StringPlural(len(p.Args.ExtraTypes), "Extra Types") %}</h3>
     <div class="mt">
-      {%= ModelList(p.Args.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", p.Project.Key), as, ps) %}
+      {%= ModelList(as, p.Args.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", p.Project.Key), ps) %}
     </div>
   </div>
   {%- endif -%}
-{% endfunc %}
-
-{% func GroupList(groups model.Groups, indent int) %}{% stripspace %}
-  {%= components.Indent(true, indent) %}
-  <ul>
-    {%- for _, g := range groups -%}
-    {%= components.Indent(true, indent+1) %}
-    <li>
-      {%= components.Indent(true, indent+2) %}
-      {%s g.String() %}
-      {% if g.Description != "" %}
-      :{% space %}{%s g.Description %}
-      {% endif %}
-      {% if g.Route != "" %}
-      :{% space %}<em><code>{%s g.Route %}</code></em>
-      {% endif %}
-      {% if len(g.Children) > 0 %}
-        {%= GroupList(g.Children, indent + 3) %}
-      {% endif %}
-    {%= components.Indent(true, indent+1) %}
-    </li>
-    {%- endfor -%}
-  {%= components.Indent(true, indent) %}
-  </ul>
-{% endstripspace %}{% endfunc %}
-
-{% func EnumList(enums enum.Enums, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <div class="overflow full-width">
-    <table class="min-200 expanded">
-      <tbody>
-        {%- for _, e := range enums -%}
-        {%- code
-          u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
-          var prefix string
-          if len(e.Group) > 0 {
-            prefix += util.StringJoin(e.Group, "/")+", "
-          }
-        -%}
-        <tr>
-          <td class="shrink"><a href="{%s u %}">{%= components.SVGIcon(e.IconSafe(), ps) %}</a> <a href="{%s u %}">{%s e.Title() %}</a></td>
-          <td>{%s e.Description %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
-{% endfunc %}
-
-{% func EventList(events model.Events, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <div class="overflow full-width">
-    <table class="min-200 expanded">
-      <tbody>
-        {%- for _, e := range events -%}
-        {%- code
-          u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
-          var prefix string
-          if len(e.Group) > 0 {
-            prefix += util.StringJoin(e.Group, "/")+", "
-          }
-        -%}
-        <tr>
-          <td class="shrink"><a href="{%s u %}">{%= components.SVGIcon(e.IconSafe(), ps) %}</a> <a href="{%s u %}">{%s e.Title() %}</a></td>
-          <td>{%s e.Description %}</td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
-{% endfunc %}
-
-{% func ModelList(models model.Models, urlPrefix string, as *app.State, ps *cutil.PageState) %}
-  <div class="overflow full-width">
-    <table class="min-200 expanded">
-      <tbody>
-        {%- for _, m := range models -%}
-        {%- code
-          u := fmt.Sprintf("%s/%s", urlPrefix, m.Name)
-          var prefix string
-          if len(m.Group) > 0 {
-            prefix += util.StringJoin(m.Group, "/")+", "
-          }
-          if len(m.SeedData) > 0 {
-            prefix += fmt.Sprintf("%s of seed data", util.StringPlural(len(m.SeedData), "row"))
-          }
-        -%}
-        <tr>
-          <td class="shrink"><a href="{%s u %}">{%= components.SVGIcon(m.IconSafe(), ps) %}</a> <a href="{%s u %}">{%s m.Title() %}</a></td>
-          <td class="text-align-right"><em>{%s prefix %}{%s util.StringPlural(len(m.Columns), "field") %}</em></td>
-        </tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-  </div>
 {% endfunc %}

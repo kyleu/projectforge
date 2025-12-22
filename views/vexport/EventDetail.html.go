@@ -87,7 +87,7 @@ func (p *EventDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
     <em>export event</em>
     `)
 //line views/vexport/EventDetail.html:28
-	streameventSummary(qw422016, p.BaseURL, m, as, ps)
+	streameventSummary(qw422016, as, p.BaseURL, m, ps)
 //line views/vexport/EventDetail.html:28
 	qw422016.N().S(`
   </div>
@@ -99,7 +99,7 @@ func (p *EventDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 	qw422016.N().S(` Columns</h3>
     `)
 //line views/vexport/EventDetail.html:32
-	streameventColumns(qw422016, m, as, ps)
+	streameventColumns(qw422016, as, m, ps)
 //line views/vexport/EventDetail.html:32
 	qw422016.N().S(`
   </div>`)
@@ -114,7 +114,7 @@ func (p *EventDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(` Exported Files</h3>
     `)
 //line views/vexport/EventDetail.html:36
-		streameventFiles(qw422016, m, p.Files, as, ps)
+		streameventFiles(qw422016, as, m, p.Files, ps)
 //line views/vexport/EventDetail.html:36
 		qw422016.N().S(`
   </div>`)
@@ -150,7 +150,7 @@ func (p *EventDetail) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/EventDetail.html:40
-func streameventSummary(qw422016 *qt422016.Writer, baseURL string, evt *model.Event, as *app.State, ps *cutil.PageState) {
+func streameventSummary(qw422016 *qt422016.Writer, as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:40
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -271,22 +271,22 @@ func streameventSummary(qw422016 *qt422016.Writer, baseURL string, evt *model.Ev
 }
 
 //line views/vexport/EventDetail.html:74
-func writeeventSummary(qq422016 qtio422016.Writer, baseURL string, evt *model.Event, as *app.State, ps *cutil.PageState) {
+func writeeventSummary(qq422016 qtio422016.Writer, as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:74
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/EventDetail.html:74
-	streameventSummary(qw422016, baseURL, evt, as, ps)
+	streameventSummary(qw422016, as, baseURL, evt, ps)
 //line views/vexport/EventDetail.html:74
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/EventDetail.html:74
 }
 
 //line views/vexport/EventDetail.html:74
-func eventSummary(baseURL string, evt *model.Event, as *app.State, ps *cutil.PageState) string {
+func eventSummary(as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) string {
 //line views/vexport/EventDetail.html:74
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/EventDetail.html:74
-	writeeventSummary(qb422016, baseURL, evt, as, ps)
+	writeeventSummary(qb422016, as, baseURL, evt, ps)
 //line views/vexport/EventDetail.html:74
 	qs422016 := string(qb422016.B)
 //line views/vexport/EventDetail.html:74
@@ -297,7 +297,7 @@ func eventSummary(baseURL string, evt *model.Event, as *app.State, ps *cutil.Pag
 }
 
 //line views/vexport/EventDetail.html:76
-func streameventColumns(qw422016 *qt422016.Writer, evt *model.Event, as *app.State, ps *cutil.PageState) {
+func streameventColumns(qw422016 *qt422016.Writer, as *app.State, evt *model.Event, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:76
 	qw422016.N().S(`
 `)
@@ -390,22 +390,22 @@ func streameventColumns(qw422016 *qt422016.Writer, evt *model.Event, as *app.Sta
 }
 
 //line views/vexport/EventDetail.html:113
-func writeeventColumns(qq422016 qtio422016.Writer, evt *model.Event, as *app.State, ps *cutil.PageState) {
+func writeeventColumns(qq422016 qtio422016.Writer, as *app.State, evt *model.Event, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:113
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/EventDetail.html:113
-	streameventColumns(qw422016, evt, as, ps)
+	streameventColumns(qw422016, as, evt, ps)
 //line views/vexport/EventDetail.html:113
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/EventDetail.html:113
 }
 
 //line views/vexport/EventDetail.html:113
-func eventColumns(evt *model.Event, as *app.State, ps *cutil.PageState) string {
+func eventColumns(as *app.State, evt *model.Event, ps *cutil.PageState) string {
 //line views/vexport/EventDetail.html:113
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/EventDetail.html:113
-	writeeventColumns(qb422016, evt, as, ps)
+	writeeventColumns(qb422016, as, evt, ps)
 //line views/vexport/EventDetail.html:113
 	qs422016 := string(qb422016.B)
 //line views/vexport/EventDetail.html:113
@@ -416,7 +416,7 @@ func eventColumns(evt *model.Event, as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/EventDetail.html:115
-func streameventFiles(qw422016 *qt422016.Writer, evt *model.Event, fls file.Files, as *app.State, ps *cutil.PageState) {
+func streameventFiles(qw422016 *qt422016.Writer, as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:115
 	qw422016.N().S(`
   <div class="mt">
@@ -476,22 +476,22 @@ func streameventFiles(qw422016 *qt422016.Writer, evt *model.Event, fls file.File
 }
 
 //line views/vexport/EventDetail.html:130
-func writeeventFiles(qq422016 qtio422016.Writer, evt *model.Event, fls file.Files, as *app.State, ps *cutil.PageState) {
+func writeeventFiles(qq422016 qtio422016.Writer, as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:130
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/EventDetail.html:130
-	streameventFiles(qw422016, evt, fls, as, ps)
+	streameventFiles(qw422016, as, evt, fls, ps)
 //line views/vexport/EventDetail.html:130
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/EventDetail.html:130
 }
 
 //line views/vexport/EventDetail.html:130
-func eventFiles(evt *model.Event, fls file.Files, as *app.State, ps *cutil.PageState) string {
+func eventFiles(as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) string {
 //line views/vexport/EventDetail.html:130
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/EventDetail.html:130
-	writeeventFiles(qb422016, evt, fls, as, ps)
+	writeeventFiles(qb422016, as, evt, fls, ps)
 //line views/vexport/EventDetail.html:130
 	qs422016 := string(qb422016.B)
 //line views/vexport/EventDetail.html:130

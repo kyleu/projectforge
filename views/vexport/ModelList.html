@@ -1,0 +1,34 @@
+{% import (
+  "fmt"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/metamodel/model"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func ModelList(as *app.State, models model.Models, urlPrefix string, ps *cutil.PageState) %}
+  <div class="overflow full-width">
+    <table class="min-200 expanded">
+      <tbody>
+        {%- for _, m := range models -%}
+        {%- code
+          u := fmt.Sprintf("%s/%s", urlPrefix, m.Name)
+          var prefix string
+          if len(m.Group) > 0 {
+            prefix += util.StringJoin(m.Group, "/")+", "
+          }
+          if len(m.SeedData) > 0 {
+            prefix += fmt.Sprintf("%s of seed data", util.StringPlural(len(m.SeedData), "row"))
+          }
+        -%}
+        <tr>
+          <td class="shrink"><a href="{%s u %}">{%= components.SVGIcon(m.IconSafe(), ps) %}</a> <a href="{%s u %}">{%s m.Title() %}</a></td>
+          <td class="text-align-right"><em>{%s prefix %}{%s util.StringPlural(len(m.Columns), "field") %}</em></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

@@ -87,7 +87,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
     <em>export model</em>
     `)
 //line views/vexport/ModelDetail.html:28
-	streammodelSummary(qw422016, p.BaseURL, m, as, ps)
+	streammodelSummary(qw422016, as, p.BaseURL, m, ps)
 //line views/vexport/ModelDetail.html:28
 	qw422016.N().S(`
   </div>
@@ -99,7 +99,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 	qw422016.N().S(` Columns</h3>
     `)
 //line views/vexport/ModelDetail.html:32
-	streammodelColumns(qw422016, m, as, ps)
+	streammodelColumns(qw422016, as, m, ps)
 //line views/vexport/ModelDetail.html:32
 	qw422016.N().S(`
   </div>
@@ -115,7 +115,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(` Relations</h3>
     `)
 //line views/vexport/ModelDetail.html:37
-		streammodelRelations(qw422016, m, p.BaseURL, as, ps)
+		streammodelRelations(qw422016, as, m, p.BaseURL, ps)
 //line views/vexport/ModelDetail.html:37
 		qw422016.N().S(`
   </div>`)
@@ -132,7 +132,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(` Links</h3>
     `)
 //line views/vexport/ModelDetail.html:41
-		streammodelLinks(qw422016, m, as, ps)
+		streammodelLinks(qw422016, as, m, ps)
 //line views/vexport/ModelDetail.html:41
 		qw422016.N().S(`
   </div>`)
@@ -149,7 +149,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(` Indexes</h3>
     `)
 //line views/vexport/ModelDetail.html:45
-		streammodelIndexes(qw422016, m, as, ps)
+		streammodelIndexes(qw422016, as, m, ps)
 //line views/vexport/ModelDetail.html:45
 		qw422016.N().S(`
   </div>`)
@@ -166,7 +166,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(` Exported Files</h3>
     `)
 //line views/vexport/ModelDetail.html:49
-		streammodelFiles(qw422016, m, p.Files, as, ps)
+		streammodelFiles(qw422016, as, m, p.Files, ps)
 //line views/vexport/ModelDetail.html:49
 		qw422016.N().S(`
   </div>`)
@@ -202,7 +202,7 @@ func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/ModelDetail.html:53
-func streammodelSummary(qw422016 *qt422016.Writer, baseURL string, model *model.Model, as *app.State, ps *cutil.PageState) {
+func streammodelSummary(qw422016 *qt422016.Writer, as *app.State, baseURL string, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:53
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -426,22 +426,22 @@ func streammodelSummary(qw422016 *qt422016.Writer, baseURL string, model *model.
 }
 
 //line views/vexport/ModelDetail.html:116
-func writemodelSummary(qq422016 qtio422016.Writer, baseURL string, model *model.Model, as *app.State, ps *cutil.PageState) {
+func writemodelSummary(qq422016 qtio422016.Writer, as *app.State, baseURL string, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:116
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:116
-	streammodelSummary(qw422016, baseURL, model, as, ps)
+	streammodelSummary(qw422016, as, baseURL, model, ps)
 //line views/vexport/ModelDetail.html:116
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:116
 }
 
 //line views/vexport/ModelDetail.html:116
-func modelSummary(baseURL string, model *model.Model, as *app.State, ps *cutil.PageState) string {
+func modelSummary(as *app.State, baseURL string, model *model.Model, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:116
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:116
-	writemodelSummary(qb422016, baseURL, model, as, ps)
+	writemodelSummary(qb422016, as, baseURL, model, ps)
 //line views/vexport/ModelDetail.html:116
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:116
@@ -452,7 +452,7 @@ func modelSummary(baseURL string, model *model.Model, as *app.State, ps *cutil.P
 }
 
 //line views/vexport/ModelDetail.html:118
-func streammodelColumns(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func streammodelColumns(qw422016 *qt422016.Writer, as *app.State, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:118
 	qw422016.N().S(`
 `)
@@ -551,22 +551,22 @@ func streammodelColumns(qw422016 *qt422016.Writer, model *model.Model, as *app.S
 }
 
 //line views/vexport/ModelDetail.html:157
-func writemodelColumns(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func writemodelColumns(qq422016 qtio422016.Writer, as *app.State, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:157
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:157
-	streammodelColumns(qw422016, model, as, ps)
+	streammodelColumns(qw422016, as, model, ps)
 //line views/vexport/ModelDetail.html:157
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:157
 }
 
 //line views/vexport/ModelDetail.html:157
-func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) string {
+func modelColumns(as *app.State, model *model.Model, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:157
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:157
-	writemodelColumns(qb422016, model, as, ps)
+	writemodelColumns(qb422016, as, model, ps)
 //line views/vexport/ModelDetail.html:157
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:157
@@ -577,7 +577,7 @@ func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) string
 }
 
 //line views/vexport/ModelDetail.html:159
-func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, baseURL string, as *app.State, ps *cutil.PageState) {
+func streammodelRelations(qw422016 *qt422016.Writer, as *app.State, model *model.Model, baseURL string, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:159
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -637,22 +637,22 @@ func streammodelRelations(qw422016 *qt422016.Writer, model *model.Model, baseURL
 }
 
 //line views/vexport/ModelDetail.html:182
-func writemodelRelations(qq422016 qtio422016.Writer, model *model.Model, baseURL string, as *app.State, ps *cutil.PageState) {
+func writemodelRelations(qq422016 qtio422016.Writer, as *app.State, model *model.Model, baseURL string, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:182
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:182
-	streammodelRelations(qw422016, model, baseURL, as, ps)
+	streammodelRelations(qw422016, as, model, baseURL, ps)
 //line views/vexport/ModelDetail.html:182
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:182
 }
 
 //line views/vexport/ModelDetail.html:182
-func modelRelations(model *model.Model, baseURL string, as *app.State, ps *cutil.PageState) string {
+func modelRelations(as *app.State, model *model.Model, baseURL string, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:182
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:182
-	writemodelRelations(qb422016, model, baseURL, as, ps)
+	writemodelRelations(qb422016, as, model, baseURL, ps)
 //line views/vexport/ModelDetail.html:182
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:182
@@ -663,7 +663,7 @@ func modelRelations(model *model.Model, baseURL string, as *app.State, ps *cutil
 }
 
 //line views/vexport/ModelDetail.html:184
-func streammodelIndexes(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func streammodelIndexes(qw422016 *qt422016.Writer, as *app.State, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:184
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -703,22 +703,22 @@ func streammodelIndexes(qw422016 *qt422016.Writer, model *model.Model, as *app.S
 }
 
 //line views/vexport/ModelDetail.html:203
-func writemodelIndexes(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func writemodelIndexes(qq422016 qtio422016.Writer, as *app.State, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:203
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:203
-	streammodelIndexes(qw422016, model, as, ps)
+	streammodelIndexes(qw422016, as, model, ps)
 //line views/vexport/ModelDetail.html:203
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:203
 }
 
 //line views/vexport/ModelDetail.html:203
-func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) string {
+func modelIndexes(as *app.State, model *model.Model, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:203
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:203
-	writemodelIndexes(qb422016, model, as, ps)
+	writemodelIndexes(qb422016, as, model, ps)
 //line views/vexport/ModelDetail.html:203
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:203
@@ -729,7 +729,7 @@ func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) string
 }
 
 //line views/vexport/ModelDetail.html:205
-func streammodelLinks(qw422016 *qt422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func streammodelLinks(qw422016 *qt422016.Writer, as *app.State, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:205
 	qw422016.N().S(`
   <div class="overflow full-width">
@@ -781,22 +781,22 @@ func streammodelLinks(qw422016 *qt422016.Writer, model *model.Model, as *app.Sta
 }
 
 //line views/vexport/ModelDetail.html:228
-func writemodelLinks(qq422016 qtio422016.Writer, model *model.Model, as *app.State, ps *cutil.PageState) {
+func writemodelLinks(qq422016 qtio422016.Writer, as *app.State, model *model.Model, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:228
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:228
-	streammodelLinks(qw422016, model, as, ps)
+	streammodelLinks(qw422016, as, model, ps)
 //line views/vexport/ModelDetail.html:228
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:228
 }
 
 //line views/vexport/ModelDetail.html:228
-func modelLinks(model *model.Model, as *app.State, ps *cutil.PageState) string {
+func modelLinks(as *app.State, model *model.Model, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:228
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:228
-	writemodelLinks(qb422016, model, as, ps)
+	writemodelLinks(qb422016, as, model, ps)
 //line views/vexport/ModelDetail.html:228
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:228
@@ -807,7 +807,7 @@ func modelLinks(model *model.Model, as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/ModelDetail.html:230
-func streammodelFiles(qw422016 *qt422016.Writer, model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) {
+func streammodelFiles(qw422016 *qt422016.Writer, as *app.State, model *model.Model, fls file.Files, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:230
 	qw422016.N().S(`
   <div class="mt">
@@ -867,22 +867,22 @@ func streammodelFiles(qw422016 *qt422016.Writer, model *model.Model, fls file.Fi
 }
 
 //line views/vexport/ModelDetail.html:245
-func writemodelFiles(qq422016 qtio422016.Writer, model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) {
+func writemodelFiles(qq422016 qtio422016.Writer, as *app.State, model *model.Model, fls file.Files, ps *cutil.PageState) {
 //line views/vexport/ModelDetail.html:245
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ModelDetail.html:245
-	streammodelFiles(qw422016, model, fls, as, ps)
+	streammodelFiles(qw422016, as, model, fls, ps)
 //line views/vexport/ModelDetail.html:245
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ModelDetail.html:245
 }
 
 //line views/vexport/ModelDetail.html:245
-func modelFiles(model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) string {
+func modelFiles(as *app.State, model *model.Model, fls file.Files, ps *cutil.PageState) string {
 //line views/vexport/ModelDetail.html:245
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ModelDetail.html:245
-	writemodelFiles(qb422016, model, fls, as, ps)
+	writemodelFiles(qb422016, as, model, fls, ps)
 //line views/vexport/ModelDetail.html:245
 	qs422016 := string(qb422016.B)
 //line views/vexport/ModelDetail.html:245

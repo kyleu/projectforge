@@ -1,0 +1,31 @@
+{% import (
+  "fmt"
+
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/lib/metamodel/enum"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+) %}
+
+{% func EnumList(as *app.State, enums enum.Enums, urlPrefix string, ps *cutil.PageState) %}
+  <div class="overflow full-width">
+    <table class="min-200 expanded">
+      <tbody>
+        {%- for _, e := range enums -%}
+        {%- code
+          u := fmt.Sprintf("%s/%s", urlPrefix, e.Name)
+          var prefix string
+          if len(e.Group) > 0 {
+            prefix += util.StringJoin(e.Group, "/")+", "
+          }
+        -%}
+        <tr>
+          <td class="shrink"><a href="{%s u %}">{%= components.SVGIcon(e.IconSafe(), ps) %}</a> <a href="{%s u %}">{%s e.Title() %}</a></td>
+          <td>{%s e.Description %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}

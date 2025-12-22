@@ -24,19 +24,19 @@
     </div>
     <h3>{%= components.SVGIcon(e.IconSafe(), ps) %} {%s e.Name %}</h3>
     <em>export enum</em>
-    {%= enumSummary(e, as, ps) %}
+    {%= enumSummary(as, e, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`star`, ps) %} Values</h3>
-    {%= enumValues(e, as, ps) %}
+    {%= enumValues(as, e, ps) %}
   </div>{%- if p.File != nil -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
-    {%= enumFiles(e, p.File, as, ps) %}
+    {%= enumFiles(as, e, p.File, ps) %}
   </div>{%- endif -%}
 {% endfunc %}
 
-{% func enumSummary(enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
+{% func enumSummary(as *app.State, enum *enum.Enum, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <tbody>
@@ -64,7 +64,7 @@
   </div>
 {% endfunc %}
 
-{% func enumValues(enum *enum.Enum, as *app.State, ps *cutil.PageState) %}
+{% func enumValues(as *app.State, enum *enum.Enum, ps *cutil.PageState) %}
   {%- if len(enum.Values) == 0 -%}
   <p><em>no values</em></p>
   {%- else -%}
@@ -104,7 +104,7 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func enumFiles(enum *enum.Enum, f *file.File, as *app.State, ps *cutil.PageState) %}
+{% func enumFiles(as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) %}
   <div class="mt">
     <ul class="accordion">
       <li>

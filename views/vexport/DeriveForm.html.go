@@ -81,7 +81,7 @@ func (p *DeriveForm) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vexport/DeriveForm.html:38
 		qw422016.N().S(`  `)
 //line views/vexport/DeriveForm.html:39
-		StreamDeriveResult(qw422016, p.Result, as, ps)
+		StreamDeriveResult(qw422016, as, p.Result, ps)
 //line views/vexport/DeriveForm.html:39
 		qw422016.N().S(`
 `)
@@ -117,7 +117,7 @@ func (p *DeriveForm) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vexport/DeriveForm.html:43
-func StreamDeriveResult(qw422016 *qt422016.Writer, r derive.Result, as *app.State, ps *cutil.PageState) {
+func StreamDeriveResult(qw422016 *qt422016.Writer, as *app.State, r derive.Result, ps *cutil.PageState) {
 //line views/vexport/DeriveForm.html:43
 	qw422016.N().S(`
   <div class="card">
@@ -137,22 +137,22 @@ func StreamDeriveResult(qw422016 *qt422016.Writer, r derive.Result, as *app.Stat
 }
 
 //line views/vexport/DeriveForm.html:48
-func WriteDeriveResult(qq422016 qtio422016.Writer, r derive.Result, as *app.State, ps *cutil.PageState) {
+func WriteDeriveResult(qq422016 qtio422016.Writer, as *app.State, r derive.Result, ps *cutil.PageState) {
 //line views/vexport/DeriveForm.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/DeriveForm.html:48
-	StreamDeriveResult(qw422016, r, as, ps)
+	StreamDeriveResult(qw422016, as, r, ps)
 //line views/vexport/DeriveForm.html:48
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/DeriveForm.html:48
 }
 
 //line views/vexport/DeriveForm.html:48
-func DeriveResult(r derive.Result, as *app.State, ps *cutil.PageState) string {
+func DeriveResult(as *app.State, r derive.Result, ps *cutil.PageState) string {
 //line views/vexport/DeriveForm.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/DeriveForm.html:48
-	WriteDeriveResult(qb422016, r, as, ps)
+	WriteDeriveResult(qb422016, as, r, ps)
 //line views/vexport/DeriveForm.html:48
 	qs422016 := string(qb422016.B)
 //line views/vexport/DeriveForm.html:48

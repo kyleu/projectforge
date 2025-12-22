@@ -17,10 +17,10 @@
   <div class="card">
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
     <em>export model</em>
-    {%= modelSummary(p.BaseURL, m, as, ps) %}
+    {%= modelSummary(as, p.BaseURL, m, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
-    {%= modelColumns(m, as, ps) %}
+    {%= modelColumns(as, m, ps) %}
   </div>
 {% endfunc %}

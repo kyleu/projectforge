@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vexport/ArgsDetail.html:12
-func StreamArgsDetail(qw422016 *qt422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
+func StreamArgsDetail(qw422016 *qt422016.Writer, as *app.State, key string, ea *metamodel.Args, full bool, ps *cutil.PageState) {
 //line views/vexport/ArgsDetail.html:12
 	qw422016.N().S(`
   <ul class="accordion">
@@ -146,7 +146,7 @@ func StreamArgsDetail(qw422016 *qt422016.Writer, key string, ea *metamodel.Args,
       <div class="bd"><div><div>
         `)
 //line views/vexport/ArgsDetail.html:49
-		StreamEnumList(qw422016, ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), as, ps)
+		StreamEnumList(qw422016, as, ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), ps)
 //line views/vexport/ArgsDetail.html:49
 		qw422016.N().S(`
       </div></div></div>
@@ -187,7 +187,7 @@ func StreamArgsDetail(qw422016 *qt422016.Writer, key string, ea *metamodel.Args,
       <div class="bd"><div><div>
         `)
 //line views/vexport/ArgsDetail.html:62
-		StreamEventList(qw422016, ea.Events, fmt.Sprintf("/p/%s/export/events", key), as, ps)
+		StreamEventList(qw422016, as, ea.Events, fmt.Sprintf("/p/%s/export/events", key), ps)
 //line views/vexport/ArgsDetail.html:62
 		qw422016.N().S(`
       </div></div></div>
@@ -228,7 +228,7 @@ func StreamArgsDetail(qw422016 *qt422016.Writer, key string, ea *metamodel.Args,
       <div class="bd"><div><div>
         `)
 //line views/vexport/ArgsDetail.html:75
-		StreamModelList(qw422016, ea.Models, fmt.Sprintf("/p/%s/export/models", key), as, ps)
+		StreamModelList(qw422016, as, ea.Models, fmt.Sprintf("/p/%s/export/models", key), ps)
 //line views/vexport/ArgsDetail.html:75
 		qw422016.N().S(`
       </div></div></div>
@@ -269,7 +269,7 @@ func StreamArgsDetail(qw422016 *qt422016.Writer, key string, ea *metamodel.Args,
       <div class="bd"><div><div>
         `)
 //line views/vexport/ArgsDetail.html:88
-		StreamModelList(qw422016, ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), as, ps)
+		StreamModelList(qw422016, as, ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), ps)
 //line views/vexport/ArgsDetail.html:88
 		qw422016.N().S(`
       </div></div></div>
@@ -317,22 +317,22 @@ func StreamArgsDetail(qw422016 *qt422016.Writer, key string, ea *metamodel.Args,
 }
 
 //line views/vexport/ArgsDetail.html:106
-func WriteArgsDetail(qq422016 qtio422016.Writer, key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) {
+func WriteArgsDetail(qq422016 qtio422016.Writer, as *app.State, key string, ea *metamodel.Args, full bool, ps *cutil.PageState) {
 //line views/vexport/ArgsDetail.html:106
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vexport/ArgsDetail.html:106
-	StreamArgsDetail(qw422016, key, ea, as, ps)
+	StreamArgsDetail(qw422016, as, key, ea, full, ps)
 //line views/vexport/ArgsDetail.html:106
 	qt422016.ReleaseWriter(qw422016)
 //line views/vexport/ArgsDetail.html:106
 }
 
 //line views/vexport/ArgsDetail.html:106
-func ArgsDetail(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) string {
+func ArgsDetail(as *app.State, key string, ea *metamodel.Args, full bool, ps *cutil.PageState) string {
 //line views/vexport/ArgsDetail.html:106
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vexport/ArgsDetail.html:106
-	WriteArgsDetail(qb422016, key, ea, as, ps)
+	WriteArgsDetail(qb422016, as, key, ea, full, ps)
 //line views/vexport/ArgsDetail.html:106
 	qs422016 := string(qb422016.B)
 //line views/vexport/ArgsDetail.html:106

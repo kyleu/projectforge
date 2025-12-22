@@ -25,32 +25,32 @@
     </div>
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
     <em>export model</em>
-    {%= modelSummary(p.BaseURL, m, as, ps) %}
+    {%= modelSummary(as, p.BaseURL, m, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
-    {%= modelColumns(m, as, ps) %}
+    {%= modelColumns(as, m, ps) %}
   </div>
   {%- if len(m.Relations) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`social`, ps) %} Relations</h3>
-    {%= modelRelations(m, p.BaseURL, as, ps) %}
+    {%= modelRelations(as, m, p.BaseURL, ps) %}
   </div>{%- endif -%}{%- if len(m.Links) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`link`, ps) %} Links</h3>
-    {%= modelLinks(m, as, ps) %}
+    {%= modelLinks(as, m, ps) %}
   </div>{%- endif -%}{%- if len(m.Indexes) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`star`, ps) %} Indexes</h3>
-    {%= modelIndexes(m, as, ps) %}
+    {%= modelIndexes(as, m, ps) %}
   </div>{%- endif -%}{%- if len(p.Files) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
-    {%= modelFiles(m, p.Files, as, ps) %}
+    {%= modelFiles(as, m, p.Files, ps) %}
   </div>{%- endif -%}
 {% endfunc %}
 
-{% func modelSummary(baseURL string, model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelSummary(as *app.State, baseURL string, model *model.Model, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <tbody>
@@ -115,7 +115,7 @@
   </div>
 {% endfunc %}
 
-{% func modelColumns(model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelColumns(as *app.State, model *model.Model, ps *cutil.PageState) %}
   {%- if len(model.Columns) == 0 -%}
   <p><em>no columns</em></p>
   {%- else -%}
@@ -156,7 +156,7 @@
   {%- endif -%}
 {% endfunc %}
 
-{% func modelRelations(model *model.Model, baseURL string, as *app.State, ps *cutil.PageState) %}
+{% func modelRelations(as *app.State, model *model.Model, baseURL string, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <thead>
@@ -181,7 +181,7 @@
   </div>
 {% endfunc %}
 
-{% func modelIndexes(model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelIndexes(as *app.State, model *model.Model, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <thead>
@@ -202,7 +202,7 @@
   </div>
 {% endfunc %}
 
-{% func modelLinks(model *model.Model, as *app.State, ps *cutil.PageState) %}
+{% func modelLinks(as *app.State, model *model.Model, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <thead>
@@ -227,7 +227,7 @@
   </div>
 {% endfunc %}
 
-{% func modelFiles(model *model.Model, fls file.Files, as *app.State, ps *cutil.PageState) %}
+{% func modelFiles(as *app.State, model *model.Model, fls file.Files, ps *cutil.PageState) %}
   <div class="mt">
     <ul class="accordion">
       {%- for _, f := range fls -%}

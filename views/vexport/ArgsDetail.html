@@ -9,7 +9,7 @@
   "projectforge.dev/projectforge/views/components/view"
 ) %}
 
-{% func ArgsDetail(key string, ea *metamodel.Args, as *app.State, ps *cutil.PageState) %}
+{% func ArgsDetail(as *app.State, key string, ea *metamodel.Args, full bool, ps *cutil.PageState) %}
   <ul class="accordion">
     {%- if ea.Config != nil && !ea.Config.Empty() -%}
     <li>
@@ -46,7 +46,7 @@
         {%s util.StringPlural(len(ea.Enums), "Enum") %}
       </label>
       <div class="bd"><div><div>
-        {%= EnumList(ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), as, ps) %}
+        {%= EnumList(as, ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
@@ -59,7 +59,7 @@
         {%s util.StringPlural(len(ea.Events), "Event") %}
       </label>
       <div class="bd"><div><div>
-        {%= EventList(ea.Events, fmt.Sprintf("/p/%s/export/events", key), as, ps) %}
+        {%= EventList(as, ea.Events, fmt.Sprintf("/p/%s/export/events", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
@@ -72,7 +72,7 @@
         {%s util.StringPlural(len(ea.Models), "Model") %}
       </label>
       <div class="bd"><div><div>
-        {%= ModelList(ea.Models, fmt.Sprintf("/p/%s/export/models", key), as, ps) %}
+        {%= ModelList(as, ea.Models, fmt.Sprintf("/p/%s/export/models", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
@@ -85,7 +85,7 @@
         {%s util.StringPlural(len(ea.ExtraTypes), "Extra Type") %}
       </label>
       <div class="bd"><div><div>
-        {%= ModelList(ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), as, ps) %}
+        {%= ModelList(as, ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
