@@ -27,29 +27,6 @@
     </div>
     {%- endif -%}
     <h3>{%= components.SVGIcon(`table`, ps) %} [{%s x.Name %}] JSON Schema</h3>
-    {%= RenderModel(p.BaseURL, x, sch, p.Result, df, ps) %}
-  </div>
-{% endfunc %}
-
-{% func RenderModel(baseURL string, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) %}
-  <div class="flex">
-    <div class="flex-item">
-      <a href="{%s baseURL %}/{%s x.Name %}"><strong>Original</strong></a>
-      <pre class="mt">{%s util.ToJSON(x) %}</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Result</strong>
-      <pre class="mt">{%s util.ToJSON(result) %}</pre>
-    </div>
-  </div>
-  <div class="flex">
-    <div class="flex-item">
-      <strong>Schema</strong>
-      <pre class="mt">{%s util.ToJSON(sch) %}</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Diff</strong>
-      <pre class="mt">{%s util.ToJSON(df) %}</pre>
-    </div>
+    {%= RenderResult(p.BaseURL, x, sch, p.Result, df, nil, nil, ps) %}
   </div>
 {% endfunc %}

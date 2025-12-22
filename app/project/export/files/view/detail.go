@@ -164,7 +164,7 @@ func exportViewDetailBody(m *model.Model, rrs model.Relations, audit bool) (*gol
 		ret.W("  {%%- if len(p.AuditRecords) > 0 -%%}")
 		ret.W("  <div class=\"card\">")
 		ret.WF("    %sAudits%s", helper.TextH3Start, helper.TextH3End)
-		ret.W("    {%%= vaudit.RecordTable(p.AuditRecords, p.Params, as, ps) %%}")
+		ret.W("    {%%= vaudit.RecordTable(as, p.AuditRecords, p.Params, ps) %%}")
 		ret.W("  </div>")
 		ret.W(ind1 + helper.TextEndIfDash)
 	}

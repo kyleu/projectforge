@@ -1,4 +1,6 @@
 {% import (
+  "fmt"
+
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/metamodel"
@@ -7,19 +9,8 @@
   "projectforge.dev/projectforge/views/components/view"
 ) %}
 
-{% func ArgsDetail(as *app.State, key string, ea *metamodel.Args, argsLogs []string, ps *cutil.PageState) %}
+{% func ArgsList(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
   <ul class="accordion">
-    <li>
-      <input id="accordion-{%s key %}-config" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-config">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("file", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(argsLogs), "Logs") %}
-      </label>
-      <div class="bd"><div><div>
-        {%= components.Terminal("argsLogs", argsLogs...) %}
-      </div></div></div>
-    </li>
     {%- if ea.Config != nil && !ea.Config.Empty() -%}
     <li>
       <input id="accordion-{%s key %}-config" type="checkbox" hidden />
@@ -55,19 +46,7 @@
         {%s util.StringPlural(len(ea.Enums), "Enum") %}
       </label>
       <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, enum := range ea.Enums -%}
-        <li>
-          <input id="accordion-{%s key %}-enum-{%s enum.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-enum-{%s enum.Name %}">
-            {%= components.ExpandCollapse(3, ps) %} {%s enum.Name %}
-          </label>
-          <div class="bd"><div><div>
-            {%= enumDetail(as, "", enum, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
+        {%= EnumList(as, ea.Enums, fmt.Sprintf("/p/%s/export/enums", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
@@ -80,17 +59,7 @@
         {%s util.StringPlural(len(ea.Events), "Event") %}
       </label>
       <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, event := range ea.Events -%}
-        <li>
-          <input id="accordion-{%s key %}-event-{%s event.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-event-{%s event.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s event.Name %}</label>
-          <div class="bd"><div><div>
-            {%= eventDetail(as, "", event, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
+        {%= EventList(as, ea.Events, fmt.Sprintf("/p/%s/export/events", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
@@ -103,17 +72,7 @@
         {%s util.StringPlural(len(ea.Models), "Model") %}
       </label>
       <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, model := range ea.Models -%}
-        <li>
-          <input id="accordion-{%s key %}-model-{%s model.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-model-{%s model.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s model.Name %}</label>
-          <div class="bd"><div><div>
-            {%= modelDetail(as, "", model, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
+        {%= ModelList(as, ea.Models, fmt.Sprintf("/p/%s/export/models", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
@@ -126,34 +85,10 @@
         {%s util.StringPlural(len(ea.ExtraTypes), "Extra Type") %}
       </label>
       <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, extra := range ea.ExtraTypes -%}
-        <li>
-          <input id="accordion-{%s key %}-extra-{%s extra.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-extra-{%s extra.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s extra.Name %}</label>
-          <div class="bd"><div><div>
-            {%= modelDetail(as, "", extra, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
+        {%= ModelList(as, ea.ExtraTypes, fmt.Sprintf("/p/%s/export/extra", key), ps) %}
       </div></div></div>
     </li>
     {%- endif -%}
     {%- if ea.Empty() -%}{%= emptyArgs(key, ps) %}{%- endif -%}
   </ul>
-{%- endfunc -%}
-
-{% func emptyArgs(key string, ps *cutil.PageState) %}
-  <li>
-    <input id="accordion-{%s key %}-empty" type="checkbox" hidden />
-    <label for="accordion-{%s key %}-empty">
-      {%= components.ExpandCollapse(3, ps) %}
-      {%= components.SVGRef("error", 16, 16, "icon", ps) %}
-      No Exported Data
-    </label>
-    <div class="bd"><div><div>
-      <em>No exportable data found for these arguments</em>
-    </div></div></div>
-  </li>
 {%- endfunc -%}

@@ -2,7 +2,6 @@ package cmodule
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -11,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/doc"
 	"projectforge.dev/projectforge/views/vmodule"
 )
@@ -38,7 +38,8 @@ func ModuleDetail(w http.ResponseWriter, r *http.Request) {
 			if e != nil {
 				return "", "", e
 			}
-			ret = strings.ReplaceAll(ret, `.md"`, `"`)
+
+			ret = util.Str(ret).ReplaceAll(`.md"`, `"`).String()
 			return "", ret, nil
 		})
 		if err != nil {

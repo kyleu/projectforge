@@ -38,11 +38,11 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		cmd := util.RS(frm.GetStringOpt("cmd")).TrimSpace()
+		cmd := util.Str(frm.GetStringOpt("cmd")).TrimSpace()
 		if cmd == "" {
 			return "", errors.New("must provide non-empty [cmd]")
 		}
-		key := util.RS(frm.GetStringOpt("key")).TrimSpace()
+		key := util.Str(frm.GetStringOpt("key")).TrimSpace()
 		if key == "" {
 			key, _ = cmd.Split(' ', true)
 		}

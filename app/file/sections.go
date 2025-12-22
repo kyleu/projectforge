@@ -10,6 +10,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const (
@@ -44,7 +45,7 @@ func Inject(fl *File, content map[string]string) error {
 
 func ReplaceSections(fl *File, tgt filesystem.FileLoader) error {
 	f := fl.FullPath()
-	if strings.Contains(fl.Content, sectionPrefix) && tgt.Exists(f) {
+	if util.Str(fl.Content).Contains(sectionPrefix) && tgt.Exists(f) {
 		tgtBytes, _ := tgt.ReadFile(f)
 		if utf8.Valid(tgtBytes) {
 			newContent, err := copySections(string(tgtBytes), fl.Content)
@@ -134,21 +135,22 @@ func sectionIndexes(s string, prefix string) (sections, error) {
 }
 
 func parseText(ret sections, idx int, text string, prefix string) (sections, error) {
+	rt := util.Str(text)
 	switch {
-	case strings.HasPrefix(text, startPattern):
-		currSection := text[len(startPattern) : len(text)-len(closePattern)]
-		if ret.Get(currSection) != nil {
+	case rt.HasPrefix(startPattern):
+		currSection := rt.Substring(len(startPattern), len(text)-len(closePattern))
+		if ret.Get(currSection.String()) != nil {
 			return nil, errors.Errorf("multiple sections found with key [%s]", currSection)
 		}
-		ret = append(ret, &section{Key: currSection, Start: idx})
+		ret = append(ret, &section{Key: currSection.String(), Start: idx})
 		return ret, nil
-	case strings.HasPrefix(text, endPattern):
+	case rt.HasPrefix(endPattern):
 		if len(ret) == 0 {
 			return nil, errors.New("encountered end section pattern before start")
 		}
 		curr := ret[len(ret)-1]
-		sec := text[len(endPattern) : len(text)-len(closePattern)]
-		if curr.Key != sec {
+		sec := rt.Substring(len(endPattern), len(text)-len(closePattern))
+		if curr.Key != sec.String() {
 			return nil, errors.Errorf("encountered nested section patterns (%s within %s)", sec, curr.Key)
 		}
 		curr.End = idx - len(prefix) - len(text)

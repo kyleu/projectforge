@@ -79,7 +79,7 @@ func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	qw422016.N().S(`] JSON Schema</h3>
     `)
 //line views/vjsonschema/Enum.html:30
-	StreamRenderEnum(qw422016, p.BaseURL, x, sch, p.Result, df, ps)
+	StreamRenderResult(qw422016, p.BaseURL, x, sch, p.Result, df, nil, nil, ps)
 //line views/vjsonschema/Enum.html:30
 	qw422016.N().S(`
   </div>
@@ -111,82 +111,4 @@ func (p *EnumDetail) Body(as *app.State, ps *cutil.PageState) string {
 //line views/vjsonschema/Enum.html:32
 	return qs422016
 //line views/vjsonschema/Enum.html:32
-}
-
-//line views/vjsonschema/Enum.html:34
-func StreamRenderEnum(qw422016 *qt422016.Writer, baseURL string, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) {
-//line views/vjsonschema/Enum.html:34
-	qw422016.N().S(`
-  <div class="flex" style="">
-    <div class="flex-item">
-      <a href="`)
-//line views/vjsonschema/Enum.html:37
-	qw422016.E().S(baseURL)
-//line views/vjsonschema/Enum.html:37
-	qw422016.N().S(`/`)
-//line views/vjsonschema/Enum.html:37
-	qw422016.E().S(x.Name)
-//line views/vjsonschema/Enum.html:37
-	qw422016.N().S(`"><strong>Original</strong></a>
-      <pre class="mt">`)
-//line views/vjsonschema/Enum.html:38
-	qw422016.E().S(util.ToJSON(x))
-//line views/vjsonschema/Enum.html:38
-	qw422016.N().S(`</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Result</strong>
-      <pre class="mt">`)
-//line views/vjsonschema/Enum.html:42
-	qw422016.E().S(util.ToJSON(result))
-//line views/vjsonschema/Enum.html:42
-	qw422016.N().S(`</pre>
-    </div>
-  </div>
-  <div class="flex" style="">
-    <div class="flex-item">
-      <strong>Schema</strong>
-      <pre class="mt">`)
-//line views/vjsonschema/Enum.html:48
-	qw422016.E().S(util.ToJSON(sch))
-//line views/vjsonschema/Enum.html:48
-	qw422016.N().S(`</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Diff</strong>
-      <pre class="mt">`)
-//line views/vjsonschema/Enum.html:52
-	qw422016.E().S(util.ToJSON(df))
-//line views/vjsonschema/Enum.html:52
-	qw422016.N().S(`</pre>
-    </div>
-  </div>
-`)
-//line views/vjsonschema/Enum.html:55
-}
-
-//line views/vjsonschema/Enum.html:55
-func WriteRenderEnum(qq422016 qtio422016.Writer, baseURL string, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) {
-//line views/vjsonschema/Enum.html:55
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/Enum.html:55
-	StreamRenderEnum(qw422016, baseURL, x, sch, result, df, ps)
-//line views/vjsonschema/Enum.html:55
-	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/Enum.html:55
-}
-
-//line views/vjsonschema/Enum.html:55
-func RenderEnum(baseURL string, x *enum.Enum, sch *jsonschema.Schema, result *enum.Enum, df util.Diffs, ps *cutil.PageState) string {
-//line views/vjsonschema/Enum.html:55
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/Enum.html:55
-	WriteRenderEnum(qb422016, baseURL, x, sch, result, df, ps)
-//line views/vjsonschema/Enum.html:55
-	qs422016 := string(qb422016.B)
-//line views/vjsonschema/Enum.html:55
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/Enum.html:55
-	return qs422016
-//line views/vjsonschema/Enum.html:55
 }

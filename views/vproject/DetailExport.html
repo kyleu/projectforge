@@ -9,6 +9,6 @@
 {% func DetailExport(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
   <a href="/p/{%s key %}/export"><button>{%= components.SVGButton("wrench", ps) %} Manage</button></a>
   <div class="mt">
-    {%= vexport.ArgsDetail(as, key, ea, false, ps) %}
+    {%= vexport.ArgsList(as, key, ea, ps) %}
   </div>
 {%- endfunc -%}

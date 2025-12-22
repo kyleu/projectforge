@@ -89,6 +89,7 @@ table.terminal th {
   font-family: monospace;
   padding: 2px var(--padding);
   border-right: var(--border);
+  cursor: default;
 }
 
 table.terminal td {

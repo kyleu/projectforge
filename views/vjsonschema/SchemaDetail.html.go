@@ -188,7 +188,7 @@ func streamrenderSchemaPanel(qw422016 *qt422016.Writer, as *app.State, sch *json
 //line views/vjsonschema/SchemaDetail.html:55
 		qw422016.N().S(`      `)
 //line views/vjsonschema/SchemaDetail.html:56
-		view.StreamJSONSchema(qw422016, sch, true, ps)
+		view.StreamJSONSchema(qw422016, sch, ps)
 //line views/vjsonschema/SchemaDetail.html:56
 		qw422016.N().S(`
 `)
@@ -354,7 +354,7 @@ func streamrenderCollectionPanel(qw422016 *qt422016.Writer, as *app.State, coll 
           <div class="bd"><div><div>
             `)
 //line views/vjsonschema/SchemaDetail.html:93
-		view.StreamJSONSchema(qw422016, x, true, ps)
+		view.StreamJSONSchema(qw422016, x, ps)
 //line views/vjsonschema/SchemaDetail.html:93
 		qw422016.N().S(`
           </div></div></div>
@@ -416,42 +416,37 @@ func streamrenderArgsPanel(qw422016 *qt422016.Writer, as *app.State, args *metam
     <div class="bd"><div><div>
       `)
 //line views/vjsonschema/SchemaDetail.html:109
-	vexport.StreamArgsDetail(qw422016, as, util.RandomID(), args, true, ps)
+	vexport.StreamArgsDetail(qw422016, as, util.RandomID(), args, argsLogs, ps)
 //line views/vjsonschema/SchemaDetail.html:109
-	qw422016.N().S(`
-      `)
-//line views/vjsonschema/SchemaDetail.html:110
-	components.StreamTerminal(qw422016, "argsLogs", argsLogs...)
-//line views/vjsonschema/SchemaDetail.html:110
 	qw422016.N().S(`
     </div></div></div>
   </li>
 `)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 }
 
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 func writerenderArgsPanel(qq422016 qtio422016.Writer, as *app.State, args *metamodel.Args, argsLogs []string, ps *cutil.PageState) {
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	streamrenderArgsPanel(qw422016, as, args, argsLogs, ps)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 }
 
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 func renderArgsPanel(as *app.State, args *metamodel.Args, argsLogs []string, ps *cutil.PageState) string {
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	writerenderArgsPanel(qb422016, as, args, argsLogs, ps)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	qs422016 := string(qb422016.B)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 	return qs422016
-//line views/vjsonschema/SchemaDetail.html:113
+//line views/vjsonschema/SchemaDetail.html:112
 }

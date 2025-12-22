@@ -41,274 +41,345 @@ type EventDetail struct {
 func (p *EventDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/vexport/EventDetail.html:19
 	qw422016.N().S(`
+  `)
+//line views/vexport/EventDetail.html:20
+	streameventDetail(qw422016, as, p.BaseURL, p.Event, p.Files, ps)
+//line views/vexport/EventDetail.html:20
+	qw422016.N().S(`
 `)
-//line views/vexport/EventDetail.html:20
-	m := p.Event
+//line views/vexport/EventDetail.html:21
+}
 
-//line views/vexport/EventDetail.html:20
+//line views/vexport/EventDetail.html:21
+func (p *EventDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vexport/EventDetail.html:21
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vexport/EventDetail.html:21
+	p.StreamBody(qw422016, as, ps)
+//line views/vexport/EventDetail.html:21
+	qt422016.ReleaseWriter(qw422016)
+//line views/vexport/EventDetail.html:21
+}
+
+//line views/vexport/EventDetail.html:21
+func (p *EventDetail) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vexport/EventDetail.html:21
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vexport/EventDetail.html:21
+	p.WriteBody(qb422016, as, ps)
+//line views/vexport/EventDetail.html:21
+	qs422016 := string(qb422016.B)
+//line views/vexport/EventDetail.html:21
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vexport/EventDetail.html:21
+	return qs422016
+//line views/vexport/EventDetail.html:21
+}
+
+//line views/vexport/EventDetail.html:23
+func streameventDetail(qw422016 *qt422016.Writer, as *app.State, baseURL string, evt *model.Event, files file.Files, ps *cutil.PageState) {
+//line views/vexport/EventDetail.html:23
+	qw422016.N().S(`
+`)
+//line views/vexport/EventDetail.html:24
+	key := util.RandomID()
+
+//line views/vexport/EventDetail.html:24
 	qw422016.N().S(`  <div class="card">
     <div class="right">
+`)
+//line views/vexport/EventDetail.html:27
+	if baseURL == "" {
+//line views/vexport/EventDetail.html:27
+		qw422016.N().S(`      <a href="#modal-`)
+//line views/vexport/EventDetail.html:28
+		qw422016.E().S(key)
+//line views/vexport/EventDetail.html:28
+		qw422016.N().S(`" title="JSON"><button>`)
+//line views/vexport/EventDetail.html:28
+		components.StreamSVGButton(qw422016, "code", ps)
+//line views/vexport/EventDetail.html:28
+		qw422016.N().S(` JSON</button></a>
+`)
+//line views/vexport/EventDetail.html:29
+	} else {
+//line views/vexport/EventDetail.html:29
+		qw422016.N().S(`      <a href="`)
+//line views/vexport/EventDetail.html:30
+		qw422016.E().S(baseURL)
+//line views/vexport/EventDetail.html:30
+		qw422016.N().S(`/`)
+//line views/vexport/EventDetail.html:30
+		qw422016.E().S(evt.Name)
+//line views/vexport/EventDetail.html:30
+		qw422016.N().S(`/jsonschema"><button>`)
+//line views/vexport/EventDetail.html:30
+		components.StreamSVGButton(qw422016, "table", ps)
+//line views/vexport/EventDetail.html:30
+		qw422016.N().S(` JSON Schema</button></a>
       <a href="`)
-//line views/vexport/EventDetail.html:23
-	qw422016.E().S(p.BaseURL)
-//line views/vexport/EventDetail.html:23
-	qw422016.N().S(`/`)
-//line views/vexport/EventDetail.html:23
-	qw422016.E().S(p.Event.Name)
-//line views/vexport/EventDetail.html:23
-	qw422016.N().S(`/jsonschema"><button>`)
-//line views/vexport/EventDetail.html:23
-	components.StreamSVGButton(qw422016, "table", ps)
-//line views/vexport/EventDetail.html:23
-	qw422016.N().S(` JSON Schema</button></a>
-      <a href="`)
-//line views/vexport/EventDetail.html:24
-	qw422016.E().S(p.BaseURL)
-//line views/vexport/EventDetail.html:24
-	qw422016.N().S(`/`)
-//line views/vexport/EventDetail.html:24
-	qw422016.E().S(p.Event.Name)
-//line views/vexport/EventDetail.html:24
-	qw422016.N().S(`/edit"><button>`)
-//line views/vexport/EventDetail.html:24
-	components.StreamSVGButton(qw422016, "edit", ps)
-//line views/vexport/EventDetail.html:24
-	qw422016.N().S(` Edit</button></a>
-    </div>
+//line views/vexport/EventDetail.html:31
+		qw422016.E().S(baseURL)
+//line views/vexport/EventDetail.html:31
+		qw422016.N().S(`/`)
+//line views/vexport/EventDetail.html:31
+		qw422016.E().S(evt.Name)
+//line views/vexport/EventDetail.html:31
+		qw422016.N().S(`/edit"><button>`)
+//line views/vexport/EventDetail.html:31
+		components.StreamSVGButton(qw422016, "edit", ps)
+//line views/vexport/EventDetail.html:31
+		qw422016.N().S(` Edit</button></a>
+`)
+//line views/vexport/EventDetail.html:32
+	}
+//line views/vexport/EventDetail.html:32
+	qw422016.N().S(`    </div>
     <h3>`)
-//line views/vexport/EventDetail.html:26
-	components.StreamSVGIcon(qw422016, m.IconSafe(), ps)
-//line views/vexport/EventDetail.html:26
+//line views/vexport/EventDetail.html:34
+	components.StreamSVGIcon(qw422016, evt.IconSafe(), ps)
+//line views/vexport/EventDetail.html:34
 	qw422016.N().S(` `)
-//line views/vexport/EventDetail.html:26
-	qw422016.E().S(m.Name)
-//line views/vexport/EventDetail.html:26
+//line views/vexport/EventDetail.html:34
+	qw422016.E().S(evt.Name)
+//line views/vexport/EventDetail.html:34
 	qw422016.N().S(`</h3>
     <em>export event</em>
     `)
-//line views/vexport/EventDetail.html:28
-	streameventSummary(qw422016, as, p.BaseURL, m, ps)
-//line views/vexport/EventDetail.html:28
+//line views/vexport/EventDetail.html:36
+	streameventSummary(qw422016, as, evt, ps)
+//line views/vexport/EventDetail.html:36
 	qw422016.N().S(`
   </div>
   <div class="card">
     <h3>`)
-//line views/vexport/EventDetail.html:31
+//line views/vexport/EventDetail.html:39
 	components.StreamSVGIcon(qw422016, `first-aid`, ps)
-//line views/vexport/EventDetail.html:31
+//line views/vexport/EventDetail.html:39
 	qw422016.N().S(` Columns</h3>
     `)
-//line views/vexport/EventDetail.html:32
-	streameventColumns(qw422016, as, m, ps)
-//line views/vexport/EventDetail.html:32
+//line views/vexport/EventDetail.html:40
+	streameventColumns(qw422016, as, evt, ps)
+//line views/vexport/EventDetail.html:40
 	qw422016.N().S(`
   </div>`)
-//line views/vexport/EventDetail.html:33
-	if len(p.Files) > 0 {
-//line views/vexport/EventDetail.html:33
+//line views/vexport/EventDetail.html:41
+	if len(files) > 0 {
+//line views/vexport/EventDetail.html:41
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vexport/EventDetail.html:35
+//line views/vexport/EventDetail.html:43
 		components.StreamSVGIcon(qw422016, `file`, ps)
-//line views/vexport/EventDetail.html:35
+//line views/vexport/EventDetail.html:43
 		qw422016.N().S(` Exported Files</h3>
     `)
-//line views/vexport/EventDetail.html:36
-		streameventFiles(qw422016, as, m, p.Files, ps)
-//line views/vexport/EventDetail.html:36
+//line views/vexport/EventDetail.html:44
+		streameventFiles(qw422016, as, evt, files, ps)
+//line views/vexport/EventDetail.html:44
 		qw422016.N().S(`
   </div>`)
-//line views/vexport/EventDetail.html:37
+//line views/vexport/EventDetail.html:45
 	}
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:46
+	if baseURL == "" {
+//line views/vexport/EventDetail.html:46
+		qw422016.N().S(`  `)
+//line views/vexport/EventDetail.html:47
+		components.StreamJSONModal(qw422016, key, "Event JSON", evt, 1)
+//line views/vexport/EventDetail.html:47
+		qw422016.N().S(`
+`)
+//line views/vexport/EventDetail.html:48
+	}
+//line views/vexport/EventDetail.html:49
 }
 
-//line views/vexport/EventDetail.html:38
-func (p *EventDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
+func writeeventDetail(qq422016 qtio422016.Writer, as *app.State, baseURL string, evt *model.Event, files file.Files, ps *cutil.PageState) {
+//line views/vexport/EventDetail.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EventDetail.html:38
-	p.StreamBody(qw422016, as, ps)
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
+	streameventDetail(qw422016, as, baseURL, evt, files, ps)
+//line views/vexport/EventDetail.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
 }
 
-//line views/vexport/EventDetail.html:38
-func (p *EventDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
+func eventDetail(as *app.State, baseURL string, evt *model.Event, files file.Files, ps *cutil.PageState) string {
+//line views/vexport/EventDetail.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EventDetail.html:38
-	p.WriteBody(qb422016, as, ps)
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
+	writeeventDetail(qb422016, as, baseURL, evt, files, ps)
+//line views/vexport/EventDetail.html:49
 	qs422016 := string(qb422016.B)
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
 	return qs422016
-//line views/vexport/EventDetail.html:38
+//line views/vexport/EventDetail.html:49
 }
 
-//line views/vexport/EventDetail.html:40
-func streameventSummary(qw422016 *qt422016.Writer, as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:40
+//line views/vexport/EventDetail.html:51
+func streameventSummary(qw422016 *qt422016.Writer, as *app.State, evt *model.Event, ps *cutil.PageState) {
+//line views/vexport/EventDetail.html:51
 	qw422016.N().S(`
   <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>`)
-//line views/vexport/EventDetail.html:44
+//line views/vexport/EventDetail.html:55
 	qw422016.E().S(evt.Name)
-//line views/vexport/EventDetail.html:44
+//line views/vexport/EventDetail.html:55
 	qw422016.N().S(`</td></tr>
         <tr><th>Package</th><td>`)
-//line views/vexport/EventDetail.html:45
+//line views/vexport/EventDetail.html:56
 	qw422016.E().S(evt.Package)
-//line views/vexport/EventDetail.html:45
+//line views/vexport/EventDetail.html:56
 	qw422016.N().S(`</td></tr>
 `)
-//line views/vexport/EventDetail.html:46
+//line views/vexport/EventDetail.html:57
 	if len(evt.Group) > 0 {
-//line views/vexport/EventDetail.html:46
+//line views/vexport/EventDetail.html:57
 		qw422016.N().S(`        <tr><th>Group</th><td>`)
-//line views/vexport/EventDetail.html:47
-		qw422016.E().S(util.StringJoin(evt.Group, "/"))
-//line views/vexport/EventDetail.html:47
-		qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EventDetail.html:48
-	}
-//line views/vexport/EventDetail.html:49
-	if evt.Schema != "" {
-//line views/vexport/EventDetail.html:49
-		qw422016.N().S(`        <tr><th>Schema</th><td>`)
-//line views/vexport/EventDetail.html:50
-		qw422016.E().S(evt.Schema)
-//line views/vexport/EventDetail.html:50
-		qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EventDetail.html:51
-	}
-//line views/vexport/EventDetail.html:51
-	qw422016.N().S(`        <tr><th>Description</th><td>`)
-//line views/vexport/EventDetail.html:52
-	qw422016.E().S(evt.Description)
-//line views/vexport/EventDetail.html:52
-	qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EventDetail.html:53
-	if evt.TitleOverride != "" {
-//line views/vexport/EventDetail.html:53
-		qw422016.N().S(`        <tr><th>Title Override</th><td>`)
-//line views/vexport/EventDetail.html:54
-		qw422016.E().S(evt.TitleOverride)
-//line views/vexport/EventDetail.html:54
-		qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EventDetail.html:55
-	}
-//line views/vexport/EventDetail.html:56
-	if evt.PluralOverride != "" {
-//line views/vexport/EventDetail.html:56
-		qw422016.N().S(`        <tr><th>Plural Override</th><td>`)
-//line views/vexport/EventDetail.html:57
-		qw422016.E().S(evt.PluralOverride)
-//line views/vexport/EventDetail.html:57
-		qw422016.N().S(`</td></tr>
-`)
 //line views/vexport/EventDetail.html:58
-	}
-//line views/vexport/EventDetail.html:59
-	if evt.ProperOverride != "" {
-//line views/vexport/EventDetail.html:59
-		qw422016.N().S(`        <tr><th>Proper Override</th><td>`)
-//line views/vexport/EventDetail.html:60
-		qw422016.E().S(evt.ProperOverride)
-//line views/vexport/EventDetail.html:60
+		qw422016.E().S(util.StringJoin(evt.Group, "/"))
+//line views/vexport/EventDetail.html:58
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/EventDetail.html:59
+	}
+//line views/vexport/EventDetail.html:60
+	if evt.Schema != "" {
+//line views/vexport/EventDetail.html:60
+		qw422016.N().S(`        <tr><th>Schema</th><td>`)
 //line views/vexport/EventDetail.html:61
+		qw422016.E().S(evt.Schema)
+//line views/vexport/EventDetail.html:61
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EventDetail.html:62
 	}
 //line views/vexport/EventDetail.html:62
-	if len(evt.Tags) > 0 {
-//line views/vexport/EventDetail.html:62
-		qw422016.N().S(`        <tr><th>Tags</th><td>`)
+	qw422016.N().S(`        <tr><th>Description</th><td>`)
 //line views/vexport/EventDetail.html:63
-		qw422016.E().S(util.StringJoin(evt.Tags, ", "))
+	qw422016.E().S(evt.Description)
 //line views/vexport/EventDetail.html:63
-		qw422016.N().S(`</td></tr>
+	qw422016.N().S(`</td></tr>
 `)
 //line views/vexport/EventDetail.html:64
-	}
+	if evt.TitleOverride != "" {
+//line views/vexport/EventDetail.html:64
+		qw422016.N().S(`        <tr><th>Title Override</th><td>`)
 //line views/vexport/EventDetail.html:65
-	if len(evt.Config) > 0 {
+		qw422016.E().S(evt.TitleOverride)
 //line views/vexport/EventDetail.html:65
-		qw422016.N().S(`        <tr><th>Config</th><td>`)
-//line views/vexport/EventDetail.html:66
-		view.StreamMap(qw422016, true, evt.Config, ps)
-//line views/vexport/EventDetail.html:66
 		qw422016.N().S(`</td></tr>
 `)
+//line views/vexport/EventDetail.html:66
+	}
 //line views/vexport/EventDetail.html:67
-	}
+	if evt.PluralOverride != "" {
+//line views/vexport/EventDetail.html:67
+		qw422016.N().S(`        <tr><th>Plural Override</th><td>`)
 //line views/vexport/EventDetail.html:68
-	if len(evt.Imports) > 0 {
+		qw422016.E().S(evt.PluralOverride)
 //line views/vexport/EventDetail.html:68
-		qw422016.N().S(`        <tr><th>Imports</th><td>`)
-//line views/vexport/EventDetail.html:69
-		components.StreamJSON(qw422016, evt.Imports)
-//line views/vexport/EventDetail.html:69
 		qw422016.N().S(`</td></tr>
 `)
-//line views/vexport/EventDetail.html:70
+//line views/vexport/EventDetail.html:69
 	}
 //line views/vexport/EventDetail.html:70
+	if evt.ProperOverride != "" {
+//line views/vexport/EventDetail.html:70
+		qw422016.N().S(`        <tr><th>Proper Override</th><td>`)
+//line views/vexport/EventDetail.html:71
+		qw422016.E().S(evt.ProperOverride)
+//line views/vexport/EventDetail.html:71
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EventDetail.html:72
+	}
+//line views/vexport/EventDetail.html:73
+	if len(evt.Tags) > 0 {
+//line views/vexport/EventDetail.html:73
+		qw422016.N().S(`        <tr><th>Tags</th><td>`)
+//line views/vexport/EventDetail.html:74
+		qw422016.E().S(util.StringJoin(evt.Tags, ", "))
+//line views/vexport/EventDetail.html:74
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EventDetail.html:75
+	}
+//line views/vexport/EventDetail.html:76
+	if len(evt.Config) > 0 {
+//line views/vexport/EventDetail.html:76
+		qw422016.N().S(`        <tr><th>Config</th><td>`)
+//line views/vexport/EventDetail.html:77
+		view.StreamMap(qw422016, true, evt.Config, ps)
+//line views/vexport/EventDetail.html:77
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EventDetail.html:78
+	}
+//line views/vexport/EventDetail.html:79
+	if len(evt.Imports) > 0 {
+//line views/vexport/EventDetail.html:79
+		qw422016.N().S(`        <tr><th>Imports</th><td>`)
+//line views/vexport/EventDetail.html:80
+		components.StreamJSON(qw422016, evt.Imports)
+//line views/vexport/EventDetail.html:80
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EventDetail.html:81
+	}
+//line views/vexport/EventDetail.html:81
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
 }
 
-//line views/vexport/EventDetail.html:74
-func writeeventSummary(qq422016 qtio422016.Writer, as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
+func writeeventSummary(qq422016 qtio422016.Writer, as *app.State, evt *model.Event, ps *cutil.PageState) {
+//line views/vexport/EventDetail.html:85
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EventDetail.html:74
-	streameventSummary(qw422016, as, baseURL, evt, ps)
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
+	streameventSummary(qw422016, as, evt, ps)
+//line views/vexport/EventDetail.html:85
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
 }
 
-//line views/vexport/EventDetail.html:74
-func eventSummary(as *app.State, baseURL string, evt *model.Event, ps *cutil.PageState) string {
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
+func eventSummary(as *app.State, evt *model.Event, ps *cutil.PageState) string {
+//line views/vexport/EventDetail.html:85
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EventDetail.html:74
-	writeeventSummary(qb422016, as, baseURL, evt, ps)
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
+	writeeventSummary(qb422016, as, evt, ps)
+//line views/vexport/EventDetail.html:85
 	qs422016 := string(qb422016.B)
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
 	return qs422016
-//line views/vexport/EventDetail.html:74
+//line views/vexport/EventDetail.html:85
 }
 
-//line views/vexport/EventDetail.html:76
+//line views/vexport/EventDetail.html:87
 func streameventColumns(qw422016 *qt422016.Writer, as *app.State, evt *model.Event, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:76
+//line views/vexport/EventDetail.html:87
 	qw422016.N().S(`
 `)
-//line views/vexport/EventDetail.html:77
+//line views/vexport/EventDetail.html:88
 	if len(evt.Columns) == 0 {
-//line views/vexport/EventDetail.html:77
+//line views/vexport/EventDetail.html:88
 		qw422016.N().S(`  <p><em>no columns</em></p>
 `)
-//line views/vexport/EventDetail.html:79
+//line views/vexport/EventDetail.html:90
 	} else {
-//line views/vexport/EventDetail.html:79
+//line views/vexport/EventDetail.html:90
 		qw422016.N().S(`  <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <thead>
@@ -326,177 +397,177 @@ func streameventColumns(qw422016 *qt422016.Writer, as *app.State, evt *model.Eve
       </thead>
       <tbody>
 `)
-//line views/vexport/EventDetail.html:96
+//line views/vexport/EventDetail.html:107
 		for _, col := range evt.Columns {
-//line views/vexport/EventDetail.html:96
+//line views/vexport/EventDetail.html:107
 			qw422016.N().S(`        <tr>
           <td>`)
-//line views/vexport/EventDetail.html:98
+//line views/vexport/EventDetail.html:109
 			qw422016.E().S(col.Name)
-//line views/vexport/EventDetail.html:98
+//line views/vexport/EventDetail.html:109
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:99
+//line views/vexport/EventDetail.html:110
 			qw422016.E().S(col.Type.String())
-//line views/vexport/EventDetail.html:99
+//line views/vexport/EventDetail.html:110
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:100
+//line views/vexport/EventDetail.html:111
 			qw422016.E().S(col.Format)
-//line views/vexport/EventDetail.html:100
+//line views/vexport/EventDetail.html:111
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:101
+//line views/vexport/EventDetail.html:112
 			qw422016.E().S(col.Example)
-//line views/vexport/EventDetail.html:101
+//line views/vexport/EventDetail.html:112
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:102
+//line views/vexport/EventDetail.html:113
 			qw422016.E().S(col.JSON)
-//line views/vexport/EventDetail.html:102
+//line views/vexport/EventDetail.html:113
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:103
+//line views/vexport/EventDetail.html:114
 			qw422016.E().S(col.Validation)
-//line views/vexport/EventDetail.html:103
+//line views/vexport/EventDetail.html:114
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:104
+//line views/vexport/EventDetail.html:115
 			view.StreamBoolIcon(qw422016, col.HasTag("unique"), 15, "icon", ps)
-//line views/vexport/EventDetail.html:104
+//line views/vexport/EventDetail.html:115
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:105
+//line views/vexport/EventDetail.html:116
 			qw422016.E().S(util.StringJoin(col.Tags, ", "))
-//line views/vexport/EventDetail.html:105
+//line views/vexport/EventDetail.html:116
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EventDetail.html:106
+//line views/vexport/EventDetail.html:117
 			view.StreamMap(qw422016, false, col.Metadata, ps)
-//line views/vexport/EventDetail.html:106
+//line views/vexport/EventDetail.html:117
 			qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vexport/EventDetail.html:108
+//line views/vexport/EventDetail.html:119
 		}
-//line views/vexport/EventDetail.html:108
+//line views/vexport/EventDetail.html:119
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vexport/EventDetail.html:112
+//line views/vexport/EventDetail.html:123
 	}
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 }
 
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 func writeeventColumns(qq422016 qtio422016.Writer, as *app.State, evt *model.Event, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	streameventColumns(qw422016, as, evt, ps)
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 }
 
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 func eventColumns(as *app.State, evt *model.Event, ps *cutil.PageState) string {
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	writeeventColumns(qb422016, as, evt, ps)
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	qs422016 := string(qb422016.B)
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 	return qs422016
-//line views/vexport/EventDetail.html:113
+//line views/vexport/EventDetail.html:124
 }
 
-//line views/vexport/EventDetail.html:115
+//line views/vexport/EventDetail.html:126
 func streameventFiles(qw422016 *qt422016.Writer, as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:115
+//line views/vexport/EventDetail.html:126
 	qw422016.N().S(`
   <div class="mt">
     <ul class="accordion">
 `)
-//line views/vexport/EventDetail.html:118
+//line views/vexport/EventDetail.html:129
 	for _, f := range fls {
-//line views/vexport/EventDetail.html:118
+//line views/vexport/EventDetail.html:129
 		qw422016.N().S(`      <li>
         <input id="accordion-`)
-//line views/vexport/EventDetail.html:120
+//line views/vexport/EventDetail.html:131
 		qw422016.E().S(f.FullPath())
-//line views/vexport/EventDetail.html:120
+//line views/vexport/EventDetail.html:131
 		qw422016.N().S(`" type="checkbox" hidden />
         <label for="accordion-`)
-//line views/vexport/EventDetail.html:121
+//line views/vexport/EventDetail.html:132
 		qw422016.E().S(f.FullPath())
-//line views/vexport/EventDetail.html:121
+//line views/vexport/EventDetail.html:132
 		qw422016.N().S(`">`)
-//line views/vexport/EventDetail.html:121
+//line views/vexport/EventDetail.html:132
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/EventDetail.html:121
+//line views/vexport/EventDetail.html:132
 		qw422016.N().S(` `)
-//line views/vexport/EventDetail.html:121
+//line views/vexport/EventDetail.html:132
 		qw422016.E().S(f.FullPath())
-//line views/vexport/EventDetail.html:121
+//line views/vexport/EventDetail.html:132
 		qw422016.N().S(`</label>
         <div class="bd"><div><div>
 `)
-//line views/vexport/EventDetail.html:123
+//line views/vexport/EventDetail.html:134
 		out, err := cutil.FormatLang(f.Content, f.Ext())
 
-//line views/vexport/EventDetail.html:123
+//line views/vexport/EventDetail.html:134
 		qw422016.N().S(`          `)
-//line views/vexport/EventDetail.html:124
+//line views/vexport/EventDetail.html:135
 		if err == nil {
-//line views/vexport/EventDetail.html:124
+//line views/vexport/EventDetail.html:135
 			qw422016.N().S(out)
-//line views/vexport/EventDetail.html:124
+//line views/vexport/EventDetail.html:135
 		} else {
-//line views/vexport/EventDetail.html:124
+//line views/vexport/EventDetail.html:135
 			qw422016.E().S(err.Error())
-//line views/vexport/EventDetail.html:124
+//line views/vexport/EventDetail.html:135
 		}
-//line views/vexport/EventDetail.html:124
+//line views/vexport/EventDetail.html:135
 		qw422016.N().S(`
         </div></div></div>
       </li>
 `)
-//line views/vexport/EventDetail.html:127
+//line views/vexport/EventDetail.html:138
 	}
-//line views/vexport/EventDetail.html:127
+//line views/vexport/EventDetail.html:138
 	qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 }
 
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 func writeeventFiles(qq422016 qtio422016.Writer, as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) {
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	streameventFiles(qw422016, as, evt, fls, ps)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 }
 
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 func eventFiles(as *app.State, evt *model.Event, fls file.Files, ps *cutil.PageState) string {
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	writeeventFiles(qb422016, as, evt, fls, ps)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	qs422016 := string(qb422016.B)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 	return qs422016
-//line views/vexport/EventDetail.html:130
+//line views/vexport/EventDetail.html:141
 }

@@ -37,7 +37,7 @@ func ThemeColor(w http.ResponseWriter, r *http.Request) {
 
 func ThemeColorEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.color.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		color := util.RS(r.URL.Query().Get("color"))
+		color := util.Str(r.URL.Query().Get("color"))
 		if color.Empty() {
 			return "", errors.New("must provide color in query string")
 		}

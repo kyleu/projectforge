@@ -17,15 +17,23 @@
 } %}
 
 {% func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code m := p.Model -%}
+  {%= modelDetail(as, p.BaseURL, p.Model, p.Files, ps) %}
+{% endfunc %}
+
+{% func modelDetail(as *app.State, baseURL string, m *model.Model, files file.Files, ps *cutil.PageState) %}
+  {%- code key := util.RandomID() -%}
   <div class="card">
     <div class="right">
-      <a href="{%s p.BaseURL %}/{%s p.Model.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
-      <a href="{%s p.BaseURL %}/{%s p.Model.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      {%- if baseURL == "" -%}
+      <a href="#modal-{%s key %}" title="JSON"><button>{%= components.SVGButton("code", ps) %} JSON</button></a>
+      {%- else -%}
+      <a href="{%s baseURL %}/{%s m.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
+      <a href="{%s baseURL %}/{%s m.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      {%- endif -%}
     </div>
     <h3>{%= components.SVGIcon(m.IconSafe(), ps) %} {%s m.Name %}</h3>
     <em>export model</em>
-    {%= modelSummary(as, p.BaseURL, m, ps) %}
+    {%= modelSummary(as, baseURL, m, ps) %}
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`first-aid`, ps) %} Columns</h3>
@@ -34,7 +42,7 @@
   {%- if len(m.Relations) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`social`, ps) %} Relations</h3>
-    {%= modelRelations(as, m, p.BaseURL, ps) %}
+    {%= modelRelations(as, m, baseURL, ps) %}
   </div>{%- endif -%}{%- if len(m.Links) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`link`, ps) %} Links</h3>
@@ -43,11 +51,14 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`star`, ps) %} Indexes</h3>
     {%= modelIndexes(as, m, ps) %}
-  </div>{%- endif -%}{%- if len(p.Files) > 0 -%}
+  </div>{%- endif -%}{%- if len(files) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
-    {%= modelFiles(as, m, p.Files, ps) %}
+    {%= modelFiles(as, m, files, ps) %}
   </div>{%- endif -%}
+  {%- if baseURL == "" -%}
+  {%= components.JSONModal(key, "Model JSON", m, 1) %}
+  {%- endif -%}
 {% endfunc %}
 
 {% func modelSummary(as *app.State, baseURL string, model *model.Model, ps *cutil.PageState) %}
@@ -99,7 +110,13 @@
         <tr><th>Search</th><td>{%s util.StringJoin(model.Search, ", ") %}</td></tr>
         {%- endif -%}
         {%- if len(model.SeedData) > 0 -%}
-        <tr><th>Seed Data</th><td><a href="{%s baseURL %}/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a></td></tr>
+        <tr><th>Seed Data</th><td>
+          {%- if baseURL == "" -%}
+          {%d len(model.SeedData) %} rows
+          {%- else -%}
+          <a href="{%s baseURL %}/{%s model.Name %}/seeddata">{%d len(model.SeedData) %} rows</a>
+          {%- endif -%}
+        </td></tr>
         {%- endif -%}
         {%- if len(model.Config) > 0 -%}
         <tr><th>Config</th><td>{%= view.Map(true, model.Config, ps) %}</td></tr>

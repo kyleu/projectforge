@@ -79,7 +79,7 @@ func (p *ModelDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 	qw422016.N().S(`] JSON Schema</h3>
     `)
 //line views/vjsonschema/Model.html:30
-	StreamRenderModel(qw422016, p.BaseURL, x, sch, p.Result, df, ps)
+	StreamRenderResult(qw422016, p.BaseURL, x, sch, p.Result, df, nil, nil, ps)
 //line views/vjsonschema/Model.html:30
 	qw422016.N().S(`
   </div>
@@ -111,82 +111,4 @@ func (p *ModelDetail) Body(as *app.State, ps *cutil.PageState) string {
 //line views/vjsonschema/Model.html:32
 	return qs422016
 //line views/vjsonschema/Model.html:32
-}
-
-//line views/vjsonschema/Model.html:34
-func StreamRenderModel(qw422016 *qt422016.Writer, baseURL string, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) {
-//line views/vjsonschema/Model.html:34
-	qw422016.N().S(`
-  <div class="flex">
-    <div class="flex-item">
-      <a href="`)
-//line views/vjsonschema/Model.html:37
-	qw422016.E().S(baseURL)
-//line views/vjsonschema/Model.html:37
-	qw422016.N().S(`/`)
-//line views/vjsonschema/Model.html:37
-	qw422016.E().S(x.Name)
-//line views/vjsonschema/Model.html:37
-	qw422016.N().S(`"><strong>Original</strong></a>
-      <pre class="mt">`)
-//line views/vjsonschema/Model.html:38
-	qw422016.E().S(util.ToJSON(x))
-//line views/vjsonschema/Model.html:38
-	qw422016.N().S(`</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Result</strong>
-      <pre class="mt">`)
-//line views/vjsonschema/Model.html:42
-	qw422016.E().S(util.ToJSON(result))
-//line views/vjsonschema/Model.html:42
-	qw422016.N().S(`</pre>
-    </div>
-  </div>
-  <div class="flex">
-    <div class="flex-item">
-      <strong>Schema</strong>
-      <pre class="mt">`)
-//line views/vjsonschema/Model.html:48
-	qw422016.E().S(util.ToJSON(sch))
-//line views/vjsonschema/Model.html:48
-	qw422016.N().S(`</pre>
-    </div>
-    <div class="flex-item">
-      <strong>Diff</strong>
-      <pre class="mt">`)
-//line views/vjsonschema/Model.html:52
-	qw422016.E().S(util.ToJSON(df))
-//line views/vjsonschema/Model.html:52
-	qw422016.N().S(`</pre>
-    </div>
-  </div>
-`)
-//line views/vjsonschema/Model.html:55
-}
-
-//line views/vjsonschema/Model.html:55
-func WriteRenderModel(qq422016 qtio422016.Writer, baseURL string, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) {
-//line views/vjsonschema/Model.html:55
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/Model.html:55
-	StreamRenderModel(qw422016, baseURL, x, sch, result, df, ps)
-//line views/vjsonschema/Model.html:55
-	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/Model.html:55
-}
-
-//line views/vjsonschema/Model.html:55
-func RenderModel(baseURL string, x *model.Model, sch *jsonschema.Schema, result *model.Model, df util.Diffs, ps *cutil.PageState) string {
-//line views/vjsonschema/Model.html:55
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/Model.html:55
-	WriteRenderModel(qb422016, baseURL, x, sch, result, df, ps)
-//line views/vjsonschema/Model.html:55
-	qs422016 := string(qb422016.B)
-//line views/vjsonschema/Model.html:55
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/Model.html:55
-	return qs422016
-//line views/vjsonschema/Model.html:55
 }

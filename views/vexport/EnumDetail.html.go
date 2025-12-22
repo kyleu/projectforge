@@ -40,249 +40,320 @@ type EnumDetail struct {
 func (p *EnumDetail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/vexport/EnumDetail.html:18
 	qw422016.N().S(`
+  `)
+//line views/vexport/EnumDetail.html:19
+	streamenumDetail(qw422016, as, p.BaseURL, p.Enum, p.File, ps)
+//line views/vexport/EnumDetail.html:19
+	qw422016.N().S(`
 `)
-//line views/vexport/EnumDetail.html:19
-	e := p.Enum
+//line views/vexport/EnumDetail.html:20
+}
 
-//line views/vexport/EnumDetail.html:19
+//line views/vexport/EnumDetail.html:20
+func (p *EnumDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vexport/EnumDetail.html:20
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vexport/EnumDetail.html:20
+	p.StreamBody(qw422016, as, ps)
+//line views/vexport/EnumDetail.html:20
+	qt422016.ReleaseWriter(qw422016)
+//line views/vexport/EnumDetail.html:20
+}
+
+//line views/vexport/EnumDetail.html:20
+func (p *EnumDetail) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vexport/EnumDetail.html:20
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vexport/EnumDetail.html:20
+	p.WriteBody(qb422016, as, ps)
+//line views/vexport/EnumDetail.html:20
+	qs422016 := string(qb422016.B)
+//line views/vexport/EnumDetail.html:20
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vexport/EnumDetail.html:20
+	return qs422016
+//line views/vexport/EnumDetail.html:20
+}
+
+//line views/vexport/EnumDetail.html:22
+func streamenumDetail(qw422016 *qt422016.Writer, as *app.State, baseURL string, e *enum.Enum, file *file.File, ps *cutil.PageState) {
+//line views/vexport/EnumDetail.html:22
+	qw422016.N().S(`
+`)
+//line views/vexport/EnumDetail.html:23
+	key := util.RandomID()
+
+//line views/vexport/EnumDetail.html:23
 	qw422016.N().S(`  <div class="card">
     <div class="right">
+`)
+//line views/vexport/EnumDetail.html:26
+	if baseURL == "" {
+//line views/vexport/EnumDetail.html:26
+		qw422016.N().S(`      <a href="#modal-`)
+//line views/vexport/EnumDetail.html:27
+		qw422016.E().S(key)
+//line views/vexport/EnumDetail.html:27
+		qw422016.N().S(`" title="JSON"><button>`)
+//line views/vexport/EnumDetail.html:27
+		components.StreamSVGButton(qw422016, "code", ps)
+//line views/vexport/EnumDetail.html:27
+		qw422016.N().S(` JSON</button></a>
+`)
+//line views/vexport/EnumDetail.html:28
+	} else {
+//line views/vexport/EnumDetail.html:28
+		qw422016.N().S(`      <a href="`)
+//line views/vexport/EnumDetail.html:29
+		qw422016.E().S(baseURL)
+//line views/vexport/EnumDetail.html:29
+		qw422016.N().S(`/`)
+//line views/vexport/EnumDetail.html:29
+		qw422016.E().S(e.Name)
+//line views/vexport/EnumDetail.html:29
+		qw422016.N().S(`/jsonschema"><button>`)
+//line views/vexport/EnumDetail.html:29
+		components.StreamSVGButton(qw422016, "table", ps)
+//line views/vexport/EnumDetail.html:29
+		qw422016.N().S(` JSON Schema</button></a>
       <a href="`)
-//line views/vexport/EnumDetail.html:22
-	qw422016.E().S(p.BaseURL)
-//line views/vexport/EnumDetail.html:22
-	qw422016.N().S(`/`)
-//line views/vexport/EnumDetail.html:22
-	qw422016.E().S(e.Name)
-//line views/vexport/EnumDetail.html:22
-	qw422016.N().S(`/jsonschema"><button>`)
-//line views/vexport/EnumDetail.html:22
-	components.StreamSVGButton(qw422016, "table", ps)
-//line views/vexport/EnumDetail.html:22
-	qw422016.N().S(` JSON Schema</button></a>
-      <a href="`)
-//line views/vexport/EnumDetail.html:23
-	qw422016.E().S(p.BaseURL)
-//line views/vexport/EnumDetail.html:23
-	qw422016.N().S(`/`)
-//line views/vexport/EnumDetail.html:23
-	qw422016.E().S(e.Name)
-//line views/vexport/EnumDetail.html:23
-	qw422016.N().S(`/edit"><button>`)
-//line views/vexport/EnumDetail.html:23
-	components.StreamSVGButton(qw422016, "edit", ps)
-//line views/vexport/EnumDetail.html:23
-	qw422016.N().S(` Edit</button></a>
-    </div>
+//line views/vexport/EnumDetail.html:30
+		qw422016.E().S(baseURL)
+//line views/vexport/EnumDetail.html:30
+		qw422016.N().S(`/`)
+//line views/vexport/EnumDetail.html:30
+		qw422016.E().S(e.Name)
+//line views/vexport/EnumDetail.html:30
+		qw422016.N().S(`/edit"><button>`)
+//line views/vexport/EnumDetail.html:30
+		components.StreamSVGButton(qw422016, "edit", ps)
+//line views/vexport/EnumDetail.html:30
+		qw422016.N().S(` Edit</button></a>
+`)
+//line views/vexport/EnumDetail.html:31
+	}
+//line views/vexport/EnumDetail.html:31
+	qw422016.N().S(`    </div>
     <h3>`)
-//line views/vexport/EnumDetail.html:25
+//line views/vexport/EnumDetail.html:33
 	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
-//line views/vexport/EnumDetail.html:25
+//line views/vexport/EnumDetail.html:33
 	qw422016.N().S(` `)
-//line views/vexport/EnumDetail.html:25
+//line views/vexport/EnumDetail.html:33
 	qw422016.E().S(e.Name)
-//line views/vexport/EnumDetail.html:25
+//line views/vexport/EnumDetail.html:33
 	qw422016.N().S(`</h3>
     <em>export enum</em>
     `)
-//line views/vexport/EnumDetail.html:27
+//line views/vexport/EnumDetail.html:35
 	streamenumSummary(qw422016, as, e, ps)
-//line views/vexport/EnumDetail.html:27
+//line views/vexport/EnumDetail.html:35
 	qw422016.N().S(`
   </div>
   <div class="card">
     <h3>`)
-//line views/vexport/EnumDetail.html:30
+//line views/vexport/EnumDetail.html:38
 	components.StreamSVGIcon(qw422016, `star`, ps)
-//line views/vexport/EnumDetail.html:30
+//line views/vexport/EnumDetail.html:38
 	qw422016.N().S(` Values</h3>
     `)
-//line views/vexport/EnumDetail.html:31
+//line views/vexport/EnumDetail.html:39
 	streamenumValues(qw422016, as, e, ps)
-//line views/vexport/EnumDetail.html:31
+//line views/vexport/EnumDetail.html:39
 	qw422016.N().S(`
   </div>`)
-//line views/vexport/EnumDetail.html:32
-	if p.File != nil {
-//line views/vexport/EnumDetail.html:32
+//line views/vexport/EnumDetail.html:40
+	if file != nil {
+//line views/vexport/EnumDetail.html:40
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vexport/EnumDetail.html:34
+//line views/vexport/EnumDetail.html:42
 		components.StreamSVGIcon(qw422016, `file`, ps)
-//line views/vexport/EnumDetail.html:34
+//line views/vexport/EnumDetail.html:42
 		qw422016.N().S(` Exported Files</h3>
     `)
-//line views/vexport/EnumDetail.html:35
-		streamenumFiles(qw422016, as, e, p.File, ps)
-//line views/vexport/EnumDetail.html:35
+//line views/vexport/EnumDetail.html:43
+		streamenumFiles(qw422016, as, e, file, ps)
+//line views/vexport/EnumDetail.html:43
 		qw422016.N().S(`
   </div>`)
-//line views/vexport/EnumDetail.html:36
+//line views/vexport/EnumDetail.html:44
 	}
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:45
+	if baseURL == "" {
+//line views/vexport/EnumDetail.html:45
+		qw422016.N().S(`  `)
+//line views/vexport/EnumDetail.html:46
+		components.StreamJSONModal(qw422016, key, "Enum JSON", e, 1)
+//line views/vexport/EnumDetail.html:46
+		qw422016.N().S(`
+`)
+//line views/vexport/EnumDetail.html:47
+	}
+//line views/vexport/EnumDetail.html:48
 }
 
-//line views/vexport/EnumDetail.html:37
-func (p *EnumDetail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
+func writeenumDetail(qq422016 qtio422016.Writer, as *app.State, baseURL string, e *enum.Enum, file *file.File, ps *cutil.PageState) {
+//line views/vexport/EnumDetail.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumDetail.html:37
-	p.StreamBody(qw422016, as, ps)
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
+	streamenumDetail(qw422016, as, baseURL, e, file, ps)
+//line views/vexport/EnumDetail.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
 }
 
-//line views/vexport/EnumDetail.html:37
-func (p *EnumDetail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
+func enumDetail(as *app.State, baseURL string, e *enum.Enum, file *file.File, ps *cutil.PageState) string {
+//line views/vexport/EnumDetail.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumDetail.html:37
-	p.WriteBody(qb422016, as, ps)
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
+	writeenumDetail(qb422016, as, baseURL, e, file, ps)
+//line views/vexport/EnumDetail.html:48
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
 	return qs422016
-//line views/vexport/EnumDetail.html:37
+//line views/vexport/EnumDetail.html:48
 }
 
-//line views/vexport/EnumDetail.html:39
+//line views/vexport/EnumDetail.html:50
 func streamenumSummary(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:39
+//line views/vexport/EnumDetail.html:50
 	qw422016.N().S(`
   <div class="overflow full-width">
-    <table class="mt min-200 expanded">
+    <table class="min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>`)
-//line views/vexport/EnumDetail.html:43
+//line views/vexport/EnumDetail.html:54
 	qw422016.E().S(enum.Name)
-//line views/vexport/EnumDetail.html:43
+//line views/vexport/EnumDetail.html:54
 	qw422016.N().S(`</td></tr>
         <tr><th>Package</th><td>`)
-//line views/vexport/EnumDetail.html:44
-	qw422016.E().S(enum.Package)
-//line views/vexport/EnumDetail.html:44
-	qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EnumDetail.html:45
-	if len(enum.Group) > 0 {
-//line views/vexport/EnumDetail.html:45
-		qw422016.N().S(`        <tr><th>Group</th><td>`)
-//line views/vexport/EnumDetail.html:46
-		qw422016.E().S(util.StringJoin(enum.Group, "/"))
-//line views/vexport/EnumDetail.html:46
-		qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EnumDetail.html:47
-	}
-//line views/vexport/EnumDetail.html:47
-	qw422016.N().S(`        <tr><th>Description</th><td>`)
-//line views/vexport/EnumDetail.html:48
-	qw422016.E().S(enum.Description)
-//line views/vexport/EnumDetail.html:48
-	qw422016.N().S(`</td></tr>
-        <tr><th>Icon</th><td>`)
-//line views/vexport/EnumDetail.html:49
-	qw422016.E().S(enum.IconSafe())
-//line views/vexport/EnumDetail.html:49
-	qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EnumDetail.html:50
-	if enum.TitleOverride != "" {
-//line views/vexport/EnumDetail.html:50
-		qw422016.N().S(`        <tr><th>Title Override</th><td>`)
-//line views/vexport/EnumDetail.html:51
-		qw422016.E().S(enum.TitleOverride)
-//line views/vexport/EnumDetail.html:51
-		qw422016.N().S(`</td></tr>
-`)
-//line views/vexport/EnumDetail.html:52
-	}
-//line views/vexport/EnumDetail.html:53
-	if enum.ProperOverride != "" {
-//line views/vexport/EnumDetail.html:53
-		qw422016.N().S(`        <tr><th>Proper Override</th><td>`)
-//line views/vexport/EnumDetail.html:54
-		qw422016.E().S(enum.ProperOverride)
-//line views/vexport/EnumDetail.html:54
-		qw422016.N().S(`</td></tr>
-`)
 //line views/vexport/EnumDetail.html:55
-	}
+	qw422016.E().S(enum.Package)
+//line views/vexport/EnumDetail.html:55
+	qw422016.N().S(`</td></tr>
+`)
 //line views/vexport/EnumDetail.html:56
-	if enum.RouteOverride != "" {
+	if len(enum.Group) > 0 {
 //line views/vexport/EnumDetail.html:56
-		qw422016.N().S(`        <tr><th>Route Override</th><td>`)
+		qw422016.N().S(`        <tr><th>Group</th><td>`)
 //line views/vexport/EnumDetail.html:57
-		qw422016.E().S(enum.RouteOverride)
+		qw422016.E().S(util.StringJoin(enum.Group, "/"))
 //line views/vexport/EnumDetail.html:57
 		qw422016.N().S(`</td></tr>
 `)
 //line views/vexport/EnumDetail.html:58
 	}
+//line views/vexport/EnumDetail.html:58
+	qw422016.N().S(`        <tr><th>Description</th><td>`)
 //line views/vexport/EnumDetail.html:59
-	if len(enum.Tags) > 0 {
+	qw422016.E().S(enum.Description)
 //line views/vexport/EnumDetail.html:59
-		qw422016.N().S(`        <tr><th>Tags</th><td>`)
+	qw422016.N().S(`</td></tr>
+        <tr><th>Icon</th><td>`)
 //line views/vexport/EnumDetail.html:60
-		qw422016.E().S(util.StringJoin(enum.Tags, ", "))
+	qw422016.E().S(enum.IconSafe())
 //line views/vexport/EnumDetail.html:60
-		qw422016.N().S(`</td></tr>
+	qw422016.N().S(`</td></tr>
 `)
 //line views/vexport/EnumDetail.html:61
-	}
+	if enum.TitleOverride != "" {
 //line views/vexport/EnumDetail.html:61
+		qw422016.N().S(`        <tr><th>Title Override</th><td>`)
+//line views/vexport/EnumDetail.html:62
+		qw422016.E().S(enum.TitleOverride)
+//line views/vexport/EnumDetail.html:62
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EnumDetail.html:63
+	}
+//line views/vexport/EnumDetail.html:64
+	if enum.ProperOverride != "" {
+//line views/vexport/EnumDetail.html:64
+		qw422016.N().S(`        <tr><th>Proper Override</th><td>`)
+//line views/vexport/EnumDetail.html:65
+		qw422016.E().S(enum.ProperOverride)
+//line views/vexport/EnumDetail.html:65
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EnumDetail.html:66
+	}
+//line views/vexport/EnumDetail.html:67
+	if enum.RouteOverride != "" {
+//line views/vexport/EnumDetail.html:67
+		qw422016.N().S(`        <tr><th>Route Override</th><td>`)
+//line views/vexport/EnumDetail.html:68
+		qw422016.E().S(enum.RouteOverride)
+//line views/vexport/EnumDetail.html:68
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EnumDetail.html:69
+	}
+//line views/vexport/EnumDetail.html:70
+	if len(enum.Tags) > 0 {
+//line views/vexport/EnumDetail.html:70
+		qw422016.N().S(`        <tr><th>Tags</th><td>`)
+//line views/vexport/EnumDetail.html:71
+		qw422016.E().S(util.StringJoin(enum.Tags, ", "))
+//line views/vexport/EnumDetail.html:71
+		qw422016.N().S(`</td></tr>
+`)
+//line views/vexport/EnumDetail.html:72
+	}
+//line views/vexport/EnumDetail.html:72
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 }
 
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 func writeenumSummary(qq422016 qtio422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	streamenumSummary(qw422016, as, enum, ps)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 }
 
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 func enumSummary(as *app.State, enum *enum.Enum, ps *cutil.PageState) string {
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	writeenumSummary(qb422016, as, enum, ps)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 	return qs422016
-//line views/vexport/EnumDetail.html:65
+//line views/vexport/EnumDetail.html:76
 }
 
-//line views/vexport/EnumDetail.html:67
+//line views/vexport/EnumDetail.html:78
 func streamenumValues(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:67
+//line views/vexport/EnumDetail.html:78
 	qw422016.N().S(`
 `)
-//line views/vexport/EnumDetail.html:68
+//line views/vexport/EnumDetail.html:79
 	if len(enum.Values) == 0 {
-//line views/vexport/EnumDetail.html:68
+//line views/vexport/EnumDetail.html:79
 		qw422016.N().S(`  <p><em>no values</em></p>
 `)
-//line views/vexport/EnumDetail.html:70
+//line views/vexport/EnumDetail.html:81
 	} else {
-//line views/vexport/EnumDetail.html:71
+//line views/vexport/EnumDetail.html:82
 		ef := enum.ExtraFields()
 
-//line views/vexport/EnumDetail.html:71
+//line views/vexport/EnumDetail.html:82
 		qw422016.N().S(`  <div class="overflow full-width">
     <table class="mt min-200 expanded">
       <thead>
@@ -292,182 +363,182 @@ func streamenumValues(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum,
           <th>Icon</th>
           <th>Description</th>
 `)
-//line views/vexport/EnumDetail.html:80
+//line views/vexport/EnumDetail.html:91
 		for _, x := range ef.Keys() {
-//line views/vexport/EnumDetail.html:80
+//line views/vexport/EnumDetail.html:91
 			qw422016.N().S(`          <th>`)
-//line views/vexport/EnumDetail.html:81
+//line views/vexport/EnumDetail.html:92
 			qw422016.E().S(x)
-//line views/vexport/EnumDetail.html:81
+//line views/vexport/EnumDetail.html:92
 			qw422016.N().S(`</th>
 `)
-//line views/vexport/EnumDetail.html:82
+//line views/vexport/EnumDetail.html:93
 		}
-//line views/vexport/EnumDetail.html:82
+//line views/vexport/EnumDetail.html:93
 		qw422016.N().S(`        </tr>
       </thead>
       <tbody>
 `)
-//line views/vexport/EnumDetail.html:86
+//line views/vexport/EnumDetail.html:97
 		for _, v := range enum.Values {
-//line views/vexport/EnumDetail.html:86
+//line views/vexport/EnumDetail.html:97
 			qw422016.N().S(`        <tr>
           <td>`)
-//line views/vexport/EnumDetail.html:88
+//line views/vexport/EnumDetail.html:99
 			qw422016.E().S(v.Key)
-//line views/vexport/EnumDetail.html:88
+//line views/vexport/EnumDetail.html:99
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EnumDetail.html:89
+//line views/vexport/EnumDetail.html:100
 			qw422016.E().S(v.Name)
-//line views/vexport/EnumDetail.html:89
+//line views/vexport/EnumDetail.html:100
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EnumDetail.html:90
+//line views/vexport/EnumDetail.html:101
 			components.StreamSVGIcon(qw422016, v.IconSafe(), ps)
-//line views/vexport/EnumDetail.html:90
+//line views/vexport/EnumDetail.html:101
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vexport/EnumDetail.html:91
+//line views/vexport/EnumDetail.html:102
 			qw422016.E().S(v.Description)
-//line views/vexport/EnumDetail.html:91
+//line views/vexport/EnumDetail.html:102
 			qw422016.N().S(`</td>
 `)
-//line views/vexport/EnumDetail.html:92
+//line views/vexport/EnumDetail.html:103
 			for _, x := range ef.Keys() {
-//line views/vexport/EnumDetail.html:93
+//line views/vexport/EnumDetail.html:104
 				if v.Extra == nil {
-//line views/vexport/EnumDetail.html:93
+//line views/vexport/EnumDetail.html:104
 					qw422016.N().S(`          <td></td>
 `)
-//line views/vexport/EnumDetail.html:95
+//line views/vexport/EnumDetail.html:106
 				} else {
-//line views/vexport/EnumDetail.html:95
+//line views/vexport/EnumDetail.html:106
 					qw422016.N().S(`          <td>`)
-//line views/vexport/EnumDetail.html:96
+//line views/vexport/EnumDetail.html:107
 					qw422016.E().V(v.Extra.GetSimple(x))
-//line views/vexport/EnumDetail.html:96
+//line views/vexport/EnumDetail.html:107
 					qw422016.N().S(`</td>
 `)
-//line views/vexport/EnumDetail.html:97
+//line views/vexport/EnumDetail.html:108
 				}
-//line views/vexport/EnumDetail.html:98
+//line views/vexport/EnumDetail.html:109
 			}
-//line views/vexport/EnumDetail.html:98
+//line views/vexport/EnumDetail.html:109
 			qw422016.N().S(`        </tr>
 `)
-//line views/vexport/EnumDetail.html:100
+//line views/vexport/EnumDetail.html:111
 		}
-//line views/vexport/EnumDetail.html:100
+//line views/vexport/EnumDetail.html:111
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vexport/EnumDetail.html:104
+//line views/vexport/EnumDetail.html:115
 	}
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 }
 
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 func writeenumValues(qq422016 qtio422016.Writer, as *app.State, enum *enum.Enum, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	streamenumValues(qw422016, as, enum, ps)
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 }
 
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 func enumValues(as *app.State, enum *enum.Enum, ps *cutil.PageState) string {
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	writeenumValues(qb422016, as, enum, ps)
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 	return qs422016
-//line views/vexport/EnumDetail.html:105
+//line views/vexport/EnumDetail.html:116
 }
 
-//line views/vexport/EnumDetail.html:107
+//line views/vexport/EnumDetail.html:118
 func streamenumFiles(qw422016 *qt422016.Writer, as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:107
+//line views/vexport/EnumDetail.html:118
 	qw422016.N().S(`
   <div class="mt">
     <ul class="accordion">
       <li>
         <input id="accordion-`)
-//line views/vexport/EnumDetail.html:111
+//line views/vexport/EnumDetail.html:122
 	qw422016.E().S(f.FullPath())
-//line views/vexport/EnumDetail.html:111
+//line views/vexport/EnumDetail.html:122
 	qw422016.N().S(`" type="checkbox" hidden />
         <label for="accordion-`)
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:123
 	qw422016.E().S(f.FullPath())
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:123
 	qw422016.N().S(`">`)
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:123
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:123
 	qw422016.N().S(` `)
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:123
 	qw422016.E().S(f.FullPath())
-//line views/vexport/EnumDetail.html:112
+//line views/vexport/EnumDetail.html:123
 	qw422016.N().S(`</label>
         <div class="bd"><div><div>
 `)
-//line views/vexport/EnumDetail.html:114
+//line views/vexport/EnumDetail.html:125
 	out, err := cutil.FormatLang(f.Content, f.Ext())
 
-//line views/vexport/EnumDetail.html:114
+//line views/vexport/EnumDetail.html:125
 	qw422016.N().S(`          `)
-//line views/vexport/EnumDetail.html:115
+//line views/vexport/EnumDetail.html:126
 	if err == nil {
-//line views/vexport/EnumDetail.html:115
+//line views/vexport/EnumDetail.html:126
 		qw422016.N().S(out)
-//line views/vexport/EnumDetail.html:115
+//line views/vexport/EnumDetail.html:126
 	} else {
-//line views/vexport/EnumDetail.html:115
+//line views/vexport/EnumDetail.html:126
 		qw422016.E().S(err.Error())
-//line views/vexport/EnumDetail.html:115
+//line views/vexport/EnumDetail.html:126
 	}
-//line views/vexport/EnumDetail.html:115
+//line views/vexport/EnumDetail.html:126
 	qw422016.N().S(`
         </div></div></div>
       </li>
     </ul>
   </div>
 `)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 }
 
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 func writeenumFiles(qq422016 qtio422016.Writer, as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) {
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	streamenumFiles(qw422016, as, enum, f, ps)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 }
 
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 func enumFiles(as *app.State, enum *enum.Enum, f *file.File, ps *cutil.PageState) string {
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	writeenumFiles(qb422016, as, enum, f, ps)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	qs422016 := string(qb422016.B)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 	return qs422016
-//line views/vexport/EnumDetail.html:120
+//line views/vexport/EnumDetail.html:131
 }

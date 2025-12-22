@@ -13,6 +13,8 @@
     <h3>{%= components.SVGIcon(util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps) %} {%s ps.Title %}</h3>
     {%- if s, ok := ps.Data.(string); ok -%}
     <div class="overflow full-width"><pre class="mt">{%s s %}</pre></div>
+    {%- elseif b, ok := ps.Data.([]byte); ok -%}
+    <div class="overflow full-width"><pre class="mt">{%s string(b) %}</pre></div>
     {%- else -%}
     {%- if util.ArrayTest(ps.Data) -%}
     <div class="overflow full-width">

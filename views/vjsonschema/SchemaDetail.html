@@ -53,7 +53,7 @@
       {%- if sch == nil -%}
       <em>no schema found</em>
       {%- else -%}
-      {%= view.JSONSchema(sch, true, ps) %}
+      {%= view.JSONSchema(sch, ps) %}
       {%- endif -%}
     </div></div></div>
   </li>
@@ -90,7 +90,7 @@
             <code>{%d idx %}</code> {%s x.ID() %}
           </label>
           <div class="bd"><div><div>
-            {%= view.JSONSchema(x, true, ps) %}
+            {%= view.JSONSchema(x, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -106,8 +106,7 @@
       {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("cog", 16, 16, "icon", ps) %} Args
     </label>
     <div class="bd"><div><div>
-      {%= vexport.ArgsDetail(as, util.RandomID(), args, true, ps) %}
-      {%= components.Terminal("argsLogs", argsLogs...) %}
+      {%= vexport.ArgsDetail(as, util.RandomID(), args, argsLogs, ps) %}
     </div></div></div>
   </li>
 {% endfunc %}

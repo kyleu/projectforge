@@ -5,7 +5,7 @@
   "{{{ .Package }}}/views/components"
 ) %}
 
-{% func jsonSchemaTD(key string, source string, v any, full bool, ps *cutil.PageState) %}{% stripspace %}
+{% func jsonSchemaTD(key string, source string, v any, ps *cutil.PageState) %}{% stripspace %}
   {% if v == nil %}
     <em>-</em>
   {% else %}
@@ -24,7 +24,7 @@
                 {%= components.ExpandCollapse(3, ps) %} <code>{% space %}{%s k %}</code>
               </label>
               <div class="bd"><div><div>
-                {%= JSONSchema(x, full, ps) %}
+                {%= JSONSchema(x, ps) %}
               </div></div></div>
             </li>
           {%- endfor -%}
@@ -36,16 +36,16 @@
   {% endif %}
 {% endstripspace %}{% endfunc %}
 
-{% func jsonSchemaTR(key string, source string, v any, full bool, ps *cutil.PageState, omit bool) %}
+{% func jsonSchemaTR(key string, source string, v any, ps *cutil.PageState, omit bool) %}{% stripspace %}
   {% if !omit %}
   <tr>
     <th class="shrink" title="{%s source %}">{%s key %}</th>
-    <td>{%= jsonSchemaTD(key, source, v, full, ps) %}</td>
+    <td>{%= jsonSchemaTD(key, source, v, ps) %}</td>
   </tr>
   {% endif %}
-{% endfunc %}
+{% endstripspace %}{% endfunc %}
 
-{% func JSONSchema(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}{% stripspace %}
+{% func JSONSchema(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
   <div class="overflow full-width bl">
     <table class="expanded">
       <tbody>
@@ -57,110 +57,106 @@
           <th class="nowrap"><em title="derived field">Schema Type</em></th>
           <td>{%s sch.DetectSchemaType().String() %}</td>
         </tr>
-        {%= RenderFullSchema(sch, full, ps) %}
+        {%= RenderFullSchema(sch, ps) %}
       </tbody>
     </table>
   </div>
 {% endstripspace %}{% endfunc %}
 
-{% func RenderFullSchema(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}{% stripspace %}
-  {%= RenderSchemaCore(sch, full, ps) %}
-  {%= RenderSchemaAnnotations(sch, full, ps) %}
-  {%= RenderSchemaValidations(sch, full, ps) %}
-  {%= RenderSchemaApplicators(sch, full, ps) %}
+{% func RenderFullSchema(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= RenderSchemaCore(sch, ps) %}
+  {%= RenderSchemaAnnotations(sch, ps) %}
+  {%= RenderSchemaValidations(sch, ps) %}
+  {%= RenderSchemaApplicators(sch, ps) %}
 {% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaCore(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("$Schema", "$schema", sch.Schema, full, ps, sch.Schema == "") %}
-  {%= jsonSchemaTR("$ID", "$id", sch.MetaID, full, ps, sch.MetaID == "") %}
-  {%= jsonSchemaTR("Anchor", "$anchor", sch.Anchor, full, ps, sch.Anchor == "") %}
-  {%= jsonSchemaTR("Ref", "$ref", sch.Ref, full, ps, sch.Ref == "") %}
-  {%= jsonSchemaTR("Dynamic Ref", "$dynamicRef", sch.DynamicRef, full, ps, sch.DynamicRef == "") %}
-  {%= jsonSchemaTR("Dynamic Anchor", "$dynamicAnchor", sch.DynamicAnchor, full, ps, sch.DynamicAnchor == "") %}
-  {%= jsonSchemaTR("Vocabulary", "$vocabulary", sch.Vocabulary, full, ps, sch.Vocabulary.Length() == 0) %}
-  {%= jsonSchemaTR("Comment", "$comment", sch.Comment, full, ps, sch.Comment == "") %}
+{% func RenderSchemaCore(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("$Schema", "$schema", sch.Schema, ps, sch.Schema == "") %}
+  {%= jsonSchemaTR("$ID", "$id", sch.MetaID, ps, sch.MetaID == "") %}
+  {%= jsonSchemaTR("Anchor", "$anchor", sch.Anchor, ps, sch.Anchor == "") %}
+  {%= jsonSchemaTR("Ref", "$ref", sch.Ref, ps, sch.Ref == "") %}
+  {%= jsonSchemaTR("Dynamic Ref", "$dynamicRef", sch.DynamicRef, ps, sch.DynamicRef == "") %}
+  {%= jsonSchemaTR("Dynamic Anchor", "$dynamicAnchor", sch.DynamicAnchor, ps, sch.DynamicAnchor == "") %}
+  {%= jsonSchemaTR("Vocabulary", "$vocabulary", sch.Vocabulary, ps, sch.Vocabulary.Length() == 0) %}
+  {%= jsonSchemaTR("Comment", "$comment", sch.Comment, ps, sch.Comment == "") %}
   {%- code defs := sch.Definitions() -%}
-  {%= jsonSchemaTR("Definitions", "$defs", defs, full, ps, defs.Length() == 0) %}
-{% endfunc %}
+  {%= jsonSchemaTR("Definitions", "$defs", defs, ps, defs.Length() == 0) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaAnnotations(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("Title", "title", sch.Title, full, ps, sch.Title == "") %}
-  {%= jsonSchemaTR("Description", "description", sch.Description, full, ps, sch.Description == "") %}
-  {%= jsonSchemaTR("Default", "default", sch.Default, full, ps, sch.Default == nil) %}
-  {%= jsonSchemaTR("Deprecated", "deprecated", sch.Deprecated, full, ps, sch.Deprecated == nil) %}
-  {%= jsonSchemaTR("Read Only", "readOnly", sch.ReadOnly, full, ps, !sch.ReadOnly) %}
-  {%= jsonSchemaTR("Write Only", "writeOnly", sch.WriteOnly, full, ps, !sch.WriteOnly) %}
-{% endfunc %}
+{% func RenderSchemaAnnotations(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("Title", "title", sch.Title, ps, sch.Title == "") %}
+  {%= jsonSchemaTR("Description", "description", sch.Description, ps, sch.Description == "") %}
+  {%= jsonSchemaTR("Default", "default", sch.Default, ps, sch.Default == nil) %}
+  {%= jsonSchemaTR("Deprecated", "deprecated", sch.Deprecated, ps, sch.Deprecated == nil) %}
+  {%= jsonSchemaTR("Read Only", "readOnly", sch.ReadOnly, ps, !sch.ReadOnly) %}
+  {%= jsonSchemaTR("Write Only", "writeOnly", sch.WriteOnly, ps, !sch.WriteOnly) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaValidations(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("Type", "type", sch.Type, full, ps, sch.Type == nil) %}
-  {%= jsonSchemaTR("Enum", "enum", sch.Enum, full, ps, len(sch.Enum) == 0) %}
-  {%= jsonSchemaTR("Const", "const", sch.Const, full, ps, sch.Const == nil) %}
+{% func RenderSchemaValidations(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("Type", "type", sch.Type, ps, sch.Type == nil) %}
+  {%= jsonSchemaTR("Enum", "enum", sch.Enum, ps, len(sch.Enum) == 0) %}
+  {%= jsonSchemaTR("Const", "const", sch.Const, ps, sch.Const == nil) %}
 
-  {%= RenderSchemaStringValidations(sch, full, ps) %}
-  {%= RenderSchemaNumberValidations(sch, full, ps) %}
-  {%= RenderSchemaArrayValidations(sch, full, ps) %}
-  {%= RenderSchemaObjectValidations(sch, full, ps) %}
-{% endfunc %}
+  {%= RenderSchemaStringValidations(sch, ps) %}
+  {%= RenderSchemaNumberValidations(sch, ps) %}
+  {%= RenderSchemaArrayValidations(sch, ps) %}
+  {%= RenderSchemaObjectValidations(sch, ps) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaStringValidations(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("MaxLength", "maxLength", sch.MaxLength, full, ps, sch.MaxLength == nil) %}
-  {%= jsonSchemaTR("MinLength", "minLength", sch.MinLength, full, ps, sch.MinLength == nil) %}
-  {%= jsonSchemaTR("Pattern", "pattern", sch.Pattern, full, ps, sch.Pattern == "") %}
-  {%= jsonSchemaTR("Format", "format", sch.Format, full, ps, sch.Format == "") %}
-  {%= jsonSchemaTR("Content Encoding", "contentEncoding", sch.ContentEncoding, full, ps, sch.ContentEncoding == "") %}
-  {%= jsonSchemaTR("Content Media Type", "contentMediaType", sch.ContentMediaType, full, ps, sch.ContentMediaType == "") %}
-  {%= jsonSchemaTR("Content Schema", "contentSchema", sch.ContentSchema, full, ps, sch.ContentSchema == nil) %}
-{% endfunc %}
+{% func RenderSchemaStringValidations(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("MaxLength", "maxLength", sch.MaxLength, ps, sch.MaxLength == nil) %}
+  {%= jsonSchemaTR("MinLength", "minLength", sch.MinLength, ps, sch.MinLength == nil) %}
+  {%= jsonSchemaTR("Pattern", "pattern", sch.Pattern, ps, sch.Pattern == "") %}
+  {%= jsonSchemaTR("Format", "format", sch.Format, ps, sch.Format == "") %}
+  {%= jsonSchemaTR("Content Encoding", "contentEncoding", sch.ContentEncoding, ps, sch.ContentEncoding == "") %}
+  {%= jsonSchemaTR("Content Media Type", "contentMediaType", sch.ContentMediaType, ps, sch.ContentMediaType == "") %}
+  {%= jsonSchemaTR("Content Schema", "contentSchema", sch.ContentSchema, ps, sch.ContentSchema == nil) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaNumberValidations(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("Multiple Of", "multipleOf", sch.MultipleOf, full, ps, sch.MultipleOf == nil) %}
-  {%= jsonSchemaTR("Maximum", "maximum", sch.Maximum, full, ps, sch.Maximum == nil) %}
-  {%= jsonSchemaTR("Exclusive Maximum", "exclusiveMaximum", sch.ExclusiveMaximum, full, ps, sch.ExclusiveMaximum == nil) %}
-  {%= jsonSchemaTR("Minimum", "minimum", sch.Minimum, full, ps, sch.Minimum == nil) %}
-  {%= jsonSchemaTR("Exclusive Minimum", "exclusiveMinimum", sch.ExclusiveMinimum, full, ps, sch.ExclusiveMinimum == nil) %}
-{% endfunc %}
+{% func RenderSchemaNumberValidations(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("Multiple Of", "multipleOf", sch.MultipleOf, ps, sch.MultipleOf == nil) %}
+  {%= jsonSchemaTR("Maximum", "maximum", sch.Maximum, ps, sch.Maximum == nil) %}
+  {%= jsonSchemaTR("Exclusive Maximum", "exclusiveMaximum", sch.ExclusiveMaximum, ps, sch.ExclusiveMaximum == nil) %}
+  {%= jsonSchemaTR("Minimum", "minimum", sch.Minimum, ps, sch.Minimum == nil) %}
+  {%= jsonSchemaTR("Exclusive Minimum", "exclusiveMinimum", sch.ExclusiveMinimum, ps, sch.ExclusiveMinimum == nil) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaArrayValidations(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("Items", "items", sch.Items, full, ps, sch.Items == nil) %}
-  {%= jsonSchemaTR("Prefix Items", "prefixItems", sch.PrefixItems, full, ps, sch.PrefixItems == nil) %}
-  {%= jsonSchemaTR("Unevaluated Items", "unevaluatedItems", sch.UnevaluatedItems, full, ps, sch.UnevaluatedItems == nil) %}
-  {%= jsonSchemaTR("Max Items", "maxItems", sch.MaxItems, full, ps, sch.MaxItems == nil) %}
-  {%= jsonSchemaTR("Min Items", "minItems", sch.MinItems, full, ps, sch.MinItems == nil) %}
-  {%= jsonSchemaTR("Unique Items", "uniqueItems", sch.UniqueItems, full, ps, sch.UniqueItems == nil) %}
-  {%= jsonSchemaTR("Contains", "contains", sch.Contains, full, ps, sch.Contains == nil) %}
-  {%= jsonSchemaTR("Max Contains", "maxContains", sch.MaxContains, full, ps, sch.MaxContains == nil) %}
-  {%= jsonSchemaTR("Min Contains", "minContains", sch.MinContains, full, ps, sch.MinContains == nil) %}
-{% endfunc %}
+{% func RenderSchemaArrayValidations(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("Items", "items", sch.Items, ps, sch.Items == nil) %}
+  {%= jsonSchemaTR("Prefix Items", "prefixItems", sch.PrefixItems, ps, sch.PrefixItems == nil) %}
+  {%= jsonSchemaTR("Unevaluated Items", "unevaluatedItems", sch.UnevaluatedItems, ps, sch.UnevaluatedItems == nil) %}
+  {%= jsonSchemaTR("Max Items", "maxItems", sch.MaxItems, ps, sch.MaxItems == nil) %}
+  {%= jsonSchemaTR("Min Items", "minItems", sch.MinItems, ps, sch.MinItems == nil) %}
+  {%= jsonSchemaTR("Unique Items", "uniqueItems", sch.UniqueItems, ps, sch.UniqueItems == nil) %}
+  {%= jsonSchemaTR("Contains", "contains", sch.Contains, ps, sch.Contains == nil) %}
+  {%= jsonSchemaTR("Max Contains", "maxContains", sch.MaxContains, ps, sch.MaxContains == nil) %}
+  {%= jsonSchemaTR("Min Contains", "minContains", sch.MinContains, ps, sch.MinContains == nil) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaObjectValidations(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%- if full -%}
-  {%= jsonSchemaTR("Properties", "properties", sch.Properties, full, ps, sch.Properties.Length() == 0) %}
-  {%- else -%}
-  {%= jsonSchemaTR("Properties", "properties", sch.Properties.Keys(), full, ps, sch.Properties.Length() == 0) %}
-  {%- endif -%}
-  {%= jsonSchemaTR("Pattern Properties", "patternProperties", sch.PatternProperties, full, ps, sch.PatternProperties.Length() == 0) %}
-  {%= jsonSchemaTR("Additional Properties", "additionalProperties", sch.AdditionalProperties, full, ps, sch.AdditionalProperties == nil) %}
-  {%= jsonSchemaTR("Allow Trailing Commas", "allowTrailingCommas", sch.AllowTrailingCommas, full, ps, !sch.AllowTrailingCommas) %}
-  {%= jsonSchemaTR("Unevaluated Properties", "unevaluatedProperties", sch.UnevaluatedProperties, full, ps, sch.UnevaluatedProperties == nil) %}
-  {%= jsonSchemaTR("Required", "required", sch.Required, full, ps, len(sch.Required) == 0) %}
-  {%= jsonSchemaTR("Property Names", "propertyNames", sch.PropertyNames, full, ps, sch.PropertyNames == nil) %}
-  {%= jsonSchemaTR("Max Properties", "maxProperties", sch.MaxProperties, full, ps, sch.MaxProperties == nil) %}
-  {%= jsonSchemaTR("Min Properties", "minProperties", sch.MinProperties, full, ps, sch.MinProperties == nil) %}
-  {%= jsonSchemaTR("Dependent Required", "dependentRequired", sch.DependentRequired, full, ps, sch.DependentRequired.Length() == 0) %}
-  {%= jsonSchemaTR("Dependent Schemas", "dependentSchemas", sch.DependentSchemas, full, ps, sch.DependentSchemas.Length() == 0) %}
-{% endfunc %}
+{% func RenderSchemaObjectValidations(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("Properties", "properties", sch.Properties, ps, sch.Properties.Length() == 0) %}
+  {%= jsonSchemaTR("Pattern Properties", "patternProperties", sch.PatternProperties, ps, sch.PatternProperties.Length() == 0) %}
+  {%= jsonSchemaTR("Additional Properties", "additionalProperties", sch.AdditionalProperties, ps, sch.AdditionalProperties == nil) %}
+  {%= jsonSchemaTR("Allow Trailing Commas", "allowTrailingCommas", sch.AllowTrailingCommas, ps, !sch.AllowTrailingCommas) %}
+  {%= jsonSchemaTR("Unevaluated Properties", "unevaluatedProperties", sch.UnevaluatedProperties, ps, sch.UnevaluatedProperties == nil) %}
+  {%= jsonSchemaTR("Required", "required", sch.Required, ps, len(sch.Required) == 0) %}
+  {%= jsonSchemaTR("Property Names", "propertyNames", sch.PropertyNames, ps, sch.PropertyNames == nil) %}
+  {%= jsonSchemaTR("Max Properties", "maxProperties", sch.MaxProperties, ps, sch.MaxProperties == nil) %}
+  {%= jsonSchemaTR("Min Properties", "minProperties", sch.MinProperties, ps, sch.MinProperties == nil) %}
+  {%= jsonSchemaTR("Dependent Required", "dependentRequired", sch.DependentRequired, ps, sch.DependentRequired.Length() == 0) %}
+  {%= jsonSchemaTR("Dependent Schemas", "dependentSchemas", sch.DependentSchemas, ps, sch.DependentSchemas.Length() == 0) %}
+{% endstripspace %}{% endfunc %}
 
-{% func RenderSchemaApplicators(sch *jsonschema.Schema, full bool, ps *cutil.PageState) %}
-  {%= jsonSchemaTR("If", "if", sch.If, full, ps, sch.If == nil) %}
-  {%= jsonSchemaTR("Then", "then", sch.Then, full, ps, sch.Then == nil) %}
-  {%= jsonSchemaTR("Else", "else", sch.Else, full, ps, sch.Else == nil) %}
+{% func RenderSchemaApplicators(sch *jsonschema.Schema, ps *cutil.PageState) %}{% stripspace %}
+  {%= jsonSchemaTR("If", "if", sch.If, ps, sch.If == nil) %}
+  {%= jsonSchemaTR("Then", "then", sch.Then, ps, sch.Then == nil) %}
+  {%= jsonSchemaTR("Else", "else", sch.Else, ps, sch.Else == nil) %}
 
-  {%= jsonSchemaTR("All Of", "allOf", sch.AllOf, full, ps, len(sch.AllOf) == 0) %}
-  {%= jsonSchemaTR("Any Of", "anyOf", sch.AnyOf, full, ps, len(sch.AnyOf) == 0) %}
-  {%= jsonSchemaTR("One Of", "oneOf", sch.OneOf, full, ps, len(sch.OneOf) == 0) %}
-  {%= jsonSchemaTR("Not", "not", sch.Not, full, ps, sch.Not == nil) %}
+  {%= jsonSchemaTR("All Of", "allOf", sch.AllOf, ps, len(sch.AllOf) == 0) %}
+  {%= jsonSchemaTR("Any Of", "anyOf", sch.AnyOf, ps, len(sch.AnyOf) == 0) %}
+  {%= jsonSchemaTR("One Of", "oneOf", sch.OneOf, ps, len(sch.OneOf) == 0) %}
+  {%= jsonSchemaTR("Not", "not", sch.Not, ps, sch.Not == nil) %}
 
-  {%= jsonSchemaTR("Examples", "examples", sch.Examples, full, ps, len(sch.Examples) == 0) %}
-  {%= jsonSchemaTR("Unknown", "unknown", sch.Unknown, full, ps, len(sch.Unknown) == 0) %}
-{% endfunc %}
+  {%= jsonSchemaTR("Examples", "examples", sch.Examples, ps, len(sch.Examples) == 0) %}
+  {%= jsonSchemaTR("Unknown", "unknown", sch.Unknown, ps, len(sch.Unknown) == 0) %}
+{% endstripspace %}{% endfunc %}

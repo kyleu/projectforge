@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"path"
 	"path/filepath"
-	"reflect"
 	"runtime"
 	"strings"
 	"unicode/utf8"
@@ -176,7 +175,7 @@ func StringReplaceBetween(s string, l string, r string, replacement string) (str
 }
 
 func StringNullable(s fmt.Stringer) string {
-	if s == nil || reflect.ValueOf(s).IsNil() {
+	if IsNil(s) {
 		return ""
 	}
 	return s.String()

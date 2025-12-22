@@ -60,6 +60,12 @@ func (o *OrderedMap[V]) Set(k string, v V) {
 	}
 }
 
+func (o *OrderedMap[V]) SetAll(m map[string]V) {
+	for k, v := range m {
+		o.Set(k, v)
+	}
+}
+
 func (o *OrderedMap[V]) Merge(defs *OrderedMap[V]) *OrderedMap[V] {
 	ret := o.Clone()
 	if defs == nil {

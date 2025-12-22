@@ -13,6 +13,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/jsonschema"
+	"projectforge.dev/projectforge/app/lib/metamodel/jsonload"
 	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/vjsonschema"
@@ -28,7 +29,12 @@ func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		results, err := metaschema.ImportArgs(schCollection, prj.ExportArgs)
+		oldResults, err := metaschema.ImportArgs(schCollection, prj.ExportArgs)
+		if err != nil {
+			return "", err
+		}
+		newValidation := &jsonload.Validation{Collection: schCollection}
+		_, newResults, err := newValidation.Export(ps.Context, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -37,7 +43,7 @@ func ProjectExportJSONSchema(w http.ResponseWriter, r *http.Request) {
 		})
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
 		page := &vjsonschema.CollectionDetail{
-			BaseURL: prj.WebPath(), Args: prj.ExportArgs, Collection: schCollection, Results: results, Unrelated: unrelated,
+			BaseURL: prj.WebPath(), Args: prj.ExportArgs, Collection: schCollection, OldResults: oldResults, NewResults: newResults, Unrelated: unrelated,
 		}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, "JSON Schema")
 	})

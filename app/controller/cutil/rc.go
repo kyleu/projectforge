@@ -44,7 +44,7 @@ func PathString(r *http.Request, key string, allowEmpty bool) (string, error) {
 
 func PathRichString(r *http.Request, key string, allowEmpty bool) (util.RichString, error) {
 	ret, err := PathString(r, key, allowEmpty)
-	return util.RS(ret), err
+	return util.Str(ret), err
 }
 
 func PathBool(r *http.Request, key string) (bool, error) {

@@ -19,7 +19,7 @@ import (
 const keyAdmin = "admin"
 
 func Admin(w http.ResponseWriter, r *http.Request) {
-	path := util.RS(r.URL.Path).TrimPrefix("/admin").SplitAndTrim("/")
+	path := util.Str(r.URL.Path).TrimPrefix("/admin").SplitAndTrim("/")
 	key := keyAdmin
 	if len(path) > 0 {
 		key += "." + path.Join(".").String()

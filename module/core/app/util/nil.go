@@ -3,8 +3,22 @@ package util
 import (
 	"database/sql"
 	"encoding/json/jsontext"
+	"reflect"
 	"time"
 )
+
+func IsNil(x any) bool {
+	if x == nil {
+		return true
+	}
+	rv := reflect.ValueOf(x)
+	switch rv.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Pointer, reflect.Interface, reflect.Slice:
+		return rv.IsNil()
+	default:
+		return false
+	}
+}
 
 var EmptyStruct = struct{}{}
 

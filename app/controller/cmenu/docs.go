@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"io/fs"
 	"slices"
-	"strings"
 
 	"github.com/samber/lo"
 
@@ -33,17 +32,19 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 	}
 
 	ret := &menu.Item{Key: "docs", Title: "Documentation", Icon: "folder"}
-	for _, p := range util.ArraySorted(paths) {
-		if p == "." || strings.HasPrefix(p, "module/") || !strings.HasSuffix(p, util.ExtMarkdown) {
+	for _, pth := range util.ArraySorted(paths) {
+		p := util.Str(pth)
+
+		if p.Equal(".") || p.HasPrefix("module/") || !p.HasSuffix(util.ExtMarkdown) {
 			continue
 		}
-		split := util.StringSplitAndTrim(p, "/")
-		p = strings.TrimSuffix(p, util.ExtMarkdown)
+		split := p.SplitAndTrim("/")
+		p = p.TrimSuffix(util.ExtMarkdown)
 		mi := ret
-		lo.ForEach(split, func(comp string, idx int) {
-			name := strings.TrimSuffix(comp, util.ExtMarkdown)
+		lo.ForEach(split, func(comp util.RichString, idx int) {
+			name := comp.TrimSuffix(util.ExtMarkdown)
 			addFolder := func() {
-				i := &menu.Item{Key: name, Title: util.StringToProper(name), Icon: "folder"}
+				i := &menu.Item{Key: name.String(), Title: comp.ToProper().String(), Icon: "folder"}
 				mi.Children = append(mi.Children, i)
 				slices.SortFunc(mi.Children, func(l *menu.Item, r *menu.Item) int {
 					return cmp.Compare(l.Title, r.Title)
@@ -51,13 +52,13 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 				mi = i
 			}
 			if idx == len(split)-1 {
-				if strings.HasSuffix(comp, util.ExtMarkdown) {
-					mi.Children = append(mi.Children, addChild(p, name))
+				if comp.HasSuffix(util.ExtMarkdown) {
+					mi.Children = append(mi.Children, addChild(p.String(), name.String()))
 				} else {
 					addFolder()
 				}
 			} else {
-				if kid := mi.Children.Get(comp); kid == nil {
+				if kid := mi.Children.Get(comp.String()); kid == nil {
 					addFolder()
 				} else {
 					mi = kid
@@ -81,12 +82,13 @@ func addChild(p string, name string) *menu.Item {
 	}
 
 	lines := util.StringSplitLines(string(b))
-	for _, line := range lines {
-		if strings.HasPrefix(line, "#") {
-			for strings.HasPrefix(line, "#") {
+	for _, l := range lines {
+		line := util.Str(l)
+		if line.HasPrefix("#") {
+			for line.HasPrefix("#") {
 				line = line[1:]
 			}
-			title = strings.TrimSpace(line)
+			title = line.TrimSpace().String()
 			break
 		}
 	}

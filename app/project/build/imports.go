@@ -125,10 +125,10 @@ func processFileImports(fn string, lines []string, self string) ([]string, []str
 	fixed := make([]string, 0, len(lines))
 	if len(ordered) == 1 && !funky {
 		fixed = append(fixed, lines[:start]...)
-		if util.RS(lines[start]).Contains("{%") {
-			fixed = append(fixed, util.RS(ordered[0]).TrimSpace().WithPrefix("{% import ").WithSuffix(" %}").String())
+		if util.Str(lines[start]).Contains("{%") {
+			fixed = append(fixed, util.Str(ordered[0]).TrimSpace().WithPrefix("{% import ").WithSuffix(" %}").String())
 		} else {
-			fixed = append(fixed, util.RS(ordered[0]).TrimSpace().WithPrefix("import ").String())
+			fixed = append(fixed, util.Str(ordered[0]).TrimSpace().WithPrefix("import ").String())
 		}
 		fixed = append(fixed, lines[end+1:]...)
 	} else {

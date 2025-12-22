@@ -14,7 +14,8 @@
   Args *metamodel.Args
   Collection *jsonschema.Collection
   Unrelated jsonschema.Schemas
-  Results *metamodel.Args
+  OldResults *metamodel.Args
+  NewResults *metamodel.Args
 } %}
 
 {% func (p *CollectionDetail) Body(as *app.State, ps *cutil.PageState) %}
@@ -32,20 +33,22 @@
       <ul class="accordion">
         {%- for _, x := range p.Args.Enums -%}
         {%- code sch := p.Collection.GetSchema(x.ID()) -%}
-        {%- code res := p.Results.Enums.Get(x.Name) -%}
-        {%- code df := util.DiffObjects(x, res) -%}
+        {%- code oldRes := p.OldResults.Enums.Get(x.Name) -%}
+        {%- code newRes := p.NewResults.Enums.Get(x.Name) -%}
+        {%- code oldDiffs := util.DiffObjects(x, oldRes) -%}
+        {%- code newDiffs := util.DiffObjects(x, newRes) -%}
         <li>
           <input id="accordion-enum-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-enum-{%s x.Name %}">
-            {%- if len(df) > 0 -%}
-            <div class="right"><em>{%s util.StringPlural(len(df), "difference") %}</em></div>
+            {%- if (len(oldDiffs) + len(newDiffs)) > 0 -%}
+            <div class="right"><em>{%s util.StringPlural(len(oldDiffs) + len(newDiffs), "difference") %}</em></div>
             {%- endif -%}
             {%= components.ExpandCollapse(3, ps) %}
             {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %}
             {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%= RenderEnum(p.BaseURL + "/export/enums", x, sch, res, df, ps) %}
+            {%= RenderResult(p.BaseURL + "/export/enums", x, sch, oldRes, oldDiffs, newRes, newDiffs, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -58,20 +61,22 @@
       <ul class="accordion">
         {%- for _, x := range p.Args.Models -%}
         {%- code sch := p.Collection.GetSchema(x.ID()) -%}
-        {%- code res := p.Results.Models.Get(x.Name) -%}
-        {%- code df := util.DiffObjects(x, res) -%}
+        {%- code oldRes := p.OldResults.Models.Get(x.Name) -%}
+        {%- code newRes := p.NewResults.Models.Get(x.Name) -%}
+        {%- code oldDiffs := util.DiffObjects(x, oldRes) -%}
+        {%- code newDiffs := util.DiffObjects(x, newRes) -%}
         <li>
           <input id="accordion-model-{%s x.Name %}" type="checkbox" hidden="hidden" />
           <label for="accordion-model-{%s x.Name %}">
-            {%- if len(df) > 0 -%}
-            <div class="right"><em>{%s util.StringPlural(len(df), "difference") %}</em></div>
+            {%- if (len(oldDiffs) + len(newDiffs)) > 0 -%}
+            <div class="right"><em>{%s util.StringPlural(len(oldDiffs) + len(newDiffs), "difference") %}</em></div>
             {%- endif -%}
             {%= components.ExpandCollapse(3, ps) %}
             {%= components.SVGRef(util.Choose(sch == nil, "times", "check"), 16, 16, "icon", ps) %}
             {%s x.Name %}
           </label>
           <div class="bd"><div><div>
-            {%= RenderModel(p.BaseURL + "/export/models", x, sch, res, df, ps) %}
+            {%= RenderResult(p.BaseURL + "/export/models", x, sch, oldRes, oldDiffs, newRes, newDiffs, ps) %}
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -89,7 +94,7 @@
           <input id="accordion-extra-{%s sch.ID() %}" type="checkbox" hidden="hidden" />
           <label for="accordion-extra-{%s sch.ID() %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID() %}</label>
           <div class="bd"><div><div>
-            {%- code res := p.Results.Models.Get(sch.ID()) -%}
+            {%- code res := p.OldResults.Models.Get(sch.ID()) -%}
             {%= RenderExtra(as, sch, res, ps) %}
           </div></div></div>
         </li>
@@ -101,18 +106,14 @@
 {% endfunc %}
 
 {% func RenderExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) %}
-  <div class="flex" style="">
-    <div class="flex-item">
-      <strong>Original</strong>
-      <pre class="mt">null</pre>
-    </div>
+  <div class="flex">
     <div class="flex-item">
       <strong>Schema</strong>
-      <pre class="mt">{%s util.ToJSON(sch) %}</pre>
+      <div class="mt">{%= components.JSON(sch) %}</div>
     </div>
     <div class="flex-item">
       <strong>Result</strong>
-      <pre class="mt">{%s util.ToJSON(result) %}</pre>
+      <div class="mt">{%= components.JSON(result) %}</div>
     </div>
   </div>
 {% endfunc %}

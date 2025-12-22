@@ -44,7 +44,7 @@
     {% case *int64 %}
       {%= Int(*t) %}
     {% case *jsonschema.Schema %}
-      {%= JSONSchema(t, true, ps) %}
+      {%= JSONSchema(t, ps) %}
     {% case jsonschema.Schemas %}
       {%= Any(util.ArrayToAnyArray(t), ps) %}
     {% case jsontext.Value %}

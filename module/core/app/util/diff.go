@@ -73,14 +73,15 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 	if len(path) > 0 && lo.Contains(ignored, path[len(path)-1]) {
 		return nil
 	}
-	if l == nil && r == nil {
+	lNil, rNil := IsNil(l), IsNil(r)
+	if lNil && rNil {
 		return nil
 	}
-	if l == nil {
-		return Diffs{NewDiff(StringJoin(path, "."), "", fmt.Sprint(r))}
+	if lNil {
+		return Diffs{NewDiff(StringJoin(path, "."), "<nil>", "<original value")}
 	}
-	if r == nil {
-		return Diffs{NewDiff(StringJoin(path, "."), fmt.Sprint(l), "")}
+	if rNil {
+		return Diffs{NewDiff(StringJoin(path, "."), "<original value>", "<nil>")}
 	}
 	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
 		return Diffs{NewDiff(StringJoin(path, "."), ToJSONCompact(l), ToJSONCompact(r))}

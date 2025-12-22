@@ -42,7 +42,7 @@ func StreamDetailExport(qw422016 *qt422016.Writer, as *app.State, key string, ea
   <div class="mt">
     `)
 //line views/vproject/DetailExport.html:12
-	vexport.StreamArgsDetail(qw422016, as, key, ea, false, ps)
+	vexport.StreamArgsList(qw422016, as, key, ea, ps)
 //line views/vproject/DetailExport.html:12
 	qw422016.N().S(`
   </div>

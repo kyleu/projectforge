@@ -16,11 +16,19 @@
 } %}
 
 {% func (p *EnumDetail) Body(as *app.State, ps *cutil.PageState) %}
-  {%- code e := p.Enum -%}
+  {%= enumDetail(as, p.BaseURL, p.Enum, p.File, ps) %}
+{% endfunc %}
+
+{% func enumDetail(as *app.State, baseURL string, e *enum.Enum, file *file.File, ps *cutil.PageState) %}
+  {%- code key := util.RandomID() -%}
   <div class="card">
     <div class="right">
-      <a href="{%s p.BaseURL %}/{%s e.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
-      <a href="{%s p.BaseURL %}/{%s e.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      {%- if baseURL == "" -%}
+      <a href="#modal-{%s key %}" title="JSON"><button>{%= components.SVGButton("code", ps) %} JSON</button></a>
+      {%- else -%}
+      <a href="{%s baseURL %}/{%s e.Name %}/jsonschema"><button>{%= components.SVGButton("table", ps) %} JSON Schema</button></a>
+      <a href="{%s baseURL %}/{%s e.Name %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      {%- endif -%}
     </div>
     <h3>{%= components.SVGIcon(e.IconSafe(), ps) %} {%s e.Name %}</h3>
     <em>export enum</em>
@@ -29,16 +37,19 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`star`, ps) %} Values</h3>
     {%= enumValues(as, e, ps) %}
-  </div>{%- if p.File != nil -%}
+  </div>{%- if file != nil -%}
   <div class="card">
     <h3>{%= components.SVGIcon(`file`, ps) %} Exported Files</h3>
-    {%= enumFiles(as, e, p.File, ps) %}
+    {%= enumFiles(as, e, file, ps) %}
   </div>{%- endif -%}
+  {%- if baseURL == "" -%}
+  {%= components.JSONModal(key, "Enum JSON", e, 1) %}
+  {%- endif -%}
 {% endfunc %}
 
 {% func enumSummary(as *app.State, enum *enum.Enum, ps *cutil.PageState) %}
   <div class="overflow full-width">
-    <table class="mt min-200 expanded">
+    <table class="min-200 expanded">
       <tbody>
         <tr><th class="shrink">Name</th><td>{%s enum.Name %}</td></tr>
         <tr><th>Package</th><td>{%s enum.Package %}</td></tr>
