@@ -3,6 +3,7 @@ package util
 import (
 	"cmp"
 	"fmt"
+	"reflect"
 	"slices"
 	"strings"
 
@@ -78,12 +79,12 @@ func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
 		return nil
 	}
 	if lNil {
-		return Diffs{NewDiff(StringJoin(path, "."), "<nil>", "<original value")}
+		return Diffs{NewDiff(StringJoin(path, "."), "<nil>", diffPrint(r))}
 	}
 	if rNil {
-		return Diffs{NewDiff(StringJoin(path, "."), "<original value>", "<nil>")}
+		return Diffs{NewDiff(StringJoin(path, "."), diffPrint(l), "<nil>")}
 	}
-	if lt, rt := fmt.Sprintf("%T", l), fmt.Sprintf("%T", r); lt != rt {
+	if !diffCompareTypes(l, r) {
 		return Diffs{NewDiff(StringJoin(path, "."), ToJSONCompact(l), ToJSONCompact(r))}
 	}
 	return diffType(l, r, ignored, false, path...)
@@ -109,17 +110,17 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 	case int64:
 		i := CastOK[int64](r)
 		if t != i {
-			ret = append(ret, NewDiff(StringJoin(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+			ret = append(ret, NewDiff(StringJoin(path, "."), diffPrint(t), diffPrint(i)))
 		}
 	case int:
 		i := CastOK[int](r)
 		if t != i {
-			ret = append(ret, NewDiff(StringJoin(path, "."), fmt.Sprint(t), fmt.Sprint(i)))
+			ret = append(ret, NewDiff(StringJoin(path, "."), diffPrint(t), diffPrint(i)))
 		}
 	case float64:
 		f := CastOK[float64](r)
 		if t != f {
-			ret = append(ret, NewDiff(StringJoin(path, "."), fmt.Sprint(t), fmt.Sprint(f)))
+			ret = append(ret, NewDiff(StringJoin(path, "."), diffPrint(t), diffPrint(f)))
 		}
 	case string:
 		s := CastOK[string](r)
@@ -147,14 +148,14 @@ func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {
 	lo.ForEach(l, func(v any, idx int) {
 		if len(rm) > idx {
 			rv := rm[idx]
-			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(ArrayCopy(path), fmt.Sprint(idx))...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(ArrayCopy(path), diffPrint(idx))...)...)
 		} else {
-			ret = append(ret, DiffObjectsIgnoring(v, nil, ignored, append(ArrayCopy(path), fmt.Sprint(idx))...)...)
+			ret = append(ret, DiffObjectsIgnoring(v, nil, ignored, append(ArrayCopy(path), diffPrint(idx))...)...)
 		}
 	})
 	if len(rm) > len(l) {
 		for i := len(l); i < len(rm); i++ {
-			ret = append(ret, DiffObjectsIgnoring(nil, rm[i], ignored, append(ArrayCopy(path), fmt.Sprint(i))...)...)
+			ret = append(ret, DiffObjectsIgnoring(nil, rm[i], ignored, append(ArrayCopy(path), diffPrint(i))...)...)
 		}
 	}
 	return ret
@@ -203,4 +204,31 @@ func diffIntMaps(l map[string]int, r any, ignored []string, path ...string) Diff
 		}
 	}
 	return ret
+}
+
+func diffCompareTypes(l any, r any) bool {
+	return reflect.TypeOf(l) == reflect.TypeOf(r)
+}
+
+func diffPrint(x any) string {
+	if x, ok := x.(fmt.Stringer); ok {
+		return x.String()
+	}
+	rv := reflect.ValueOf(x)
+	switch rv.Kind() {
+	case reflect.Array:
+		ret := diffPrintType(x)
+		return fmt.Sprintf("%s (%d items)", ret, rv.Len())
+	case reflect.Map:
+		ret := diffPrintType(x)
+		ret = Choose(ret == "map[string]any", "map", ret)
+		return fmt.Sprintf("%s (%d keys)", ret, rv.Len())
+	default:
+		return fmt.Sprint(x)
+	}
+}
+
+func diffPrintType(x any) string {
+	t := fmt.Sprintf("%T", x)
+	return Str(t).ReplaceAll("interface {}", "any").TrimPrefix("*").TrimSpace().String()
 }

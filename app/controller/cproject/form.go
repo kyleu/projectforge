@@ -9,10 +9,10 @@ import (
 )
 
 func projectFromForm(frm util.ValueMap, prj *project.Project) error {
-	get := func(k string, def string) util.RichString {
+	get := func(k string, def string) util.Str {
 		return frm.GetRichStringOpt(k).OrDefault(def)
 	}
-	getSplit := func(k string, def []string, delimOpt ...string) util.RichStrings {
+	getSplit := func(k string, def []string, delimOpt ...string) util.Strings {
 		delim := ","
 		if len(delimOpt) > 0 {
 			delim = delimOpt[0]

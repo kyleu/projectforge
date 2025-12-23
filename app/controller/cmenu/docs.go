@@ -41,7 +41,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 		split := p.SplitAndTrim("/")
 		p = p.TrimSuffix(util.ExtMarkdown)
 		mi := ret
-		lo.ForEach(split, func(comp util.RichString, idx int) {
+		lo.ForEach(split, func(comp util.Str, idx int) {
 			name := comp.TrimSuffix(util.ExtMarkdown)
 			addFolder := func() {
 				i := &menu.Item{Key: name.String(), Title: comp.ToProper().String(), Icon: "folder"}

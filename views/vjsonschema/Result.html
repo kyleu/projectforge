@@ -43,11 +43,11 @@
         <div class="flex">
           <div class="flex-item">
             <strong>Old</strong>
-            <div class="mt">{%= view.Diffs(oldDiffs) %}</div>
+            <div class="mt">{%= view.Diffs(oldDiffs.Sorted()) %}</div>
           </div>
           <div class="flex-item">
             <strong>New</strong>
-            <div class="mt">{%= view.Diffs(newDiffs) %}</div>
+            <div class="mt">{%= view.Diffs(newDiffs.Sorted()) %}</div>
           </div>
         </div>
       </div></div></div>

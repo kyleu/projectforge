@@ -202,12 +202,12 @@ func (m ValueMap) GetStringPtr(key string) *string {
 	return &ret
 }
 
-func (m ValueMap) GetRichString(key string, allowEmpty bool) (RichString, error) {
+func (m ValueMap) GetRichString(key string, allowEmpty bool) (Str, error) {
 	ret, err := m.ParseString(key, false, allowEmpty)
 	return Str(ret), err
 }
 
-func (m ValueMap) GetRichStringOpt(key string) RichString {
+func (m ValueMap) GetRichStringOpt(key string) Str {
 	ret, _ := m.GetRichString(key, true)
 	return ret
 }

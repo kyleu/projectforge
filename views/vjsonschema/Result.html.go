@@ -124,7 +124,7 @@ func StreamRenderResult(qw422016 *qt422016.Writer,
             <strong>Old</strong>
             <div class="mt">`)
 //line views/vjsonschema/Result.html:46
-	view.StreamDiffs(qw422016, oldDiffs)
+	view.StreamDiffs(qw422016, oldDiffs.Sorted())
 //line views/vjsonschema/Result.html:46
 	qw422016.N().S(`</div>
           </div>
@@ -132,7 +132,7 @@ func StreamRenderResult(qw422016 *qt422016.Writer,
             <strong>New</strong>
             <div class="mt">`)
 //line views/vjsonschema/Result.html:50
-	view.StreamDiffs(qw422016, newDiffs)
+	view.StreamDiffs(qw422016, newDiffs.Sorted())
 //line views/vjsonschema/Result.html:50
 	qw422016.N().S(`</div>
           </div>

@@ -42,7 +42,7 @@ func PathString(r *http.Request, key string, allowEmpty bool) (string, error) {
 	return v, nil
 }
 
-func PathRichString(r *http.Request, key string, allowEmpty bool) (util.RichString, error) {
+func PathRichString(r *http.Request, key string, allowEmpty bool) (util.Str, error) {
 	ret, err := PathString(r, key, allowEmpty)
 	return util.Str(ret), err
 }
@@ -72,7 +72,7 @@ func PathUUID(r *http.Request, key string) (*uuid.UUID, error) {
 	return ret.ParseUUID(), nil
 }
 
-func PathArray(r *http.Request, key string) (util.RichStrings, error) {
+func PathArray(r *http.Request, key string) (util.Strings, error) {
 	ret, err := PathRichString(r, key, true)
 	if err != nil {
 		return nil, err

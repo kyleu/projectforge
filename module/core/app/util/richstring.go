@@ -7,255 +7,251 @@ import (
 	"github.com/google/uuid"
 )
 
-type RichString string
+type Str string
 
-func Str(s string) RichString {
-	return RichString(s)
+func (s Str) String() string {
+	return string(s)
 }
 
-func (r RichString) String() string {
-	return string(r)
+func (s Str) Empty() bool {
+	return len(s) == 0
 }
 
-func (r RichString) Empty() bool {
-	return len(r) == 0
+func (s Str) Equal(x string) bool {
+	return string(s) == x
 }
 
-func (r RichString) Equal(s string) bool {
-	return string(r) == s
+func (s Str) EqualFold(x string) bool {
+	return strings.EqualFold(string(s), x)
 }
 
-func (r RichString) EqualFold(s string) bool {
-	return strings.EqualFold(string(r), s)
+func (s Str) Length() int {
+	return len(s)
 }
 
-func (r RichString) Length() int {
-	return len(r)
+func (s Str) Index(substring string) int {
+	return strings.Index(s.String(), substring)
 }
 
-func (r RichString) Index(substring string) int {
-	return strings.Index(r.String(), substring)
+func (s Str) Contains(x string) bool {
+	return strings.Contains(string(s), x)
 }
 
-func (r RichString) Contains(s string) bool {
-	return strings.Contains(string(r), s)
+func (s Str) ContainsAny(x string) bool {
+	return strings.ContainsAny(string(s), x)
 }
 
-func (r RichString) ContainsAny(s string) bool {
-	return strings.ContainsAny(string(r), s)
+func (s Str) ContainsRune(chr rune) bool {
+	return strings.ContainsRune(string(s), chr)
 }
 
-func (r RichString) ContainsRune(chr rune) bool {
-	return strings.ContainsRune(string(r), chr)
+func (s Str) HasPrefix(prefix string) bool {
+	return strings.HasPrefix(string(s), prefix)
 }
 
-func (r RichString) HasPrefix(prefix string) bool {
-	return strings.HasPrefix(string(r), prefix)
+func (s Str) HasSuffix(suffix string) bool {
+	return strings.HasSuffix(string(s), suffix)
 }
 
-func (r RichString) HasSuffix(suffix string) bool {
-	return strings.HasSuffix(string(r), suffix)
+func (s Str) ToLower() Str {
+	return Str(strings.ToLower(string(s)))
 }
 
-func (r RichString) ToLower() RichString {
-	return Str(strings.ToLower(string(r)))
+func (s Str) ToUpper() Str {
+	return Str(strings.ToUpper(string(s)))
 }
 
-func (r RichString) ToUpper() RichString {
-	return Str(strings.ToUpper(string(r)))
+func (s Str) TrimPrefix(prefix string) Str {
+	return Str(strings.TrimPrefix(string(s), prefix))
 }
 
-func (r RichString) TrimPrefix(prefix string) RichString {
-	return Str(strings.TrimPrefix(string(r), prefix))
+func (s Str) TrimSuffix(suffix string) Str {
+	return Str(strings.TrimSuffix(string(s), suffix))
 }
 
-func (r RichString) TrimSuffix(suffix string) RichString {
-	return Str(strings.TrimSuffix(string(r), suffix))
+func (s Str) TrimSpace() Str {
+	return Str(strings.TrimSpace(string(s)))
 }
 
-func (r RichString) TrimSpace() RichString {
-	return Str(strings.TrimSpace(string(r)))
-}
-
-func (r RichString) Cut(sep byte, cutc bool) (RichString, RichString) {
-	left, right := StringCut(string(r), sep, cutc)
+func (s Str) Cut(sep byte, cutc bool) (Str, Str) {
+	left, right := StringCut(string(s), sep, cutc)
 	return Str(left), Str(right)
 }
 
-func (r RichString) CutLast(sep byte, cutc bool) (RichString, RichString) {
-	left, right := StringCutLast(string(r), sep, cutc)
+func (s Str) CutLast(sep byte, cutc bool) (Str, Str) {
+	left, right := StringCutLast(string(s), sep, cutc)
 	return Str(left), Str(right)
 }
 
-func (r RichString) Split(delim string) RichStrings {
-	return Strs(strings.Split(r.String(), delim)...)
+func (s Str) Split(delim string) Strings {
+	return Strs(strings.Split(s.String(), delim)...)
 }
 
-func (r RichString) SplitLastOnly(sep byte, cutc bool) RichString {
-	return Str(StringSplitLastOnly(string(r), sep, cutc))
+func (s Str) SplitLastOnly(sep byte, cutc bool) Str {
+	return Str(StringSplitLastOnly(string(s), sep, cutc))
 }
 
-func (r RichString) SplitAndTrim(delim string) RichStrings {
-	return Strs(StringSplitAndTrim(string(r), delim)...)
+func (s Str) SplitAndTrim(delim string) Strings {
+	return Strs(StringSplitAndTrim(string(s), delim)...)
 }
 
-func (r RichString) SplitPath() (string, string) {
-	return StringSplitPath(string(r))
+func (s Str) SplitPath() (string, string) {
+	return StringSplitPath(string(s))
 }
 
-func (r RichString) SplitPathAndTrim() RichStrings {
-	return Strs(StringSplitPathAndTrim(string(r))...)
+func (s Str) SplitPathAndTrim() Strings {
+	return Strs(StringSplitPathAndTrim(string(s))...)
 }
 
-func (r RichString) DetectLinebreak() string {
-	return StringDetectLinebreak(string(r))
+func (s Str) DetectLinebreak() string {
+	return StringDetectLinebreak(string(s))
 }
 
-func (r RichString) SplitLines() RichStrings {
-	return Strs(StringSplitLines(string(r))...)
+func (s Str) SplitLines() Strings {
+	return Strs(StringSplitLines(string(s))...)
 }
 
-func (r RichString) SplitLinesIndented(indent int, indentFirstLine bool, includeEmptyLines bool) RichStrings {
-	return Strs(StringSplitLinesIndented(string(r), indent, indentFirstLine, includeEmptyLines)...)
+func (s Str) SplitLinesIndented(indent int, indentFirstLine bool, includeEmptyLines bool) Strings {
+	return Strs(StringSplitLinesIndented(string(s), indent, indentFirstLine, includeEmptyLines)...)
 }
 
-func (r RichString) Pad(size int) RichString {
-	return Str(StringPadRight(string(r), size, ' '))
+func (s Str) Pad(size int) Str {
+	return Str(StringPadRight(string(s), size, ' '))
 }
 
-func (r RichString) PadRight(size int, chr rune) RichString {
-	return Str(StringPadRight(string(r), size, chr))
+func (s Str) PadRight(size int, chr rune) Str {
+	return Str(StringPadRight(string(s), size, chr))
 }
 
-func (r RichString) PadLeft(size int, chr rune) RichString {
-	return Str(StringPadLeft(string(r), size, chr))
+func (s Str) PadLeft(size int, chr rune) Str {
+	return Str(StringPadLeft(string(s), size, chr))
 }
 
-func (r RichString) Truncate(mx int) RichString {
-	return Str(StringTruncate(string(r), mx))
+func (s Str) Truncate(mx int) Str {
+	return Str(StringTruncate(string(s), mx))
 }
 
-func (r RichString) Repeat(n int) RichString {
-	return Str(StringRepeat(string(r), n))
+func (s Str) Repeat(n int) Str {
+	return Str(StringRepeat(string(s), n))
 }
 
-func (r RichString) Substring(start int, end int) RichString {
-	return Str(string(r)[start:end])
+func (s Str) Substring(start int, end int) Str {
+	return Str(string(s)[start:end])
 }
 
-func (r RichString) SubstringBetween(left string, right string) RichString {
-	return Str(StringSubstringBetween(string(r), left, right))
+func (s Str) SubstringBetween(left string, right string) Str {
+	return Str(StringSubstringBetween(string(s), left, right))
 }
 
-func (r RichString) Replace(old string, new string, n int) RichString {
-	return Str(strings.Replace(string(r), old, new, n))
+func (s Str) Replace(old string, new string, n int) Str {
+	return Str(strings.Replace(string(s), old, new, n))
 }
 
-func (r RichString) ReplaceAll(old string, new string) RichString {
-	return Str(strings.ReplaceAll(string(r), old, new))
+func (s Str) ReplaceAll(old string, new string) Str {
+	return Str(strings.ReplaceAll(string(s), old, new))
 }
 
-func (r RichString) ReplaceBetween(left string, right string, replacement string) (RichString, error) {
-	ret, err := StringReplaceBetween(string(r), left, right, replacement)
+func (s Str) ReplaceBetween(left string, right string, replacement string) (Str, error) {
+	ret, err := StringReplaceBetween(string(s), left, right, replacement)
 	return Str(ret), err
 }
 
-func (r RichString) ParseUUID() *uuid.UUID {
-	return UUIDFromString(r.String())
+func (s Str) ParseUUID() *uuid.UUID {
+	return UUIDFromString(s.String())
 }
 
-func (r RichString) ParseInt() (int, bool) {
-	ret, err := strconv.ParseInt(r.String(), 10, 32)
+func (s Str) ParseInt() (int, bool) {
+	ret, err := strconv.ParseInt(s.String(), 10, 32)
 	return int(ret), err == nil
 }
 
-func (r RichString) WithPrefix(prefixes ...RichString) RichString {
-	var ret RichStrings = append(ArrayCopy(prefixes), r)
+func (s Str) WithPrefix(prefixes ...Str) Str {
+	var ret Strings = append(ArrayCopy(prefixes), s)
 	return ret.Join("")
 }
 
-func (r RichString) WithSuffix(suffixes ...RichString) RichString {
-	var ret RichStrings = append(RichStrings{r}, suffixes...)
+func (s Str) WithSuffix(suffixes ...Str) Str {
+	var ret Strings = append(Strings{s}, suffixes...)
 	return ret.Join("")
 }
 
-func (r RichString) With(elems ...RichString) RichStrings {
-	return append(RichStrings{r}, elems...)
+func (s Str) With(elems ...Str) Strings {
+	return append(Strings{s}, elems...)
 }
 
-func (r RichString) WithStrings(elems ...string) RichStrings {
-	return r.With(Strs(elems...)...)
+func (s Str) WithStrings(elems ...string) Strings {
+	return s.With(Strs(elems...)...)
 }
 
-func (r RichString) Join(elems RichStrings, delim string) RichString {
-	return Str(StringJoin(r.With(elems...).Strings(), delim))
+func (s Str) Join(elems Strings, delim string) Str {
+	return Str(StringJoin(s.With(elems...).Strings(), delim))
 }
 
-func (r RichString) JoinStrings(elems []string, delim string) RichString {
-	return Str(StringJoin(r.With(Strs(elems...)...).Strings(), delim))
+func (s Str) JoinStrings(elems []string, delim string) Str {
+	return Str(StringJoin(s.With(Strs(elems...)...).Strings(), delim))
 }
 
-func (r RichString) Path(elems ...string) RichString {
-	return Str(StringPath(r.WithStrings(elems...).Strings()...))
+func (s Str) Path(elems ...string) Str {
+	return Str(StringPath(s.WithStrings(elems...).Strings()...))
 }
 
-func (r RichString) FilePath(elems ...string) RichString {
-	return Str(StringFilePath(r.WithStrings(elems...).Strings()...))
+func (s Str) FilePath(elems ...string) Str {
+	return Str(StringFilePath(s.WithStrings(elems...).Strings()...))
 }
 
-func (r RichString) ToProper() RichString {
-	return Str(StringToProper(string(r)))
+func (s Str) ToProper() Str {
+	return Str(StringToProper(string(s)))
 }
 
-func (r RichString) ToCamel() RichString {
-	return Str(StringToCamel(string(r)))
+func (s Str) ToCamel() Str {
+	return Str(StringToCamel(string(s)))
 }
 
-func (r RichString) ToSnake() RichString {
-	return Str(StringToSnake(string(r)))
+func (s Str) ToSnake() Str {
+	return Str(StringToSnake(string(s)))
 }
 
-func (r RichString) ToKebab() RichString {
-	return Str(StringToKebab(string(r)))
+func (s Str) ToKebab() Str {
+	return Str(StringToKebab(string(s)))
 }
 
-func (r RichString) OrDefault(dflt string) RichString {
-	if r.Empty() {
+func (s Str) OrDefault(dflt string) Str {
+	if s.Empty() {
 		return Str(dflt)
 	}
-	return r
+	return s
 }
 
-func (r RichString) Append(strs ...string) RichString {
-	ret := r.String()
+func (s Str) Append(strs ...string) Str {
+	ret := s.String()
 	for _, s := range strs {
 		ret += s
 	}
 	return Str(ret)
 }
 
-type RichStrings []RichString
+type Strings []Str
 
-func Strs(strs ...string) RichStrings {
-	ret := make(RichStrings, 0, len(strs))
+func Strs(strs ...string) Strings {
+	ret := make(Strings, 0, len(strs))
 	for _, s := range strs {
 		ret = append(ret, Str(s))
 	}
 	return ret
 }
 
-func (r RichStrings) Strings() []string {
-	ret := make([]string, 0, len(r))
-	for _, s := range r {
-		ret = append(ret, s.String())
+func (s Strings) Strings() []string {
+	ret := make([]string, 0, len(s))
+	for _, x := range s {
+		ret = append(ret, x.String())
 	}
 	return ret
 }
 
-func (r RichStrings) Empty() bool {
-	return len(r) == 0
+func (s Strings) Empty() bool {
+	return len(s) == 0
 }
 
-func (r RichStrings) Join(delim string) RichString {
-	return Str(StringJoin(r.Strings(), delim))
+func (s Strings) Join(delim string) Str {
+	return Str(StringJoin(s.Strings(), delim))
 }
