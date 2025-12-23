@@ -31,7 +31,7 @@ func goViewStringForString(url bool, src string, t *types.Wrapped, nullable bool
 	case FmtLinebreaks.Key:
 		return "<div class=\"prewsl\">" + tmplStartS + ToGoString(t, nullable, prop, false) + tmplEnd + "</div>"
 	case FmtCodeHidden.Key:
-		_, p := util.StringSplitLast(prop, '.', true)
+		_, p := util.StringCutLast(prop, '.', true)
 		ret := util.NewStringSliceWithSize(30)
 		ret.Push(
 			"<ul class=\"accordion\">",

@@ -32,7 +32,7 @@ func runCoverage(ctx context.Context, fs filesystem.FileLoader, scope string, lo
 	testLines := util.StringSplitLines(testOut)
 	testMap := make(util.ValueMap, len(testLines))
 	for _, x := range testLines {
-		p, c := util.StringSplit(x, ':', true)
+		p, c := util.StringCut(x, ':', true)
 		p = strings.TrimPrefix(p, "ok")
 		p = strings.TrimSuffix(p, "coverage")
 		p = strings.TrimSpace(p)

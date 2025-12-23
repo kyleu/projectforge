@@ -132,7 +132,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`</div>
 `)
 //line views/vsvg/List.html:66
-		x, y := util.StringSplit(k, '@', true)
+		x, y := util.StringCut(k, '@', true)
 
 //line views/vsvg/List.html:67
 		if y == "" {

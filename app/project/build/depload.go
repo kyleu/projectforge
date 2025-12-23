@@ -96,12 +96,12 @@ func loadReferences(ctx context.Context, path string, deps Dependencies, logger 
 	}
 
 	for _, line := range util.StringSplitLines(out) {
-		src, dest := util.StringSplit(line, ' ', true)
+		src, dest := util.StringCut(line, ' ', true)
 		if src == "" || dest == "" {
 			continue
 		}
-		src, _ = util.StringSplit(src, '@', true)
-		dest, _ = util.StringSplit(dest, '@', true)
+		src, _ = util.StringCut(src, '@', true)
+		dest, _ = util.StringCut(dest, '@', true)
 		curr := deps.Get(dest)
 		if curr != nil {
 			curr.AddRef(src)

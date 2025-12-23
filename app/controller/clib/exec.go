@@ -44,7 +44,7 @@ func ExecNew(w http.ResponseWriter, r *http.Request) {
 		}
 		key := util.Str(frm.GetStringOpt("key")).TrimSpace()
 		if key == "" {
-			key, _ = cmd.Split(' ', true)
+			key, _ = cmd.Cut(' ', true)
 		}
 		path := frm.GetRichStringOpt("path").TrimSpace().OrDefault(".")
 		env := frm.GetRichStringOpt("env").TrimSpace().SplitAndTrim(",")

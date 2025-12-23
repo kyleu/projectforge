@@ -37,7 +37,7 @@ func (a *Account) Domain() string {
 	if a.Email == "" || !strings.Contains(a.Email, "@") {
 		return ""
 	}
-	_, r := util.StringSplitLast(a.Email, '@', true)
+	_, r := util.StringCutLast(a.Email, '@', true)
 	return r
 }
 
@@ -46,10 +46,10 @@ func (a *Account) Matches(x *Account) bool {
 }
 
 func accountFromString(s string) *Account {
-	p, e := util.StringSplit(s, ':', true)
+	p, e := util.StringCut(s, ':', true)
 	var t, pic string
 	if strings.Contains(e, "|") {
-		e, t = util.StringSplit(e, '|', true)
+		e, t = util.StringCut(e, '|', true)
 		if decr, err := util.DecryptMessage(nil, t, nil); err == nil {
 			t = decr
 			if idx := strings.LastIndex(t, "@@"); idx > -1 {

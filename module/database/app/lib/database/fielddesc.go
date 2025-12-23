@@ -21,7 +21,7 @@ func QueryFieldDescs(fields util.FieldDescs, query string, argOffset int) (strin
 	wcs := make([]string, 0, len(parts))
 	vals := make([]any, 0, len(parts))
 	for _, part := range parts {
-		col, q := util.StringSplit(part, ':', true)
+		col, q := util.StringCut(part, ':', true)
 		if q == "" {
 			continue
 		}

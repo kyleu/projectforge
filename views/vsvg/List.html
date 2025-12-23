@@ -63,7 +63,7 @@
       <div class="icon-container">
         <a href="/svg/{%s p.Project.Key %}/{%s k %}" title="{%s k %}">
           <div>{%s= strings.ReplaceAll(p.Contents[k], "svg-" + k, "svg-" + k + "_adhoc") %}</div>
-          {%- code x, y := util.StringSplit(k, '@', true) -%}
+          {%- code x, y := util.StringCut(k, '@', true) -%}
           {%- if y == "" -%}
           <div class="title">{%s k %}</div>
           {%- else -%}
@@ -94,4 +94,3 @@
     </div>
   </div>
 {% endfunc %}
-

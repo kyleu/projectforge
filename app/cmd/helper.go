@@ -28,7 +28,7 @@ func extractConfig(args []string) util.ValueMap {
 	retMap := util.ValueMap{}
 	lo.ForEach(args, func(arg string, _ int) {
 		rs := util.Str(arg)
-		l, r := rs.Split('=', true)
+		l, r := rs.Cut('=', true)
 		l = l.TrimSpace()
 		r = r.TrimSpace()
 		if r.Empty() {

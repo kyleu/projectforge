@@ -34,7 +34,7 @@ func (p *Params) Keyed() util.ValueMap {
 	})
 	ret := make(util.ValueMap, len(x))
 	lo.ForEach(x, func(s string, _ int) {
-		k, v := util.StringSplit(s, ':', true)
+		k, v := util.StringCut(s, ':', true)
 		ret[k] = v
 	})
 	return ret

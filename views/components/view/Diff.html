@@ -50,7 +50,7 @@
   <ul class="accordion">
     {%- for idx, k := range value.Keys() -%}
       {%- code
-        dk, u := util.StringSplitLast(k, '^', true)
+        dk, u := util.StringCutLast(k, '^', true)
         v := value[k]
         if limit == 0 {
           limit = 100

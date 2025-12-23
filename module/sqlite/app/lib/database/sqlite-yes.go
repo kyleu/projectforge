@@ -26,7 +26,7 @@ func OpenSQLiteDatabase(ctx context.Context, key string, params *SQLiteParams, l
 	if params.File == "" {
 		return nil, errors.New("need filename for SQLite database")
 	}
-	if pth, fn := util.StringSplitLast(params.File, '/', true); fn != "" {
+	if pth, fn := util.StringCutLast(params.File, '/', true); fn != "" {
 		_ = os.MkdirAll(pth, os.FileMode(filesystem.DirectoryMode))
 	}
 	conn := fmt.Sprintf("%s?_pragma=foreign_keys(1)&_pragma=busy_timeout(10000)&_pragma=trusted_schema(0)", params.File)

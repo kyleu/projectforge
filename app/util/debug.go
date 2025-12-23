@@ -34,9 +34,9 @@ func DebugGetInfo(version string, started time.Time) *DebugInfo {
 	appTags := NewOrderedMap[string](false, 10)
 	appTags.Set("Name", AppName)
 	exec, _ := os.Executable()
-	wind, exec := StringSplitLast(exec, '/', true)
+	wind, exec := StringCutLast(exec, '/', true)
 	if exec == "" {
-		_, exec = StringSplitLast(wind, '\\', true)
+		_, exec = StringCutLast(wind, '\\', true)
 	}
 	appTags.Set("Executable", exec)
 	appTags.Set("Version", version)

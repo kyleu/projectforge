@@ -71,7 +71,7 @@ func (a Accounts) Matches(match string) bool {
 			return a.Matches(x)
 		})
 	}
-	prv, acct := util.StringSplit(match, ':', true)
+	prv, acct := util.StringCut(match, ':', true)
 	for _, x := range a {
 		if x.Provider == prv {
 			if acct == "" {

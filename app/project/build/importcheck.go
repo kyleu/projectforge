@@ -48,7 +48,7 @@ func check(imports []string, orig []string, origLines []string) ([]string, []str
 	}
 
 	for idx, imp := range imports {
-		i, l := util.StringSplitLast(imp, ':', true)
+		i, l := util.StringCutLast(imp, ':', true)
 		switch l {
 		case sepKey:
 			if state != 0 && lastLine != "" {

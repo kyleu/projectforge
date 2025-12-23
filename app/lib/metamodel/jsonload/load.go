@@ -61,10 +61,8 @@ func exportEnum(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Args
 	logs.Pushf("exporting enum schema [%s]", sch.ID())
 	vals := make(enum.Values, 0, len(sch.Enum))
 
-	var valsExtra util.ValueMap
-	if json, ok := sch.Unknown["x-values"]; ok {
-		valsExtra, _ = util.FromJSONObj[util.ValueMap](json)
-	}
+	md := sch.GetMetadata()
+	valsExtra := md.GetMapOpt("values")
 	for _, v := range sch.Enum {
 		e, err := exportEnumValue(v, valsExtra)
 		if err != nil {
@@ -72,23 +70,51 @@ func exportEnum(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Args
 		}
 		vals = append(vals, e)
 	}
+	name, pkg, grp, err := extractPath(sch)
+	if err != nil {
+		return err
+	}
 	e := &enum.Enum{
-		Name:           sch.ID(),
-		Package:        "",
-		Group:          []string{},
-		Schema:         "",
-		Description:    "",
-		Icon:           "",
+		Name: name, Package: pkg, Group: grp,
+		Schema:         md.GetStringOpt("schema"),
+		Description:    sch.Description,
+		Icon:           md.GetStringOpt("icon"),
 		Values:         vals,
-		Tags:           []string{},
-		TitleOverride:  "",
-		ProperOverride: "",
-		RouteOverride:  "",
-		Config:         util.ValueMap{},
-		Acronyms:       []string{},
+		Tags:           md.GetStringArrayOpt("tags"),
+		TitleOverride:  md.GetStringOpt("title"),
+		ProperOverride: md.GetStringOpt("proper"),
+		RouteOverride:  md.GetStringOpt("route"),
+		Config:         md.GetMapOpt("config"),
 	}
 	ret.Enums = append(ret.Enums, e)
 	return nil
+}
+
+func extractPath(sch *jsonschema.Schema) (string, string, []string, error) {
+	id := util.Str(sch.ID())
+	var prefix util.RichString
+	if idx := id.Index("://"); idx > -1 {
+		prefix = id.Substring(0, idx+3)
+		id = id.Substring(idx+3, id.Length())
+	}
+	if id.HasSuffix(".json") {
+		id = id.TrimSuffix(".json")
+	}
+	if id.HasSuffix(".schema") {
+		id = id.TrimSuffix(".schema")
+	}
+
+	parts := id.Split("/")
+	partsLen := len(parts)
+	n := parts[partsLen-1]
+	var p util.RichString
+	var g util.RichStrings
+	if partsLen > 1 {
+		p = parts[partsLen-2]
+		g = parts[:partsLen-2]
+		g[0] = prefix + g[0]
+	}
+	return n.String(), p.String(), g.Strings(), nil
 }
 
 func exportEnumValue(v any, valsExtra util.ValueMap) (*enum.Value, error) {

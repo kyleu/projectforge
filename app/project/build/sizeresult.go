@@ -73,13 +73,13 @@ func (s SizeResultMap) Flatten() SizeResultMap {
 				pk := k[:slashIdx]
 				xk := k[slashIdx+1:]
 				if strings.Contains(xk, ".") {
-					nk, nn := util.StringSplit(xk, '.', true)
+					nk, nn := util.StringCut(xk, '.', true)
 					nk = clean(pk + "/" + nk)
 					x.Name = nn + "." + x.Name
 					ret.Add(nk, x)
 				}
 			} else if strings.Contains(k, ".") {
-				nk, nn := util.StringSplit(k, '.', true)
+				nk, nn := util.StringCut(k, '.', true)
 				nk = clean(nk)
 				x.Name = nn + "." + x.Name
 				ret.Add(nk, x)

@@ -135,7 +135,7 @@ func StreamBoolIcon(qw422016 *qt422016.Writer, b bool, size int, cls string, ps 
 			extra = "false"
 		}
 	case 1:
-		l, r := util.StringSplitLast(titles[0], '|', true)
+		l, r := util.StringCutLast(titles[0], '|', true)
 		extra = util.Choose(b || r == "", l, r)
 	case 2:
 		extra = util.Choose(b, titles[0], titles[1])

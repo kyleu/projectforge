@@ -53,14 +53,14 @@ func AddContentToProject(prj string, fs filesystem.FileLoader, tgt string, conte
 
 func svgPath(prj string, key string) string {
 	if strings.Contains(key, "@") {
-		x, y := util.StringSplit(key, '@', true)
+		x, y := util.StringCut(key, '@', true)
 		return fmt.Sprintf("%s%s/wwwroot/svg/%s%s", util.StringToTitle(prj), util.StringToTitle(y), x, util.ExtSVG)
 	}
 	return svgRoot + key + util.ExtSVG
 }
 
 func load(ctx context.Context, src string, tgt string) (*SVG, error) {
-	tgt, _ = util.StringSplit(tgt, '@', true)
+	tgt, _ = util.StringCut(tgt, '@', true)
 	test := func(u string) ([]byte, error) {
 		ctx, cancel := context.WithTimeout(ctx, time.Minute)
 		defer cancel()

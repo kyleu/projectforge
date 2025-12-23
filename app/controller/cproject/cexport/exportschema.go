@@ -72,7 +72,7 @@ func ProjectExportWriteJSONSchema(w http.ResponseWriter, r *http.Request) {
 		for _, sch := range schCollection.SchemaMap {
 			id := sch.ID()
 			if strings.Contains(id, "/") {
-				_, id = util.StringSplitLast(id, '/', true)
+				_, id = util.StringCutLast(id, '/', true)
 			}
 			fn := "tmp/schema/" + id
 			err = fs.WriteFile(fn, util.ToJSONBytes(sch, true), filesystem.DefaultMode, true)

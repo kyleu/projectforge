@@ -35,7 +35,7 @@
   {% if len(flashes) > 0 %}
     <div id="flash-container">
       {% for idx, f := range flashes %}
-        {% code level, msg := util.StringSplit(f, ':', true) %}
+        {% code level, msg := util.StringCut(f, ':', true) %}
         <div class="flash">
           <input type="radio" style="display:none;" id="hide-flash-{%d idx %}">
           <label for="hide-flash-{%d idx %}"><span>×</span></label>

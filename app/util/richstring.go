@@ -29,6 +29,14 @@ func (r RichString) EqualFold(s string) bool {
 	return strings.EqualFold(string(r), s)
 }
 
+func (r RichString) Length() int {
+	return len(r)
+}
+
+func (r RichString) Index(substring string) int {
+	return strings.Index(r.String(), substring)
+}
+
 func (r RichString) Contains(s string) bool {
 	return strings.Contains(string(r), s)
 }
@@ -69,14 +77,18 @@ func (r RichString) TrimSpace() RichString {
 	return Str(strings.TrimSpace(string(r)))
 }
 
-func (r RichString) Split(sep byte, cutc bool) (RichString, RichString) {
-	left, right := StringSplit(string(r), sep, cutc)
+func (r RichString) Cut(sep byte, cutc bool) (RichString, RichString) {
+	left, right := StringCut(string(r), sep, cutc)
 	return Str(left), Str(right)
 }
 
-func (r RichString) SplitLast(sep byte, cutc bool) (RichString, RichString) {
-	left, right := StringSplitLast(string(r), sep, cutc)
+func (r RichString) CutLast(sep byte, cutc bool) (RichString, RichString) {
+	left, right := StringCutLast(string(r), sep, cutc)
 	return Str(left), Str(right)
+}
+
+func (r RichString) Split(delim string) RichStrings {
+	return Strs(strings.Split(r.String(), delim)...)
 }
 
 func (r RichString) SplitLastOnly(sep byte, cutc bool) RichString {
@@ -84,7 +96,7 @@ func (r RichString) SplitLastOnly(sep byte, cutc bool) RichString {
 }
 
 func (r RichString) SplitAndTrim(delim string) RichStrings {
-	return RStrings(StringSplitAndTrim(string(r), delim)...)
+	return Strs(StringSplitAndTrim(string(r), delim)...)
 }
 
 func (r RichString) SplitPath() (string, string) {
@@ -92,7 +104,7 @@ func (r RichString) SplitPath() (string, string) {
 }
 
 func (r RichString) SplitPathAndTrim() RichStrings {
-	return RStrings(StringSplitPathAndTrim(string(r))...)
+	return Strs(StringSplitPathAndTrim(string(r))...)
 }
 
 func (r RichString) DetectLinebreak() string {
@@ -100,11 +112,11 @@ func (r RichString) DetectLinebreak() string {
 }
 
 func (r RichString) SplitLines() RichStrings {
-	return RStrings(StringSplitLines(string(r))...)
+	return Strs(StringSplitLines(string(r))...)
 }
 
 func (r RichString) SplitLinesIndented(indent int, indentFirstLine bool, includeEmptyLines bool) RichStrings {
-	return RStrings(StringSplitLinesIndented(string(r), indent, indentFirstLine, includeEmptyLines)...)
+	return Strs(StringSplitLinesIndented(string(r), indent, indentFirstLine, includeEmptyLines)...)
 }
 
 func (r RichString) Pad(size int) RichString {
@@ -172,7 +184,7 @@ func (r RichString) With(elems ...RichString) RichStrings {
 }
 
 func (r RichString) WithStrings(elems ...string) RichStrings {
-	return r.With(RStrings(elems...)...)
+	return r.With(Strs(elems...)...)
 }
 
 func (r RichString) Join(elems RichStrings, delim string) RichString {
@@ -180,7 +192,7 @@ func (r RichString) Join(elems RichStrings, delim string) RichString {
 }
 
 func (r RichString) JoinStrings(elems []string, delim string) RichString {
-	return Str(StringJoin(r.With(RStrings(elems...)...).Strings(), delim))
+	return Str(StringJoin(r.With(Strs(elems...)...).Strings(), delim))
 }
 
 func (r RichString) Path(elems ...string) RichString {
@@ -224,7 +236,7 @@ func (r RichString) Append(strs ...string) RichString {
 
 type RichStrings []RichString
 
-func RStrings(strs ...string) RichStrings {
+func Strs(strs ...string) RichStrings {
 	ret := make(RichStrings, 0, len(strs))
 	for _, s := range strs {
 		ret = append(ret, Str(s))

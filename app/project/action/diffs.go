@@ -90,7 +90,7 @@ func runTemplates(srcFiles file.Files, tCtx *template.Context, fs filesystem.Fil
 			if err != nil {
 				return err
 			}
-			p, n := util.StringSplitLast(newPath, '/', true)
+			p, n := util.StringCutLast(newPath, '/', true)
 			f.Path = strings.Split(p, string(filepath.Separator))
 			f.Name = n
 		}

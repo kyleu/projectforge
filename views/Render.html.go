@@ -164,7 +164,7 @@ func streamrenderFlashes(qw422016 *qt422016.Writer, flashes []string) {
 //line views/Render.html:37
 		for idx, f := range flashes {
 //line views/Render.html:38
-			level, msg := util.StringSplit(f, ':', true)
+			level, msg := util.StringCut(f, ':', true)
 
 //line views/Render.html:38
 			qw422016.N().S(`<div class="flash"><input type="radio" style="display:none;" id="hide-flash-`)

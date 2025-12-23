@@ -151,7 +151,7 @@ func StreamDiffsSet(qw422016 *qt422016.Writer, key string, value util.DiffsSet, 
 //line views/components/view/Diff.html:51
 		for idx, k := range value.Keys() {
 //line views/components/view/Diff.html:53
-			dk, u := util.StringSplitLast(k, '^', true)
+			dk, u := util.StringCutLast(k, '^', true)
 			v := value[k]
 			if limit == 0 {
 				limit = 100
