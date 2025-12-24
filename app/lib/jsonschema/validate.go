@@ -15,11 +15,8 @@ func (s *Schema) Validate() (SchemaType, error) {
 	if s == nil {
 		return SchemaTypeNull, nil
 	}
-	sendErr := func(msg string, args ...any) (SchemaType, error) {
-		return SchemaTypeUnknown, errors.Errorf(msg, args...)
-	}
-	if len(s.Required) > 0 && (s.Properties.Empty()) {
-		return sendErr("schema [%s] has required fields, but no properties", s.String())
+	if err := validateCommon(s); err != nil {
+		return SchemaTypeUnknown, err
 	}
 
 	switch s.Type {
@@ -62,6 +59,13 @@ func (s *Schema) Validate() (SchemaType, error) {
 		}
 		return SchemaTypeUnknown, nil
 	}
+}
+
+func validateCommon(s *Schema) error {
+	if len(s.Required) > 0 && (s.Properties.Empty()) {
+		return errors.Errorf("schema [%s] has required fields, but no properties", s.String())
+	}
+	return nil
 }
 
 func validateObject(s *Schema) error {

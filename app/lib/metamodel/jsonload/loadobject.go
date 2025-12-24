@@ -40,6 +40,10 @@ func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Ar
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [seed] for [%s]", sch.ID())
 	}
+	seed, err = cleanSeedData(seed)
+	if err != nil {
+		return errors.Wrapf(err, "unable to process seed data for [%s]", sch.ID())
+	}
 	links, err := fromMD[model.Links](sch.Unknown, "links")
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [links] for [%s]", sch.ID())
@@ -75,4 +79,8 @@ func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Ar
 	}
 	ret.Models = append(ret.Models, m)
 	return nil
+}
+
+func cleanSeedData(seed [][]any) ([][]any, error) {
+	return seed, nil
 }

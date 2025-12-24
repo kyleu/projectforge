@@ -83,6 +83,7 @@ func LoadSchemaTestFile(ctx context.Context, filename string, fs filesystem.File
 	loader := jsonload.Validation{Collection: coll}
 	logs, args, err := loader.Export(ctx, logger)
 	if err != nil {
+		ret.Logs = append(ret.Logs, "[validation] "+err.Error())
 		ret.ArgsLogs = append(ret.ArgsLogs, "[error] "+err.Error())
 	}
 	ret.ArgsLogs = append(ret.ArgsLogs, logs...)

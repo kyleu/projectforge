@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 )
 
 type Str string
@@ -237,6 +238,22 @@ func Strs(strs ...string) Strings {
 		ret = append(ret, Str(s))
 	}
 	return ret
+}
+
+func (s Strings) WithPrefix(prefixes ...Str) Strings {
+	return lo.Map(s, func(item Str, index int) Str {
+		return item.WithPrefix(prefixes...)
+	})
+}
+
+func (s Strings) WithSuffix(suffixes ...Str) Strings {
+	return lo.Map(s, func(item Str, index int) Str {
+		return item.WithSuffix(suffixes...)
+	})
+}
+
+func (s Strings) With(elems ...Str) Strings {
+	return append(ArrayCopy(s), elems...)
 }
 
 func (s Strings) Strings() []string {
