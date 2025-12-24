@@ -71,6 +71,7 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 	return logs, ret, nil
 }
 
+//nolint:gocognit
 func processFileImports(fn string, lines []string, self string) ([]string, []string, diff.Diffs, error) {
 	if strings.HasPrefix(fn, "module/") {
 		return nil, nil, nil, nil

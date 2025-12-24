@@ -29,10 +29,10 @@
 
   <div class="card">
     <h3>{%= components.SVGIcon(`archive`, ps) %} Admin Functions</h3>
-    {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
+    {%= settingsLink("/admin/server", "list", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "robot", "Go Modules", "The Go modules used by " + util.AppName, ps) %}
-    {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}
-    {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}
+    {%= settingsLink("/theme", "theme", "Edit Themes", "Configure the design themes available to end users", ps) %}
+    {%= settingsLink("/admin/exec", "play", "Managed Processes", "Manage OS processes from within this app", ps) %}
     {%= settingsLink("/admin/task", "task", "Task Engine", "See the tasks that have run, and start new runs", ps) %}
     {%= settingsLink("/admin/logs", "folder", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
     <div class="clear"></div>
@@ -43,16 +43,16 @@
     {%= settingsLink("/admin/routes", "folder", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
     {%= settingsLink("/admin/session", "play", "User Session", "View the user session, including all cookies and settings", ps) %}
     {%= settingsLink("/admin/request", "download", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps) %}
-    {%= settingsLink("/admin/sockets", "cog", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}
+    {%= settingsLink("/admin/sockets", "satellite", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}
     <div class="clear"></div>
   </div>
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} App Profiling</h3>
     {%= settingsLink("/admin/memusage", "desktop", "Memory Usage", "Detailed memory usage statistics for this application", ps) %}
-    {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}
-    {%= settingsLink("/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
-    {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
-    {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
+    {%= settingsLink("/admin/gc", "fire", "Collect Garbage", "Runs the Go garbage collector", ps) %}
+    {%= settingsLink("/admin/heap", "file-archive", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
+    {%= settingsLink("/admin/cpu/start", "play", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
+    {%= settingsLink("/admin/cpu/stop", "stop", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
     <div class="clear"></div>
   </div>
 {% endfunc %}

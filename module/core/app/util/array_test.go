@@ -481,7 +481,10 @@ func TestArrayFromAny(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := util.ArrayFromAny[int](tt.input)
+			result, err := util.ArrayFromAny[int](tt.input)
+			if err != nil {
+				t.Errorf("ArrayFromAny() = %v, want %v", result, tt.expected)
+			}
 			if !reflect.DeepEqual(result, tt.expected) {
 				t.Errorf("ArrayFromAny() = %v, want %v", result, tt.expected)
 			}

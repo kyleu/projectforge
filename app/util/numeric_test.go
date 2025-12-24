@@ -22,7 +22,6 @@ func TestMillisToString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(fmt.Sprintf("%d", tt.input), func(t *testing.T) {
 			t.Parallel()
 			result := util.MillisToString(tt.input)
@@ -49,7 +48,6 @@ func TestMicrosToMillis(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(fmt.Sprintf("%d", tt.input), func(t *testing.T) {
 			t.Parallel()
 			result := util.MicrosToMillis(tt.input)

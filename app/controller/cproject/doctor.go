@@ -30,7 +30,7 @@ func Doctor(w http.ResponseWriter, r *http.Request) {
 
 func DoctorRunAll(w http.ResponseWriter, r *http.Request) {
 	controller.Act("doctor.run.all", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if r.URL.Query().Get("loaded") != util.BoolTrue {
+		if cutil.QueryStringString(r, "loaded") != util.BoolTrue {
 			page := &vpage.Load{URL: "/doctor/all?loaded=true", Title: "Running Doctor Checks", Message: "Hang tight..."}
 			return controller.Render(r, as, page, ps, "Welcome")
 		}
@@ -62,7 +62,7 @@ func DoctorSolve(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		returnURL := util.OrDefault(r.URL.Query().Get("return"), "/doctor/all")
+		returnURL := util.OrDefault(cutil.QueryStringString(r, "return"), "/doctor/all")
 		c := checks.GetCheck(key)
 		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
 		ret := c.Check(ps.Context, ps.Logger)

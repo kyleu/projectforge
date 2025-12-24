@@ -1,0 +1,26 @@
+{% import (
+  "projectforge.dev/projectforge/app/controller/cutil"
+) %}
+
+{% func Array(preserveWhitespace bool, a []any, ps *cutil.PageState) %}{% stripspace %}
+  {%- if a == nil || len(a) == 0 -%}
+  <em>empty collection</em>
+  {%- else -%}
+  <div class="overflow full-width bl">
+    <table class="expanded">
+      <tbody>
+        {%- for idx, v := range a -%}
+          <tr>
+            <th class="shrink">{%d idx %}</th>
+            {%- if preserveWhitespace -%}
+            <td class="prews">{%= Any(v, ps) %}</td>
+            {%- else -%}
+            <td>{%= Any(v, ps) %}</td>
+            {%- endif -%}
+          </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}

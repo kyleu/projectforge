@@ -108,18 +108,20 @@ func BlockStrings(g *golang.File, cols model.Columns, str metamodel.StringProvid
 	return ret
 }
 
+const omitEmpty = ",omitempty"
+
 func JSONSuffix(col *model.Column) string {
 	if col.HasTag("force-json") {
 		return ""
 	}
 	if types.IsList(col.Type) {
-		return ",omitempty"
+		return omitEmpty
 	}
-	if col.Type.String() == "map" {
-		return ",omitempty"
+	if col.Type.String() == types.KeyMap {
+		return omitEmpty
 	}
 	if col.Type.Key() == types.KeyReference && util.StringToPlural(col.Name) == col.Name {
-		return ",omitempty"
+		return omitEmpty
 	}
 	return ",omitzero"
 }

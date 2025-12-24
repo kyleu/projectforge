@@ -20,7 +20,7 @@ var Gotestsum = &doctor.Check{
 
 func solveGotestsum(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("!go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest")
+		r.AddSolution("!go install gotest.tools/gotestsum@latest")
 	}
 	return r
 }

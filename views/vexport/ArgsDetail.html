@@ -106,8 +106,9 @@
         <ul class="accordion">
         {%- for _, model := range ea.Models -%}
         <li>
-          <input id="accordion-{%s key %}-model-{%s model.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-model-{%s model.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s model.Name %}</label>
+          {%- code id := util.RandomID() %}
+          <input id="accordion-{%s key %}-model-{%s model.Name %}-{%s id %}" type="checkbox" hidden />
+          <label for="accordion-{%s key %}-model-{%s model.Name %}-{%s id %}">{%= components.ExpandCollapse(3, ps) %} {%s model.Name %}</label>
           <div class="bd"><div><div>
             {%= modelDetail(as, "", model, nil, ps) %}
           </div></div></div>

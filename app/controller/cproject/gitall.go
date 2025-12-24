@@ -23,7 +23,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 	a, _ := cutil.PathString(r, "act", false)
 	controller.Act("git.all."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
+		tags := util.StringSplitAndTrim(cutil.QueryStringString(r, "tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
@@ -103,11 +103,11 @@ func gitAll(prjs project.Projects, f func(prj *project.Project) (*git.Result, er
 }
 
 func gitHistoryAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) (git.Results, error) {
-	path := r.URL.Query().Get("path")
-	since, _ := util.TimeFromString(r.URL.Query().Get("since"))
-	authors := util.StringSplitAndTrim(r.URL.Query().Get("authors"), ",")
-	limit, _ := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 32)
-	commit := r.URL.Query().Get("commit")
+	path := cutil.QueryStringString(r, "path")
+	since, _ := util.TimeFromString(cutil.QueryStringString(r, "since"))
+	authors := util.StringSplitAndTrim(cutil.QueryStringString(r, "authors"), ",")
+	limit, _ := strconv.ParseInt(cutil.QueryStringString(r, "limit"), 10, 32)
+	commit := cutil.QueryStringString(r, "commit")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		args := &git.HistoryArgs{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 		return git.NewService(prj.Key, prj.Path).History(ps.Context, args, ps.Logger)
@@ -115,7 +115,7 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) 
 }
 
 func gitMagicAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) (git.Results, error) {
-	message := r.URL.Query().Get("message")
+	message := cutil.QueryStringString(r, "message")
 	dryRun := cutil.QueryStringBool(r, "dryRun")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		return git.NewService(prj.Key, prj.Path).Magic(ps.Context, message, dryRun, ps.Logger)

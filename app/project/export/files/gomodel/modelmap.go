@@ -6,13 +6,14 @@ import (
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/gohelper"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
 func ModelMap(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, error) {
-	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+"map")
+	g := golang.NewFile(m.Package, []string{"app", m.PackageWithGroup("")}, strings.ToLower(m.Camel())+types.KeyMap)
 	g.AddImport(helper.ImpAppUtil)
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args)
 	if err != nil {
@@ -24,7 +25,7 @@ func ModelMap(m *model.Model, args *metamodel.Args, linebreak string) (*file.Fil
 		return nil, err
 	}
 	g.AddImport(imps...)
-	g.AddImport(m.Imports.Supporting("map")...)
+	g.AddImport(m.Imports.Supporting(types.KeyMap)...)
 	g.AddBlocks(gohelper.ToMap(m, m.Columns))
 	if b, e := gohelper.FromMap(g, m, m.Columns, args); e == nil {
 		g.AddBlocks(b)

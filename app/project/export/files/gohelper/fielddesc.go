@@ -5,6 +5,7 @@ import (
 
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/golang"
 )
 
@@ -17,7 +18,7 @@ func BlockFieldDescs(cols model.Columns, str metamodel.StringProvider) (*golang.
 			t = t[idx+1:]
 		}
 		if c.Type.Key() == "numericMap" {
-			t = "map"
+			t = types.KeyMap
 		}
 
 		msg := "\t{Key: %q, Title: %q"

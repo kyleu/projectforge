@@ -20,11 +20,11 @@ func List(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
 		execs := as.Services.Exec.Execs
-		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
+		tags := util.StringSplitAndTrim(cutil.QueryStringString(r, "tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
-		switch r.URL.Query().Get("sort") {
+		switch cutil.QueryStringString(r, "sort") {
 		case "package":
 			slices.SortFunc(prjs, func(l *project.Project, r *project.Project) int {
 				return cmp.Compare(l.Package, r.Package)
@@ -35,7 +35,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 		ps.SetTitleAndData("All Projects", prjs)
-		switch r.URL.Query().Get("fmt") {
+		switch cutil.QueryStringString(r, "fmt") {
 		case "ports":
 			msgs := lo.Map(prjs, func(p *project.Project, _ int) string {
 				return fmt.Sprintf("%s: %d", p.Key, p.Port)

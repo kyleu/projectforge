@@ -40,7 +40,7 @@ jobs:
           OWNER: "${{ github.repository_owner }}"
           TOKEN: "${{ secrets.CR_PAT }}"
       - name: "Lint"
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v9
         env:
           GOEXPERIMENT: "jsonv2"
         with:

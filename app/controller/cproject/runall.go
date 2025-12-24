@@ -18,6 +18,7 @@ import (
 	"projectforge.dev/projectforge/views/vpage"
 )
 
+//nolint:gocognit
 func RunAllActions(w http.ResponseWriter, r *http.Request) {
 	helpKey := "run.all"
 	actKey, _ := cutil.PathString(r, "act", false)
@@ -29,9 +30,9 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		cfg := cutil.QueryArgsMap(r.URL)
+		cfg := cutil.QueryStringAsMap(r.URL)
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(r.URL.Query().Get("tags"), ",")
+		tags := util.StringSplitAndTrim(cutil.QueryStringString(r, "tags"), ",")
 		if len(tags) == 0 {
 			prjs = prjs.WithoutTags("all-skip")
 		} else {
@@ -66,7 +67,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 
 		if actT.Matches(action.TypeBuild) {
 			phase := cfg.GetStringOpt("phase")
-			if phase == "custom" {
+			if phase == keyCustom {
 				if cmd := cfg.GetStringOpt("cmd"); cmd == "" {
 					argRes := util.FieldDescsCollectMap(cfg, gitCustomArgs)
 					if argRes.HasMissing() {

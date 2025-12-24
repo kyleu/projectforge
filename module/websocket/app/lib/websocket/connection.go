@@ -36,6 +36,7 @@ func NewConnection(svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, p
 		Profile:  profile{{{ if .HasAccount }}},
 		Accounts: accounts{{{ end }}},
 		Svc:      svc,
+		Channels: []string{},
 		Started:  util.TimeCurrent(),
 		Stats:    NewStats(),
 		handler:  handler,

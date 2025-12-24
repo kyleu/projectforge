@@ -3,6 +3,7 @@
   "{{{ .Package }}}/app/controller/cutil"
   "{{{ .Package }}}/app/util"
   "{{{ .Package }}}/views/components"
+  "{{{ .Package }}}/views/components/view"
   "{{{ .Package }}}/views/layout"
 ) %}
 
@@ -20,12 +21,15 @@
     <div class="overflow full-width">
       <table class="mt">
         <tbody>
-          {%- code a := util.ArrayFromAny[any](ps.Data) -%}
+          {%- code a, err := util.ArrayFromAny[any](ps.Data) -%}
+          {%- if err != nil -%}
+          {%= components.JSON(a) %}
+          {%- else -%}
           {%- for idx, x := range a -%}
           {%- if idx < 32 -%}
           <tr>
             <th class="shrink">{%d idx + 1 %}</th>
-            <td>{%s= components.JSON(x) %}</td>
+            <td>{%= components.JSON(x) %}</td>
           </tr>
           {%- endif -%}
           {%- endfor -%}
@@ -34,12 +38,42 @@
             <td class="shrink" colspan="2"><em>...and [{%d len(a) - 32 %}] more...</em></td>
           </tr>
           {%- endif -%}
+          {%- endif -%}
         </tbody>
       </table>
     </div>
     {%- else -%}
-    <div class="mt">{%s= components.JSON(ps.Data) %}</div>
+    <div class="mt">{%= components.JSON(ps.Data) %}</div>
     {%- endif -%}
     {%- endif -%}
   </div>
 {% endfunc %}
+
+{% code type DebugObject struct { layout.Basic } %}
+
+{% func (p *DebugObject) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps) %} {%s ps.Title %}</h3>
+    <div class="mt">{%= view.Any(ps.Data, ps) %}</div>
+  </div>
+{% endfunc %}{{{ if .HasModule "process" }}}{{{ if .HasModule "websocket" }}}
+
+{% code type DebugSocket struct {
+  layout.Basic
+  URL string
+  InitialContent []string
+  ExtraHandlers []string
+} %}
+
+{% func (p *DebugSocket) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code id := util.RandomID() -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps) %} {%s ps.Title %}</h3>
+    <div class="mt">{%= components.Terminal(id, p.InitialContent...) %}</div>
+  </div>
+  <script>
+    window.addEventListener('load', () => {
+      projectforge.socketLog(true, document.getElementById("{%s id %}"), true, "{%s= p.URL %}", [{%s= util.StringJoin(p.ExtraHandlers, `, `) %}]);
+    });
+  </script>
+{% endfunc %}{{{ end }}}{{{ end }}}

@@ -8,8 +8,6 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/project/action"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/layout"
 	"projectforge.dev/projectforge/views/vtest"
 )
@@ -55,11 +53,4 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 		}
 		return controller.Render(r, as, page, ps, bc...)
 	})
-}
-
-func actionParams(tgt string, t action.Type, cfg util.ValueMap, as *app.State, logger util.Logger) *action.Params {
-	return &action.Params{
-		ProjectKey: tgt, T: t, Cfg: cfg,
-		MSvc: as.Services.Modules, PSvc: as.Services.Projects, XSvc: as.Services.Exec, SSvc: as.Services.Socket, ESvc: as.Services.Export, Logger: logger,
-	}
 }

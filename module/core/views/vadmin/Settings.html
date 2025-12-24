@@ -56,13 +56,13 @@
 
   <div class="card">
     <h3>{%= components.SVGIcon(`archive`, ps) %} Admin Functions</h3>
-    {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
+    {%= settingsLink("/admin/server", "list", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "robot", "Go Modules", "The Go modules used by " + util.AppName, ps) %}{{{ if .HasModule "queue" }}}
-    {%= settingsLink("/admin/queue", "archive", "Queue Management", "Manages the queue consumers and producers", ps) %}{{{ end }}}
-    {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}{{{ if .HasModule "schedule" }}}
+    {%= settingsLink("/admin/queue", "filter", "Queue Management", "Manages the queue consumers and producers", ps) %}{{{ end }}}
+    {%= settingsLink("/theme", "theme", "Edit Themes", "Configure the design themes available to end users", ps) %}{{{ if .HasModule "schedule" }}}
     {%= settingsLink("/admin/schedule", "stopwatch", "Scheduled Jobs", "Manage the execution and results from scheduled tasks", ps) %}{{{ end }}}{{{ if .HasModule "process" }}}
-    {%= settingsLink("/admin/exec", "archive", "Managed Processes", "Manage OS processes from within this app", ps) %}{{{ end }}}{{{ if .HasModule "scripting" }}}
-    {%= settingsLink("/admin/scripting", "archive", "Script Files", "View and run the JavaScript files managed by the server", ps) %}{{{ end }}}{{{ if .HasModule "task" }}}
+    {%= settingsLink("/admin/exec", "play", "Managed Processes", "Manage OS processes from within this app", ps) %}{{{ end }}}{{{ if .HasModule "scripting" }}}
+    {%= settingsLink("/admin/scripting", "file-code", "Script Files", "View and run the JavaScript files managed by the server", ps) %}{{{ end }}}{{{ if .HasModule "task" }}}
     {%= settingsLink("/admin/task", "task", "Task Engine", "See the tasks that have run, and start new runs", ps) %}{{{ end }}}
     {%= settingsLink("/admin/logs", "folder", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
     <div class="clear"></div>
@@ -73,7 +73,7 @@
     {%= settingsLink("/admin/routes", "folder", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps) %}
     {%= settingsLink("/admin/session", "play", "User Session", "View the user session, including all cookies and settings", ps) %}
     {%= settingsLink("/admin/request", "download", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps) %}{{{ if .HasModule "websocket" }}}
-    {%= settingsLink("/admin/sockets", "cog", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}{{{ end }}}{{{ if .HasModule "brands" }}}
+    {%= settingsLink("/admin/sockets", "satellite", "Active WebSockets", "Manage the active WebSockets in this server", ps) %}{{{ end }}}{{{ if .HasModule "brands" }}}
     {%= settingsLink("/admin/brands", "bolt", "Brand Icons", "Displays the brand icons that are available to this application", ps) %}{{{ end }}}
     <div class="clear"></div>
   </div>
@@ -81,16 +81,16 @@
     <h3>{%= components.SVGIcon(`cog`, ps) %} App Profiling</h3>{{{ if .HasModule "system" }}}
     {%= settingsLink("/admin/system", "desktop", "System Status", "Tons of info about the computer running this application", ps) %}{{{ end }}}
     {%= settingsLink("/admin/memusage", "desktop", "Memory Usage", "Detailed memory usage statistics for this application", ps) %}
-    {%= settingsLink("/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps) %}{{{ if .DangerousOK }}}
-    {%= settingsLink("/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
-    {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
-    {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/gc", "fire", "Collect Garbage", "Runs the Go garbage collector", ps) %}{{{ if .DangerousOK }}}
+    {%= settingsLink("/admin/heap", "file-archive", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps) %}
+    {%= settingsLink("/admin/cpu/start", "play", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
+    {%= settingsLink("/admin/cpu/stop", "stop", "Stop CPU Profile", "Stops the active CPU profile", ps) %}{{{ end }}}
     <div class="clear"></div>
   </div>{{{ if .HasModules "databaseui" "migration" }}}
   <div class="card">
     <h3>{%= components.SVGIcon(`database`, ps) %} Database Management</h3>{{{ if .HasModule "databaseui" }}}
     {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}{{{ end }}}{{{ if .HasModule "migration" }}}
-    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}
+    {%= settingsLink("/admin/migrations", "database", "Migrations", "Shows the full content of all database SQL migrations", ps) %}{{{ end }}}
   </div>{{{ end }}}{{{ if .HasAccount }}}
 
   {%= vauth.Authentication(as, ps) %}

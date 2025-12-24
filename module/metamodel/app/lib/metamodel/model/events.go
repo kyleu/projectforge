@@ -11,21 +11,21 @@ import (
 
 type Events []*Event
 
-func (m Events) Get(n string) *Event {
-	return lo.FindOrElse(m, nil, func(x *Event) bool {
+func (e Events) Get(n string) *Event {
+	return lo.FindOrElse(e, nil, func(x *Event) bool {
 		return x.Name == n || x.Camel() == n || x.Proper() == n
 	})
 }
 
-func (m Events) ForGroup(pth ...string) Events {
-	return lo.Filter(m, func(x *Event, _ int) bool {
+func (e Events) ForGroup(pth ...string) Events {
+	return lo.Filter(e, func(x *Event, _ int) bool {
 		return slices.Equal(x.Group, pth)
 	})
 }
 
-func (m Events) Validate(mods []string, groups Groups) error {
+func (e Events) Validate(mods []string, groups Groups) error {
 	names := util.ValueMap{}
-	for _, x := range m {
+	for _, x := range e {
 		if _, ok := names[x.Name]; ok {
 			return errors.Errorf("multiple Events found with name [%s]", x.Name)
 		}
@@ -33,14 +33,14 @@ func (m Events) Validate(mods []string, groups Groups) error {
 	return nil
 }
 
-func (m Events) WithTag(tag string) Events {
-	return lo.Filter(m, func(x *Event, _ int) bool {
+func (e Events) WithTag(tag string) Events {
+	return lo.Filter(e, func(x *Event, _ int) bool {
 		return x.HasTag(tag)
 	})
 }
 
-func (m Events) WithoutTag(tag string) Events {
-	return lo.Reject(m, func(x *Event, _ int) bool {
+func (e Events) WithoutTag(tag string) Events {
+	return lo.Reject(e, func(x *Event, _ int) bool {
 		return x.HasTag(tag)
 	})
 }

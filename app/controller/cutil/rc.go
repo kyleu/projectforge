@@ -80,13 +80,17 @@ func PathArray(r *http.Request, key string) (util.Strings, error) {
 	return ret.SplitAndTrim(","), nil
 }
 
+func QueryStringString(r *http.Request, key string) string {
+	return r.URL.Query().Get(key)
+}
+
 func QueryStringBool(r *http.Request, key string) bool {
-	x := r.URL.Query().Get(key)
+	x := QueryStringString(r, key)
 	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
 }
 
 func QueryStringInt(r *http.Request, key string) int {
-	x := r.URL.Query().Get(key)
+	x := QueryStringString(r, key)
 	ret, err := strconv.ParseInt(x, 10, 32)
 	if err != nil {
 		return 0
@@ -95,11 +99,11 @@ func QueryStringInt(r *http.Request, key string) int {
 }
 
 func QueryStringUUID(r *http.Request, key string) *uuid.UUID {
-	x := r.URL.Query().Get(key)
+	x := QueryStringString(r, key)
 	return util.UUIDFromString(x)
 }
 
-func QueryArgsMap(uri *url.URL) util.ValueMap {
+func QueryStringAsMap(uri *url.URL) util.ValueMap {
 	ret := make(util.ValueMap, len(uri.Query()))
 	for k, v := range uri.Query() {
 		if len(v) == 1 {

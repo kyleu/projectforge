@@ -14,13 +14,13 @@ var Golangcilint = &doctor.Check{
 	Summary: "Check for style and linting errors",
 	URL:     "https://golangci-lint.run",
 	UsedBy:  "[bin/check.sh]",
-	Fn:      simpleOut(".", "golangci-lint", nil, noop),
+	Fn:      simpleOut(".", "golangci-lint-v2", nil, noop),
 	Solve:   solveGolangcilint,
 }
 
 func solveGolangcilint(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
 	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
-		r.AddSolution("!go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest")
+		r.AddSolution("!go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest")
 	}
 	return r
 }

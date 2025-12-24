@@ -12,6 +12,7 @@ import (
 
 const sepKey, firstKey, thirdKey, selfKey = "sep", "1st", "3rd", "self"
 
+//nolint:gocognit
 func check(imports []string, orig []string, origLines []string) ([]string, []string, error) {
 	var errs []error
 	var state int

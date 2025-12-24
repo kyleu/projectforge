@@ -113,7 +113,7 @@ func TaskRemove(w http.ResponseWriter, r *http.Request) {
 }
 
 func argsAndCategory(r *http.Request) (util.ValueMap, string) {
-	args := cutil.QueryArgsMap(r.URL)
+	args := cutil.QueryStringAsMap(r.URL)
 	category := args.GetStringOpt("category")
 	if category == "" {
 		category = "ad-hoc"

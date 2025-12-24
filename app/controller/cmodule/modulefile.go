@@ -39,7 +39,7 @@ func ModuleFile(w http.ResponseWriter, r *http.Request) {
 		}
 		fsys := as.Services.Modules.GetFilesystem(mod.Key)
 		path := util.StringSplitAndTrim(pathS, "/")
-		if r.URL.Query().Get("download") == "true" {
+		if cutil.QueryStringString(r, "download") == "true" {
 			b, err := fsys.ReadFile(util.StringFilePath(path...))
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to read module file [%s] for download", pathS)

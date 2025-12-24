@@ -221,7 +221,7 @@ func diffPrint(x any) string {
 		return fmt.Sprintf("%s (%d items)", ret, rv.Len())
 	case reflect.Map:
 		ret := diffPrintType(x)
-		ret = Choose(ret == "map[string]any", "map", ret)
+		ret = Choose(ret == "map[string]any", KeyMap, ret)
 		return fmt.Sprintf("%s (%d keys)", ret, rv.Len())
 	default:
 		return fmt.Sprint(x)

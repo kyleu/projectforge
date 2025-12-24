@@ -112,7 +112,6 @@ func TestFormatMilliseconds(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			result := util.FormatMilliseconds(tt.input, tt.includeFraction)
@@ -137,11 +136,10 @@ func TestFormatSecondsFull(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		x := tt
-		t.Run(fmt.Sprintf("%.3f", x.input), func(t *testing.T) {
-			result := util.FormatSecondsFull(x.input)
-			if result != x.expected {
-				t.Errorf("FormatSecondsFull(%.3f) = %s, want %s", x.input, result, x.expected)
+		t.Run(fmt.Sprintf("%.3f", tt.input), func(t *testing.T) {
+			result := util.FormatSecondsFull(tt.input)
+			if result != tt.expected {
+				t.Errorf("FormatSecondsFull(%.3f) = %s, want %s", tt.input, result, tt.expected)
 			}
 		})
 	}

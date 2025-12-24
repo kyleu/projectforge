@@ -347,193 +347,207 @@ func StreamArgsDetail(qw422016 *qt422016.Writer, as *app.State, key string, ea *
 		for _, model := range ea.Models {
 //line views/vexport/ArgsDetail.html:107
 			qw422016.N().S(`        <li>
+`)
+//line views/vexport/ArgsDetail.html:109
+			id := util.RandomID()
+
+//line views/vexport/ArgsDetail.html:109
+			qw422016.N().S(`
           <input id="accordion-`)
-//line views/vexport/ArgsDetail.html:109
+//line views/vexport/ArgsDetail.html:110
 			qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:109
+//line views/vexport/ArgsDetail.html:110
 			qw422016.N().S(`-model-`)
-//line views/vexport/ArgsDetail.html:109
+//line views/vexport/ArgsDetail.html:110
 			qw422016.E().S(model.Name)
-//line views/vexport/ArgsDetail.html:109
+//line views/vexport/ArgsDetail.html:110
+			qw422016.N().S(`-`)
+//line views/vexport/ArgsDetail.html:110
+			qw422016.E().S(id)
+//line views/vexport/ArgsDetail.html:110
 			qw422016.N().S(`" type="checkbox" hidden />
           <label for="accordion-`)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			qw422016.N().S(`-model-`)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			qw422016.E().S(model.Name)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
+			qw422016.N().S(`-`)
+//line views/vexport/ArgsDetail.html:111
+			qw422016.E().S(id)
+//line views/vexport/ArgsDetail.html:111
 			qw422016.N().S(`">`)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			qw422016.N().S(` `)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			qw422016.E().S(model.Name)
-//line views/vexport/ArgsDetail.html:110
+//line views/vexport/ArgsDetail.html:111
 			qw422016.N().S(`</label>
           <div class="bd"><div><div>
             `)
-//line views/vexport/ArgsDetail.html:112
+//line views/vexport/ArgsDetail.html:113
 			streammodelDetail(qw422016, as, "", model, nil, ps)
-//line views/vexport/ArgsDetail.html:112
+//line views/vexport/ArgsDetail.html:113
 			qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vexport/ArgsDetail.html:115
+//line views/vexport/ArgsDetail.html:116
 		}
-//line views/vexport/ArgsDetail.html:115
+//line views/vexport/ArgsDetail.html:116
 		qw422016.N().S(`        </ul>
       </div></div></div>
     </li>
 `)
-//line views/vexport/ArgsDetail.html:119
+//line views/vexport/ArgsDetail.html:120
 	}
-//line views/vexport/ArgsDetail.html:120
+//line views/vexport/ArgsDetail.html:121
 	if len(ea.ExtraTypes) > 0 {
-//line views/vexport/ArgsDetail.html:120
+//line views/vexport/ArgsDetail.html:121
 		qw422016.N().S(`    <li>
       <input id="accordion-`)
-//line views/vexport/ArgsDetail.html:122
+//line views/vexport/ArgsDetail.html:123
 		qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:122
+//line views/vexport/ArgsDetail.html:123
 		qw422016.N().S(`-extra" type="checkbox" hidden />
       <label for="accordion-`)
-//line views/vexport/ArgsDetail.html:123
+//line views/vexport/ArgsDetail.html:124
 		qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:123
+//line views/vexport/ArgsDetail.html:124
 		qw422016.N().S(`-extra">
         `)
-//line views/vexport/ArgsDetail.html:124
+//line views/vexport/ArgsDetail.html:125
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/ArgsDetail.html:124
+//line views/vexport/ArgsDetail.html:125
 		qw422016.N().S(`
         `)
-//line views/vexport/ArgsDetail.html:125
+//line views/vexport/ArgsDetail.html:126
 		components.StreamSVGRef(qw422016, "list", 16, 16, "icon", ps)
-//line views/vexport/ArgsDetail.html:125
+//line views/vexport/ArgsDetail.html:126
 		qw422016.N().S(`
         `)
-//line views/vexport/ArgsDetail.html:126
+//line views/vexport/ArgsDetail.html:127
 		qw422016.E().S(util.StringPlural(len(ea.ExtraTypes), "Extra Type"))
-//line views/vexport/ArgsDetail.html:126
+//line views/vexport/ArgsDetail.html:127
 		qw422016.N().S(`
       </label>
       <div class="bd"><div><div>
         <ul class="accordion">
 `)
-//line views/vexport/ArgsDetail.html:130
+//line views/vexport/ArgsDetail.html:131
 		for _, extra := range ea.ExtraTypes {
-//line views/vexport/ArgsDetail.html:130
+//line views/vexport/ArgsDetail.html:131
 			qw422016.N().S(`        <li>
           <input id="accordion-`)
-//line views/vexport/ArgsDetail.html:132
+//line views/vexport/ArgsDetail.html:133
 			qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:132
+//line views/vexport/ArgsDetail.html:133
 			qw422016.N().S(`-extra-`)
-//line views/vexport/ArgsDetail.html:132
+//line views/vexport/ArgsDetail.html:133
 			qw422016.E().S(extra.Name)
-//line views/vexport/ArgsDetail.html:132
+//line views/vexport/ArgsDetail.html:133
 			qw422016.N().S(`" type="checkbox" hidden />
           <label for="accordion-`)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.N().S(`-extra-`)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.E().S(extra.Name)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.N().S(`">`)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.N().S(` `)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.E().S(extra.Name)
-//line views/vexport/ArgsDetail.html:133
+//line views/vexport/ArgsDetail.html:134
 			qw422016.N().S(`</label>
           <div class="bd"><div><div>
             `)
-//line views/vexport/ArgsDetail.html:135
+//line views/vexport/ArgsDetail.html:136
 			streammodelDetail(qw422016, as, "", extra, nil, ps)
-//line views/vexport/ArgsDetail.html:135
+//line views/vexport/ArgsDetail.html:136
 			qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vexport/ArgsDetail.html:138
+//line views/vexport/ArgsDetail.html:139
 		}
-//line views/vexport/ArgsDetail.html:138
+//line views/vexport/ArgsDetail.html:139
 		qw422016.N().S(`        </ul>
       </div></div></div>
     </li>
 `)
-//line views/vexport/ArgsDetail.html:142
-	}
 //line views/vexport/ArgsDetail.html:143
+	}
+//line views/vexport/ArgsDetail.html:144
 	if ea.Empty() {
-//line views/vexport/ArgsDetail.html:143
+//line views/vexport/ArgsDetail.html:144
 		streamemptyArgs(qw422016, key, ps)
-//line views/vexport/ArgsDetail.html:143
+//line views/vexport/ArgsDetail.html:144
 	}
-//line views/vexport/ArgsDetail.html:143
+//line views/vexport/ArgsDetail.html:144
 	qw422016.N().S(`  </ul>
 `)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 }
 
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 func WriteArgsDetail(qq422016 qtio422016.Writer, as *app.State, key string, ea *metamodel.Args, argsLogs []string, ps *cutil.PageState) {
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	StreamArgsDetail(qw422016, as, key, ea, argsLogs, ps)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 }
 
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 func ArgsDetail(as *app.State, key string, ea *metamodel.Args, argsLogs []string, ps *cutil.PageState) string {
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	WriteArgsDetail(qb422016, as, key, ea, argsLogs, ps)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	qs422016 := string(qb422016.B)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 	return qs422016
-//line views/vexport/ArgsDetail.html:145
+//line views/vexport/ArgsDetail.html:146
 }
 
-//line views/vexport/ArgsDetail.html:147
+//line views/vexport/ArgsDetail.html:148
 func streamemptyArgs(qw422016 *qt422016.Writer, key string, ps *cutil.PageState) {
-//line views/vexport/ArgsDetail.html:147
+//line views/vexport/ArgsDetail.html:148
 	qw422016.N().S(`
   <li>
     <input id="accordion-`)
-//line views/vexport/ArgsDetail.html:149
+//line views/vexport/ArgsDetail.html:150
 	qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:149
+//line views/vexport/ArgsDetail.html:150
 	qw422016.N().S(`-empty" type="checkbox" hidden />
     <label for="accordion-`)
-//line views/vexport/ArgsDetail.html:150
+//line views/vexport/ArgsDetail.html:151
 	qw422016.E().S(key)
-//line views/vexport/ArgsDetail.html:150
+//line views/vexport/ArgsDetail.html:151
 	qw422016.N().S(`-empty">
       `)
-//line views/vexport/ArgsDetail.html:151
+//line views/vexport/ArgsDetail.html:152
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vexport/ArgsDetail.html:151
+//line views/vexport/ArgsDetail.html:152
 	qw422016.N().S(`
       `)
-//line views/vexport/ArgsDetail.html:152
+//line views/vexport/ArgsDetail.html:153
 	components.StreamSVGRef(qw422016, "error", 16, 16, "icon", ps)
-//line views/vexport/ArgsDetail.html:152
+//line views/vexport/ArgsDetail.html:153
 	qw422016.N().S(`
       No Exported Data
     </label>
@@ -542,31 +556,31 @@ func streamemptyArgs(qw422016 *qt422016.Writer, key string, ps *cutil.PageState)
     </div></div></div>
   </li>
 `)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 }
 
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 func writeemptyArgs(qq422016 qtio422016.Writer, key string, ps *cutil.PageState) {
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	streamemptyArgs(qw422016, key, ps)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	qt422016.ReleaseWriter(qw422016)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 }
 
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 func emptyArgs(key string, ps *cutil.PageState) string {
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	writeemptyArgs(qb422016, key, ps)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	qs422016 := string(qb422016.B)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 	return qs422016
-//line views/vexport/ArgsDetail.html:159
+//line views/vexport/ArgsDetail.html:160
 }

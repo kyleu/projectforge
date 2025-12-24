@@ -26,7 +26,7 @@ func MenuFor(
 	ret = append(ret, generatedMenu()...){{{ end }}}{{{ end }}}
 	// This is your menu, feel free to customize it
 	admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
-	ret = append(ret, {{{ if .HasModule "graphql" }}}graphQLMenu(ctx, as.GraphQL), menu.Separator, {{{end}}}{{{ if .HasModule "sandbox" }}}sandbox.Menu(ctx), menu.Separator, {{{ end }}}admin{{{ if .HasModule "docbrowse" }}}, menu.Separator, docMenu(logger){{{ end }}}{{{ if .HasModule "mcp" }}}, mcpMenu(){{{ end }}})
+	ret = append(ret, {{{ if .HasModule "graphql" }}}graphQLMenu(ctx, as.GraphQL), menu.Separator, {{{end}}}{{{ if .HasModule "sandbox" }}}sandbox.Menu(ctx), menu.Separator, {{{ end }}}admin{{{ if .HasModule "docbrowse" }}}, menu.Separator, docMenu(logger){{{ end }}}{{{ if .HasModule "mcp" }}}, MCPMenu(){{{ end }}})
 	const aboutDesc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(menu)$

@@ -14,104 +14,127 @@ import (
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
+	"projectforge.dev/projectforge/views/vexec"
 	"projectforge.dev/projectforge/views/vmodule"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
-//line views/Home.html:14
+//line views/Home.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Home.html:14
+//line views/Home.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Home.html:14
+//line views/Home.html:15
 type Home struct {
 	layout.Basic
 	Projects project.Projects
-	Execs    exec.Execs
 	Modules  module.Modules
+	Execs    exec.Execs
 }
 
-//line views/Home.html:21
+//line views/Home.html:22
 func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:21
+//line views/Home.html:22
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/Home.html:23
+//line views/Home.html:24
 	components.StreamSVGIcon(qw422016, `app`, ps)
-//line views/Home.html:23
+//line views/Home.html:24
 	qw422016.N().S(` `)
-//line views/Home.html:23
+//line views/Home.html:24
 	qw422016.E().S(util.AppName)
-//line views/Home.html:23
+//line views/Home.html:24
 	qw422016.N().S(`</h3>
     <div class="mt">
       <div>Project Forge creates and manages applications written in the <a href="https://go.dev">Go</a> programming language.</div>
       <p><em>Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.</em></p>
       <a href="/about"><button>`)
-//line views/Home.html:27
+//line views/Home.html:28
 	components.StreamSVGButton(qw422016, "question", ps)
-//line views/Home.html:27
+//line views/Home.html:28
 	qw422016.N().S(` Learn More</button></a>
 `)
-//line views/Home.html:28
+//line views/Home.html:29
 	if len(p.Projects) > 0 {
-//line views/Home.html:28
+//line views/Home.html:29
 		qw422016.N().S(`      <a href="/run/preview"><button>`)
-//line views/Home.html:29
+//line views/Home.html:30
 		components.StreamSVGButton(qw422016, "play", ps)
-//line views/Home.html:29
+//line views/Home.html:30
 		qw422016.N().S(` Preview All</button></a>
 `)
-//line views/Home.html:30
+//line views/Home.html:31
 	}
-//line views/Home.html:30
+//line views/Home.html:31
 	qw422016.N().S(`    </div>
   </div>
   `)
-//line views/Home.html:33
+//line views/Home.html:34
 	vproject.StreamTable(qw422016, p.Projects, nil, false, p.Execs, as, ps)
-//line views/Home.html:33
+//line views/Home.html:34
 	qw422016.N().S(`
   `)
-//line views/Home.html:34
+//line views/Home.html:35
 	vmodule.StreamTable(qw422016, p.Modules, false, "", as, ps)
-//line views/Home.html:34
+//line views/Home.html:35
 	qw422016.N().S(`
 `)
-//line views/Home.html:35
+//line views/Home.html:36
+	if len(p.Execs) > 0 {
+//line views/Home.html:36
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/Home.html:38
+		components.StreamSVGIcon(qw422016, `play`, ps)
+//line views/Home.html:38
+		qw422016.N().S(` `)
+//line views/Home.html:38
+		qw422016.E().S(util.StringPlural(len(p.Execs), "Process"))
+//line views/Home.html:38
+		qw422016.N().S(`</h3>
+    `)
+//line views/Home.html:39
+		vexec.StreamTable(qw422016, as, p.Execs, ps)
+//line views/Home.html:39
+		qw422016.N().S(`
+  </div>
+`)
+//line views/Home.html:41
+	}
+//line views/Home.html:42
 }
 
-//line views/Home.html:35
+//line views/Home.html:42
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:35
+//line views/Home.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:35
+//line views/Home.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:35
+//line views/Home.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:35
+//line views/Home.html:42
 }
 
-//line views/Home.html:35
+//line views/Home.html:42
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:35
+//line views/Home.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:35
+//line views/Home.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:35
+//line views/Home.html:42
 	qs422016 := string(qb422016.B)
-//line views/Home.html:35
+//line views/Home.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:35
+//line views/Home.html:42
 	return qs422016
-//line views/Home.html:35
+//line views/Home.html:42
 }

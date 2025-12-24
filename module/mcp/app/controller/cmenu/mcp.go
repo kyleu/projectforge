@@ -5,7 +5,7 @@ import (
 	"{{{ .Package }}}/app/lib/menu"
 )
 
-func mcpMenu() *menu.Item {
+func MCPMenu() *menu.Item {
 	ret := &menu.Item{Key: "mcp", Title: "Model Context Protocol", Icon: "robot", Route: "/mcp"}
 	if x := mcpserver.CurrentDefaultServer(); x != nil {
 		if len(x.Resources) > 0 {

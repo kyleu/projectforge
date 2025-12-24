@@ -10,151 +10,298 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
+	"projectforge.dev/projectforge/views/components/view"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/Debug.html:9
+//line views/Debug.html:10
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Debug.html:9
+//line views/Debug.html:10
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Debug.html:9
+//line views/Debug.html:10
 type Debug struct{ layout.Basic }
 
-//line views/Debug.html:11
+//line views/Debug.html:12
 func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Debug.html:11
+//line views/Debug.html:12
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/Debug.html:13
+//line views/Debug.html:14
 	components.StreamSVGIcon(qw422016, util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps)
-//line views/Debug.html:13
+//line views/Debug.html:14
 	qw422016.N().S(` `)
-//line views/Debug.html:13
+//line views/Debug.html:14
 	qw422016.E().S(ps.Title)
-//line views/Debug.html:13
+//line views/Debug.html:14
 	qw422016.N().S(`</h3>
 `)
-//line views/Debug.html:14
+//line views/Debug.html:15
 	if s, ok := ps.Data.(string); ok {
-//line views/Debug.html:14
-		qw422016.N().S(`    <div class="overflow full-width"><pre class="mt">`)
 //line views/Debug.html:15
+		qw422016.N().S(`    <div class="overflow full-width"><pre class="mt">`)
+//line views/Debug.html:16
 		qw422016.E().S(s)
-//line views/Debug.html:15
+//line views/Debug.html:16
 		qw422016.N().S(`</pre></div>
 `)
-//line views/Debug.html:16
+//line views/Debug.html:17
 	} else if b, ok := ps.Data.([]byte); ok {
-//line views/Debug.html:16
+//line views/Debug.html:17
 		qw422016.N().S(`    <div class="overflow full-width"><pre class="mt">`)
-//line views/Debug.html:17
+//line views/Debug.html:18
 		qw422016.E().S(string(b))
-//line views/Debug.html:17
+//line views/Debug.html:18
 		qw422016.N().S(`</pre></div>
 `)
-//line views/Debug.html:18
+//line views/Debug.html:19
 	} else {
-//line views/Debug.html:19
+//line views/Debug.html:20
 		if util.ArrayTest(ps.Data) {
-//line views/Debug.html:19
+//line views/Debug.html:20
 			qw422016.N().S(`    <div class="overflow full-width">
       <table class="mt">
         <tbody>
 `)
-//line views/Debug.html:23
-			a := util.ArrayFromAny[any](ps.Data)
-
 //line views/Debug.html:24
-			for idx, x := range a {
+			a, err := util.ArrayFromAny[any](ps.Data)
+
 //line views/Debug.html:25
-				if idx < 32 {
+			if err != nil {
 //line views/Debug.html:25
-					qw422016.N().S(`          <tr>
+				qw422016.N().S(`          `)
+//line views/Debug.html:26
+				components.StreamJSON(qw422016, a)
+//line views/Debug.html:26
+				qw422016.N().S(`
+`)
+//line views/Debug.html:27
+			} else {
+//line views/Debug.html:28
+				for idx, x := range a {
+//line views/Debug.html:29
+					if idx < 32 {
+//line views/Debug.html:29
+						qw422016.N().S(`          <tr>
             <th class="shrink">`)
-//line views/Debug.html:27
-					qw422016.N().D(idx + 1)
-//line views/Debug.html:27
-					qw422016.N().S(`</th>
-            <td>`)
-//line views/Debug.html:28
-					qw422016.N().S(components.JSON(x))
-//line views/Debug.html:28
-					qw422016.N().S(`</td>
-          </tr>
-`)
-//line views/Debug.html:30
-				}
 //line views/Debug.html:31
-			}
+						qw422016.N().D(idx + 1)
+//line views/Debug.html:31
+						qw422016.N().S(`</th>
+            <td>`)
 //line views/Debug.html:32
-			if len(a) > 32 {
+						components.StreamJSON(qw422016, x)
 //line views/Debug.html:32
-				qw422016.N().S(`          <tr>
-            <td class="shrink" colspan="2"><em>...and [`)
-//line views/Debug.html:34
-				qw422016.N().D(len(a) - 32)
-//line views/Debug.html:34
-				qw422016.N().S(`] more...</em></td>
+						qw422016.N().S(`</td>
           </tr>
 `)
+//line views/Debug.html:34
+					}
+//line views/Debug.html:35
+				}
 //line views/Debug.html:36
+				if len(a) > 32 {
+//line views/Debug.html:36
+					qw422016.N().S(`          <tr>
+            <td class="shrink" colspan="2"><em>...and [`)
+//line views/Debug.html:38
+					qw422016.N().D(len(a) - 32)
+//line views/Debug.html:38
+					qw422016.N().S(`] more...</em></td>
+          </tr>
+`)
+//line views/Debug.html:40
+				}
+//line views/Debug.html:41
 			}
-//line views/Debug.html:36
+//line views/Debug.html:41
 			qw422016.N().S(`        </tbody>
       </table>
     </div>
 `)
-//line views/Debug.html:40
+//line views/Debug.html:45
 		} else {
-//line views/Debug.html:40
+//line views/Debug.html:45
 			qw422016.N().S(`    <div class="mt">`)
-//line views/Debug.html:41
-			qw422016.N().S(components.JSON(ps.Data))
-//line views/Debug.html:41
+//line views/Debug.html:46
+			components.StreamJSON(qw422016, ps.Data)
+//line views/Debug.html:46
 			qw422016.N().S(`</div>
 `)
-//line views/Debug.html:42
+//line views/Debug.html:47
 		}
-//line views/Debug.html:43
+//line views/Debug.html:48
 	}
-//line views/Debug.html:43
+//line views/Debug.html:48
 	qw422016.N().S(`  </div>
 `)
-//line views/Debug.html:45
+//line views/Debug.html:50
 }
 
-//line views/Debug.html:45
+//line views/Debug.html:50
 func (p *Debug) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Debug.html:45
+//line views/Debug.html:50
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Debug.html:45
+//line views/Debug.html:50
 	p.StreamBody(qw422016, as, ps)
-//line views/Debug.html:45
+//line views/Debug.html:50
 	qt422016.ReleaseWriter(qw422016)
-//line views/Debug.html:45
+//line views/Debug.html:50
 }
 
-//line views/Debug.html:45
+//line views/Debug.html:50
 func (p *Debug) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Debug.html:45
+//line views/Debug.html:50
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Debug.html:45
+//line views/Debug.html:50
 	p.WriteBody(qb422016, as, ps)
-//line views/Debug.html:45
+//line views/Debug.html:50
 	qs422016 := string(qb422016.B)
-//line views/Debug.html:45
+//line views/Debug.html:50
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Debug.html:45
+//line views/Debug.html:50
 	return qs422016
-//line views/Debug.html:45
+//line views/Debug.html:50
+}
+
+//line views/Debug.html:52
+type DebugObject struct{ layout.Basic }
+
+//line views/Debug.html:54
+func (p *DebugObject) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/Debug.html:54
+	qw422016.N().S(`
+  <div class="card">
+    <h3>`)
+//line views/Debug.html:56
+	components.StreamSVGIcon(qw422016, util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps)
+//line views/Debug.html:56
+	qw422016.N().S(` `)
+//line views/Debug.html:56
+	qw422016.E().S(ps.Title)
+//line views/Debug.html:56
+	qw422016.N().S(`</h3>
+    <div class="mt">`)
+//line views/Debug.html:57
+	view.StreamAny(qw422016, ps.Data, ps)
+//line views/Debug.html:57
+	qw422016.N().S(`</div>
+  </div>
+`)
+//line views/Debug.html:59
+}
+
+//line views/Debug.html:59
+func (p *DebugObject) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/Debug.html:59
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/Debug.html:59
+	p.StreamBody(qw422016, as, ps)
+//line views/Debug.html:59
+	qt422016.ReleaseWriter(qw422016)
+//line views/Debug.html:59
+}
+
+//line views/Debug.html:59
+func (p *DebugObject) Body(as *app.State, ps *cutil.PageState) string {
+//line views/Debug.html:59
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/Debug.html:59
+	p.WriteBody(qb422016, as, ps)
+//line views/Debug.html:59
+	qs422016 := string(qb422016.B)
+//line views/Debug.html:59
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/Debug.html:59
+	return qs422016
+//line views/Debug.html:59
+}
+
+//line views/Debug.html:61
+type DebugSocket struct {
+	layout.Basic
+	URL            string
+	InitialContent []string
+	ExtraHandlers  []string
+}
+
+//line views/Debug.html:68
+func (p *DebugSocket) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/Debug.html:68
+	qw422016.N().S(`
+`)
+//line views/Debug.html:69
+	id := util.RandomID()
+
+//line views/Debug.html:69
+	qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/Debug.html:71
+	components.StreamSVGIcon(qw422016, util.Choose(ps.DefaultNavIcon == ``, `graph`, ps.DefaultNavIcon), ps)
+//line views/Debug.html:71
+	qw422016.N().S(` `)
+//line views/Debug.html:71
+	qw422016.E().S(ps.Title)
+//line views/Debug.html:71
+	qw422016.N().S(`</h3>
+    <div class="mt">`)
+//line views/Debug.html:72
+	components.StreamTerminal(qw422016, id, p.InitialContent...)
+//line views/Debug.html:72
+	qw422016.N().S(`</div>
+  </div>
+  <script>
+    window.addEventListener('load', () => {
+      projectforge.socketLog(true, document.getElementById("`)
+//line views/Debug.html:76
+	qw422016.E().S(id)
+//line views/Debug.html:76
+	qw422016.N().S(`"), true, "`)
+//line views/Debug.html:76
+	qw422016.N().S(p.URL)
+//line views/Debug.html:76
+	qw422016.N().S(`", [`)
+//line views/Debug.html:76
+	qw422016.N().S(util.StringJoin(p.ExtraHandlers, `, `))
+//line views/Debug.html:76
+	qw422016.N().S(`]);
+    });
+  </script>
+`)
+//line views/Debug.html:79
+}
+
+//line views/Debug.html:79
+func (p *DebugSocket) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/Debug.html:79
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/Debug.html:79
+	p.StreamBody(qw422016, as, ps)
+//line views/Debug.html:79
+	qt422016.ReleaseWriter(qw422016)
+//line views/Debug.html:79
+}
+
+//line views/Debug.html:79
+func (p *DebugSocket) Body(as *app.State, ps *cutil.PageState) string {
+//line views/Debug.html:79
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/Debug.html:79
+	p.WriteBody(qb422016, as, ps)
+//line views/Debug.html:79
+	qs422016 := string(qb422016.B)
+//line views/Debug.html:79
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/Debug.html:79
+	return qs422016
+//line views/Debug.html:79
 }

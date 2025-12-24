@@ -105,7 +105,7 @@ func listGoViewString(t *types.Wrapped, prop string, src string, enums enum.Enum
 	case types.KeyString:
 		return saGoViewString(prop)
 	case types.KeyInt:
-		return tmplStartEQ + fmt.Sprintf("view.IntArray(util.ArrayFromAny[any](%s))", prop) + tmplEnd
+		return tmplStartEQ + fmt.Sprintf("view.IntArray(util.ArrayFromAnyOK[any](%s))", prop) + tmplEnd
 	case types.KeyEnum:
 		e, _ := AsEnumInstance(lt, enums)
 		if e == nil {

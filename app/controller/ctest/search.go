@@ -15,7 +15,7 @@ import (
 )
 
 func searchTest(as *app.State, r *http.Request, ps *cutil.PageState) (layout.Page, error) {
-	q := r.URL.Query().Get("q")
+	q := cutil.QueryStringString(r, "q")
 	cfg := util.ValueMap{"q": q}
 
 	prjs := as.Services.Projects.Projects().WithModules("export")

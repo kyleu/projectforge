@@ -37,7 +37,7 @@ func ThemeColor(w http.ResponseWriter, r *http.Request) {
 
 func ThemeColorEdit(w http.ResponseWriter, r *http.Request) {
 	controller.Act("theme.color.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		color := util.Str(r.URL.Query().Get("color"))
+		color := util.Str(cutil.QueryStringString(r, "color"))
 		if color.Empty() {
 			return "", errors.New("must provide color in query string")
 		}
@@ -65,7 +65,7 @@ func ThemePalette(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), thms)
-		if r.URL.Query().Get("t") == "go" {
+		if cutil.QueryStringString(r, "t") == "go" {
 			ps.Data = util.StringJoin(lo.Map(thms, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)

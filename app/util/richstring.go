@@ -143,12 +143,12 @@ func (s Str) SubstringBetween(left string, right string) Str {
 	return Str(StringSubstringBetween(string(s), left, right))
 }
 
-func (s Str) Replace(old string, new string, n int) Str {
-	return Str(strings.Replace(string(s), old, new, n))
+func (s Str) Replace(old string, nw string, n int) Str {
+	return Str(strings.Replace(string(s), old, nw, n))
 }
 
-func (s Str) ReplaceAll(old string, new string) Str {
-	return Str(strings.ReplaceAll(string(s), old, new))
+func (s Str) ReplaceAll(old string, nw string) Str {
+	return Str(strings.ReplaceAll(string(s), old, nw))
 }
 
 func (s Str) ReplaceBetween(left string, right string, replacement string) (Str, error) {
@@ -171,8 +171,7 @@ func (s Str) WithPrefix(prefixes ...Str) Str {
 }
 
 func (s Str) WithSuffix(suffixes ...Str) Str {
-	var ret Strings = append(Strings{s}, suffixes...)
-	return ret.Join("")
+	return s.With(suffixes...).Join("")
 }
 
 func (s Str) With(elems ...Str) Strings {

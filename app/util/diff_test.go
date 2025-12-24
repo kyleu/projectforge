@@ -38,11 +38,13 @@ var diffTests = []*diffTest{
 	{k: "map.different", l: testObj, r: util.ValueMap{"x": util.ValueMap{"y": 2}}, d: util.Diffs{&util.Diff{Path: ".x.y", Old: "1", New: "2"}}},
 	{
 		k: "map.missing", l: testObj, r: util.ValueMap{"y": true}, d: util.Diffs{
-			&util.Diff{Path: ".x", Old: `{"y":1}`, New: ""},
-			&util.Diff{Path: ".y", Old: "", New: util.BoolTrue},
+			&util.Diff{Path: ".x", Old: `{"y":1}`, New: "<nil>"},
+			&util.Diff{Path: ".y", Old: "<nil>", New: util.BoolTrue},
 		},
 	},
-	{k: "map.extra", l: testObj, r: util.ValueMap{"x": util.ValueMap{"y": 1, "z": true}}, d: util.Diffs{&util.Diff{Path: ".x.z", Old: "", New: util.BoolTrue}}},
+	{k: "map.extra", l: testObj, r: util.ValueMap{
+		"x": util.ValueMap{"y": 1, "z": true},
+	}, d: util.Diffs{&util.Diff{Path: ".x.z", Old: "<nil>", New: util.BoolTrue}}},
 	{k: "array.same", l: testArr, r: testArr, d: util.Diffs{}},
 	{
 		k: "array.different", l: testArr, r: []any{"y", 2, true}, d: util.Diffs{
@@ -50,8 +52,8 @@ var diffTests = []*diffTest{
 			&util.Diff{Path: ".1", Old: "1", New: "2"},
 		},
 	},
-	{k: "array.missing", l: testArr, r: []any{"x", 1}, d: util.Diffs{&util.Diff{Path: ".2", Old: util.BoolTrue, New: ""}}},
-	{k: "array.extra", l: testArr, r: []any{"x", 1, true, "new"}, d: util.Diffs{&util.Diff{Path: ".3", Old: "", New: "new"}}},
+	{k: "array.missing", l: testArr, r: []any{"x", 1}, d: util.Diffs{&util.Diff{Path: ".2", Old: util.BoolTrue, New: "<nil>"}}},
+	{k: "array.extra", l: testArr, r: []any{"x", 1, true, "new"}, d: util.Diffs{&util.Diff{Path: ".3", Old: "<nil>", New: "new"}}},
 }
 
 func TestDiffs(t *testing.T) {

@@ -86,6 +86,6 @@
   <script>
     window.addEventListener('load', () => {
       {{{ .CleanKey }}}.socketLog({%v debug %}, document.getElementById("{%s id %}"), {%v terminal %}, "{%s= connectURL %}", [{%s= util.StringJoin(extraHandlers, `, `) %}]);
-    })
+    });
   </script>
 {% endfunc %}

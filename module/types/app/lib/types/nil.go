@@ -1,6 +1,9 @@
 package types
 
-const KeyNil = "nil"
+const (
+	KeyNil       = "nil"
+	KeyNilString = "<nil>"
+)
 
 type Nil struct{}
 
@@ -30,7 +33,7 @@ func (x *Nil) From(v any) any {
 }
 
 func (x *Nil) Default(string) any {
-	return "<nil>"
+	return KeyNilString
 }
 
 func NewNil() *Wrapped {

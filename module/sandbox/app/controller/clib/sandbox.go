@@ -17,7 +17,7 @@ import (
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("sandbox.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		if title := r.URL.Query().Get("title"); title != "" {
+		if title := cutil.QueryStringString(r, "title"); title != "" {
 			ps.SetTitleAndData(title, title)
 			return controller.Render(r, as, &views.Debug{}, ps, title)
 		}

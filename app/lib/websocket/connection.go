@@ -31,6 +31,7 @@ func NewConnection(svc string, profile *user.Profile, socket *websocket.Conn, ha
 		ID:       util.UUID(),
 		Profile:  profile,
 		Svc:      svc,
+		Channels: []string{},
 		Started:  util.TimeCurrent(),
 		Stats:    NewStats(),
 		handler:  handler,

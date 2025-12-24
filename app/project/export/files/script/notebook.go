@@ -32,7 +32,7 @@ func NotebookScript(p *project.Project, models model.Models, linebreak string) (
 	w(`const defaultOpts = {limit: 0, offset: 0, order: "", t: "json", q: "", extra: {}};`)
 	w("")
 	w("export function urlFor(key, path, {limit, offset, order, t, q, extra} = defaultOpts) {")
-	w("  let ret = `http://localhost:" + fmt.Sprint(p.Port) + "/${path}?t=${t}`;")
+	w("  let ret = `http://localhost:" + fmt.Sprint(p.Port) + "/${path}?t=${t}`;") //nolint:govet
 	w(`  let prefix = key !== "" ? key + "." : "";`)
 	w(`  if (order && order !== "") {`)
 	w("    ret += `&${prefix}o=${order}`;")

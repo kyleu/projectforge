@@ -25,7 +25,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	prj.Package = get("package", prj.Package).OrDefault("github.com/org/" + prj.Key).String()
 	prj.Args = get("args", prj.Args).String()
 	prt, _ := get("port", fmt.Sprintf("%d", prj.Port)).ParseInt()
-	prj.Port = int(prt)
+	prj.Port = prt
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}

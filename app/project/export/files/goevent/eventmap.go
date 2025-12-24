@@ -3,6 +3,7 @@ package goevent
 import (
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
+	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/gohelper"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -20,7 +21,7 @@ func eventMap(g *golang.File, evt *model.Event, args *metamodel.Args, linebreak 
 		return err
 	}
 	g.AddImport(imps...)
-	g.AddImport(evt.Imports.Supporting("map")...)
+	g.AddImport(evt.Imports.Supporting(types.KeyMap)...)
 	if b, e := gohelper.FromMap(g, evt, evt.Columns, args); e == nil {
 		g.AddBlocks(b)
 	} else {

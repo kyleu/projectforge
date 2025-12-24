@@ -298,7 +298,7 @@ func StreamExecScript(qw422016 *qt422016.Writer, debug bool, id string, connectU
 	qw422016.N().S(util.StringJoin(extraHandlers, `, `))
 //line views/vexec/Detail.html:88
 	qw422016.N().S(`]);
-    })
+    });
   </script>
 `)
 //line views/vexec/Detail.html:91

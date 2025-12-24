@@ -22,13 +22,14 @@ const (
 	pkgsKey     = "packages"
 	statsKey    = "codestats"
 	coverageKey = "coverage"
+	keyCustom   = "custom"
 )
 
-//nolint:gocognit
+//nolint:gocognit,nestif
 func RunAction(w http.ResponseWriter, r *http.Request) {
 	actQ, _ := cutil.PathString(r, "act", false)
 	act := "run.action." + actQ
-	if phase := r.URL.Query().Get("phase"); phase != "" {
+	if phase := cutil.QueryStringString(r, "phase"); phase != "" {
 		act += "." + phase
 	}
 	controller.Act(act, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
@@ -58,7 +59,7 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 			if b == nil {
 				return "", errors.Errorf("unknown phase [%s]", phase)
 			}
-			if b.Key == "custom" {
+			if b.Key == keyCustom {
 				if cmd := cfg.GetStringOpt("cmd"); cmd == "" {
 					argRes := util.FieldDescsCollectMap(cfg, gitCustomArgs)
 					if argRes.HasMissing() {
@@ -119,7 +120,7 @@ func loadActionProject(r *http.Request, as *app.State) (util.ValueMap, action.Ty
 		return nil, actT, nil, err
 	}
 
-	cfg := cutil.QueryArgsMap(r.URL)
+	cfg := cutil.QueryStringAsMap(r.URL)
 	prj, err := as.Services.Projects.Get(tgt)
 	if err != nil {
 		return nil, actT, nil, err

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/enum"

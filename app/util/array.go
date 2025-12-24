@@ -157,26 +157,34 @@ func LengthAny(dest any) int {
 	return rfl.Len()
 }
 
-func ArrayFromAny[T any](dest any) []T {
+func ArrayFromAny[T any](dest any) ([]T, error) {
 	defer func() { _ = recover() }()
 	rfl := reflect.ValueOf(dest)
 	if rfl.Kind() == reflect.Ptr {
 		rfl = rfl.Elem()
 	}
 	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {
-		return lo.Times(rfl.Len(), func(i int) T {
+		l := rfl.Len()
+		ret := make([]T, 0, l)
+		for i := range l {
 			x := rfl.Index(i).Interface()
-			if t, err := Cast[T](x); err == nil {
-				return t
+			t, err := Cast[T](x)
+			if err != nil {
+				return nil, err
 			}
-			var t T
-			return t
-		})
+			ret = append(ret, t)
+		}
+		return ret, nil
 	}
 	if t, err := Cast[T](dest); err == nil {
-		return []T{t}
+		return []T{t}, nil
 	}
-	return nil
+	return nil, errors.Errorf("unable to convert [%T] to an array", dest)
+}
+
+func ArrayFromAnyOK[T any](dest any) []T {
+	ret, _ := ArrayFromAny[T](dest)
+	return ret
 }
 
 func ArrayTest(dest any) bool {

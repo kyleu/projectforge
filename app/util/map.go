@@ -6,11 +6,14 @@ import (
 	"fmt"
 	"maps"
 	"net/url"
+	"reflect"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
+
+const KeyMap = "map"
 
 type ValueMap map[string]any
 
@@ -37,6 +40,15 @@ func ValueMapFromAny(x any) (ValueMap, error) {
 	case ToMap:
 		return t.ToMap(), nil
 	default:
+		rv := reflect.ValueOf(x)
+		if rv.Kind() == reflect.Map {
+			args := make([]any, 0, rv.Len()*2)
+			iter := rv.MapRange()
+			for iter.Next() {
+				args = append(args, iter.Key().Interface(), iter.Value().Interface())
+			}
+			return ValueMapFor(args...), nil
+		}
 		return nil, errors.Errorf("unable to parse [%T] as ValueMap", x)
 	}
 }
@@ -47,10 +59,31 @@ func ValueMapFromAnyOK(x any) ValueMap {
 }
 
 func (m ValueMap) Add(kvs ...any) {
+	numWidth := -1
+	pad := func() int {
+		if numWidth == -1 {
+			numWidth = len(fmt.Sprintf("%d", len(m)+len(kvs)/2))
+		}
+		return numWidth
+	}
 	for i := 0; i < len(kvs); i += 2 {
-		k, err := Cast[string](kvs[i])
-		if err != nil {
-			k = fmt.Sprintf("error-invalid-type:%T", kvs[i])
+		v := kvs[i]
+		var k string
+		switch t := v.(type) {
+		case string:
+			k = t
+		case fmt.Stringer:
+			k = t.String()
+		case int:
+			k = fmt.Sprintf("%0*d", pad(), t)
+		case int64:
+			k = fmt.Sprintf("%0*d", pad(), t)
+		case float64:
+			k = fmt.Sprintf("%0*f", pad(), t)
+		case bool:
+			k = fmt.Sprintf("%t", t)
+		default:
+			k = fmt.Sprintf("error-invalid-type:%T", v)
 		}
 		m[k] = kvs[i+1]
 	}
@@ -148,7 +181,7 @@ func (m ValueMap) AsMap(simplify bool) map[string]any {
 	}
 	ret := make(map[string]any, len(m))
 	for k, v := range m {
-		ret[k] = simplifyValue(k, v)
+		ret[k], _ = simplifyValue(k, v)
 	}
 	return ret
 }
@@ -207,7 +240,7 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 }
 
 func (m ValueMap) MarshalXML(e *xml.Encoder, _ xml.StartElement) error {
-	err := e.EncodeToken(xml.StartElement{Name: xml.Name{Local: "map"}})
+	err := e.EncodeToken(xml.StartElement{Name: xml.Name{Local: KeyMap}})
 	if err != nil {
 		return err
 	}
@@ -217,7 +250,7 @@ func (m ValueMap) MarshalXML(e *xml.Encoder, _ xml.StartElement) error {
 			return err
 		}
 	}
-	err = e.EncodeToken(xml.EndElement{Name: xml.Name{Local: "map"}})
+	err = e.EncodeToken(xml.EndElement{Name: xml.Name{Local: KeyMap}})
 	if err != nil {
 		return err
 	}
@@ -255,4 +288,24 @@ func MapClone[K comparable, V any](m map[K]V) map[K]V {
 
 func MapKeysSorted[K cmp.Ordered, V any](m map[K]V) []K {
 	return ArraySorted(MapKeys(m))
+}
+
+func MapUpdateKeys[K cmp.Ordered, V any, NK cmp.Ordered](m map[K]V, fn func(k K, v V) NK) map[NK]V {
+	ret := map[NK]V{}
+	for k, v := range m {
+		ret[fn(k, v)] = v
+	}
+	return ret
+}
+
+func MapUpdateValues[K comparable, V any, NV any](m map[K]V, fn func(k K, v V) (NV, error)) (map[K]NV, error) {
+	ret := map[K]NV{}
+	for k, v := range m {
+		nv, err := fn(k, v)
+		if err != nil {
+			return nil, err
+		}
+		ret[k] = nv
+	}
+	return ret, nil
 }

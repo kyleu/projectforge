@@ -27,7 +27,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	}
 	if m.HasSearches() {
 		g.AddImport(helper.ImpStrings)
-		ret.W("\t\tq := strings.TrimSpace(r.URL.Query().Get(\"q\"))")
+		ret.W("\t\tq := strings.TrimSpace(cutil.QueryStringString(r, \"q\"))")
 	}
 	ret.WF("\t\tprms := ps.Params.Sanitized(%q, ps.Logger)", m.Package)
 	if grpArgs == "" && m.HasSearches() {

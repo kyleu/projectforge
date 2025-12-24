@@ -34,7 +34,7 @@ func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, mod
 		decls = append(decls, fmt.Sprintf("%s: %sArg", grp.Proper(), grp.Camel()))
 	}
 	ret.WF("\t\tret := &%s{%s}", m.ClassRef(), util.StringJoin(decls, ", "))
-	ret.W("\t\tif r.URL.Query().Get(\"prototype\") == util.KeyRandom {")
+	ret.W("\t\tif cutil.QueryStringString(r, \"prototype\") == util.KeyRandom {")
 	ret.WF("\t\t\tret = %s.Random%s()", m.Package, m.Proper())
 	var encounteredRelTables []string
 	for _, rel := range m.Relations {

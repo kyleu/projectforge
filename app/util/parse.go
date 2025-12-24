@@ -252,7 +252,7 @@ func ParseMap(r any, path string, allowEmpty bool) (ValueMap, error) {
 		}
 		return nil, nil
 	default:
-		return nil, invalidTypeError(path, "map", t)
+		return nil, invalidTypeError(path, KeyMap, t)
 	}
 }
 

@@ -114,19 +114,20 @@ func parseMapField[T any](m ValueMap, path string, allowMissing bool, fn func(re
 	return fn(result)
 }
 
-func simplifyValue(k string, v any) any {
+func simplifyValue(k string, v any) (any, error) {
+	var err error
 	if v != nil {
 		switch t := v.(type) {
 		case []string:
-			v = ArrayFromAny[any](t)
+			v, err = ArrayFromAny[any](t)
 		case []int:
-			v = ArrayFromAny[any](t)
+			v, err = ArrayFromAny[any](t)
 		case []int64:
-			v = ArrayFromAny[any](t)
+			v, err = ArrayFromAny[any](t)
 		case []float32:
-			v = ArrayFromAny[any](t)
+			v, err = ArrayFromAny[any](t)
 		case []float64:
-			v = ArrayFromAny[any](t)
+			v, err = ArrayFromAny[any](t)
 		case uuid.UUID:
 			v = t.String()
 		case *uuid.UUID:
@@ -142,21 +143,27 @@ func simplifyValue(k string, v any) any {
 				return x.AsMap(true)
 			})
 		case []any:
-			v = lo.Map(t, func(x any, idx int) any {
-				return simplifyValue(fmt.Sprintf("%s[%d]", k, idx), x)
-			})
+			var acc []any
+			for idx, x := range t {
+				var simple any
+				simple, err = simplifyValue(fmt.Sprintf("%s[%d]", k, idx), x)
+				if err != nil {
+					break
+				}
+				acc = append(acc, simple)
+			}
+			v = acc
 		case map[string]any:
 		case string:
 		case int:
 		case bool:
 		case float64:
 		default:
-			var err error
 			v, err = FromJSONAny(ToJSONBytes(v, true))
 			if err != nil {
 				panic(fmt.Sprintf("encountered [%s] value of type [%T]", k, v))
 			}
 		}
 	}
-	return v
+	return v, err
 }

@@ -18,8 +18,8 @@ import (
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	controller.Act("welcome", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		override := r.URL.Query().Get("override") == util.BoolTrue
-		showLoad := override || r.URL.Query().Get("loaded") == util.BoolTrue
+		override := cutil.QueryStringString(r, "override") == util.BoolTrue
+		showLoad := override || cutil.QueryStringString(r, "loaded") == util.BoolTrue
 		if !showLoad {
 			ps.HideMenu = true
 			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting " + util.AppName, Message: "Checking some things..."}

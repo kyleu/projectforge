@@ -27,6 +27,9 @@ func Models(m *model.Model, args *metamodel.Args, goVersion string, linebreak st
 		g.AddImport(imp)
 	})
 	g.AddImport(m.Imports.Supporting("array")...)
-	gohelper.Array(g, m, m.Columns, m.IndexedColumns(true), args, goVersion, linebreak)
+	_, err := gohelper.Array(g, m, m.Columns, m.IndexedColumns(true), args, goVersion, linebreak)
+	if err != nil {
+		return nil, err
+	}
 	return g.Render(linebreak)
 }

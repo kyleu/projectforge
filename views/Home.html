@@ -7,6 +7,7 @@
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
   "projectforge.dev/projectforge/views/layout"
+  "projectforge.dev/projectforge/views/vexec"
   "projectforge.dev/projectforge/views/vmodule"
   "projectforge.dev/projectforge/views/vproject"
 ) %}
@@ -14,8 +15,8 @@
 {% code type Home struct {
   layout.Basic
   Projects project.Projects
-  Execs exec.Execs
   Modules module.Modules
+  Execs exec.Execs
 } %}
 
 {% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
@@ -32,4 +33,10 @@
   </div>
   {%= vproject.Table(p.Projects, nil, false, p.Execs, as, ps) %}
   {%= vmodule.Table(p.Modules, false, "", as, ps) %}
+  {%- if len(p.Execs) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`play`, ps) %} {%s util.StringPlural(len(p.Execs), "Process") %}</h3>
+    {%= vexec.Table(as, p.Execs, ps) %}
+  </div>
+  {%- endif -%}
 {% endfunc %}

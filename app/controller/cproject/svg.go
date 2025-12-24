@@ -143,7 +143,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		cfg := cutil.QueryArgsMap(r.URL)
+		cfg := cutil.QueryStringAsMap(r.URL)
 		if page := HandleLoad(cfg, r.URL, "Generating icons"); page != nil {
 			return controller.Render(r, as, page, ps, "projects", prj.Key, svgBC(prj), "App Icon")
 		}
@@ -174,7 +174,7 @@ func SVGRefreshApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		cfg := cutil.QueryArgsMap(r.URL)
+		cfg := cutil.QueryStringAsMap(r.URL)
 		if page := HandleLoad(cfg, r.URL, "Generating app icons"); page != nil {
 			return controller.Render(r, as, page, ps, "projects", prj.Key, svgBC(prj), "Refresh App Icon")
 		}

@@ -2,6 +2,7 @@
   "encoding/json/jsontext"
   "fmt"
   "net/url"
+  "reflect"
   "time"
 
   "github.com/google/uuid"
@@ -114,7 +115,24 @@
     {% case fmt.Stringer %}
       {%= String(t.String()) %}
     {% default %}
-      unhandled type [{%s fmt.Sprintf("%T", x) %}]
+      {%- code rv := reflect.TypeOf(t) -%}
+      {%- if rv.Kind() == reflect.Map -%}
+        {%- code m, err := util.ValueMapFromAny(t) -%}
+        {%- if err != nil -%}
+          {%= String("Error rendering map: " + err.Error()) %}
+        {%- else -%}
+          {%= Map(false, m, ps) %}
+        {%- endif -%}
+      {%- elseif rv.Kind() == reflect.Array -%}
+        {%- code a, err := util.ArrayFromAny[any](t) -%}
+        {%- if err != nil -%}
+          {%= String("Error rendering array: " + err.Error()) %}
+        {%- else -%}
+          {%= Array(false, util.ArrayFromAnyOK[any](a), ps) %}
+        {%- endif -%}
+      {%- else -%}
+        unhandled type [{%s fmt.Sprintf("%T", x) %}]
+      {%- endif -%}
     {% endswitch %}
   {% endif %}
 {% endstripspace %}{% endfunc %}

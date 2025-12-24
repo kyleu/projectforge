@@ -71,7 +71,10 @@ func ImportModel(sch *jsonschema.Schema, coll *jsonschema.Collection, args *meta
 		ret.View = x
 	}
 	if len(sch.Examples) > 0 {
-		ret.SeedData = util.ArrayFromAny[[]any](sch.Examples)
+		ret.SeedData, err = util.ArrayFromAny[[]any](sch.Examples)
+		if err != nil {
+			return nil, err
+		}
 	}
 	if e := parseExtra(md, ret); e != nil {
 		return nil, e

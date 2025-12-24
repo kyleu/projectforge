@@ -21,9 +21,11 @@ func MicrosToMillis(i int) string {
 	return fmt.Sprintf("%.3f", x) + "ms"
 }
 
+const zeroSeconds = "0s"
+
 func MillisToString(i int) string {
 	if i == 0 {
-		return "0s"
+		return zeroSeconds
 	}
 
 	negative := i < 0
@@ -33,12 +35,12 @@ func MillisToString(i int) string {
 
 	seconds := i / 1000
 	if seconds == 0 {
-		return "0s"
+		return zeroSeconds
 	}
 
 	hours := seconds / 3600
 	minutes := (seconds % 3600) / 60
-	seconds = seconds % 60
+	seconds %= 60
 
 	var ret string
 	if hours > 0 {

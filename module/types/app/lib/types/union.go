@@ -16,37 +16,37 @@ type Union struct {
 	V []*Wrapped `json:"v"`
 }
 
-func (x *Union) Key() string {
+func (u *Union) Key() string {
 	return KeyUnion
 }
 
-func (x *Union) Sortable() bool {
-	return lo.EveryBy(x.V, func(v *Wrapped) bool {
+func (u *Union) Sortable() bool {
+	return lo.EveryBy(u.V, func(v *Wrapped) bool {
 		return v.Sortable()
 	})
 }
 
-func (x *Union) Scalar() bool {
+func (u *Union) Scalar() bool {
 	return false
 }
 
-func (x *Union) String() string {
-	ss := util.NewStringSliceWithSize(len(x.V))
-	for _, v := range x.V {
+func (u *Union) String() string {
+	ss := util.NewStringSliceWithSize(len(u.V))
+	for _, v := range u.V {
 		ss.Push(v.String())
 	}
 	return fmt.Sprintf("[%s]", ss.JoinCommas())
 }
 
-func (x *Union) From(v any) any {
-	return invalidInput(x.Key(), v)
+func (u *Union) From(v any) any {
+	return invalidInput(u.Key(), v)
 }
 
-func (x *Union) Default(string) any {
-	if len(x.V) == 0 {
-		return "<nil>"
+func (u *Union) Default(x string) any {
+	if len(u.V) == 0 {
+		return KeyNilString
 	}
-	return x.V[0].Default("")
+	return u.V[0].Default(x)
 }
 
 func NewUnion(t ...*Wrapped) *Wrapped {
