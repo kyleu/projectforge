@@ -2,103 +2,134 @@
 
 ![app logo](./assets/favicon.png)
 
-[Project Forge](https://projectforge.dev) is an application that allows you to generate, manage, and grow web applications built using the Go programming
-language.
-You control your application's features, provided via "modules" that enable everything from databases to OAuth.
-When creating a new application with Project Forge, a standard Golang project is created, which includes utilities and APIs to help you build the application
-you want, without compromise.
 
-All projects managed by Project Forge provide an HTTP server using [quicktemplate](https://github.com/valyala/quicktemplate) for HTML templates (and SQL, if
-enabled).
-An MVC framework is provided (but not required) that handles content negotiation, hierarchical menus, breadcrumbs, OAuth to dozens of providers, stateless user
-profiles, dark mode support, SVG management, syntax highlighting, form components, and embedded assets.
+[Project Forge](https://projectforge.dev) is a long-lived code generator and project manager for Go web apps. It produces a complete Go codebase (with no runtime dependency on Project Forge) and keeps it evolvable: regenerate as your schema, modules, or targets change and keep custom code intact. Project Forge is itself managed by Project Forge; the tooling is continuously exercised in real apps.
 
-Project Forge applications can support any UI framework, but the included UI renders a JS-dependency-free page, heavily optimized for speed and accessibility,
-with a modern UX that works surprisingly well without JavaScript.
-The about page is animated, themed, and responsive, and only creates three requests (HTML, CSS, JS) totaling less than 20KB zipped.
-It serves in less than a millisecond, and renders in Chrome in less than 20ms.
-Progressive enhancement is provided by an included ESBuild TypeScript project, though all functionality is supported with JavaScript disabled.
-
-Your application can (optionally) build for _every_ platform; desktop and mobile webview apps, WASM, and notarized universal macOS binaries.
-If you enable all the build options, it will produce almost 60 builds for various platforms. They all produce a ~20MB native binary.
-The binaries produced can be configured to auto-upgrade from GitHub Releases, or be upgraded by the user using a CLI or UI (module "upgrade" must be in your
-project).
-CI/CD workflows based on GitHub Actions are provided, handling building, testing, linting, and publishing to GitHub Releases (and any configured Docker repos).
+Project Forge is a tool for Go-first web apps with predictable latency, minimal JS, and a codebase that can evolve without rewriting foundations. You get a standard Go project that compiles fast, ships everywhere, and stays yours.
 
 ## Download
 
 https://projectforge.dev/download
 
+
 ## Source code
 
 https://github.com/kyleu/projectforge
 
-## App Features
 
-A project managed by Project Forge...
+## Why it is worth using
 
-- Has a beautiful and fast HTML UI, no JavaScript required
-- Optimizes for speed and developer experience, sub-second turnaround times
-- Builds in seconds, live-reloads in dev mode when code or templates change
-- Builds native apps for dozens of platforms; mobile, desktop, weird architectures, macOS universal apps
-- Produces a small self-contained binary, includes full REST server and command line interface
-- Optionally supports OAuth with dozens of providers, full theme and stateless session support
-- Provides a type-safe API for working with PostgreSQL, MySQL, and SQLite databases (or no database at all)
-- Uses ESBuild for a TypeScript client with progressive enhancement, embedded SVGs, and modern CSS
+- Lifecycle-aware generation, not a one-time scaffold; updates improve your codebase on your schedule
+- Performance-first runtime: quicktemplate HTML, zero-JS baseline, small payloads, aggressive caching
+- Modular architecture: enable only what you need and ship a minimal or full-stack build
 
-## Available Modules
 
-|                                                                  |                                                                                                |
-|------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| [Core](module/core/doc/module/core.md)                           | Provides common utilities for a Go application                                                 |
-| [Android App](module/android/doc/module/android.md)              | Webview-based application and Android build                                                    |
-| [Audit](module/audit/doc/module/audit.md)                        | Using the database module, provides an audit framework for tracking changes                    |
-| [Brand Icons](module/brands/doc/module/brands.md)                | Provides thousands of SVG icons from [simple-icons] for representing common logos              |
-| [Database](module/database/doc/module/database.md)               | Provides an API for accessing relational databases                                             |
-| [Database UI](module/databaseui/doc/module/databaseui.md)        | Provides a UI for registered databases                                                         |
-| [Desktop](module/desktop/doc/module/desktop.md)                  | Provides a desktop application using the system's webview                                      |
-| [Doc Browser](module/docbrowse/doc/module/docbrowse.md)          | Provides a UI for browsing the documentation                                                   |
-| [Export](module/export/doc/module/export.md)                     | Generates code based on the project's schema                                                   |
-| [Expression](module/expression/doc/module/expression.md)         | Exposes CEL engine for evaluating arbitrary expressions                                        |
-| [Filesystem](module/filesystem/doc/module/filesystem.md)         | Provides an abstraction around local and remote filesystems                                    |
-| [Git](module/git/doc/module/git.md)                              | Helper classes for performing operations on git repositories                                   |
-| [GraphQL](module/graphql/doc/module/graphql.md)                  | Supports GraphQL APIs within your application                                                  |
-| [Grep Search](module/grep/doc/module/grep.md)                     | Provides a mechanism for searching with ripgrep                                                |
-| [Help](module/help/doc/module/help.md)                           | Provides Markdown help files that integrate into the UI                                        |
-| [HTTP Archive](module/har/doc/module/har.md)                     | Provides classes for parsing HTTP Archive (*.har) files                                        |
-| [iOS App](module/ios/doc/module/ios.md)                          | Webview-based application and iOS build                                                        |
-| [JSX](module/jsx/doc/module/jsx.md)                              | Provides a slim JSX implementation for scripting                                               |
-| [Marketing Site](module/marketing/doc/module/marketing.md)       | Provides a website for downloads, tutorials, and marketing                                     |
-| [Migration](module/migration/doc/module/migration.md)            | Database migrations and a common database pool                                                 |
-| [MySQL](module/mysql/doc/module/mysql.md)                        | Provides an API for accessing MySQL databases                                                  |
-| [Notarize](module/notarize/doc/module/notarize.md)               | Sends files to Apple for notarization                                                          |
-| [Notebook](module/notebook/doc/module/notebook.md)               | Provides an Observable Framework notebook                                                      |
-| [Numeric](module/numeric/doc/module/numeric.md)                  | It provides TypeScript and Golang implementations for managing large numbers.                  |
-| [OAuth](module/oauth/doc/module/oauth.md)                        | Provides logins and session management for many OAuth providers                                |
-| [OpenAPI](module/openapi/doc/module/openapi.md)                  | Embeds the Swagger UI, using your OpenAPI specification                                        |
-| [Playwright](module/playwright/doc/module/playwright.md)         | Adds a project for testing the UI using playwright.dev                                         |
-| [Plot](module/plot/doc/module/plot.md)                           | Library for visualizing data using Observable Plot                                             |
-| [PostgreSQL](module/postgres/doc/module/postgres.md)             | Provides an API for accessing PostgreSQL databases                                             |
-| [Process](module/process/doc/module/process.md)                  | Provides a framework for managing system processes                                             |
-| [Proxy](module/proxy/doc/module/proxy.md)                        | Provides an HTTP proxy while still enforcing this app's security                               |
-| [Queue](module/queue/doc/module/queue.md)                        | Provides a simple message queue based on SQLite                                                |
-| [Read-only DB](module/readonlydb/doc/module/readonlydb.md)       | Adds a read-only database connection                                                           |
-| [Rich Editor](module/richedit/doc/module/richedit.md)            | It provides a rich editing experience with a decent fallback when scripting is disabled        |
-| [Sandbox](module/sandbox/doc/module/sandbox.md)                  | Useful playgrounds for testing custom functions                                                |
-| [Scheduled Jobs](module/schedule/doc/module/schedule.md)         | Provides a scheduled job engine and UI based on gocron                                         |
-| [Scripting](module/scripting/doc/module/scripting.md)            | Allows the execution of JavaScript files using a built-in interpreter                          |
-| [Search](module/search/doc/module/search.md)                     | Adds search facilities to the top-level navigation bar                                         |
-| [Settings](module/settings/doc/module/settings.md)               | Provides a framework for managing file-backed application settings                             |
-| [SQL Server](module/sqlserver/doc/module/sqlserver.md)           | Provides an API for accessing MSSQL databases                                                  |
-| [SQLite](module/sqlite/doc/module/sqlite.md)                     | Provides an API for accessing SQLite databases                                                 |
-| [Task](module/task/doc/module/task.md)                           | Provides an engine for executing and monitoring tasks                                          |
-| [Theme Catalog](module/themecatalog/doc/module/themecatalog.md)  | Includes a dozen default themes, and facilities to create additional                           |
-| [Types](module/types/doc/module/types.md)                        | Classes for representing common data types                                                     |
-| [Upgrade](module/upgrade/doc/module/upgrade.md)                  | Provides in-place version upgrades using GitHub Releases                                       |
-| [User](module/user/doc/module/user.md)                           | Classes for representing a user                                                                |
-| [WebAssembly Client](module/wasmclient/doc/module/wasmclient.md) | Provides a WASM library and HTML host for an HTTP client                                       |
-| [WebAssembly Server](module/wasmserver/doc/module/wasmserver.md) | Build your normal app as an http server, but load it as a WebAssembly module or Service Worker |
-| [WebSocket](module/websocket/doc/module/websocket.md)            | Provides an API for hosting WebSocket connections                                              |
+## Core runtime
+
+- Fast HTTP server with MVC helpers and content negotiation (HTML, JSON, CSV, TOML, YAML, XML)
+- Quicktemplate rendering for type safety, debugging support, and speed
+- Stateless sessions, menu/breadcrumb hierarchy, and consistent request state
+- ETag and Cache-Control support with request-aware rendering
+- Embedded assets and SVG icon system with symbol reuse
+
+
+## Web UI/UX
+
+- UI works without JavaScript; progressive enhancement via TypeScript + ESBuild
+- Optional JSX engine for lightweight component scripting without heavy frameworks
+- Clean, accessible HTML/CSS with light/dark theming based on user preference and an optional theme catalog
+- Client bundles and source maps included for fast debugging
+
+
+## Developer experience
+
+- Sub-second feedback loops and live reload for Go, templates, and client assets
+- Debug builds that step through Go, quicktemplate files, and TypeScript
+- Template debugging with breakpoints and test workflows
+- Rich CLI and a web UI for project health, diagnostics, and admin tooling
+
+
+## Build, deploy, operate
+
+- Web, [desktop](module/desktop/doc/module/desktop.md), [iOS](module/ios/doc/module/ios.md), [Android](module/android/doc/module/android.md), [WASM](module/wasmserver/doc/module/wasmserver.md), and [notarized](module/notarize/doc/module/notarize.md) macOS targets; ~60 build targets when fully enabled
+- Self-contained ~25MB binaries with embedded assets, providing a rich CLI and web API
+- CI/CD via GitHub Actions, GoReleaser packaging, optional Docker publishing
+- [Auto-upgrade](module/upgrade/doc/module/upgrade.md) via GitHub Releases (optional)
+- OpenTelemetry tracing, Prometheus metrics, and structured Zap logging
+- Admin UI utilities for profiling, system stats, sitemaps, and debugging
+
+
+## Feature inventory (all optional via modules)
+
+### Platform targets
+
+- Custom, lightweight [desktop](module/desktop/doc/module/desktop.md) webview apps (Windows/macOS/Linux, ARM64/AMD64)
+- [iOS](module/ios/doc/module/ios.md) and [Android](module/android/doc/module/android.md) webview apps
+- [WASM client](module/wasmclient/doc/module/wasmclient.md) library and [WASM server](module/wasmserver/doc/module/wasmserver.md) (an offline service-worker running your Go server)
+- macOS [notarization](module/notarize/doc/module/notarize.md) support
+
+
+### Data and schema
+
+- [Database](module/database/doc/module/database.md) abstraction with [PostgreSQL](module/postgres/doc/module/postgres.md), [MySQL](module/mysql/doc/module/mysql.md), [SQL Server](module/sqlserver/doc/module/sqlserver.md), [SQLite](module/sqlite/doc/module/sqlite.md), and [read-only](module/readonlydb/doc/module/readonlydb.md) replicas
+- [Migration](module/migration/doc/module/migration.md) engine and [database admin UI](module/databaseui/doc/module/databaseui.md)
+- Schema-driven [export](module/export/doc/module/export.md)/codegen (Go + TypeScript)
+- [JSON Schema](module/jsonschema/doc/module/jsonschema.md) engine, rich [type hierarchy](module/types/doc/module/types.md) for reflection-free introspection
+- High-precision [numeric](module/numeric/doc/module/numeric.md) types for Go and TypeScript
+
+
+### API and protocol surface
+
+- [OpenAPI](module/openapi/doc/module/openapi.md)/Swagger UI integration
+- [WebSocket](module/websocket/doc/module/websocket.md) support with reconnection, queueing, and admin observation
+- Secure [HTTP proxying](module/proxy/doc/module/proxy.md)
+- [GraphQL](module/graphql/doc/module/graphql.md) APIs with embedded GraphiQL UI
+- [HTTP Archive](module/har/doc/module/har.md) (HAR) parsing and tooling
+
+
+### Auth, users, auditing
+
+- [OAuth](module/oauth/doc/module/oauth.md) 2.0 providers (dozens), permission system, stateless sessions
+- [User](module/user/doc/module/user.md) framework (filesystem or database-backed)
+- [Audit](module/audit/doc/module/audit.md) trails for changes and actions
+
+
+### Runtime utilities
+
+- [Filesystem](module/filesystem/doc/module/filesystem.md) abstraction for local, embedded, remote, and browser storage
+- [Search](module/search/doc/module/search.md) system with UI and indexers
+- [ripgrep](module/grep/doc/module/grep.md) integration
+- [Git](module/git/doc/module/git.md) automation and repo workflows
+- [Process](module/process/doc/module/process.md) manager with real-time output streaming
+- [Task](module/task/doc/module/task.md) engine, queue system, and scheduler
+- [Reactive](module/reactive/doc/module/reactive.md) values and observer pattern
+- [CEL expression](module/expression/doc/module/expression.md) engine with caching
+- Server-side [JavaScript execution](module/scripting/doc/module/scripting.md)
+- [Sandbox](module/sandbox/doc/module/sandbox.md) module for experimentation
+- [Settings](module/settings/doc/module/settings.md) framework for file-backed config
+
+
+### UI and content system
+
+- Markdown renderer and [doc browser](module/docbrowse/doc/module/docbrowse.md) with embedded help
+- Syntax highlighting via Chroma
+- [Rich editor components](module/richedit/doc/module/richedit.md) with progressive enhancement and JSON fallback
+- [Icon packs](module/brands/doc/module/brands.md) via simple-icons (brand icons)
+- UI components: menus, forms, arguments, tables, tabs, modals, accordions, load screens, flash messages, tag editor, autocomplete, link augments, DOM utilities
+
+
+### Productivity and QA
+
+- [Playwright](module/playwright/doc/module/playwright.md) E2E testing harness
+- [Notebook](module/notebook/doc/module/notebook.md) integration (Observable Framework)
+- [Plotting](module/plot/doc/module/plot.md) and data visualization (Observable Plot)
+- [Marketing site](module/marketing/doc/module/marketing.md) module with multi-port architecture and download UX
+
+
+### AI and tooling
+
+- [Model Context Protocol](module/mcp/doc/module/mcp.md) server integration
+
 
 ## Example Applications
 
@@ -140,4 +171,4 @@ _More examples coming soon..._
 
 ## Licensing
 
-The Project Forge application is released under [MIT](LICENSE.md) license, and all modules are [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+The Project Forge application is released under [MIT](LICENSE.md) license, and all modules and generated code are [CC0](https://creativecommons.org/publicdomain/zero/1.0/). Code used in your project is your own, and should be licensed accordingly.
