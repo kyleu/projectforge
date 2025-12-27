@@ -1,6 +1,4 @@
-{% import (
-  "projectforge.dev/projectforge/app/controller/cutil"
-) %}
+{% import "projectforge.dev/projectforge/app/controller/cutil" %}
 
 {% func Array(preserveWhitespace bool, a []any, ps *cutil.PageState) %}{% stripspace %}
   {%- if a == nil || len(a) == 0 -%}

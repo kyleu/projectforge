@@ -3,7 +3,7 @@ package jsonschema
 import "projectforge.dev/projectforge/app/util"
 
 // JSON fields that represent core vocabulary & metadata
-type dataCore struct {
+type DataCore struct {
 	Schema        string                    `json:"$schema,omitzero"`        // uri identifying the dialect ("https://json-schema.org/draft/2020-12/schema")
 	MetaID        string                    `json:"$id,omitzero"`            // base uri for the schema
 	ExplicitID    string                    `json:"id,omitzero"`             // older [id] key
@@ -17,14 +17,14 @@ type dataCore struct {
 	ExplicitDefs  *util.OrderedMap[*Schema] `json:"definitions,omitzero"`    // older [definition] key
 }
 
-func (d dataCore) IsEmpty() bool {
+func (d DataCore) IsEmpty() bool {
 	return d.Schema == "" && d.MetaID == "" && d.ExplicitID == "" && d.Anchor == "" &&
 		d.Ref == "" && d.DynamicRef == "" && d.DynamicAnchor == "" && d.Vocabulary.Empty() &&
 		d.Comment == "" && d.Defs.Empty() && d.ExplicitDefs.Empty()
 }
 
-func (d dataCore) Clone() dataCore {
-	return dataCore{
+func (d DataCore) Clone() DataCore {
+	return DataCore{
 		Schema: d.Schema, MetaID: d.MetaID, ExplicitID: d.ExplicitID, Anchor: d.Anchor,
 		Ref: d.Ref, DynamicRef: d.DynamicRef, DynamicAnchor: d.DynamicAnchor, Vocabulary: d.Vocabulary.Clone(),
 		Comment: d.Comment, Defs: d.Defs.Clone(), ExplicitDefs: d.ExplicitDefs.Clone(),

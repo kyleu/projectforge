@@ -29,7 +29,7 @@ func (s *Schema) MarshalJSON() ([]byte, error) {
 	if s.IsEmptyExceptNot() {
 		return []byte("false"), nil
 	}
-	return util.ToJSONBytes(s.data, true), nil
+	return util.ToJSONBytes(s.Data, true), nil
 }
 
 func schemaFromJSON(msg []byte) (*Schema, error) {
@@ -39,10 +39,10 @@ func schemaFromJSON(msg []byte) (*Schema, error) {
 	}
 	if len(trimmed) >= 4 {
 		if bytes.Equal(trimmed, []byte("true")) {
-			return trueSchemaData, nil
+			return trueSchema, nil
 		}
 		if bytes.Equal(trimmed, []byte("false")) {
-			return falseSchemaData, nil
+			return falseSchema, nil
 		}
 	}
 	if trimmed[0] == '[' {
@@ -56,14 +56,14 @@ func schemaFromJSON(msg []byte) (*Schema, error) {
 		if len(x) == 1 {
 			return x[0], nil
 		}
-		return &Schema{data: data{dataValidations: dataValidations{dataArrayValidations: dataArrayValidations{PrefixItems: x}}}, bytes: msg}, nil
+		return NewSchema(DataArray{PrefixItems: x}, msg), nil
 	}
 	if trimmed[0] != '{' {
 		return nil, errors.Errorf("invalid JSON schema root [%c], expected object or boolean", trimmed[0])
 	}
-	ret, err := util.FromJSONObj[data](msg)
+	ret, err := util.FromJSONObj[Data](msg)
 	if err != nil {
 		return nil, err
 	}
-	return &Schema{data: ret, bytes: msg}, nil
+	return NewSchema(ret, msg), nil
 }

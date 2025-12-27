@@ -360,84 +360,98 @@ func OrderedMap(preserveWhitespace bool, m *util.OrderedMap[any], ps *cutil.Page
 //line views/components/view/Map.html:106
 func StreamOrderedMapArray(qw422016 *qt422016.Writer, preserveWhitespace bool, ps *cutil.PageState, maps ...*util.OrderedMap[any]) {
 //line views/components/view/Map.html:107
-	if len(maps) == 0 {
-//line views/components/view/Map.html:107
+	withoutNil := util.ArrayRemoveNil(maps)
+
+//line views/components/view/Map.html:108
+	if len(withoutNil) == 0 {
+//line views/components/view/Map.html:108
 		qw422016.N().S(`<em>no results</em>`)
-//line views/components/view/Map.html:109
+//line views/components/view/Map.html:110
 	} else {
-//line views/components/view/Map.html:109
+//line views/components/view/Map.html:111
+		first := withoutNil[0]
+
+//line views/components/view/Map.html:111
 		qw422016.N().S(`<div class="overflow full-width"><table><thead><tr>`)
-//line views/components/view/Map.html:114
-		for _, k := range maps[0].Order {
-//line views/components/view/Map.html:114
+//line views/components/view/Map.html:116
+		for _, k := range first.Order {
+//line views/components/view/Map.html:116
 			qw422016.N().S(`<th>`)
-//line views/components/view/Map.html:115
+//line views/components/view/Map.html:117
 			qw422016.E().S(k)
-//line views/components/view/Map.html:115
+//line views/components/view/Map.html:117
 			qw422016.N().S(`</th>`)
-//line views/components/view/Map.html:116
+//line views/components/view/Map.html:118
 		}
-//line views/components/view/Map.html:116
+//line views/components/view/Map.html:118
 		qw422016.N().S(`</tr></thead><tbody>`)
-//line views/components/view/Map.html:120
-		for _, m := range maps {
-//line views/components/view/Map.html:120
-			qw422016.N().S(`<tr>`)
 //line views/components/view/Map.html:122
-			for _, k := range m.Order {
+		for _, m := range maps {
 //line views/components/view/Map.html:123
-				if preserveWhitespace {
+			if m == nil {
 //line views/components/view/Map.html:123
-					qw422016.N().S(`<td class="prews">`)
-//line views/components/view/Map.html:124
-					StreamAny(qw422016, m.GetSimple(k), ps)
-//line views/components/view/Map.html:124
-					qw422016.N().S(`</td>`)
-//line views/components/view/Map.html:125
-				} else {
-//line views/components/view/Map.html:125
-					qw422016.N().S(`<td>`)
-//line views/components/view/Map.html:126
-					StreamAny(qw422016, m.GetSimple(k), ps)
-//line views/components/view/Map.html:126
-					qw422016.N().S(`</td>`)
+				qw422016.N().S(`<tr><td colspan="100%"><em>&lt;nil&gt;</em></td></tr>`)
 //line views/components/view/Map.html:127
-				}
-//line views/components/view/Map.html:128
-			}
-//line views/components/view/Map.html:128
-			qw422016.N().S(`</tr>`)
+			} else {
+//line views/components/view/Map.html:127
+				qw422016.N().S(`<tr>`)
+//line views/components/view/Map.html:129
+				for _, k := range m.Order {
 //line views/components/view/Map.html:130
-		}
+					if preserveWhitespace {
 //line views/components/view/Map.html:130
-		qw422016.N().S(`</tbody></table></div>`)
+						qw422016.N().S(`<td class="prews">`)
+//line views/components/view/Map.html:131
+						StreamAny(qw422016, m.GetSimple(k), ps)
+//line views/components/view/Map.html:131
+						qw422016.N().S(`</td>`)
+//line views/components/view/Map.html:132
+					} else {
+//line views/components/view/Map.html:132
+						qw422016.N().S(`<td>`)
+//line views/components/view/Map.html:133
+						StreamAny(qw422016, m.GetSimple(k), ps)
+//line views/components/view/Map.html:133
+						qw422016.N().S(`</td>`)
 //line views/components/view/Map.html:134
+					}
+//line views/components/view/Map.html:135
+				}
+//line views/components/view/Map.html:135
+				qw422016.N().S(`</tr>`)
+//line views/components/view/Map.html:137
+			}
+//line views/components/view/Map.html:138
+		}
+//line views/components/view/Map.html:138
+		qw422016.N().S(`</tbody></table></div>`)
+//line views/components/view/Map.html:142
 	}
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 }
 
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 func WriteOrderedMapArray(qq422016 qtio422016.Writer, preserveWhitespace bool, ps *cutil.PageState, maps ...*util.OrderedMap[any]) {
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	StreamOrderedMapArray(qw422016, preserveWhitespace, ps, maps...)
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 }
 
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 func OrderedMapArray(preserveWhitespace bool, ps *cutil.PageState, maps ...*util.OrderedMap[any]) string {
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	WriteOrderedMapArray(qb422016, preserveWhitespace, ps, maps...)
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	qs422016 := string(qb422016.B)
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 	return qs422016
-//line views/components/view/Map.html:135
+//line views/components/view/Map.html:143
 }

@@ -8,6 +8,9 @@
 ) %}
 
 {% func ArgsDetail(as *app.State, key string, ea *metamodel.Args, argsLogs []string, ps *cutil.PageState) %}
+  {%- if ea == nil -%}
+  {%- code ea = &metamodel.Args{} %}
+  {%- endif -%}
   <ul class="accordion">
     <li>
       <input id="accordion-{%s key %}-config" type="checkbox" hidden />

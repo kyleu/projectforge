@@ -47,6 +47,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `har`: Utilities for working with HTTP Archive files
 - `help`: Markdown-backed help files that integrate into the UI
 - `ios`: Webview-based application and iOS build
+- `jsonschema`: Custom JSON Schema models with UI components
 - `jsx`: A custom JSX engine for reactive UIs without React
 - `marketing`: Serves a website for downloads, tutorials, and marketing
 - `migration`: Database migrations and a common database pool
@@ -62,6 +63,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `process`: Framework and UI for managing system processes.
 - `proxy`: Provides an HTTP proxy while still enforcing this app's security
 - `queue`: Provides a simple message queue based on SQLite
+- `reactive`: Provides thread-safe reactive values with observer pattern support
 - `readonlydb`: Read-only database connection
 - `richedit`: Provides a rich editing experience with a decent fallback when scripting is disabled
 - `sandbox`: Useful playgrounds for testing custom functions
@@ -226,7 +228,7 @@ Create the file `./projectforge/additional-projects.json`, containing a JSON arr
 
 ## How are static assets served?<a name="faq-11"></a>
 
-Assets are embedded into the servier binary at build time using Go's `embed` package.
+Assets are embedded into the server binary at build time using Go's `embed` package.
 This brings a lot of advantages, but you'll need to rebuild before you see changes to your assets.
 The script `./bin/dev.sh` handles the rebuild/restart automatically.
 

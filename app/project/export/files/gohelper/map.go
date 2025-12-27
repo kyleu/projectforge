@@ -66,6 +66,10 @@ func FromMap(g *golang.File, m metamodel.StringProvider, cols model.Columns, arg
 func ToOrderedMap(m metamodel.StringProvider, cols model.Columns) *golang.Block {
 	ret := golang.NewBlock(m.PackageName()+"ToOrderedMap", "func")
 	ret.WF("func (%s *%s) ToOrderedMap() *util.OrderedMap[any] {", m.FirstLetter(), m.Proper())
+	ret.WF("\tif %s == nil {", m.FirstLetter())
+	ret.W("\t\treturn nil")
+	ret.W("\t}")
+
 	content := util.StringJoin(lo.Map(cols, func(col *model.Column, _ int) string {
 		return fmt.Sprintf(`{K: %q, V: %s.%s}`, col.Camel(), m.FirstLetter(), col.Proper())
 	}), ", ")

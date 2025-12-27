@@ -3,16 +3,16 @@ package jsonschema
 import "github.com/samber/lo"
 
 var (
-	trueSchemaData  = &Schema{}
-	falseSchemaData = &Schema{data: data{dataApplicators: dataApplicators{Not: &Schema{}}}}
+	trueSchema  = &Schema{}
+	falseSchema = &Schema{Data: Data{DataApplicators: DataApplicators{Not: &Schema{}}}}
 )
 
 func NewTrueSchema() *Schema {
-	return trueSchemaData.Clone()
+	return trueSchema.Clone()
 }
 
 func NewFalseSchema() *Schema {
-	return falseSchemaData.Clone()
+	return falseSchema.Clone()
 }
 
 type Schemas []*Schema

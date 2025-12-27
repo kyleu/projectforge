@@ -1,6 +1,6 @@
 package jsonschema
 
-type dataApplicators struct {
+type DataApplicators struct {
 	// conditional
 	If   *Schema `json:"if,omitzero"`   // if this schema validates, `then` must also validate
 	Then *Schema `json:"then,omitzero"` // schema applied if `if` validates
@@ -13,16 +13,16 @@ type dataApplicators struct {
 	Not   *Schema `json:"not,omitempty"`   // instance must not validate against this schema
 }
 
-func (d dataApplicators) IsEmpty() bool {
+func (d DataApplicators) IsEmpty() bool {
 	return d.If == nil && d.Then == nil && d.Else == nil && len(d.AllOf) == 0 && len(d.AnyOf) == 0 && len(d.OneOf) == 0 && d.Not == nil
 }
 
-func (d dataApplicators) IsEmptyExceptNot() bool {
+func (d DataApplicators) IsEmptyExceptNot() bool {
 	return d.If == nil && d.Then == nil && d.Else == nil && len(d.AllOf) == 0 && len(d.AnyOf) == 0 && len(d.OneOf) == 0
 }
 
-func (d dataApplicators) Clone() dataApplicators {
-	return dataApplicators{
+func (d DataApplicators) Clone() DataApplicators {
+	return DataApplicators{
 		If: d.If.Clone(), Then: d.Then.Clone(), Else: d.Else.Clone(),
 		AllOf: d.AllOf.Clone(), AnyOf: d.AnyOf.Clone(), OneOf: d.OneOf.Clone(), Not: d.Not.Clone(),
 	}

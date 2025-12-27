@@ -8,143 +8,144 @@ package vjsonschema
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/lib/jsonschema/validation"
 	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
 	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/views/components"
 	"projectforge.dev/projectforge/views/layout"
 )
 
-//line views/vjsonschema/SchemaList.html:10
+//line views/vjsonschema/SchemaList.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vjsonschema/SchemaList.html:10
+//line views/vjsonschema/SchemaList.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vjsonschema/SchemaList.html:10
+//line views/vjsonschema/SchemaList.html:11
 type SchemaList struct {
 	layout.Basic
 	Schemata    metaschema.SchemaTestFiles
 	ShowContent bool
 }
 
-//line views/vjsonschema/SchemaList.html:16
+//line views/vjsonschema/SchemaList.html:17
 func (p *SchemaList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vjsonschema/SchemaList.html:16
+//line views/vjsonschema/SchemaList.html:17
 	qw422016.N().S(`
 `)
-//line views/vjsonschema/SchemaList.html:17
+//line views/vjsonschema/SchemaList.html:18
 	errs := p.Schemata.WithError()
 
-//line views/vjsonschema/SchemaList.html:18
+//line views/vjsonschema/SchemaList.html:19
 	oks := p.Schemata.WithoutError()
 
-//line views/vjsonschema/SchemaList.html:18
+//line views/vjsonschema/SchemaList.html:19
 	qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vjsonschema/SchemaList.html:20
+//line views/vjsonschema/SchemaList.html:21
 	components.StreamSVGIcon(qw422016, `paperclip`, ps)
-//line views/vjsonschema/SchemaList.html:20
+//line views/vjsonschema/SchemaList.html:21
 	qw422016.N().S(` `)
-//line views/vjsonschema/SchemaList.html:20
+//line views/vjsonschema/SchemaList.html:21
 	qw422016.E().S(util.StringPlural(len(errs), "Error"))
-//line views/vjsonschema/SchemaList.html:20
+//line views/vjsonschema/SchemaList.html:21
 	qw422016.N().S(`</h3>
     <div class="mt">
       <em>
         Successfully processed <a href="#anchor-ok">`)
-//line views/vjsonschema/SchemaList.html:23
+//line views/vjsonschema/SchemaList.html:24
 	qw422016.E().S(util.StringPlural(len(oks), "schema"))
-//line views/vjsonschema/SchemaList.html:23
+//line views/vjsonschema/SchemaList.html:24
 	qw422016.N().S(`</a>,
         with <a href="#anchor-error">`)
-//line views/vjsonschema/SchemaList.html:24
+//line views/vjsonschema/SchemaList.html:25
 	qw422016.E().S(util.StringPlural(len(errs), "error"))
-//line views/vjsonschema/SchemaList.html:24
+//line views/vjsonschema/SchemaList.html:25
 	qw422016.N().S(`</a>
       </em>
     </div>
   </div>
 
 `)
-//line views/vjsonschema/SchemaList.html:29
+//line views/vjsonschema/SchemaList.html:30
 	if len(errs) > 0 {
-//line views/vjsonschema/SchemaList.html:29
+//line views/vjsonschema/SchemaList.html:30
 		qw422016.N().S(`  <div class="card">
     <h3 id="anchor-error">`)
-//line views/vjsonschema/SchemaList.html:31
+//line views/vjsonschema/SchemaList.html:32
 		components.StreamSVGIcon(qw422016, `check`, ps)
-//line views/vjsonschema/SchemaList.html:31
+//line views/vjsonschema/SchemaList.html:32
 		qw422016.N().S(` `)
-//line views/vjsonschema/SchemaList.html:31
+//line views/vjsonschema/SchemaList.html:32
 		qw422016.E().S(util.StringPlural(len(errs), "Error"))
-//line views/vjsonschema/SchemaList.html:31
+//line views/vjsonschema/SchemaList.html:32
 		qw422016.N().S(`</h3>
     `)
-//line views/vjsonschema/SchemaList.html:32
+//line views/vjsonschema/SchemaList.html:33
 		StreamJSONSchemaTable(qw422016, errs, p.ShowContent)
-//line views/vjsonschema/SchemaList.html:32
+//line views/vjsonschema/SchemaList.html:33
 		qw422016.N().S(`
   </div>
 `)
-//line views/vjsonschema/SchemaList.html:34
+//line views/vjsonschema/SchemaList.html:35
 	}
-//line views/vjsonschema/SchemaList.html:34
+//line views/vjsonschema/SchemaList.html:35
 	qw422016.N().S(`  <div class="card">
     <h3 id="anchor-ok">`)
-//line views/vjsonschema/SchemaList.html:36
+//line views/vjsonschema/SchemaList.html:37
 	components.StreamSVGIcon(qw422016, `error`, ps)
-//line views/vjsonschema/SchemaList.html:36
+//line views/vjsonschema/SchemaList.html:37
 	qw422016.N().S(` `)
-//line views/vjsonschema/SchemaList.html:36
+//line views/vjsonschema/SchemaList.html:37
 	qw422016.E().S(util.StringPlural(len(oks), "Success"))
-//line views/vjsonschema/SchemaList.html:36
+//line views/vjsonschema/SchemaList.html:37
 	qw422016.N().S(`</h3>
     `)
-//line views/vjsonschema/SchemaList.html:37
+//line views/vjsonschema/SchemaList.html:38
 	StreamJSONSchemaTable(qw422016, oks, p.ShowContent)
-//line views/vjsonschema/SchemaList.html:37
+//line views/vjsonschema/SchemaList.html:38
 	qw422016.N().S(`
   </div>
 `)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 }
 
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 func (p *SchemaList) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	p.StreamBody(qw422016, as, ps)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 }
 
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 func (p *SchemaList) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	p.WriteBody(qb422016, as, ps)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	qs422016 := string(qb422016.B)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 	return qs422016
-//line views/vjsonschema/SchemaList.html:39
+//line views/vjsonschema/SchemaList.html:40
 }
 
-//line views/vjsonschema/SchemaList.html:41
+//line views/vjsonschema/SchemaList.html:42
 func StreamJSONSchemaTable(qw422016 *qt422016.Writer, schemata metaschema.SchemaTestFiles, showContent bool) {
-//line views/vjsonschema/SchemaList.html:41
+//line views/vjsonschema/SchemaList.html:42
 	qw422016.N().S(`
   <div class="mt overflow full-width">
     <table>
@@ -159,135 +160,135 @@ func StreamJSONSchemaTable(qw422016 *qt422016.Writer, schemata metaschema.Schema
       </thead>
       <tbody>
 `)
-//line views/vjsonschema/SchemaList.html:54
+//line views/vjsonschema/SchemaList.html:55
 	for _, sch := range schemata {
-//line views/vjsonschema/SchemaList.html:54
+//line views/vjsonschema/SchemaList.html:55
 		qw422016.N().S(`        <tr>
           <td><a href="/test/jsonschema/`)
-//line views/vjsonschema/SchemaList.html:56
+//line views/vjsonschema/SchemaList.html:57
 		qw422016.E().S(sch.Filename)
-//line views/vjsonschema/SchemaList.html:56
+//line views/vjsonschema/SchemaList.html:57
 		qw422016.N().S(`">`)
-//line views/vjsonschema/SchemaList.html:56
+//line views/vjsonschema/SchemaList.html:57
 		qw422016.E().S(sch.Filename)
-//line views/vjsonschema/SchemaList.html:56
+//line views/vjsonschema/SchemaList.html:57
 		qw422016.N().S(`</a></td>
 `)
-//line views/vjsonschema/SchemaList.html:57
+//line views/vjsonschema/SchemaList.html:58
 		if showContent {
-//line views/vjsonschema/SchemaList.html:57
+//line views/vjsonschema/SchemaList.html:58
 			qw422016.N().S(`          <td><pre>`)
-//line views/vjsonschema/SchemaList.html:58
+//line views/vjsonschema/SchemaList.html:59
 			qw422016.E().S(sch.Content)
-//line views/vjsonschema/SchemaList.html:58
+//line views/vjsonschema/SchemaList.html:59
 			qw422016.N().S(`</pre></td>
 `)
-//line views/vjsonschema/SchemaList.html:59
+//line views/vjsonschema/SchemaList.html:60
 		} else {
-//line views/vjsonschema/SchemaList.html:59
+//line views/vjsonschema/SchemaList.html:60
 			qw422016.N().S(`          <td>`)
-//line views/vjsonschema/SchemaList.html:60
+//line views/vjsonschema/SchemaList.html:61
 			qw422016.E().S(sch.Size())
-//line views/vjsonschema/SchemaList.html:60
+//line views/vjsonschema/SchemaList.html:61
 			qw422016.N().S(`</td>
 `)
-//line views/vjsonschema/SchemaList.html:61
+//line views/vjsonschema/SchemaList.html:62
 		}
-//line views/vjsonschema/SchemaList.html:61
+//line views/vjsonschema/SchemaList.html:62
 		qw422016.N().S(`          <td>
 `)
-//line views/vjsonschema/SchemaList.html:63
+//line views/vjsonschema/SchemaList.html:64
 		if sch.Schema == nil {
-//line views/vjsonschema/SchemaList.html:63
+//line views/vjsonschema/SchemaList.html:64
 			qw422016.N().S(`            <em>-</em>
 `)
-//line views/vjsonschema/SchemaList.html:65
-		} else if _, valErr := sch.Schema.Validate(); valErr == nil {
-//line views/vjsonschema/SchemaList.html:65
+//line views/vjsonschema/SchemaList.html:66
+		} else if _, valErr := validation.Validate(sch.Schema); valErr == nil {
+//line views/vjsonschema/SchemaList.html:66
 			qw422016.N().S(`            <em>-</em>
 `)
-//line views/vjsonschema/SchemaList.html:67
-		} else {
-//line views/vjsonschema/SchemaList.html:67
-			qw422016.N().S(`            <div class="error">`)
 //line views/vjsonschema/SchemaList.html:68
+		} else {
+//line views/vjsonschema/SchemaList.html:68
+			qw422016.N().S(`            <div class="error">`)
+//line views/vjsonschema/SchemaList.html:69
 			qw422016.E().S(valErr.Error())
-//line views/vjsonschema/SchemaList.html:68
+//line views/vjsonschema/SchemaList.html:69
 			qw422016.N().S(`</div>
 `)
-//line views/vjsonschema/SchemaList.html:69
+//line views/vjsonschema/SchemaList.html:70
 		}
-//line views/vjsonschema/SchemaList.html:69
+//line views/vjsonschema/SchemaList.html:70
 		qw422016.N().S(`          </td>
           <td>
 `)
-//line views/vjsonschema/SchemaList.html:72
+//line views/vjsonschema/SchemaList.html:73
 		if sch.Error == "" {
-//line views/vjsonschema/SchemaList.html:72
+//line views/vjsonschema/SchemaList.html:73
 			qw422016.N().S(`            <em>-</em>
 `)
-//line views/vjsonschema/SchemaList.html:74
+//line views/vjsonschema/SchemaList.html:75
 		} else {
-//line views/vjsonschema/SchemaList.html:74
+//line views/vjsonschema/SchemaList.html:75
 			qw422016.N().S(`            <div class="error">`)
-//line views/vjsonschema/SchemaList.html:75
+//line views/vjsonschema/SchemaList.html:76
 			qw422016.E().S(sch.Error)
-//line views/vjsonschema/SchemaList.html:75
+//line views/vjsonschema/SchemaList.html:76
 			qw422016.N().S(`</div>
 `)
-//line views/vjsonschema/SchemaList.html:76
+//line views/vjsonschema/SchemaList.html:77
 		}
-//line views/vjsonschema/SchemaList.html:76
+//line views/vjsonschema/SchemaList.html:77
 		qw422016.N().S(`          </td>
           <td>
 `)
-//line views/vjsonschema/SchemaList.html:79
+//line views/vjsonschema/SchemaList.html:80
 		for _, log := range sch.Logs {
-//line views/vjsonschema/SchemaList.html:79
+//line views/vjsonschema/SchemaList.html:80
 			qw422016.N().S(`            <div>`)
-//line views/vjsonschema/SchemaList.html:80
+//line views/vjsonschema/SchemaList.html:81
 			qw422016.E().S(log)
-//line views/vjsonschema/SchemaList.html:80
+//line views/vjsonschema/SchemaList.html:81
 			qw422016.N().S(`</div>
 `)
-//line views/vjsonschema/SchemaList.html:81
+//line views/vjsonschema/SchemaList.html:82
 		}
-//line views/vjsonschema/SchemaList.html:81
+//line views/vjsonschema/SchemaList.html:82
 		qw422016.N().S(`          </td>
         </tr>
 `)
-//line views/vjsonschema/SchemaList.html:84
+//line views/vjsonschema/SchemaList.html:85
 	}
-//line views/vjsonschema/SchemaList.html:84
+//line views/vjsonschema/SchemaList.html:85
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 }
 
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 func WriteJSONSchemaTable(qq422016 qtio422016.Writer, schemata metaschema.SchemaTestFiles, showContent bool) {
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	StreamJSONSchemaTable(qw422016, schemata, showContent)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	qt422016.ReleaseWriter(qw422016)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 }
 
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 func JSONSchemaTable(schemata metaschema.SchemaTestFiles, showContent bool) string {
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	WriteJSONSchemaTable(qb422016, schemata, showContent)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	qs422016 := string(qb422016.B)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 	return qs422016
-//line views/vjsonschema/SchemaList.html:88
+//line views/vjsonschema/SchemaList.html:89
 }

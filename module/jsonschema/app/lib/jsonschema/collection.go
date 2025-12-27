@@ -57,22 +57,13 @@ func (c *Collection) Schemas() Schemas {
 	})
 }
 
-func (c Collection) Validate() error {
-	for _, sch := range c.SchemaMap {
-		if _, err := sch.Validate(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (c *Collection) NewSchema(id string) *Schema {
 	u := id
 	if !strings.HasSuffix(u, KeyExtension) {
 		u += KeyExtension
 	}
 	comment := fmt.Sprintf("managed by %s", util.AppName)
-	ret := &Schema{data: data{dataCore: dataCore{Schema: CurrentSchemaVersion, MetaID: u, Comment: comment}}}
+	ret := NewSchema(DataCore{Schema: CurrentSchemaVersion, MetaID: u, Comment: comment})
 	_ = c.AddSchema(true, ret)
 	return ret
 }

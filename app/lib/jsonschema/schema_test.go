@@ -19,6 +19,11 @@ func TestSchemaType(t *testing.T) {
 		{name: "ref", sch: jsonschema.NewRefSchema("test"), typ: "ref", json: `{"$ref":"ref:test"}`},
 		{name: "true", sch: jsonschema.NewTrueSchema(), typ: "empty", json: "true"},
 		{name: "false", sch: jsonschema.NewFalseSchema(), typ: "not", json: "false"},
+		{name: "string", sch: jsonschema.NewSchema(jsonschema.SchemaTypeString), typ: "string", json: `{"type":"string"}`},
+		{name: "number", sch: jsonschema.NewSchema(jsonschema.SchemaTypeNumber), typ: "number", json: `{"type":"number"}`},
+		{name: "integer", sch: jsonschema.NewSchema(jsonschema.SchemaTypeInteger), typ: "integer", json: `{"type":"integer"}`},
+		{name: "boolean", sch: jsonschema.NewSchema(jsonschema.SchemaTypeBoolean), typ: "boolean", json: `{"type":"boolean"}`},
+		{name: "array", sch: jsonschema.NewSchema(jsonschema.SchemaTypeArray), typ: "array", json: `{"type":"array"}`},
 	}
 
 	for _, tt := range tests {

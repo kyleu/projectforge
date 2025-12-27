@@ -104,20 +104,27 @@
 {% endstripspace %}{% endfunc %}
 
 {% func OrderedMapArray(preserveWhitespace bool, ps *cutil.PageState, maps ...*util.OrderedMap[any]) %}{% stripspace %}
-  {%- if len(maps) == 0 -%}
+  {%- code withoutNil := util.ArrayRemoveNil(maps) -%}
+  {%- if len(withoutNil) == 0 -%}
   <em>no results</em>
   {%- else -%}
+  {%- code first := withoutNil[0] -%}
   <div class="overflow full-width">
     <table>
       <thead>
       <tr>
-        {%- for _, k := range maps[0].Order -%}
+        {%- for _, k := range first.Order -%}
         <th>{%s k %}</th>
         {%- endfor -%}
       </tr>
       </thead>
       <tbody>
         {%- for _, m := range maps -%}
+          {%- if m == nil -%}
+          <tr>
+            <td colspan="100%"><em>&lt;nil&gt;</em></td>
+          </tr>
+          {%- else -%}
           <tr>
             {%- for _, k := range m.Order -%}
             {%- if preserveWhitespace -%}
@@ -127,6 +134,7 @@
             {%- endif -%}
             {%- endfor -%}
           </tr>
+          {%- endif -%}
         {%- endfor -%}
       </tbody>
     </table>

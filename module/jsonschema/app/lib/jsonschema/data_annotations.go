@@ -1,6 +1,6 @@
 package jsonschema
 
-type dataAnnotations struct {
+type DataAnnotations struct {
 	Title       string `json:"title,omitzero"`       // a short description of the schema
 	Description string `json:"description,omitzero"` // a more detailed explanation
 	Default     any    `json:"default,omitzero"`     // default value for the instance
@@ -9,12 +9,12 @@ type dataAnnotations struct {
 	WriteOnly   bool   `json:"writeOnly,omitzero"`   // indicates the instance may be set but should not be returned (default: false)
 }
 
-func (d dataAnnotations) IsEmpty() bool {
+func (d DataAnnotations) IsEmpty() bool {
 	return d.Title == "" && d.Description == "" && d.Default == nil && d.Deprecated == nil && d.ReadOnly == false && d.WriteOnly == false
 }
 
-func (d dataAnnotations) Clone() dataAnnotations {
-	return dataAnnotations{
+func (d DataAnnotations) Clone() DataAnnotations {
+	return DataAnnotations{
 		Title: d.Title, Description: d.Description, Default: d.Default, Deprecated: d.Deprecated, ReadOnly: d.ReadOnly, WriteOnly: d.WriteOnly,
 	}
 }

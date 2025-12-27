@@ -2,6 +2,7 @@
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
   "projectforge.dev/projectforge/app/lib/jsonschema"
+  "projectforge.dev/projectforge/app/lib/jsonschema/validation"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/metaschema"
   "projectforge.dev/projectforge/app/util"
@@ -25,7 +26,7 @@
     {%- if sch.Error != "" -%}
     <div class="mt error">{%s sch.Error %}</div>
     {%- endif -%}
-    {%- if _, valErr := sch.Schema.Validate(); valErr != nil -%}
+    {%- if _, valErr := validation.Validate(sch.Schema); valErr != nil -%}
     <div class="mt error">{%s valErr.Error() %}</div>
     {%- endif -%}
     <div class="mt">

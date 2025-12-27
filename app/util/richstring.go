@@ -240,22 +240,6 @@ func Strs(strs ...string) Strings {
 	return ret
 }
 
-func (s Strings) WithPrefix(prefixes ...Str) Strings {
-	return lo.Map(s, func(item Str, index int) Str {
-		return item.WithPrefix(prefixes...)
-	})
-}
-
-func (s Strings) WithSuffix(suffixes ...Str) Strings {
-	return lo.Map(s, func(item Str, index int) Str {
-		return item.WithSuffix(suffixes...)
-	})
-}
-
-func (s Strings) With(elems ...Str) Strings {
-	return append(ArrayCopy(s), elems...)
-}
-
 func (s Strings) Strings() []string {
 	ret := make([]string, 0, len(s))
 	for _, x := range s {
@@ -270,4 +254,20 @@ func (s Strings) Empty() bool {
 
 func (s Strings) Join(delim string) Str {
 	return Str(StringJoin(s.Strings(), delim))
+}
+
+func (s Strings) WithPrefix(prefixes ...Str) Strings {
+	return lo.Map(s, func(item Str, index int) Str {
+		return item.WithPrefix(prefixes...)
+	})
+}
+
+func (s Strings) WithSuffix(suffixes ...Str) Strings {
+	return lo.Map(s, func(item Str, index int) Str {
+		return item.WithSuffix(suffixes...)
+	})
+}
+
+func (s Strings) With(elems ...Str) Strings {
+	return append(ArrayCopy(s), elems...)
 }

@@ -69,10 +69,10 @@ func parseLaunch(fs filesystem.FileLoader, name string, ex string, upgrade bool)
 	}
 	sub := []any{util.ValueMap{"from": "${workspaceFolder}/views", "to": "views"}}
 	add(util.ValueMap{"name": "Attach to " + name, "type": "go", "request": "attach", "mode": "local", "processId": ex, "substitutePath": sub})
-	add(util.ValueMap{"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": name, "substitutePath": sub})
+	add(util.ValueMap{"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": "main.go", "substitutePath": sub})
 	if upgrade {
 		add(util.ValueMap{
-			"name": "Start " + name, "type": "go", "request": "launch", "mode": "auto", "program": name, "args": []string{"upgrade"}, "substitutePath": sub,
+			"name": "Upgrade " + name, "type": "go", "request": "launch", "mode": "auto", "program": "main.go", "args": []string{"upgrade"}, "substitutePath": sub,
 		})
 	}
 	ret["configurations"] = config

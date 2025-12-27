@@ -5,92 +5,90 @@
 package view
 
 //line views/components/view/Array.html:1
-import (
-	"projectforge.dev/projectforge/app/controller/cutil"
-)
+import "projectforge.dev/projectforge/app/controller/cutil"
 
-//line views/components/view/Array.html:5
+//line views/components/view/Array.html:3
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/components/view/Array.html:5
+//line views/components/view/Array.html:3
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/components/view/Array.html:5
+//line views/components/view/Array.html:3
 func StreamArray(qw422016 *qt422016.Writer, preserveWhitespace bool, a []any, ps *cutil.PageState) {
-//line views/components/view/Array.html:6
+//line views/components/view/Array.html:4
 	if a == nil || len(a) == 0 {
-//line views/components/view/Array.html:6
+//line views/components/view/Array.html:4
 		qw422016.N().S(`<em>empty collection</em>`)
-//line views/components/view/Array.html:8
+//line views/components/view/Array.html:6
 	} else {
-//line views/components/view/Array.html:8
+//line views/components/view/Array.html:6
 		qw422016.N().S(`<div class="overflow full-width bl"><table class="expanded"><tbody>`)
-//line views/components/view/Array.html:12
+//line views/components/view/Array.html:10
 		for idx, v := range a {
-//line views/components/view/Array.html:12
+//line views/components/view/Array.html:10
 			qw422016.N().S(`<tr><th class="shrink">`)
-//line views/components/view/Array.html:14
+//line views/components/view/Array.html:12
 			qw422016.N().D(idx)
-//line views/components/view/Array.html:14
+//line views/components/view/Array.html:12
 			qw422016.N().S(`</th>`)
-//line views/components/view/Array.html:15
+//line views/components/view/Array.html:13
 			if preserveWhitespace {
-//line views/components/view/Array.html:15
+//line views/components/view/Array.html:13
 				qw422016.N().S(`<td class="prews">`)
-//line views/components/view/Array.html:16
+//line views/components/view/Array.html:14
 				StreamAny(qw422016, v, ps)
-//line views/components/view/Array.html:16
+//line views/components/view/Array.html:14
 				qw422016.N().S(`</td>`)
-//line views/components/view/Array.html:17
+//line views/components/view/Array.html:15
 			} else {
-//line views/components/view/Array.html:17
+//line views/components/view/Array.html:15
 				qw422016.N().S(`<td>`)
-//line views/components/view/Array.html:18
+//line views/components/view/Array.html:16
 				StreamAny(qw422016, v, ps)
-//line views/components/view/Array.html:18
+//line views/components/view/Array.html:16
 				qw422016.N().S(`</td>`)
-//line views/components/view/Array.html:19
+//line views/components/view/Array.html:17
 			}
-//line views/components/view/Array.html:19
+//line views/components/view/Array.html:17
 			qw422016.N().S(`</tr>`)
-//line views/components/view/Array.html:21
+//line views/components/view/Array.html:19
 		}
-//line views/components/view/Array.html:21
+//line views/components/view/Array.html:19
 		qw422016.N().S(`</tbody></table></div>`)
-//line views/components/view/Array.html:25
+//line views/components/view/Array.html:23
 	}
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 }
 
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 func WriteArray(qq422016 qtio422016.Writer, preserveWhitespace bool, a []any, ps *cutil.PageState) {
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	StreamArray(qw422016, preserveWhitespace, a, ps)
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	qt422016.ReleaseWriter(qw422016)
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 }
 
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 func Array(preserveWhitespace bool, a []any, ps *cutil.PageState) string {
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	WriteArray(qb422016, preserveWhitespace, a, ps)
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	qs422016 := string(qb422016.B)
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 	return qs422016
-//line views/components/view/Array.html:26
+//line views/components/view/Array.html:24
 }

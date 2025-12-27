@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"projectforge.dev/projectforge/app/lib/jsonschema"
+	"projectforge.dev/projectforge/app/lib/jsonschema/validation"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -19,12 +20,12 @@ func (s *Validation) AddSchema(sch ...*jsonschema.Schema) error {
 func (s *Validation) Export(ctx context.Context, logger util.Logger) ([]string, *metamodel.Args, error) {
 	logs := util.NewStringSlice()
 	ret := &metamodel.Args{}
-	if err := s.Collection.Validate(); err != nil {
+	if err := validation.ValidateCollection(s.Collection); err != nil {
 		return nil, nil, err
 	}
 	schemata := s.Collection.Schemas()
 	for _, sch := range schemata {
-		t, err := sch.Validate()
+		t, err := validation.Validate(sch)
 		if err != nil {
 			return nil, nil, err
 		}

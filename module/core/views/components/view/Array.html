@@ -1,6 +1,4 @@
-{% import (
-  "{{{ .Package }}}/app/controller/cutil"
-) %}
+{% import "{{{ .Package }}}/app/controller/cutil" %}
 
 {% func Array(preserveWhitespace bool, a []any, ps *cutil.PageState) %}{% stripspace %}
   {%- if a == nil || len(a) == 0 -%}

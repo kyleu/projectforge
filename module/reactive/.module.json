@@ -1,7 +1,7 @@
 {
   "name": "Reactive Values",
   "icon": "sync",
-  "description": "Provides provides thread-safe reactive values with observer pattern support",
+  "description": "Provides thread-safe reactive values with observer pattern support",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
