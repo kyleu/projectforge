@@ -1,8 +1,6 @@
 package validation
 
-import (
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-)
+import "projectforge.dev/projectforge/app/lib/jsonschema"
 
 func validateArray(s *jsonschema.Schema) error {
 	return nil

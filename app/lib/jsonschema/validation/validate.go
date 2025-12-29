@@ -1,8 +1,6 @@
 package validation
 
-import (
-	"projectforge.dev/projectforge/app/lib/jsonschema"
-)
+import "projectforge.dev/projectforge/app/lib/jsonschema"
 
 func ValidateCollection(c *jsonschema.Collection) error {
 	for _, sch := range c.SchemaMap {

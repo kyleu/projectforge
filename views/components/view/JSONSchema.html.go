@@ -174,7 +174,7 @@ func jsonSchemaTR(key string, source string, v any, ps *cutil.PageState, omit bo
 //line views/components/view/JSONSchema.html:48
 func StreamJSONSchema(qw422016 *qt422016.Writer, sch *jsonschema.Schema, ps *cutil.PageState) {
 //line views/components/view/JSONSchema.html:48
-	qw422016.N().S(`<div class="overflow full-width bl"><table class="expanded"><tbody><tr><th><em title="derived field">ID</em></th><td>`)
+	qw422016.N().S(`<div class="overflow full-width bl"><table class="expanded"><tbody><tr><th><em title="derived field">Key</em></th><td>`)
 //line views/components/view/JSONSchema.html:54
 	qw422016.E().S(sch.ID())
 //line views/components/view/JSONSchema.html:54

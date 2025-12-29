@@ -2,6 +2,7 @@ package validation
 
 import (
 	"github.com/pkg/errors"
+
 	"projectforge.dev/projectforge/app/lib/jsonschema"
 )
 

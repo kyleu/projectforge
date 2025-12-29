@@ -22,10 +22,12 @@ func parseProperties(sch *jsonschema.Schema) (model.Columns, error) {
 }
 
 func parseProperty(sch *jsonschema.Schema, name string, prop *jsonschema.Schema) (*model.Column, error) {
+	if prop == nil {
+		return nil, nil
+	}
 	md := prop.GetMetadata()
 	ret := &model.Column{
 		Name:           name,
-		Type:           types.NewAny(),
 		PK:             md.GetBoolOpt("pk"),
 		Nullable:       md.GetBoolOpt("nullable"),
 		Search:         md.GetBoolOpt("search"),
@@ -45,6 +47,19 @@ func parseProperty(sch *jsonschema.Schema, name string, prop *jsonschema.Schema)
 		Comment:        md.GetStringOpt("comment"),
 		Help:           md.GetStringOpt("help"),
 		Metadata:       md.GetMapOpt("metadata"),
+	}
+	switch sch.DetectSchemaType() {
+	case jsonschema.SchemaTypeString:
+		ret.Type = types.NewString()
+	case jsonschema.SchemaTypeInteger:
+		ret.Type = types.NewInt(0)
+	case jsonschema.SchemaTypeNumber:
+		ret.Type = types.NewFloat(0)
+	case jsonschema.SchemaTypeBoolean:
+		ret.Type = types.NewBool()
+	default:
+		println("unknown type", sch.DetectSchemaType().String())
+		ret.Type = types.NewAny()
 	}
 	return ret, nil
 }
