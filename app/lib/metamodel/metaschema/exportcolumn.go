@@ -21,7 +21,7 @@ func ExportColumn(col *model.Column, coll *jsonschema.Collection, args *metamode
 		ret.AddMetadata("search", col.Search)
 	}
 	if col.SQLDefault != "" {
-		ret.Default = col.SQLDefault
+		ret.Default = util.Choose[any](col.SQLDefault == "", nil, col.SQLDefault)
 	}
 	if col.Indexed {
 		ret.AddMetadata("indexed", col.Indexed)
@@ -39,7 +39,7 @@ func ExportColumn(col *model.Column, coll *jsonschema.Collection, args *metamode
 		ret.AddMetadata("sql", col.SQLOverride)
 	}
 	if col.TitleOverride != "" {
-		ret.AddMetadata("title", col.TitleOverride)
+		ret.Title = col.TitleOverride
 	}
 	if col.PluralOverride != "" {
 		ret.AddMetadata("plural", col.PluralOverride)
@@ -60,7 +60,7 @@ func ExportColumn(col *model.Column, coll *jsonschema.Collection, args *metamode
 		ret.AddMetadata("tags", col.Tags)
 	}
 	if col.Comment != "" {
-		ret.AddMetadata("comment", col.Comment)
+		ret.Description = col.Comment
 	}
 	if col.Help != "" {
 		ret.AddMetadata("help", col.Help)

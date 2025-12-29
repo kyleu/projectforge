@@ -93,21 +93,38 @@
 {% endstripspace %}{% endfunc %}
 
 {% func renderPatch(as *app.State, patch string, ps *cutil.PageState) %}{% stripspace %}
-  {% code lines := util.StringSplitLines(patch) %}
+  {% code sections := action.ParsePatchString(patch) %}
   <pre>
-    {% for _, line := range lines %}
-      {% if len(line) > 0 %}
-        {% switch line[0] %}
-        {% case ' ' %}
-        <div class="color-muted" title="unchanged">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
-        {% case '+' %}
-        <div title="added" class="success">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
-        {% case '-' %}
-        <div title="removed" class="error">{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
-        {% default %}
-        {%s line %}
-        {% endswitch %}
+    {% for _, sec := range sections %}
+      {% if sec.Useful() %}
+      {% code secID := util.RandomID() %}
+      <div id="{%s secID %}-data" hidden="hidden" style="display:none;">{%s sec.Render() %}</div>
+      <div title="{%s sec.Type %}{% space %}(click to copy)" class="{%s sec.CSSClass() %}" style="cursor: pointer;" onclick="clipDiff('{%s secID %}');">
+      {% else %}
+      <div title="{%s sec.Type %}" class="{%s sec.CSSClass() %}">
       {% endif %}
+        {% for _, line := range sec.Lines %}
+          {% if len(line) > 0 %}
+            {% if sec.Type == "location" %}
+            <div>{%s line %}</div>
+            {% else %}
+            <div>{%s line[1:] %}{% if len(line) == 1 %}&nbsp;{% endif %}</div>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
     {% endfor %}
   </pre>
 {% endstripspace %}{% endfunc %}
+
+{% func renderDiffScript() %}
+  <script>
+    function clipDiff(k) {
+      if (!navigator.clipboard) {
+        return;
+      }
+      const el = document.getElementById(k + "-data");
+      navigator.clipboard.writeText(el.innerText);
+    }
+  </script>
+{% endfunc %}

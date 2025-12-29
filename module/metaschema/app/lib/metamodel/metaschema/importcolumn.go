@@ -19,7 +19,7 @@ func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 		return nil, err
 	}
 	nullable := !slices.Contains(parent.Required, key)
-	col := &model.Column{Name: key, Type: typ, Nullable: nullable}
+	col := &model.Column{Name: key, Type: typ, TitleOverride: prop.Title, Nullable: nullable}
 	md := prop.GetMetadata()
 	if md != nil {
 		for _, k := range md.Keys() {
@@ -38,8 +38,6 @@ func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 				col.JSON = md.GetStringOpt(k)
 			case "sql":
 				col.SQLOverride = md.GetStringOpt(k)
-			case "title":
-				col.TitleOverride = md.GetStringOpt(k)
 			case "plural":
 				col.PluralOverride = md.GetStringOpt(k)
 			case "proper":
@@ -74,6 +72,9 @@ func ImportColumn(key string, parent *jsonschema.Schema, coll *jsonschema.Collec
 	}
 	if prop.Default != nil {
 		col.SQLDefault = fmt.Sprint(prop.Default)
+	}
+	if prop.Description != "" {
+		col.Comment = prop.Description
 	}
 	return col, nil
 }

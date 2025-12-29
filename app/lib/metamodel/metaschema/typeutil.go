@@ -23,7 +23,7 @@ func FromJSONType(s string, ref string) *types.Wrapped {
 	case KeyNumber:
 		return types.NewFloat(0)
 	case KeyObject:
-		return types.NewMap(types.NewString(), types.NewAny())
+		return types.NewStringKeyedMap()
 	case KeyString:
 		return types.NewString()
 	default:

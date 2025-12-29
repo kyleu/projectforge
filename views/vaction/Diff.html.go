@@ -220,95 +220,161 @@ func renderDiffs(as *app.State, prjKey string, act action.Type, diffs diff.Diffs
 //line views/vaction/Diff.html:95
 func streamrenderPatch(qw422016 *qt422016.Writer, as *app.State, patch string, ps *cutil.PageState) {
 //line views/vaction/Diff.html:96
-	lines := util.StringSplitLines(patch)
+	sections := action.ParsePatchString(patch)
 
 //line views/vaction/Diff.html:96
 	qw422016.N().S(`<pre>`)
 //line views/vaction/Diff.html:98
-	for _, line := range lines {
+	for _, sec := range sections {
 //line views/vaction/Diff.html:99
-		if len(line) > 0 {
+		if sec.Useful() {
 //line views/vaction/Diff.html:100
-			switch line[0] {
+			secID := util.RandomID()
+
+//line views/vaction/Diff.html:100
+			qw422016.N().S(`<div id="`)
 //line views/vaction/Diff.html:101
-			case ' ':
+			qw422016.E().S(secID)
 //line views/vaction/Diff.html:101
-				qw422016.N().S(`<div class="color-muted" title="unchanged">`)
+			qw422016.N().S(`-data" hidden="hidden" style="display:none;">`)
+//line views/vaction/Diff.html:101
+			qw422016.E().S(sec.Render())
+//line views/vaction/Diff.html:101
+			qw422016.N().S(`</div><div title="`)
 //line views/vaction/Diff.html:102
-				qw422016.E().S(line[1:])
+			qw422016.E().S(sec.Type)
 //line views/vaction/Diff.html:102
-				if len(line) == 1 {
+			qw422016.N().S(` `)
 //line views/vaction/Diff.html:102
-					qw422016.N().S(`&nbsp;`)
+			qw422016.N().S(`(click to copy)" class="`)
 //line views/vaction/Diff.html:102
-				}
+			qw422016.E().S(sec.CSSClass())
 //line views/vaction/Diff.html:102
-				qw422016.N().S(`</div>`)
+			qw422016.N().S(`" style="cursor: pointer;" onclick="clipDiff('`)
+//line views/vaction/Diff.html:102
+			qw422016.E().S(secID)
+//line views/vaction/Diff.html:102
+			qw422016.N().S(`');">`)
 //line views/vaction/Diff.html:103
-			case '+':
+		} else {
 //line views/vaction/Diff.html:103
-				qw422016.N().S(`<div title="added" class="success">`)
+			qw422016.N().S(`<div title="`)
 //line views/vaction/Diff.html:104
-				qw422016.E().S(line[1:])
+			qw422016.E().S(sec.Type)
 //line views/vaction/Diff.html:104
-				if len(line) == 1 {
+			qw422016.N().S(`" class="`)
 //line views/vaction/Diff.html:104
-					qw422016.N().S(`&nbsp;`)
+			qw422016.E().S(sec.CSSClass())
 //line views/vaction/Diff.html:104
-				}
-//line views/vaction/Diff.html:104
-				qw422016.N().S(`</div>`)
+			qw422016.N().S(`">`)
 //line views/vaction/Diff.html:105
-			case '-':
-//line views/vaction/Diff.html:105
-				qw422016.N().S(`<div title="removed" class="error">`)
-//line views/vaction/Diff.html:106
-				qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:106
-				if len(line) == 1 {
-//line views/vaction/Diff.html:106
-					qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:106
-				}
-//line views/vaction/Diff.html:106
-				qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:107
-			default:
-//line views/vaction/Diff.html:108
-				qw422016.E().S(line)
-//line views/vaction/Diff.html:109
-			}
-//line views/vaction/Diff.html:110
 		}
+//line views/vaction/Diff.html:106
+		for _, line := range sec.Lines {
+//line views/vaction/Diff.html:107
+			if len(line) > 0 {
+//line views/vaction/Diff.html:108
+				if sec.Type == "location" {
+//line views/vaction/Diff.html:108
+					qw422016.N().S(`<div>`)
+//line views/vaction/Diff.html:109
+					qw422016.E().S(line)
+//line views/vaction/Diff.html:109
+					qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:110
+				} else {
+//line views/vaction/Diff.html:110
+					qw422016.N().S(`<div>`)
 //line views/vaction/Diff.html:111
+					qw422016.E().S(line[1:])
+//line views/vaction/Diff.html:111
+					if len(line) == 1 {
+//line views/vaction/Diff.html:111
+						qw422016.N().S(`&nbsp;`)
+//line views/vaction/Diff.html:111
+					}
+//line views/vaction/Diff.html:111
+					qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:112
+				}
+//line views/vaction/Diff.html:113
+			}
+//line views/vaction/Diff.html:114
+		}
+//line views/vaction/Diff.html:114
+		qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:116
 	}
-//line views/vaction/Diff.html:111
+//line views/vaction/Diff.html:116
 	qw422016.N().S(`</pre>`)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 }
 
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 func writerenderPatch(qq422016 qtio422016.Writer, as *app.State, patch string, ps *cutil.PageState) {
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	streamrenderPatch(qw422016, as, patch, ps)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 }
 
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 func renderPatch(as *app.State, patch string, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	writerenderPatch(qb422016, as, patch, ps)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
 	return qs422016
-//line views/vaction/Diff.html:113
+//line views/vaction/Diff.html:118
+}
+
+//line views/vaction/Diff.html:120
+func streamrenderDiffScript(qw422016 *qt422016.Writer) {
+//line views/vaction/Diff.html:120
+	qw422016.N().S(`
+  <script>
+    function clipDiff(k) {
+      if (!navigator.clipboard) {
+        return;
+      }
+      const el = document.getElementById(k + "-data");
+      navigator.clipboard.writeText(el.innerText);
+    }
+  </script>
+`)
+//line views/vaction/Diff.html:130
+}
+
+//line views/vaction/Diff.html:130
+func writerenderDiffScript(qq422016 qtio422016.Writer) {
+//line views/vaction/Diff.html:130
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vaction/Diff.html:130
+	streamrenderDiffScript(qw422016)
+//line views/vaction/Diff.html:130
+	qt422016.ReleaseWriter(qw422016)
+//line views/vaction/Diff.html:130
+}
+
+//line views/vaction/Diff.html:130
+func renderDiffScript() string {
+//line views/vaction/Diff.html:130
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vaction/Diff.html:130
+	writerenderDiffScript(qb422016)
+//line views/vaction/Diff.html:130
+	qs422016 := string(qb422016.B)
+//line views/vaction/Diff.html:130
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vaction/Diff.html:130
+	return qs422016
+//line views/vaction/Diff.html:130
 }

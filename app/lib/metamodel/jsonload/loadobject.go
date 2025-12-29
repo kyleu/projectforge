@@ -18,9 +18,7 @@ func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Ar
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [path] from [%s]", sch.ID())
 	}
-	md := sch.GetMetadata()
-
-	ords, err := fromMD[filter.Orderings](sch.Unknown, "ordering")
+	ords, err := fromMD[filter.Orderings](sch.Unknown, "x-ordering")
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [ordering] for [%s]", sch.ID())
 	}
@@ -28,31 +26,28 @@ func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Ar
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [columns] for [%s]", sch.ID())
 	}
-	rels, err := fromMD[model.Relations](sch.Unknown, "relations")
+	rels, err := fromMD[model.Relations](sch.Unknown, "x-relations")
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [relations] for [%s]", sch.ID())
 	}
-	idxs, err := fromMD[model.Indexes](sch.Unknown, "indexes")
+	idxs, err := fromMD[model.Indexes](sch.Unknown, "x-indexes")
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [indexes] for [%s]", sch.ID())
 	}
-	seed, err := fromMD[[][]any](sch.Unknown, "seed")
-	if err != nil {
-		return errors.Wrapf(err, "unable to process [seed] for [%s]", sch.ID())
-	}
-	seed, err = cleanSeedData(seed)
+	seed, err := cleanSeedData(sch.Examples)
 	if err != nil {
 		return errors.Wrapf(err, "unable to process seed data for [%s]", sch.ID())
 	}
-	links, err := fromMD[model.Links](sch.Unknown, "links")
+	links, err := fromMD[model.Links](sch.Unknown, "x-links")
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [links] for [%s]", sch.ID())
 	}
-	imports, err := fromMD[model.Imports](sch.Unknown, "imports")
+	imports, err := fromMD[model.Imports](sch.Unknown, "x-imports")
 	if err != nil {
 		return errors.Wrapf(err, "unable to process [imports] for [%s]", sch.ID())
 	}
 
+	md := sch.GetMetadata()
 	m := &model.Model{
 		Name: name, Package: pkg, Group: grp,
 
@@ -64,7 +59,7 @@ func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Ar
 		View:           md.GetStringOpt("view"),
 		Search:         md.GetStringArrayOpt("search"),
 		Tags:           md.GetStringArrayOpt("tags"),
-		TitleOverride:  md.GetStringOpt("title"),
+		TitleOverride:  sch.Title,
 		PluralOverride: md.GetStringOpt("plural"),
 		ProperOverride: md.GetStringOpt("proper"),
 		TableOverride:  md.GetStringOpt("table"),
@@ -81,6 +76,17 @@ func exportObject(ctx context.Context, sch *jsonschema.Schema, ret *metamodel.Ar
 	return nil
 }
 
-func cleanSeedData(seed [][]any) ([][]any, error) {
-	return seed, nil
+func cleanSeedData(seed []any) ([][]any, error) {
+	if len(seed) == 0 {
+		return nil, nil
+	}
+	ret := make([][]any, len(seed))
+	var ok bool
+	for i, s := range seed {
+		ret[i], ok = s.([]any)
+		if !ok {
+			return nil, errors.Errorf("unable to convert seed data element [%d] (%T) to [][]any", i, s)
+		}
+	}
+	return ret, nil
 }

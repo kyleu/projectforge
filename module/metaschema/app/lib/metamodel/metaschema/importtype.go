@@ -53,7 +53,7 @@ func ImportType(sch *jsonschema.Schema, coll *jsonschema.Collection, args *metam
 		if md != nil && md["type"] == util.KeyJSON {
 			ret = types.NewJSON()
 		} else {
-			ret = types.NewMap(types.NewString(), types.NewAny())
+			ret = types.NewStringKeyedMap()
 		}
 	case KeyString:
 		switch sch.Format {

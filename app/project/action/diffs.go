@@ -47,9 +47,8 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 			return f.FullPath()
 		})
 		if len(pm.Prj.ExportArgs.Models.WithService()) == 0 {
-			srcFiles = lo.Filter(srcFiles, func(f *file.File, _ int) bool {
-				p := f.Path
-				return len(p) == 4 && p[0] == "app" && p[1] == "lib" && p[2] == "svc" && (p[3] == "model.go" || p[3] == "service.go")
+			srcFiles = lo.Reject(srcFiles, func(f *file.File, _ int) bool {
+				return util.Str(f.FullPath()).HasPrefix("app/lib/svc/")
 			})
 		}
 	}

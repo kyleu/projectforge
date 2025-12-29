@@ -2,7 +2,6 @@ package metaschema
 
 import (
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 
 	"{{{ .Package }}}/app/lib/jsonschema"
 	"{{{ .Package }}}/app/lib/metamodel"
@@ -67,9 +66,7 @@ func ExportModel(x *model.Model, coll *jsonschema.Collection, arg *metamodel.Arg
 		ret.AddMetadata("indexes", x.Indexes)
 	}
 	if len(x.SeedData) > 0 {
-		ret.Examples = lo.Map(x.SeedData, func(d []any, _ int) any {
-			return d
-		})
+		ret.Examples = util.ArrayToAnyArray(x.SeedData)
 	}
 	if len(x.Links) > 0 {
 		ret.AddMetadata("links", x.Links)

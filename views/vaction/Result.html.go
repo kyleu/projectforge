@@ -75,83 +75,88 @@ func (p *Result) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	StreamDetail(qw422016, as, p.Ctx.Cfg, p.Ctx.Res, false, ps)
 //line views/vaction/Result.html:27
 	qw422016.N().S(`
-`)
+  `)
 //line views/vaction/Result.html:28
+	streamrenderDiffScript(qw422016)
+//line views/vaction/Result.html:28
+	qw422016.N().S(`
+`)
+//line views/vaction/Result.html:29
 }
 
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 func (p *Result) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	p.StreamBody(qw422016, as, ps)
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 }
 
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 func (p *Result) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	p.WriteBody(qb422016, as, ps)
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	qs422016 := string(qb422016.B)
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 	return qs422016
-//line views/vaction/Result.html:28
+//line views/vaction/Result.html:29
 }
 
-//line views/vaction/Result.html:30
+//line views/vaction/Result.html:31
 func StreamRenderCmdOutput(qw422016 *qt422016.Writer, o *action.CustomCmdResult, ps *cutil.PageState) {
-//line views/vaction/Result.html:30
-	qw422016.N().S(`
-    <div class="right">`)
 //line views/vaction/Result.html:31
+	qw422016.N().S(`
+  <div class="right">`)
+//line views/vaction/Result.html:32
 	qw422016.E().S(util.MicrosToMillis(o.Duration))
-//line views/vaction/Result.html:31
+//line views/vaction/Result.html:32
 	qw422016.N().S(`</div>
-    <h4>`)
-//line views/vaction/Result.html:32
+  <h4>`)
+//line views/vaction/Result.html:33
 	qw422016.E().S(o.Cmd)
-//line views/vaction/Result.html:32
+//line views/vaction/Result.html:33
 	qw422016.N().S(`</h4>
-    <div class="mt">
-      `)
-//line views/vaction/Result.html:34
+  <div class="mt">
+    `)
+//line views/vaction/Result.html:35
 	components.StreamTerminal(qw422016, o.Cmd, o.Output...)
-//line views/vaction/Result.html:34
+//line views/vaction/Result.html:35
 	qw422016.N().S(`
-    </div>
+  </div>
 `)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 }
 
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 func WriteRenderCmdOutput(qq422016 qtio422016.Writer, o *action.CustomCmdResult, ps *cutil.PageState) {
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	StreamRenderCmdOutput(qw422016, o, ps)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 }
 
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 func RenderCmdOutput(o *action.CustomCmdResult, ps *cutil.PageState) string {
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	WriteRenderCmdOutput(qb422016, o, ps)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	qs422016 := string(qb422016.B)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 	return qs422016
-//line views/vaction/Result.html:36
+//line views/vaction/Result.html:37
 }

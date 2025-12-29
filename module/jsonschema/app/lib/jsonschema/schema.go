@@ -57,8 +57,7 @@ func NewSchema(data ...any) *Schema {
 }
 
 func NewRefSchema(s string) *Schema {
-	r := util.Choose(strings.HasPrefix(s, "ref:"), s, "ref:"+s)
-	return &Schema{Data: Data{DataCore: DataCore{Ref: r}}}
+	return &Schema{Data: Data{DataCore: DataCore{Ref: s}}}
 }
 
 func (s *Schema) Clone() *Schema {
@@ -253,6 +252,6 @@ func (s *Schema) DetectSchemaType() SchemaType {
 		if s.IsEmptyExceptNot() {
 			return SchemaTypeNot
 		}
-		return SchemaTypeUnknown
+		return SchemaTypeObject
 	}
 }

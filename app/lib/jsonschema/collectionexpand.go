@@ -39,11 +39,24 @@ func shouldExpand(k string, sch *Schema, key string) *Schema {
 	return nil
 }
 
+func simplify(sch *Schema) *Schema {
+	if len(sch.AnyOf) == 1 && len(sch.AllOf) == 0 && len(sch.OneOf) == 0 {
+		return sch.AnyOf[0]
+	}
+	if len(sch.AnyOf) == 0 && len(sch.AllOf) == 1 && len(sch.OneOf) == 0 {
+		return sch.AllOf[0]
+	}
+	if len(sch.AnyOf) == 0 && len(sch.AllOf) == 0 && len(sch.OneOf) == 1 {
+		return sch.OneOf[0]
+	}
+	return sch
+}
+
 func expandSchema(sch *Schema, key string) (Schemas, error) {
 	if len(key) > 1024 {
 		return nil, errors.Errorf("recursion limit reached for key [%s]", key)
 	}
-	orig := sch.Clone()
+	orig := simplify(sch.Clone())
 	if orig.Key == "" {
 		orig.Key = key
 	}

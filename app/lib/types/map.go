@@ -49,3 +49,7 @@ func (x *Map) Default(string) any {
 func NewMap(k *Wrapped, v *Wrapped) *Wrapped {
 	return Wrap(&Map{K: k, V: v})
 }
+
+func NewStringKeyedMap() *Wrapped {
+	return NewMap(NewString(), NewAny())
+}
