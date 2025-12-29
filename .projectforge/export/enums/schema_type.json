@@ -1,0 +1,82 @@
+{
+  "name": "schema_type",
+  "package": "jsonschema",
+  "group": [
+    "lib"
+  ],
+  "description": "The inferred types of a JSON Schema",
+  "icon": "star",
+  "values": [
+    {
+      "key": "null",
+      "name": "Null",
+      "icon": "cog"
+    },
+    {
+      "key": "boolean",
+      "name": "Boolean",
+      "icon": "cog"
+    },
+    {
+      "key": "integer",
+      "name": "Integer",
+      "icon": "cog"
+    },
+    {
+      "key": "number",
+      "name": "Number",
+      "icon": "cog"
+    },
+    {
+      "key": "string",
+      "name": "String",
+      "icon": "cog"
+    },
+    {
+      "key": "date",
+      "name": "Date",
+      "icon": "cog"
+    },
+    {
+      "key": "object",
+      "name": "Object",
+      "icon": "cog"
+    },
+    {
+      "key": "enum",
+      "name": "Enum",
+      "icon": "cog"
+    },
+    {
+      "key": "array",
+      "name": "Array",
+      "icon": "cog"
+    },
+    {
+      "key": "ref",
+      "name": "Ref",
+      "icon": "cog"
+    },
+    {
+      "key": "union",
+      "name": "Union",
+      "icon": "cog"
+    },
+    {
+      "key": "empty",
+      "name": "Empty",
+      "icon": "cog"
+    },
+    {
+      "key": "not",
+      "name": "Not",
+      "icon": "cog"
+    },
+    {
+      "key": "unknown",
+      "name": "Unknown",
+      "icon": "cog",
+      "default": true
+    }
+  ]
+}

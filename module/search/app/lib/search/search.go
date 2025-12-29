@@ -33,7 +33,7 @@ func Search(ctx context.Context, as *app.State, params *Params, page *cutil.Page
 		return nil, nil
 	}
 	allProviders = append(allProviders, testFunc)
-	// $PF_SECTION_END(search_functions)${{{ if .HasExport }}}
+	// $PF_SECTION_END(search_functions)${{{ if .HasExportModels }}}
 
 	allProviders = append(allProviders, generatedSearch()...){{{ end }}}
 	if len(allProviders) == 0 {

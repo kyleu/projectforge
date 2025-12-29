@@ -46,6 +46,12 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 		srcFiles = lo.UniqBy(append(files, srcFiles...), func(f *file.File) string {
 			return f.FullPath()
 		})
+		if len(pm.Prj.ExportArgs.Models.WithService()) == 0 {
+			srcFiles = lo.Filter(srcFiles, func(f *file.File, _ int) bool {
+				p := f.Path
+				return len(p) == 4 && p[0] == "app" && p[1] == "lib" && p[2] == "svc" && (p[3] == "model.go" || p[3] == "service.go")
+			})
+		}
 	}
 	settingsJSON, err := parseSettings(pm.FS, pm.Prj.Theme)
 	if err != nil {

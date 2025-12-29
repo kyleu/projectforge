@@ -14,22 +14,22 @@ import (
 
 //nolint:lll
 var (
+	SchemaTypeNull    = SchemaType{Key: "null", Name: "Null", Icon: "cog"}
+	SchemaTypeBoolean = SchemaType{Key: "boolean", Name: "Boolean", Icon: "cog"}
+	SchemaTypeInteger = SchemaType{Key: "integer", Name: "Integer", Icon: "cog"}
+	SchemaTypeNumber  = SchemaType{Key: "number", Name: "Number", Icon: "cog"}
+	SchemaTypeString  = SchemaType{Key: "string", Name: "String", Icon: "cog"}
+	SchemaTypeDate    = SchemaType{Key: "date", Name: "Date", Icon: "cog"}
 	SchemaTypeObject  = SchemaType{Key: "object", Name: "Object", Icon: "cog"}
 	SchemaTypeEnum    = SchemaType{Key: "enum", Name: "Enum", Icon: "cog"}
 	SchemaTypeArray   = SchemaType{Key: "array", Name: "Array", Icon: "cog"}
 	SchemaTypeRef     = SchemaType{Key: "ref", Name: "Ref", Icon: "cog"}
+	SchemaTypeUnion   = SchemaType{Key: "union", Name: "Union", Icon: "cog"}
 	SchemaTypeEmpty   = SchemaType{Key: "empty", Name: "Empty", Icon: "cog"}
 	SchemaTypeNot     = SchemaType{Key: "not", Name: "Not", Icon: "cog"}
-	SchemaTypeString  = SchemaType{Key: "string", Name: "String", Icon: "cog"}
-	SchemaTypeBoolean = SchemaType{Key: "boolean", Name: "Boolean", Icon: "cog"}
-	SchemaTypeInteger = SchemaType{Key: "integer", Name: "Integer", Icon: "cog"}
-	SchemaTypeNumber  = SchemaType{Key: "number", Name: "Number", Icon: "cog"}
-	SchemaTypeDate    = SchemaType{Key: "date", Name: "Date", Icon: "cog"}
-	SchemaTypeUnion   = SchemaType{Key: "union", Name: "Union", Icon: "cog"}
-	SchemaTypeNull    = SchemaType{Key: "null", Name: "Null", Icon: "cog"}
 	SchemaTypeUnknown = SchemaType{Key: "unknown", Name: "Unknown", Icon: "cog"}
 
-	AllSchemaTypes = SchemaTypes{SchemaTypeObject, SchemaTypeEnum, SchemaTypeArray, SchemaTypeRef, SchemaTypeEmpty, SchemaTypeNot, SchemaTypeString, SchemaTypeBoolean, SchemaTypeInteger, SchemaTypeNumber, SchemaTypeDate, SchemaTypeUnion, SchemaTypeNull, SchemaTypeUnknown}
+	AllSchemaTypes = SchemaTypes{SchemaTypeNull, SchemaTypeBoolean, SchemaTypeInteger, SchemaTypeNumber, SchemaTypeString, SchemaTypeDate, SchemaTypeObject, SchemaTypeEnum, SchemaTypeArray, SchemaTypeRef, SchemaTypeUnion, SchemaTypeEmpty, SchemaTypeNot, SchemaTypeUnknown}
 )
 
 type SchemaType struct {

@@ -180,6 +180,10 @@ func (t *Context) HasExport() bool {
 	return t.HasModules("export") && !t.ExportArgs.Empty()
 }
 
+func (t *Context) HasExportModels() bool {
+	return t.HasModules("export") && !t.ExportArgs.EmptyModels()
+}
+
 func (t *Context) HasDocker() bool {
 	return !t.Build.SkipDocker
 }

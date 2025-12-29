@@ -44,24 +44,25 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 	}
 	ret = append(ret, files...)
 
-	x, err := svc.Services(args, linebreak)
-	if err != nil {
-		return nil, err
-	}
-	ret = append(ret, x)
+	if !args.EmptyModels() {
+		x, err := svc.Services(args, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
 
-	x, err = controller.Routes(args, linebreak)
-	if err != nil {
-		return nil, err
-	}
-	ret = append(ret, x)
+		x, err = controller.Routes(args, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
 
-	x, err = controller.Menu(args, linebreak)
-	if err != nil {
-		return nil, err
+		x, err = controller.Menu(args, linebreak)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, x)
 	}
-	ret = append(ret, x)
-
 	extraFiles, err := extraFiles(p, linebreak, args)
 	if err != nil {
 		return nil, err
@@ -74,7 +75,12 @@ func All(p *project.Project, linebreak string) (file.Files, error) {
 func extraFiles(p *project.Project, linebreak string, args *metamodel.Args) (file.Files, error) {
 	var ret file.Files
 
-	if args.HasModule("search") {
+	m, e := args.Models.WithDatabase(), args.Enums.WithDatabase()
+
+	hasDBModels := len(m) > 0
+	hasDB := hasDBModels || len(e) > 0
+
+	if hasDBModels && args.HasModule("search") {
 		x, err := controller.Search(args, linebreak)
 		if err != nil {
 			return nil, err
@@ -82,15 +88,12 @@ func extraFiles(p *project.Project, linebreak string, args *metamodel.Args) (fil
 		ret = append(ret, x)
 	}
 
-	if args.HasModule("graphql") {
-		m, e := args.Models.WithDatabase(), args.Enums.WithDatabase()
-		if len(m) > 0 || len(e) > 0 {
-			x, err := gql.All(m, e, linebreak)
-			if err != nil {
-				return nil, err
-			}
-			ret = append(ret, x)
+	if hasDB && args.HasModule("graphql") {
+		x, err := gql.All(m, e, linebreak)
+		if err != nil {
+			return nil, err
 		}
+		ret = append(ret, x)
 	}
 
 	if args.HasModule("notebook") {
@@ -103,18 +106,16 @@ func extraFiles(p *project.Project, linebreak string, args *metamodel.Args) (fil
 		}
 	}
 
-	if args.HasModule("migration") {
-		migModels := args.Models.WithoutTag("external").WithDatabase().Sorted()
-		migEnums := args.Enums.WithDatabase()
-		f, err := sql.MigrationAll(migModels, migEnums, args.HasModule("audit"), linebreak)
+	if hasDB && args.HasModule("migration") {
+		f, err := sql.MigrationAll(args.Models.WithoutTag("external").WithDatabase().Sorted(), e, args.HasModule("audit"), linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}
 		ret = append(ret, f)
 	}
 
-	if len(args.Models.WithDatabase()) > 0 || len(args.Enums.WithDatabase()) > 0 {
-		f, err := sql.SeedDataAll(args.Models.WithDatabase(), linebreak)
+	if hasDBModels {
+		f, err := sql.SeedDataAll(m, linebreak)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't render SQL \"all\" migration")
 		}

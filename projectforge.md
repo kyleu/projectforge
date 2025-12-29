@@ -9,6 +9,7 @@ The following modules were used to build this project:
 - [core](./doc/module/core.md)
 - [desktop](./doc/module/desktop.md)
 - [docbrowse](./doc/module/docbrowse.md)
+- [export](./doc/module/export.md)
 - [filesystem](./doc/module/filesystem.md)
 - [git](./doc/module/git.md)
 - [help](./doc/module/help.md)
