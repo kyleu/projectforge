@@ -8,6 +8,10 @@ import (
 
 type Pkg []string
 
+func NewPkgSplit(s string, delim string) Pkg {
+	return Pkg(StringSplitAndTrim(s, delim))
+}
+
 func (p Pkg) Quoted(quote string) string {
 	return StringJoin(lo.Map(p, func(x string, _ int) string {
 		return quote + x + quote

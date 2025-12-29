@@ -2,6 +2,8 @@ package util
 
 import "github.com/google/uuid"
 
+const UUIDRegex = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`
+
 var UUIDDefault = uuid.UUID{}
 
 func UUIDFromString(s string) *uuid.UUID {
