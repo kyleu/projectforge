@@ -45,6 +45,9 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 		case "jsonschema-test":
 			bc = append(bc, "JSON Schema")
 			page, err = schemaTest(ps)
+		case "libraries":
+			bc = append(bc, "Library Tests")
+			page, err = librariesTest(r, ps)
 		default:
 			return "", errors.Errorf("invalid test [%s]", key)
 		}

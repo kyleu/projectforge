@@ -1,0 +1,68 @@
+{% import (
+  "projectforge.dev/projectforge/app"
+  "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/doctor/libraries"
+  "projectforge.dev/projectforge/app/util"
+  "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/layout"
+) %}
+
+{% code type LibraryResult struct {
+  layout.Basic
+  Results libraries.Results
+} %}
+
+{% func (p *LibraryResult) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGIcon(`archive`, ps) %} External Libraries</h3>
+    <form action="" method="get">
+      <div class="mt">
+        {%- code libKey := util.OrDefault(cutil.QueryStringString(ps.URI, "tgt"), "all") -%}
+        {%- code println(libKey) -%}
+        <label><input type="radio" name="tgt" value="all"{% if libKey == "all" %} checked="checked"{% endif %} />
+          {%= components.SVGRef("cog", 16, 16, "icon", ps) %} All
+        </label>
+        {%- for _, lib := range libraries.AllLibraries -%}
+        <label class="ml"><input type="radio" name="tgt" value="{%s lib.Key %}"{% if lib.Key == libKey %} checked="checked"{% endif %} />
+          {%= components.SVGRef(lib.Icon, 16, 16, "icon", ps) %} {%s lib.Name %}
+        </label>
+        {%- endfor -%}
+      </div>
+      <div class="mt">
+        <button type="submit" name="act" value="test">{%= components.SVGButton("play", ps) %} Test</button>
+        <button type="submit" name="act" value="process">{%= components.SVGButton("file", ps) %} Process</button>
+      </div>
+    </form>
+  </div>
+  {%- if len(p.Results) == 1 -%}
+  <div class="card">
+    <div class="right"><em>{%s cutil.QueryStringString(ps.URI, "act") %}</em></div>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} {%s p.Results[0].String() %}</h3>
+    <div class="mt">
+      {%= renderResult(p.Results[0], ps) %}
+    </div>
+  </div>
+  {%- elseif len(p.Results) > 1 -%}
+  <div class="card">
+    <div class="right"><em>{%s cutil.QueryStringString(ps.URI, "act") %}</em></div>
+    <h3>{%= components.SVGIcon(`cog`, ps) %} Results</h3>
+    <div class="mt">
+      <ul class="accordion">
+        {%- for _, r := range p.Results -%}
+        <li>
+          <input id="accordion-{%s r.ID.String() %}" type="checkbox" hidden="hidden" />
+          <label for="accordion-{%s r.ID.String() %}">
+            {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef(r.Library.Icon, 16, 16, "icon", ps) %} {%s r.String() %}
+          </label>
+          <div class="bd"><div><div>{%= renderResult(r, ps) %}</div></div></div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  {%- endif -%}
+{% endfunc %}
+
+{% func renderResult(r *libraries.Result, ps *cutil.PageState) %}
+  {%= components.JSON(r.Output) %}
+{% endfunc %}
