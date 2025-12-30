@@ -178,7 +178,7 @@ func SearchProducts(ctx context.Context, db *sql.DB, query string, params *Searc
 
 ```go
 func (s *Service) HandleSearch(w http.ResponseWriter, r *http.Request, ps *cutil.PageState) {
-    query := cutil.QueryStringString(r, "q")
+    query := cutil.QueryStringString(ps.URI, "q")
     if query == "" {
         // Handle empty search
         return s.Render(w, r, ps, "search", "Search")
@@ -297,9 +297,9 @@ func (s *Service) performSearch(ctx context.Context, query string) ([]*SearchRes
 
 ```go
 func (s *Service) HandleAdvancedSearch(w http.ResponseWriter, r *http.Request, ps *cutil.PageState) {
-    query := cutil.QueryStringString(r, "q")
-    contentType := cutil.QueryStringString(r, "type")
-    category := cutil.QueryStringString(r, "category")
+    query := cutil.QueryStringString(ps.URI, "q")
+    contentType := cutil.QueryStringString(ps.URI, "type")
+    category := cutil.QueryStringString(ps.URI, "category")
 
     params := &SearchParams{
         Query: query,

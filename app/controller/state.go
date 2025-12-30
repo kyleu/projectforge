@@ -36,7 +36,7 @@ func handleError(as *app.State, key string, ps *cutil.PageState, r *http.Request
 	ps.LogError("error running action [%s]: %+v", key, err)
 
 	if len(ps.Breadcrumbs) == 0 {
-		bc := util.StringSplitAndTrim(r.URL.Path, "/")
+		bc := util.StringSplitAndTrim(ps.URI.Path, "/")
 		bc = append(bc, "Error")
 		ps.Breadcrumbs = bc
 	}

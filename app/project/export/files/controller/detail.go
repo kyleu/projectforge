@@ -27,7 +27,7 @@ func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *
 		return models.Get(r.Table).IsSoftDelete()
 	})
 	if shouldIncDel {
-		ret.W("\t\tincDel := cutil.QueryStringBool(r, \"includeDeleted\")")
+		ret.W("\t\tincDel := cutil.QueryStringBool(ps.URI, \"includeDeleted\")")
 	}
 	ret.WB()
 	if audit {

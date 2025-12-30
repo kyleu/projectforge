@@ -23,7 +23,7 @@ func ModuleSearch(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		q := cutil.QueryStringString(r, "q")
+		q := cutil.QueryStringString(ps.URI, "q")
 		params := &search.Params{Q: q, PS: nil}
 
 		var res result.Results

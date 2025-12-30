@@ -31,7 +31,7 @@ package controllers
 
 func LongTask(w http.ResponseWriter, r *http.Request) {
     controller.Act("long.task", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-        if cutil.QueryStringString(r, "hasloaded") != util.BoolTrue {
+        if cutil.QueryStringString(r.URL, "hasloaded") != util.BoolTrue {
             cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
             page := &vpage.Load{URL: r.URL.String(), Title: "Hang Tight", Description: "Working on it..."}
             return controller.Render(r, as, page, ps, "breadcrumb")

@@ -29,7 +29,7 @@ const (
 func RunAction(w http.ResponseWriter, r *http.Request) {
 	actQ, _ := cutil.PathString(r, "act", false)
 	act := "run.action." + actQ
-	if phase := cutil.QueryStringString(r, "phase"); phase != "" {
+	if phase := cutil.QueryStringString(r.URL, "phase"); phase != "" {
 		act += "." + phase
 	}
 	controller.Act(act, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {

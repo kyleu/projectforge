@@ -84,7 +84,7 @@ func GitAction(w http.ResponseWriter, r *http.Request) {
 			path := argRes.Values.GetStringOpt("paths")
 			since, _ := util.TimeFromString(argRes.Values.GetStringOpt("since"))
 			authors := util.StringSplitAndTrim(argRes.Values.GetStringOpt("authors"), ",")
-			commit := cutil.QueryStringString(r, "commit")
+			commit := cutil.QueryStringString(ps.URI, "commit")
 			limit, _ := strconv.ParseInt(argRes.Values.GetStringOpt("limit"), 10, 32)
 			args := &git.HistoryArgs{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 			result, err = gs.History(ps.Context, args, ps.Logger)

@@ -41,7 +41,7 @@ func ExamplePage(w http.ResponseWriter, r *http.Request) {
 func ExampleSocket(w http.ResponseWriter, r *http.Request) {
     controller.Act("example.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
         // Get or generate channel
-        channel := cutil.QueryStringString(r, "ch")
+        channel := cutil.QueryStringString(ps.URI, "ch")
         if channel == "" {
             channel = "example-" + util.RandomString(8)
         }

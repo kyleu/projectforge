@@ -18,8 +18,8 @@ import (
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	controller.Act("welcome", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		override := cutil.QueryStringString(r, "override") == util.BoolTrue
-		showLoad := override || cutil.QueryStringString(r, "loaded") == util.BoolTrue
+		override := cutil.QueryStringString(ps.URI, "override") == util.BoolTrue
+		showLoad := override || cutil.QueryStringString(ps.URI, "loaded") == util.BoolTrue
 		if !showLoad {
 			ps.HideMenu = true
 			page := &vpage.Load{URL: "/welcome?loaded=true", Title: "Starting " + util.AppName, Message: "Checking some things..."}
@@ -60,7 +60,7 @@ func WelcomeLoad(w http.ResponseWriter, r *http.Request) {
 
 		activeWelcomeProject = prj
 		activeWelcomeForm = frm
-		cutil.URLAddQuery(r.URL, "hasloaded", util.BoolTrue)
+		cutil.URLAddQuery(ps.URI, "hasloaded", util.BoolTrue)
 		page := &vpage.Load{URL: "/welcome/process", Title: "Generating and building your project"}
 		return controller.Render(r, as, page, ps, "Welcome")
 	})

@@ -48,7 +48,7 @@ func ProjectExportDerive(w http.ResponseWriter, r *http.Request) {
 		}
 
 		res := derive.Derive(name, pkg, content, ps.Logger)
-		if cutil.QueryStringBool(r, "save") {
+		if cutil.QueryStringBool(ps.URI, "save") {
 			pfs, err := as.Services.Projects.GetFilesystem(prj)
 			if err != nil {
 				return "", err

@@ -25,7 +25,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		q := cutil.QueryStringString(r, "q")
+		q := cutil.QueryStringString(ps.URI, "q")
 		params := &search.Params{
 			Q:  q,
 			PS: nil,
@@ -45,11 +45,11 @@ func Search(w http.ResponseWriter, r *http.Request) {
 func SearchAll(w http.ResponseWriter, r *http.Request) {
 	controller.Act("project.search.all", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(cutil.QueryStringString(r, "tags"), ",")
+		tags := util.StringSplitAndTrim(cutil.QueryStringString(ps.URI, "tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
-		q := cutil.QueryStringString(r, "q")
+		q := cutil.QueryStringString(ps.URI, "q")
 		params := &search.Params{
 			Q:  q,
 			PS: nil,

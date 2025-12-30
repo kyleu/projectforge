@@ -25,7 +25,7 @@ func Act(key string, w http.ResponseWriter, r *http.Request, f ActFn) {
 		ps.Logger.Warnf("%+v", err)
 	}{{{ if .HasAccount }}}
 	if !ps.Admin {
-		if allowed, reason := user.Check(r.URL.Path, ps.Accounts); !allowed {
+		if allowed, reason := user.Check(ps.URI.Path, ps.Accounts); !allowed {
 			f = Unauthorized(w, r, reason, ps.Accounts)
 		}
 	}{{{ end }}}
@@ -37,7 +37,7 @@ func ActSite(key string, w http.ResponseWriter, r *http.Request, f func(as *app.
 	wc := cutil.NewWriteCounter(w)
 	ps := cutil.LoadPageState(as, wc, r, key, _currentSiteRootLogger)
 	ps.Menu = site.Menu(ps.Context, as, ps.Profile{{{ if .HasAccount }}}, ps.Accounts{{{ end }}}, ps.Logger){{{ if .HasAccount }}}
-	if allowed, reason := user.Check(r.URL.Path, ps.Accounts); !allowed {
+	if allowed, reason := user.Check(ps.URI.Path, ps.Accounts); !allowed {
 		f = Unauthorized(w, r, reason, ps.Accounts)
 	}{{{ end }}}
 	if err := initSiteRequest(as, ps); err != nil {
@@ -61,10 +61,10 @@ func actComplete(as *app.State, key string, ps *cutil.PageState, w *cutil.WriteC
 		ctx, span, logger = telemetry.StartSpan(ps.Context, "controller."+key, ps.Logger)
 		defer span.Complete()
 	}
-	logger = logger.With("path", r.URL.Path, "method", ps.Method, "status", status)
+	logger = logger.With("path", ps.URI.Path, "method", ps.Method, "status", status)
 	ps.Context = ctx
 
-	if ps.ForceRedirect == "" || ps.ForceRedirect == r.URL.Path {
+	if ps.ForceRedirect == "" || ps.ForceRedirect == ps.URI.Path {
 		redir, err = safeRun(as, f, ps)
 		if err != nil {
 			redir, err = handleError(as, key, ps, r, err)

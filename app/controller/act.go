@@ -52,10 +52,10 @@ func actComplete(as *app.State, key string, ps *cutil.PageState, w *cutil.WriteC
 		ctx, span, logger = telemetry.StartSpan(ps.Context, "controller."+key, ps.Logger)
 		defer span.Complete()
 	}
-	logger = logger.With("path", r.URL.Path, "method", ps.Method, "status", status)
+	logger = logger.With("path", ps.URI.Path, "method", ps.Method, "status", status)
 	ps.Context = ctx
 
-	if ps.ForceRedirect == "" || ps.ForceRedirect == r.URL.Path {
+	if ps.ForceRedirect == "" || ps.ForceRedirect == ps.URI.Path {
 		redir, err = safeRun(as, f, ps)
 		if err != nil {
 			redir, err = handleError(as, key, ps, r, err)

@@ -146,7 +146,7 @@ func GetContentTypes(r *http.Request) (string, string) {
 	if idx := strings.Index(ret, ";"); idx > -1 {
 		ret = ret[0:idx]
 	}
-	t := QueryStringString(r, "t")
+	t := QueryStringString(r.URL, "t")
 	switch t {
 	case util.KeyDebug:
 		return mimeDebug, t

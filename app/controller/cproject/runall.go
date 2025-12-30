@@ -32,7 +32,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		}
 		cfg := cutil.QueryStringAsMap(r.URL)
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(cutil.QueryStringString(r, "tags"), ",")
+		tags := util.StringSplitAndTrim(cutil.QueryStringString(ps.URI, "tags"), ",")
 		if len(tags) == 0 {
 			prjs = prjs.WithoutTags("all-skip")
 		} else {

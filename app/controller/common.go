@@ -29,14 +29,14 @@ func NotFoundResponse(w http.ResponseWriter, r *http.Request) func(as *app.State
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(w)
 		w.WriteHeader(http.StatusNotFound)
-		ps.Logger.Warnf("%s %s returned [%d]", r.Method, r.URL.Path, http.StatusNotFound)
+		ps.Logger.Warnf("%s %s returned [%d]", r.Method, ps.URI.Path, http.StatusNotFound)
 		if ps.Title == "" {
 			ps.Title = "Page not found"
 		}
 		ps.Data = util.ValueMap{"status": "notfound", "statusCode": http.StatusNotFound, "message": ps.Title}
-		bc := util.StringSplitAndTrim(r.URL.Path, "/")
+		bc := util.StringSplitAndTrim(ps.URI.Path, "/")
 		bc = append(bc, "Not Found")
-		return Render(r, as, &verror.NotFound{Path: r.URL.Path}, ps, bc...)
+		return Render(r, as, &verror.NotFound{Path: ps.URI.Path}, ps, bc...)
 	}
 }
 
@@ -44,9 +44,8 @@ func Unauthorized(w http.ResponseWriter, r *http.Request, reason string) func(as
 	return func(as *app.State, ps *cutil.PageState) (string, error) {
 		cutil.WriteCORS(w)
 		w.WriteHeader(http.StatusUnauthorized)
-		path := r.URL.Path
-		ps.Logger.Warnf("%s %s returned [%d]", r.Method, path, http.StatusUnauthorized)
-		bc := util.StringSplitAndTrim(r.URL.Path, "/")
+		ps.Logger.Warnf("%s %s returned [%d]", r.Method, ps.URI.Path, http.StatusUnauthorized)
+		bc := util.StringSplitAndTrim(ps.URI.Path, "/")
 		bc = append(bc, "Unauthorized")
 		if ps.Title == "" {
 			ps.Title = "Unauthorized"
@@ -55,6 +54,6 @@ func Unauthorized(w http.ResponseWriter, r *http.Request, reason string) func(as
 			reason = "no access"
 		}
 		ps.Data = util.ValueMap{"status": "unauthorized", "statusCode": http.StatusUnauthorized, "message": reason}
-		return Render(r, as, &verror.Unauthorized{Path: path, Message: reason}, ps, bc...)
+		return Render(r, as, &verror.Unauthorized{Path: ps.URI.Path, Message: reason}, ps, bc...)
 	}
 }

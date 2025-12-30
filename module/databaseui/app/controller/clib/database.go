@@ -61,10 +61,10 @@ func DatabaseAction(w http.ResponseWriter, r *http.Request) {
 		bc := databaseBC(svc.Key, act)
 		switch act {
 		case "enable":
-			_ = svc.EnableTracing(cutil.QueryStringString(r, "tracing"), ps.Logger)
+			_ = svc.EnableTracing(cutil.QueryStringString(ps.URI, "tracing"), ps.Logger)
 			return dbRoute + svc.Key + "/recent", nil
 		case "recent":
-			if idxStr := cutil.QueryStringString(r, "idx"); idxStr != "" {
+			if idxStr := cutil.QueryStringString(ps.URI, "idx"); idxStr != "" {
 				idx, _ := strconv.ParseInt(idxStr, 10, 32)
 				st := database.GetDebugStatement(svc.Key, int(idx))
 				if st != nil {

@@ -40,7 +40,7 @@ func ProjectThemePalette(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] Themes", pal), pal)
-		if cutil.QueryStringString(r, "t") == "go" {
+		if cutil.QueryStringString(ps.URI, "t") == "go" {
 			ps.Data = util.StringJoin(lo.Map(x, func(t *theme.Theme, _ int) string {
 				return t.ToGo()
 			}), util.StringDefaultLinebreak)

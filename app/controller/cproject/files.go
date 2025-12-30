@@ -40,7 +40,7 @@ func File(w http.ResponseWriter, r *http.Request) {
 		}
 		path := util.StringSplitAndTrim(pathS, "/")
 		fsys, _ := as.Services.Projects.GetFilesystem(prj)
-		if cutil.QueryStringString(r, "download") == "true" {
+		if cutil.QueryStringString(ps.URI, "download") == "true" {
 			b, err := fsys.ReadFile(util.StringFilePath(path...))
 			if err != nil {
 				return "", errors.Wrapf(err, "unable to read project file [%s] for download", pathS)
@@ -65,9 +65,9 @@ func FileStats(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		dir := cutil.QueryStringString(r, "dir")
+		dir := cutil.QueryStringString(ps.URI, "dir")
 		pth := util.StringSplitAndTrim(dir, "/")
-		ext := cutil.QueryStringString(r, "ext")
+		ext := cutil.QueryStringString(ps.URI, "ext")
 		pfs, err := as.Services.Projects.GetFilesystem(prj)
 		if err != nil {
 			return "", err

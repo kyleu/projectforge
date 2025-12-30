@@ -15,9 +15,9 @@ import (
 
 func RequestCtxToMap(r *http.Request, {{{ if .HasModule "help" }}}as{{{ else }}}_{{{ end }}} *app.State, ps *PageState) util.ValueMap {
 	req := util.ValueMap{
-		"url": r.URL.String(), "protocol": r.URL.Scheme,
-		"host": r.URL.Host, "path": r.URL.Path,
-		"queryString": r.URL.RawQuery, "headers": r.Header,
+		"url": ps.URI.String(), "protocol": ps.URI.Scheme,
+		"host": ps.URI.Host, "path": ps.URI.Path,
+		"queryString": ps.URI.RawQuery, "headers": r.Header,
 	}{{{ if .HasModule "help" }}}
 	hasHelp := as.Services != nil && as.Services.Help != nil && as.Services.Help.Contains(ps.Action){{{ end }}}
 	action := util.ValueMap{
@@ -80,17 +80,17 @@ func PathArray(r *http.Request, key string) (util.Strings, error) {
 	return ret.SplitAndTrim(","), nil
 }
 
-func QueryStringString(r *http.Request, key string) string {
-	return r.URL.Query().Get(key)
+func QueryStringString(uri *url.URL, key string) string {
+	return uri.Query().Get(key)
 }
 
-func QueryStringBool(r *http.Request, key string) bool {
-	x := QueryStringString(r, key)
+func QueryStringBool(uri *url.URL, key string) bool {
+	x := QueryStringString(uri, key)
 	return x == util.BoolTrue || x == "t" || x == "True" || x == "TRUE"
 }
 
-func QueryStringInt(r *http.Request, key string) int {
-	x := QueryStringString(r, key)
+func QueryStringInt(uri *url.URL, key string) int {
+	x := QueryStringString(uri, key)
 	ret, err := strconv.ParseInt(x, 10, 32)
 	if err != nil {
 		return 0
@@ -98,8 +98,8 @@ func QueryStringInt(r *http.Request, key string) int {
 	return int(ret)
 }
 
-func QueryStringUUID(r *http.Request, key string) *uuid.UUID {
-	x := QueryStringString(r, key)
+func QueryStringUUID(uri *url.URL, key string) *uuid.UUID {
+	x := QueryStringString(uri, key)
 	return util.UUIDFromString(x)
 }
 

@@ -22,9 +22,9 @@ var (
 
 func Testbed(w http.ResponseWriter, r *http.Request) {
 	Act("testbed", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		key := cutil.QueryStringString(r, "key")
+		key := cutil.QueryStringString(ps.URI, "key")
 		var param util.ValueMap
-		if paramStr := cutil.QueryStringString(r, "param"); paramStr != "" {
+		if paramStr := cutil.QueryStringString(ps.URI, "param"); paramStr != "" {
 			param, _ = util.FromJSONMap([]byte(paramStr))
 		}
 		var ret any

@@ -23,7 +23,7 @@ func GitActionAll(w http.ResponseWriter, r *http.Request) {
 	a, _ := cutil.PathString(r, "act", false)
 	controller.Act("git.all."+a, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prjs := as.Services.Projects.Projects()
-		tags := util.StringSplitAndTrim(cutil.QueryStringString(r, "tags"), ",")
+		tags := util.StringSplitAndTrim(cutil.QueryStringString(ps.URI, "tags"), ",")
 		if len(tags) > 0 {
 			prjs = prjs.WithTags(tags...)
 		}
@@ -103,11 +103,11 @@ func gitAll(prjs project.Projects, f func(prj *project.Project) (*git.Result, er
 }
 
 func gitHistoryAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) (git.Results, error) {
-	path := cutil.QueryStringString(r, "path")
-	since, _ := util.TimeFromString(cutil.QueryStringString(r, "since"))
-	authors := util.StringSplitAndTrim(cutil.QueryStringString(r, "authors"), ",")
-	limit, _ := strconv.ParseInt(cutil.QueryStringString(r, "limit"), 10, 32)
-	commit := cutil.QueryStringString(r, "commit")
+	path := cutil.QueryStringString(ps.URI, "path")
+	since, _ := util.TimeFromString(cutil.QueryStringString(ps.URI, "since"))
+	authors := util.StringSplitAndTrim(cutil.QueryStringString(ps.URI, "authors"), ",")
+	limit, _ := strconv.ParseInt(cutil.QueryStringString(ps.URI, "limit"), 10, 32)
+	commit := cutil.QueryStringString(ps.URI, "commit")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		args := &git.HistoryArgs{Path: path, Since: since, Authors: authors, Commit: commit, Limit: int(limit)}
 		return git.NewService(prj.Key, prj.Path).History(ps.Context, args, ps.Logger)
@@ -115,8 +115,8 @@ func gitHistoryAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) 
 }
 
 func gitMagicAll(prjs project.Projects, r *http.Request, ps *cutil.PageState) (git.Results, error) {
-	message := cutil.QueryStringString(r, "message")
-	dryRun := cutil.QueryStringBool(r, "dryRun")
+	message := cutil.QueryStringString(ps.URI, "message")
+	dryRun := cutil.QueryStringBool(ps.URI, "dryRun")
 	return gitAll(prjs, func(prj *project.Project) (*git.Result, error) {
 		return git.NewService(prj.Key, prj.Path).Magic(ps.Context, message, dryRun, ps.Logger)
 	})

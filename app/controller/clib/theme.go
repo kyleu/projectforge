@@ -40,7 +40,7 @@ func ThemeEdit(w http.ResponseWriter, r *http.Request) {
 		} else {
 			t = as.Themes.Get(key, ps.Logger)
 			if t == nil {
-				if pal := cutil.QueryStringString(r, "palette"); pal != "" {
+				if pal := cutil.QueryStringString(ps.URI, "palette"); pal != "" {
 					themes, err := theme.PaletteThemes(pal)
 					if err != nil {
 						return "", err

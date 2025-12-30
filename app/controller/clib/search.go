@@ -15,7 +15,7 @@ const searchKey = "search"
 
 func Search(w http.ResponseWriter, r *http.Request) {
 	controller.Act(searchKey, w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := cutil.QueryStringString(r, "q")
+		q := cutil.QueryStringString(ps.URI, "q")
 		params := &search.Params{Q: q, PS: ps.Params}
 		results, errs := search.Search(ps.Context, as, params, ps)
 		ps.SetTitleAndData("Search Results", results)

@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	incDel   = "cutil.QueryStringBool(r, \"includeDeleted\")"
+	incDel   = "cutil.QueryStringBool(ps.URI, \"includeDeleted\")"
 	incFalse = ", false"
 )
 

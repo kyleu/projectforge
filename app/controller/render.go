@@ -44,7 +44,7 @@ func Render(r *http.Request, as *app.State, page layout.Page, ps *cutil.PageStat
 	}()
 
 	var fn string
-	if cutil.QueryStringString(r, "download") == "true" {
+	if cutil.QueryStringString(ps.URI, "download") == "true" {
 		fn = ps.Action
 	}
 
