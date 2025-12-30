@@ -1,20 +1,13 @@
-<!--- $PF_GENERATE_ONCE$ -->
-# {{{ .Name }}}
-![app logo](./assets/favicon.png)
+# [Core] Project Forge Module
 
-{{{ .Info.Summary }}}
+This directory contains the files used by the "core" module of [Project Forge](https://projectforge.dev).
 
-- {{{ .Info.Homepage }}}
-- https://{{{ .Package }}}
+## Purpose
 
-{{{ .Name }}} was built with help from [Project Forge](https://projectforge.dev)
+Provides common utilities for a Go application
 
-## Documentation
+## Usage
 
-- [Installation](doc/installation.md)
-- [Contributing](doc/contributing.md)
-- [Customizing](doc/customizing.md)
-- [Releasing](doc/releasing.md)
-- [Running](doc/running.md)
-- [Scripts](doc/scripts.md)
-- [Technology](doc/technology.md)
+When the "core" module is enabled in your project, all of the files in this directory (except this readme) will be processed and included in your application.
+
+See [doc/module/core.md](doc/module/core.md) for usage information.
