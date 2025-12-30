@@ -1,9 +1,17 @@
 package libraries
 
+var AllLibraries = Libraries{
+	{Key: "string", Name: "Rich String", Icon: "cog"},
+	{Key: "filesystem", Name: "Filesystem", Icon: "file", Files: map[string]string{
+		"module/filesystem/app/lib/filesystem": "./",
+	}},
+}
+
 type Library struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
-	Icon string `json:"icon"`
+	Key   string            `json:"key"`
+	Name  string            `json:"name"`
+	Icon  string            `json:"icon"`
+	Files map[string]string `json:"files"`
 }
 
 func (l *Library) String() string {
@@ -28,9 +36,4 @@ func (l Libraries) Index(key string) int {
 		}
 	}
 	return -1
-}
-
-var AllLibraries = Libraries{
-	{Key: "string", Name: "Rich String", Icon: "cog"},
-	{Key: "filesystem", Name: "Filesystem", Icon: "file"},
 }

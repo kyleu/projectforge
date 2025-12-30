@@ -18,7 +18,6 @@
     <form action="" method="get">
       <div class="mt">
         {%- code libKey := util.OrDefault(cutil.QueryStringString(ps.URI, "tgt"), "all") -%}
-        {%- code println(libKey) -%}
         <label><input type="radio" name="tgt" value="all"{% if libKey == "all" %} checked="checked"{% endif %} />
           {%= components.SVGRef("cog", 16, 16, "icon", ps) %} All
         </label>
@@ -29,8 +28,9 @@
         {%- endfor -%}
       </div>
       <div class="mt">
-        <button type="submit" name="act" value="test">{%= components.SVGButton("play", ps) %} Test</button>
-        <button type="submit" name="act" value="process">{%= components.SVGButton("file", ps) %} Process</button>
+        <button type="submit" name="act" value="test">{%= components.SVGButton("bug", ps) %} Test</button>
+        <button type="submit" name="act" value="persist">{%= components.SVGButton("file", ps) %} Persist</button>
+        <button type="submit" name="act" value="inspect">{%= components.SVGButton("search", ps) %} Inspect</button>
       </div>
     </form>
   </div>

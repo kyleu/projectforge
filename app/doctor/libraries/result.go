@@ -14,12 +14,16 @@ type Result struct {
 	ID      uuid.UUID `json:"id,omitzero"`
 	Library *Library  `json:"library,omitzero"`
 	Action  string    `json:"action,omitzero"`
-	Output  any       `json:"output,omitzero"`
+	Output  []any     `json:"output,omitzero"`
 	Outcome string    `json:"outcome,omitzero"`
 }
 
 func NewResult(library *Library, action string) *Result {
 	return &Result{ID: util.UUID(), Library: library, Action: action}
+}
+
+func (r *Result) AddMessage(s string, args ...any) {
+	r.Output = append(r.Output, fmt.Sprintf(s, args...))
 }
 
 func (r *Result) String() string {

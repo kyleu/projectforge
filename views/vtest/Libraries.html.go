@@ -49,68 +49,70 @@ func (p *LibraryResult) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vtest/Libraries.html:20
 	libKey := util.OrDefault(cutil.QueryStringString(ps.URI, "tgt"), "all")
 
-//line views/vtest/Libraries.html:21
-	println(libKey)
-
-//line views/vtest/Libraries.html:21
+//line views/vtest/Libraries.html:20
 	qw422016.N().S(`        <label><input type="radio" name="tgt" value="all"`)
-//line views/vtest/Libraries.html:22
+//line views/vtest/Libraries.html:21
 	if libKey == "all" {
-//line views/vtest/Libraries.html:22
+//line views/vtest/Libraries.html:21
 		qw422016.N().S(` checked="checked"`)
-//line views/vtest/Libraries.html:22
+//line views/vtest/Libraries.html:21
 	}
-//line views/vtest/Libraries.html:22
+//line views/vtest/Libraries.html:21
 	qw422016.N().S(` />
           `)
-//line views/vtest/Libraries.html:23
+//line views/vtest/Libraries.html:22
 	components.StreamSVGRef(qw422016, "cog", 16, 16, "icon", ps)
-//line views/vtest/Libraries.html:23
+//line views/vtest/Libraries.html:22
 	qw422016.N().S(` All
         </label>
 `)
-//line views/vtest/Libraries.html:25
+//line views/vtest/Libraries.html:24
 	for _, lib := range libraries.AllLibraries {
-//line views/vtest/Libraries.html:25
+//line views/vtest/Libraries.html:24
 		qw422016.N().S(`        <label class="ml"><input type="radio" name="tgt" value="`)
-//line views/vtest/Libraries.html:26
+//line views/vtest/Libraries.html:25
 		qw422016.E().S(lib.Key)
-//line views/vtest/Libraries.html:26
+//line views/vtest/Libraries.html:25
 		qw422016.N().S(`"`)
-//line views/vtest/Libraries.html:26
+//line views/vtest/Libraries.html:25
 		if lib.Key == libKey {
-//line views/vtest/Libraries.html:26
+//line views/vtest/Libraries.html:25
 			qw422016.N().S(` checked="checked"`)
-//line views/vtest/Libraries.html:26
+//line views/vtest/Libraries.html:25
 		}
-//line views/vtest/Libraries.html:26
+//line views/vtest/Libraries.html:25
 		qw422016.N().S(` />
           `)
-//line views/vtest/Libraries.html:27
+//line views/vtest/Libraries.html:26
 		components.StreamSVGRef(qw422016, lib.Icon, 16, 16, "icon", ps)
-//line views/vtest/Libraries.html:27
+//line views/vtest/Libraries.html:26
 		qw422016.N().S(` `)
-//line views/vtest/Libraries.html:27
+//line views/vtest/Libraries.html:26
 		qw422016.E().S(lib.Name)
-//line views/vtest/Libraries.html:27
+//line views/vtest/Libraries.html:26
 		qw422016.N().S(`
         </label>
 `)
-//line views/vtest/Libraries.html:29
+//line views/vtest/Libraries.html:28
 	}
-//line views/vtest/Libraries.html:29
+//line views/vtest/Libraries.html:28
 	qw422016.N().S(`      </div>
       <div class="mt">
         <button type="submit" name="act" value="test">`)
-//line views/vtest/Libraries.html:32
-	components.StreamSVGButton(qw422016, "play", ps)
-//line views/vtest/Libraries.html:32
+//line views/vtest/Libraries.html:31
+	components.StreamSVGButton(qw422016, "bug", ps)
+//line views/vtest/Libraries.html:31
 	qw422016.N().S(` Test</button>
-        <button type="submit" name="act" value="process">`)
-//line views/vtest/Libraries.html:33
+        <button type="submit" name="act" value="persist">`)
+//line views/vtest/Libraries.html:32
 	components.StreamSVGButton(qw422016, "file", ps)
+//line views/vtest/Libraries.html:32
+	qw422016.N().S(` Persist</button>
+        <button type="submit" name="act" value="inspect">`)
 //line views/vtest/Libraries.html:33
-	qw422016.N().S(` Process</button>
+	components.StreamSVGButton(qw422016, "search", ps)
+//line views/vtest/Libraries.html:33
+	qw422016.N().S(` Inspect</button>
       </div>
     </form>
   </div>

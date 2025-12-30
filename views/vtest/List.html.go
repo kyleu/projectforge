@@ -68,7 +68,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/vtest/List.html:33
-	components.StreamSVGIcon(qw422016, `cog`, ps)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vtest/List.html:33
 	qw422016.N().S(` Modules</h3>
     <div class="mt">
