@@ -47,7 +47,10 @@ func TestRun(w http.ResponseWriter, r *http.Request) {
 			page, err = schemaTest(ps)
 		case "libraries":
 			bc = append(bc, "Library Tests")
-			page, err = librariesTest(r, ps)
+			page, err = librariesTest(ps)
+		case "readmes":
+			bc = append(bc, "Readmes")
+			page, err = readmesTest(as, ps)
 		default:
 			return "", errors.Errorf("invalid test [%s]", key)
 		}

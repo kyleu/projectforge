@@ -18,6 +18,10 @@ func NewFile(path string, mode filesystem.FileMode, b []byte) *File {
 	return &File{Type: getType(n), Path: util.StringSplitPathAndTrim(p), Name: n, Mode: mode, Content: string(b)}
 }
 
+func (f *File) Clone() *File {
+	return &File{Type: f.Type, Path: f.Path, Name: f.Name, Mode: f.Mode, Content: f.Content}
+}
+
 func (f *File) FullPath() string {
 	return util.StringFilePath(util.StringFilePath(f.Path...), f.Name)
 }

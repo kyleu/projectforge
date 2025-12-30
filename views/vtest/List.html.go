@@ -70,37 +70,38 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vtest/List.html:33
 	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vtest/List.html:33
-	qw422016.N().S(` Modules</h3>
+	qw422016.N().S(` Libraries</h3>
     <div class="mt">
       <a href="/test/libraries"><button type="button">Manage external libraries</button></a>
+      <a href="/test/readmes"><button type="button">Generate module readmes</button></a>
     </div>
   </div>
 `)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 }
 
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	p.StreamBody(qw422016, as, ps)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 }
 
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	p.WriteBody(qb422016, as, ps)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	qs422016 := string(qb422016.B)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 	return qs422016
-//line views/vtest/List.html:38
+//line views/vtest/List.html:39
 }

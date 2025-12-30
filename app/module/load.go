@@ -9,7 +9,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-const configFilename = ".module.json"
+const (
+	configFilename = ".module.json"
+	readmeFilename = "README.md"
+)
 
 func (s *Service) LoadNative(ctx context.Context, logger util.Logger, keys ...string) (Modules, error) {
 	var ret Modules

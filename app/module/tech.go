@@ -17,6 +17,7 @@ var techLookup = map[string][]string{
 	"goth":          {"Goth", "https://github.com/markbates/goth", "users"},
 	"graphql-go":    {"graphql-go", "https://github.com/graphql-go/graphql", "graphql"},
 	"ios":           {"iOS", "https://www.apple.com/ios", "apple"},
+	"jsonschema":    {"JSON Schema", "https://json-schema.org", "json"},
 	"markdown":      {"Markdown", "https://en.wikipedia.org/wiki/Markdown"},
 	"mcp":           {"Model Context Protocol", "https://modelcontextprotocol.io", "gamepad"},
 	"mysql":         {"MySQL", "https://www.mysql.org"},

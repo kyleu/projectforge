@@ -1,8 +1,6 @@
 package ctest
 
 import (
-	"net/http"
-
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/doctor/libraries"
 	"projectforge.dev/projectforge/app/util"
@@ -10,7 +8,7 @@ import (
 	"projectforge.dev/projectforge/views/vtest"
 )
 
-func librariesTest(r *http.Request, ps *cutil.PageState) (layout.Page, error) {
+func librariesTest(ps *cutil.PageState) (layout.Page, error) {
 	var ret libraries.Results
 	act := util.OrDefault(cutil.QueryStringString(ps.URI, "act"), "test")
 	switch tgt := cutil.QueryStringString(ps.URI, "tgt"); tgt {

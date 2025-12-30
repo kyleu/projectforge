@@ -58,7 +58,7 @@ func (s *Service) loadFiles(mod *Module, docsOnly bool, ret map[string]*file.Fil
 		return err
 	}
 	for _, f := range fs {
-		if f == configFilename {
+		if f == configFilename || f == readmeFilename {
 			continue
 		}
 		if isPrivate && strings.HasPrefix(f, "doc/module") {

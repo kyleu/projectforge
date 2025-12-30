@@ -25,6 +25,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to get files from [%d] modules", len(pm.Mods))
 	}
+	srcFiles = append(srcFiles, readmeFile.Clone())
 	if pm.Prj.Key == util.AppKey {
 		for _, x := range pm.MSvc.Modules() {
 			if pm.Mods.Get(x.Key) == nil {
