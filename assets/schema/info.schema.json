@@ -109,6 +109,10 @@
         }
       }
     },
+    "additionalPorts": {
+      "description": "additional ports to expose",
+      "type": "object"
+    },
     "extraFiles": {
       "description": "additional files to include in the builds",
       "type": "array",
@@ -136,6 +140,14 @@
       "items": {
         "type": "string"
       }
+    },
+    "dockerPackages": {
+      "description": "additional Docker packages to include in the build",
+      "type": "object"
+    },
+    "dependencies": {
+      "description": "additional dependencies to include in the build",
+      "type": "object"
     },
     "docs": {
       "description": "documentation resources for this project",

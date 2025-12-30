@@ -4,6 +4,14 @@
   "title": "Project",
   "type": "object",
   "properties": {
+    "key": {
+      "description": "optional key for this theme",
+      "type": "string"
+    },
+    "base": {
+      "description": "base color for this theme",
+      "type": "string"
+    },
     "light": {
       "description": "light-mode colors",
       "$ref": "#/$defs/colors"
