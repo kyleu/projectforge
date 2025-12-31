@@ -45,7 +45,7 @@
           <input id="accordion-entry-{%s key %}" type="checkbox" hidden="hidden" />
           <label title="{%s e.Request.URL %}" for="accordion-entry-{%s key %}">
             {%= RenderEntryOptions(key, e, false) %}
-            {%= components.ExpandCollapse(3, ps) %}{%s e.String() %}
+            {%= components.ExpandCollapse(3, ps) %} {%s e.String() %}
             <div class="clear"></div>
           </label>
           <div class="bd"><div><div>
