@@ -50,16 +50,24 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.E().S(util.AppName)
 //line views/About.html:20
 	qw422016.N().S(`</h3>
-    <em>v`)
+`)
 //line views/About.html:21
-	qw422016.E().S(p.Version)
+	if p.Version != "" {
 //line views/About.html:21
-	qw422016.N().S(`, started `)
-//line views/About.html:21
-	view.StreamTimestampRelative(qw422016, &p.Started, false)
-//line views/About.html:21
-	qw422016.N().S(`</em>
-  </div>
+		qw422016.N().S(`    <em>v`)
+//line views/About.html:22
+		qw422016.E().S(p.Version)
+//line views/About.html:22
+		qw422016.N().S(`, started `)
+//line views/About.html:22
+		view.StreamTimestampRelative(qw422016, &p.Started, false)
+//line views/About.html:22
+		qw422016.N().S(`</em>
+`)
+//line views/About.html:23
+	}
+//line views/About.html:23
+	qw422016.N().S(`  </div>
   <div class="card">
     <h3>About Project Forge</h3>
     <p>
@@ -70,9 +78,9 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
       Whether you're creating a simple web service, a complex enterprise application, or a multi-platform desktop app, Project Forge provides the foundation, tools, and workflow to get you from idea to production faster than ever before.
     </p>
     `)
-//line views/About.html:32
+//line views/About.html:34
 	components.StreamBragApp(qw422016)
-//line views/About.html:32
+//line views/About.html:34
 	qw422016.N().S(`
   </div>
   <div class="card">
@@ -89,110 +97,110 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     </ul>
   </div>
   `)
-//line views/About.html:47
+//line views/About.html:49
 	components.StreamBragProject(qw422016)
-//line views/About.html:47
+//line views/About.html:49
 	qw422016.N().S(`
   <div class="card">
     <h3>Licensing</h3>
     <div class="mt">
       `)
-//line views/About.html:51
+//line views/About.html:53
 	qw422016.E().S(util.AppName)
-//line views/About.html:51
+//line views/About.html:53
 	qw422016.N().S(` is <a href="https://choosealicense.com/licenses/mit/">MIT</a> licensed,
       and the modules are <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
     </div>
     <div class="mt">Your project is your own, use any license you'd like.</div>
   </div>
   `)
-//line views/About.html:56
+//line views/About.html:58
 	StreamSourceCode(qw422016, ps)
-//line views/About.html:56
+//line views/About.html:58
 	qw422016.N().S(`
   `)
-//line views/About.html:57
+//line views/About.html:59
 	StreamFeedback(qw422016)
-//line views/About.html:57
+//line views/About.html:59
 	qw422016.N().S(`
 `)
-//line views/About.html:58
+//line views/About.html:60
 }
 
-//line views/About.html:58
+//line views/About.html:60
 func (p *About) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/About.html:58
+//line views/About.html:60
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:58
+//line views/About.html:60
 	p.StreamBody(qw422016, as, ps)
-//line views/About.html:58
+//line views/About.html:60
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:58
+//line views/About.html:60
 }
 
-//line views/About.html:58
+//line views/About.html:60
 func (p *About) Body(as *app.State, ps *cutil.PageState) string {
-//line views/About.html:58
+//line views/About.html:60
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:58
+//line views/About.html:60
 	p.WriteBody(qb422016, as, ps)
-//line views/About.html:58
+//line views/About.html:60
 	qs422016 := string(qb422016.B)
-//line views/About.html:58
+//line views/About.html:60
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:58
+//line views/About.html:60
 	return qs422016
-//line views/About.html:58
+//line views/About.html:60
 }
 
-//line views/About.html:60
+//line views/About.html:62
 func StreamSourceCode(qw422016 *qt422016.Writer, ps *cutil.PageState) {
-//line views/About.html:60
+//line views/About.html:62
 	qw422016.N().S(`
   <div class="card">
     <h3>Open Source</h3>
     <p>
       Project Forge is completely open source and available on `)
-//line views/About.html:64
+//line views/About.html:66
 	view.StreamURL(qw422016, util.AppSource, "GitHub", true, ps)
-//line views/About.html:64
+//line views/About.html:66
 	qw422016.N().S(`.
       The entire codebase, including all modules and documentation, is freely available for you to study, modify, and contribute to.
     </p>
   </div>
 `)
-//line views/About.html:68
+//line views/About.html:70
 }
 
-//line views/About.html:68
+//line views/About.html:70
 func WriteSourceCode(qq422016 qtio422016.Writer, ps *cutil.PageState) {
-//line views/About.html:68
+//line views/About.html:70
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:68
+//line views/About.html:70
 	StreamSourceCode(qw422016, ps)
-//line views/About.html:68
+//line views/About.html:70
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:68
+//line views/About.html:70
 }
 
-//line views/About.html:68
+//line views/About.html:70
 func SourceCode(ps *cutil.PageState) string {
-//line views/About.html:68
+//line views/About.html:70
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:68
+//line views/About.html:70
 	WriteSourceCode(qb422016, ps)
-//line views/About.html:68
+//line views/About.html:70
 	qs422016 := string(qb422016.B)
-//line views/About.html:68
+//line views/About.html:70
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:68
+//line views/About.html:70
 	return qs422016
-//line views/About.html:68
+//line views/About.html:70
 }
 
-//line views/About.html:70
+//line views/About.html:72
 func StreamFeedback(qw422016 *qt422016.Writer) {
-//line views/About.html:70
+//line views/About.html:72
 	qw422016.N().S(`
   <div class="card">
     <h3>Community & Support</h3>
@@ -209,31 +217,31 @@ func StreamFeedback(qw422016 *qt422016.Writer) {
     </div>
   </div>
 `)
-//line views/About.html:85
+//line views/About.html:87
 }
 
-//line views/About.html:85
+//line views/About.html:87
 func WriteFeedback(qq422016 qtio422016.Writer) {
-//line views/About.html:85
+//line views/About.html:87
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:85
+//line views/About.html:87
 	StreamFeedback(qw422016)
-//line views/About.html:85
+//line views/About.html:87
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:85
+//line views/About.html:87
 }
 
-//line views/About.html:85
+//line views/About.html:87
 func Feedback() string {
-//line views/About.html:85
+//line views/About.html:87
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:85
+//line views/About.html:87
 	WriteFeedback(qb422016)
-//line views/About.html:85
+//line views/About.html:87
 	qs422016 := string(qb422016.B)
-//line views/About.html:85
+//line views/About.html:87
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:85
+//line views/About.html:87
 	return qs422016
-//line views/About.html:85
+//line views/About.html:87
 }

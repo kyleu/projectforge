@@ -11,5 +11,5 @@ if ! command -v vhs >/dev/null 2>&1; then
   exit 1
 fi
 
-./vhs-golang-install.sh "$@"{{{ if .Build.Homebrew }}}
-./vhs-homebrew-install.sh "$@"{{{ end }}}
+{{{ if .Build.Homebrew }}}./vhs-homebrew-install.sh "$@"
+{{{ end }}}./vhs-golang-install.sh "$@"

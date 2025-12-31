@@ -48,7 +48,7 @@ func Handle(as *app.State, path []string, ps *cutil.PageState) (string, layout.P
 		}
 	case keyAbout:
 		ps.SetTitleAndData("About "+util.AppName, util.AppName+" v"+as.BuildInfo.Version)
-		page = &views.About{}
+		page = &views.About{Version: as.BuildInfo.Version, Started: as.Started}
 	case keyDownload:
 		dls := download.GetLinks(as.BuildInfo.Version)
 		data := util.ValueMap{"base": "https://github.com/kyleu/projectforge/releases/download/v" + as.BuildInfo.Version, "links": dls}

@@ -18,7 +18,9 @@
 {% func (p *About) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`app`, ps) %} {%s util.AppName %}</h3>
+    {%- if p.Version != "" -%}
     <em>v{%s p.Version %}, started {%= view.TimestampRelative(&p.Started, false) %}</em>
+    {%- endif -%}
   </div>
   <div class="card">
     <h3>About Project Forge</h3>

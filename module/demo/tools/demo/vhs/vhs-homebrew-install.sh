@@ -24,14 +24,17 @@ if "$prompt"; then
   read -r
 fi
 
+BREW_PATH="{{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}"
+
 brew_remove() {
-  brew remove -f "{{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}"
+  brew remove -f $BREW_PATH
 }
 
 echo "Prepping Homebrew installation..."
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 brew_remove
-brew install "{{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}"
+brew update
+brew install $BREW_PATH
 brew_remove
 
 echo "Recording Homebrew installation..."
