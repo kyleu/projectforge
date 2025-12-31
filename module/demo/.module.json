@@ -1,0 +1,10 @@
+{
+  "name": "Demo Assets",
+  "icon": "cocktail",
+  "description": "Provides demo content and assets for your application",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/demo",
+  "technology": []
+}

@@ -16,7 +16,7 @@ import (
 )
 
 var nativeModuleKeys = []string{
-	"android", "audit", "brands", "core", "database", "databaseui", "desktop", "docbrowse", "export", "expression",
+	"android", "audit", "brands", "core", "database", "databaseui", "demo", "desktop", "docbrowse", "export", "expression",
 	"filesystem", "git", "graphql", "grep", "har", "help", "ios", "jsonschema", "jsx",
 	"marketing", "mcp", "migration", "metamodel", "metaschema", util.DatabaseMySQL, "notebook", "notarize", "numeric",
 	"oauth", "openapi", "playwright", "plot", util.DatabasePostgreSQL, "process", "proxy", "queue", "reactive", "readonlydb", "richedit",

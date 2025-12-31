@@ -2,19 +2,19 @@
 #
 # https://github.com/charmbracelet/vhs
 
-Output ../assets/golang-install.gif
-# Output ../assets/golang-install.mp4
-# Output ../assets/golang-install.webm
-# Output ../assets/golang-install/frames/
+Output ../assets/homebrew-install.light.gif
+# Output ../assets/homebrew-install.light.mp4
+# Output ../assets/homebrew-install.light.webm
+# Output ../assets/homebrew-install/frames.light/
 
 Set TypingSpeed 50ms
 Set FontSize 18
 Set Width 1000
-Set Height 140
+Set Height 230
 Set Padding 20
-Set Theme "Atom"
+Set Theme "AtomOneLight"
 
-Type "go install projectforge.dev/projectforge@latest"
+Type "brew install kyleu/kyleu/projectforge"
 
 Sleep 500ms
 

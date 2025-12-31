@@ -1,3 +1,4 @@
+# $PF_HAS_MODULE(homebrew)$
 #!/bin/bash
 
 ## Runs the VHS scripts (https://github.com/charmbracelet/vhs)
@@ -19,18 +20,18 @@ for arg in "$@"; do
   fi
 done
 if "$prompt"; then
-  echo "We're about to remove the homebrew [projectforge] installation, so [vhs] can reinstall it. Press enter to continue..."
+  echo "We're about to remove the homebrew [{{{ .Exec }}}] installation, so [vhs] can reinstall it. Press enter to continue..."
   read -r
 fi
 
 brew_remove() {
-  brew remove -f "kyleu/kyleu/projectforge"
+  brew remove -f "{{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}"
 }
 
 echo "Prepping Homebrew installation..."
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 brew_remove
-brew install "kyleu/kyleu/projectforge"
+brew install "{{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}"
 brew_remove
 
 echo "Recording Homebrew installation..."

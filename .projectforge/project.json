@@ -8,6 +8,7 @@
   "modules": [
     "core",
     "android",
+    "demo",
     "desktop",
     "docbrowse",
     "export",

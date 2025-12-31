@@ -7,6 +7,7 @@ The following modules were used to build this project:
 
 - [android](./doc/module/android.md)
 - [core](./doc/module/core.md)
+- [demo](./doc/module/demo.md)
 - [desktop](./doc/module/desktop.md)
 - [docbrowse](./doc/module/docbrowse.md)
 - [export](./doc/module/export.md)

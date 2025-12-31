@@ -14,7 +14,7 @@ Set Height 140
 Set Padding 20
 Set Theme "Atom"
 
-Type "go install projectforge.dev/projectforge@latest"
+Type "go install {{{ .Package }}}@latest"
 
 Sleep 500ms
 
@@ -24,7 +24,7 @@ Wait
 
 Sleep 500ms
 
-Type "projectforge version"
+Type "{{{ .Exec }}} version"
 
 Sleep 500ms
 
@@ -32,10 +32,10 @@ Enter
 
 Sleep 1s
 
-Type "Project Forge"
+Type "{{{ .Name }}}"
 
 Sleep 1s
 
-Type " - Build and maintain feature-rich applications using Golang"
+Type " - {{{ .Info.Summary }}}"
 
 Sleep 3s

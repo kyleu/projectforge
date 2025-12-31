@@ -83,11 +83,14 @@ func limitDiffs(dfs diff.Diffs, fl string) (diff.Diffs, error) {
 }
 
 func gen(srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS filesystem.FileLoader) *Result {
-	src := srcFiles.Get(f.Path)
+	src := srcFiles.Get(f.Path).Clone()
 	if src == nil {
 		return ret.WithError(errors.Errorf("unable to read file from [%s]", f.Path))
 	}
 	if idx := strings.Index(src.Content, file.GenerateOncePattern); idx > -1 {
+		src.Content = src.Content[strings.Index(src.Content[idx:], "\n")+idx+1:]
+	}
+	if idx := strings.Index(src.Content, file.ModulePrefix); idx > -1 {
 		src.Content = src.Content[strings.Index(src.Content[idx:], "\n")+idx+1:]
 	}
 	err := tgtFS.WriteFile(f.Path, []byte(src.Content), src.Mode, true)

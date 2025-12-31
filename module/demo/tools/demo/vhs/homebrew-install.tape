@@ -1,3 +1,4 @@
+# $PF_HAS_MODULE(homebrew)$
 # VHS for installation of Project Forge
 #
 # https://github.com/charmbracelet/vhs
@@ -14,7 +15,7 @@ Set Height 230
 Set Padding 20
 Set Theme "Atom"
 
-Type "brew install kyleu/kyleu/projectforge"
+Type "brew install {{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}"
 
 Sleep 500ms
 
@@ -24,7 +25,7 @@ Wait
 
 Sleep 500ms
 
-Type "projectforge version"
+Type "{{{ .Exec }}} version"
 
 Sleep 500ms
 
@@ -32,10 +33,10 @@ Enter
 
 Sleep 1s
 
-Type "Project Forge"
+Type "{{{ .Name }}}"
 
 Sleep 1s
 
-Type " - Build and maintain feature-rich applications using Golang"
+Type " - {{{ .Info.Summary }}}"
 
 Sleep 3s

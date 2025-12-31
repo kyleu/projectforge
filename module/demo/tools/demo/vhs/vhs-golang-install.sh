@@ -19,16 +19,16 @@ for arg in "$@"; do
   fi
 done
 if "$prompt"; then
-  echo "We're about to remove the golang-installed [projectforge] binary, so [vhs] can reinstall it. Press enter to continue..."
+  echo "We're about to remove the golang-installed [{{{ .Exec }}}] binary, so [vhs] can reinstall it. Press enter to continue..."
   read -r
 fi
 
 go_remove() {
-  rm -f "${GOPATH}/bin/projectforge"
+  rm -f "${GOPATH}/bin/{{{ .Exec }}}"
 }
 echo "Prepping Golang installation..."
 go_remove
-go install projectforge.dev/projectforge@latest
+go install {{{ .Package }}}@latest
 go_remove
 
 echo "Recording Golang installation..."
