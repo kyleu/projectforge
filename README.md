@@ -17,6 +17,32 @@ https://projectforge.dev/download
 https://github.com/kyleu/projectforge
 
 
+## Installation
+
+### Golang
+
+```sh
+go install projectforge.dev/projectforge@latest
+```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="tools/demo/assets/golang-install.gif">
+  <img src="tools/demo/assets/golang-install.light.gif" alt="Logo">
+</picture>
+
+
+### Homebrew
+
+```sh
+brew install kyleu/kyleu/projectforge
+```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="tools/demo/assets/homebrew-install.gif">
+  <img src="tools/demo/assets/homebrew-install.light.gif" alt="Logo">
+</picture>
+
+
 ## Why it is worth using
 
 - Lifecycle-aware generation, not a one-time scaffold; updates improve your codebase on your schedule
