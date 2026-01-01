@@ -13,6 +13,7 @@ import (
 
 	"projectforge.dev/projectforge/app/doctor"
 	"projectforge.dev/projectforge/app/doctor/checks"
+	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -21,7 +22,7 @@ func clilog(s string) {
 	print(s) //nolint:forbidigo
 }
 
-func cliProject(ctx context.Context, p *project.Project, modKeys []string, logger util.Logger) error {
+func cliProject(ctx context.Context, p *project.Project, mods module.Modules, logger util.Logger) error {
 	clilog(util.AppName + "\nLet's create a new project!\n\n")
 
 	clilog("Checking a few things...\n")
@@ -62,12 +63,15 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 	}
 	p.Info.Summary = promptString("Enter a one-line description of this project", p.Info.Summary)
 
-	p.Info.AuthorName = promptString("Enter the name of this project's owner", p.Info.AuthorName)
+	authName := util.Choose(p.Info.AuthorName == "", p.Info.Org, p.Info.AuthorName)
+	p.Info.AuthorName = promptString("Enter the name of this project's owner", authName)
+
 	if p.Info.AuthorEmail == "" {
 		p.Info.AuthorEmail = fmt.Sprintf("dev@%s.com", p.Key)
 	}
 	p.Info.AuthorEmail = promptString("Enter the email address of this project's owner", p.Info.AuthorEmail)
-	p.Info.AuthorID = promptString("Enter the GitHub username(s) of this project's owner", p.Info.AuthorID)
+
+	p.Info.AuthorID = promptString("Enter the GitHub username(s) of this project's owner", util.Choose(p.Info.AuthorID == "", p.Info.Org, p.Info.AuthorID))
 	p.Info.Team = promptString("Enter the team that owns this project", p.Info.Team)
 
 	if p.Port == 0 {
@@ -76,13 +80,7 @@ func cliProject(ctx context.Context, p *project.Project, modKeys []string, logge
 	prt, _ := strconv.ParseInt(promptString("Enter the default port your http server will run on", fmt.Sprint(p.Port)), 10, 32)
 	p.Port = int(prt)
 
-	const msg = "Enter the modules your project will use as a comma-separated list (or \"all\") from choices"
-	modPromptString := fmt.Sprintf("%s:\n  %s", msg, util.StringJoin(modKeys, ", "))
-	mods := promptString(modPromptString, util.StringJoin(p.Modules, ", "))
-	p.Modules = util.StringSplitAndTrim(mods, ",")
-	if len(p.Modules) == 1 && p.Modules[0] == "all" {
-		p.Modules = modKeys
-	}
+	p.Modules = promptModules(p.Modules, mods)
 
 	if p.Info.License == "" {
 		p.Info.License = "Proprietary"

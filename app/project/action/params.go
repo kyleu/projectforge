@@ -2,7 +2,6 @@ package action
 
 import (
 	"projectforge.dev/projectforge/app/lib/exec"
-	"projectforge.dev/projectforge/app/lib/filesystem"
 	"projectforge.dev/projectforge/app/lib/websocket"
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
@@ -14,7 +13,6 @@ type Params struct {
 	ProjectKey string
 	T          Type
 	Cfg        util.ValueMap
-	RootFiles  filesystem.FileLoader
 	MSvc       *module.Service
 	PSvc       *project.Service
 	XSvc       *exec.Service

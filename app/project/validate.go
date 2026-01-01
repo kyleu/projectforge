@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/util"
 )
 
 const DebugOutputDir = "build/debug/"
@@ -19,8 +20,21 @@ type ValidationError struct {
 	Message string `json:"message"`
 }
 
-func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]string, dangerous []string) []*ValidationError {
-	var ret []*ValidationError
+func (v *ValidationError) String() string {
+	if v.Message == "" {
+		return v.Code
+	}
+	return v.Code + ": " + v.Message
+}
+
+type ValidationErrors []*ValidationError
+
+func (v ValidationErrors) Error() string {
+	return util.StringJoin(util.StringArrayFromAny(util.ArrayToAnyArray(v), 0), ", ")
+}
+
+func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]string, dangerous []string) ValidationErrors {
+	var ret ValidationErrors
 
 	e := func(code string, msg string, args ...any) {
 		if len(args) > 0 {
@@ -30,7 +44,9 @@ func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]stri
 	}
 
 	validateBasic(p, e)
-	validateFilesystem(p, e, fs)
+	if fs != nil {
+		validateFilesystem(p, e, fs)
+	}
 	validateModuleDeps(p.Modules, moduleDeps, e)
 	validateModuleConfig(p, e, dangerous)
 	validateInfo(p, e)

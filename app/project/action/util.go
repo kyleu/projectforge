@@ -42,6 +42,13 @@ func projectFromCfg(proto *project.Project, cfg util.ValueMap) *project.Project 
 		proto.Package = fmt.Sprintf("github.com/%s/%s", proto.Key, proto.Key)
 	}
 
+	if proto.Info == nil {
+		proto.Info = &project.Info{}
+	}
+	if proto.Build == nil {
+		proto.Build = &project.Build{}
+	}
+
 	port := integer("port", proto.Port)
 	if port == 0 {
 		port = 10000

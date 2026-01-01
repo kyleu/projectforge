@@ -20,13 +20,17 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	prj = projectFromCfg(prj, params.Cfg)
 	ret := newResult(TypeCreate, prj, params.Cfg, params.Logger)
 	if params.CLI {
-		err := cliProject(ctx, prj, params.MSvc.Keys(), params.Logger)
+		err := cliProject(ctx, prj, params.MSvc.Modules(), params.Logger)
 		if err != nil {
 			return ret.WithError(err)
 		}
 	}
 
 	params.ProjectKey = prj.Key
+
+	if errs := project.Validate(prj, nil, nil, nil); len(errs) > 0 {
+		return ret.WithError(errors.New(errs.Error()))
+	}
 
 	params.Logger.Info("Saving project...")
 	err := params.PSvc.Save(prj, params.Logger)

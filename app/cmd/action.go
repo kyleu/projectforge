@@ -49,13 +49,12 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 }
 
 func actionCommands(ctx context.Context) []*coral.Command {
-	ret := lo.FilterMap(action.AllTypes, func(a action.Type, _ int) (*coral.Command, bool) {
+	return lo.FilterMap(action.AllTypes, func(a action.Type, _ int) (*coral.Command, bool) {
 		if a.Hidden {
 			return nil, false
 		}
 		return actionCmd(ctx, a), true
 	})
-	return ret
 }
 
 func logResult(t action.Type, r *action.Result, logger util.Logger) {

@@ -6,7 +6,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", ".html.go$", ".sql.go$"}
+var defaultIgnore = []string{".DS_Store$", "^.git/", "^.idea/", "^build/", "^client/node_modules", "^tmp/", ".html.go$", ".sql.go$"}
 
 func buildIgnore(ign []string) []string {
 	if len(ign) == 1 && ign[0] == "-" {
