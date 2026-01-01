@@ -1,5 +1,5 @@
 /* eslint-disable max-lines, max-lines-per-function */
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { Numeric } from "./numeric";
 import { ScientificNotation } from "./formatter/scientific";
 import { EngineeringNotation } from "./formatter/engineering";

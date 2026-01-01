@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
 
 const tsFiles = ["**/*.ts", "**/*.tsx"];
-const ignores = ["build.js", "eslint.config.js", "jest.config.js"];
+const ignores = ["build.js", "eslint.config.js", "vitest.config.ts"];
 
 export default tseslint.config(
   { ignores },
