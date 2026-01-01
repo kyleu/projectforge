@@ -60,6 +60,20 @@ func (m *Module) DocPath() string {
 
 type Modules []*Module
 
+func (m Modules) Sorted() Modules {
+	ret := util.ArrayCopy(m)
+	slices.SortFunc(ret, func(l *Module, r *Module) int {
+		if l.Key == "core" {
+			return -1
+		}
+		if r.Key == "core" {
+			return 1
+		}
+		return cmp.Compare(l.Key, r.Key)
+	})
+	return ret
+}
+
 func (m Modules) Get(key string) *Module {
 	return lo.FindOrElse(m, nil, func(item *Module) bool {
 		return item.Key == key
