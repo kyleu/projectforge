@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Runs the VHS scripts (https://github.com/charmbracelet/vhs)
+## Runs the Homebrew installation VHS script (https://github.com/charmbracelet/vhs)
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
