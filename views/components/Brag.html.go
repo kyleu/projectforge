@@ -23,8 +23,8 @@ func StreamBragApp(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
     <p>
       <a href="https://projectforge.dev">Project Forge</a> is a powerful application generator and project manager for building modern web applications in Go.
-      It empowers developers to rapidly create, customize, and scale applications through a modular architecture that puts you in complete control.
-      Choose from dozens of optional modules—from database integrations and OAuth providers to advanced features like GraphQL APIs, WebSocket support, and desktop app builds.
+      It helps developers rapidly create, customize, and scale applications through an architecture that puts you in complete control.
+      Choose from dozens of optional modules — from database integrations and OAuth providers to advanced features like GraphQL APIs, WebSocket support, and desktop app builds.
     </p>
 
     <p>
