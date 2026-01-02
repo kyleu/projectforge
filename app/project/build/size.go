@@ -18,14 +18,14 @@ func Size(ctx context.Context, fs filesystem.FileLoader, path string, logger uti
 
 	if path == "" {
 		cmd := "go build -o ./tmp/size_test"
-		_, err := ex.Cmd(ctx, "project build", cmd, fs.Root(), logger)
+		_, err := ex.Cmd(ctx, "project build", cmd, fs.Root(), false, logger)
 		if err != nil {
 			return nil, ex.Logs, errors.Wrapf(err, "unable to run [%s]", cmd)
 		}
 		path = "./tmp/size_test"
 	}
 	cmd := "go tool nm -size " + path
-	out, err := ex.Cmd(ctx, "project size", cmd, fs.Root(), logger)
+	out, err := ex.Cmd(ctx, "project size", cmd, fs.Root(), false, logger)
 	if err != nil {
 		return nil, ex.Logs, errors.Wrapf(err, "unable to run [%s]", cmd)
 	}

@@ -2,8 +2,8 @@
 #
 # https://github.com/charmbracelet/vhs
 
-Output ../../assets/project-create.light.gif
-# Output ../../assets/project-create.light.mp4
+# Output ../../assets/project-create.light.gif
+Output ../../assets/project-create.light.mp4
 # Output ../../assets/project-create.light.webm
 # Output ../../assets/project-create.light/frames/
 

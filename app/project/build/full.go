@@ -23,10 +23,13 @@ func (e *ExecHelper) AddLog(msg string, args ...any) {
 }
 
 func (e *ExecHelper) AddLogOutput(key string, out string) {
+	if len(out) == 0 {
+		return
+	}
 	e.AddLog("%s output: %s", key, out)
 }
 
-func (e *ExecHelper) Cmd(ctx context.Context, key string, cmd string, pth string, logger util.Logger) (string, error) {
+func (e *ExecHelper) Cmd(ctx context.Context, key string, cmd string, pth string, silent bool, logger util.Logger) (string, error) {
 	if key == "" {
 		key = cmd
 	}
@@ -34,7 +37,9 @@ func (e *ExecHelper) Cmd(ctx context.Context, key string, cmd string, pth string
 	if err != nil {
 		return "", err
 	}
-	e.AddLogOutput(key, out)
+	if !silent {
+		e.AddLogOutput(key, out)
+	}
 	if exitCode != 0 {
 		return out, errors.Errorf(key+" failed with exit code [%d]", exitCode)
 	}
@@ -44,23 +49,23 @@ func (e *ExecHelper) Cmd(ctx context.Context, key string, cmd string, pth string
 func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]string, error) {
 	ex := &ExecHelper{}
 	ex.AddLog("building project [%s] in [%s]", prj.Key, prj.Path)
-	_, err := ex.Cmd(ctx, templatesNS+ScriptExtension, util.StringFilePath("bin", templatesNS+ScriptExtension), prj.Path, logger)
+	_, err := ex.Cmd(ctx, templatesNS+ScriptExtension, util.StringFilePath("bin", templatesNS+ScriptExtension), prj.Path, false, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "gmt", "go mod tidy", prj.Path, logger)
+	_, err = ex.Cmd(ctx, "gmt", "go mod tidy", prj.Path, false, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "node install", "npm install", util.StringFilePath(prj.Path, "client"), logger)
+	_, err = ex.Cmd(ctx, "node install", "npm install", util.StringFilePath(prj.Path, "client"), true, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "client build", util.StringFilePath("bin", "build", "client."+ScriptExtension), prj.Path, logger)
+	_, err = ex.Cmd(ctx, "client build", util.StringFilePath("bin", "build", "client."+ScriptExtension), prj.Path, false, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
-	_, err = ex.Cmd(ctx, "templates", util.StringFilePath("bin", "templates."+ScriptExtension), prj.Path, logger)
+	_, err = ex.Cmd(ctx, "templates", util.StringFilePath("bin", "templates."+ScriptExtension), prj.Path, false, logger)
 	if err != nil {
 		return ex.Logs, err
 	}
@@ -68,7 +73,7 @@ func Full(ctx context.Context, prj *project.Project, logger util.Logger) ([]stri
 	if runtime.GOOS == OSWindows {
 		makeCmd = fmt.Sprintf(`go build -ldflags "-s -w" -trimpath -o build/release/%s.exe`, prj.Executable())
 	}
-	_, err = ex.Cmd(ctx, "project build", makeCmd, prj.Path, logger)
+	_, err = ex.Cmd(ctx, "project build", makeCmd, prj.Path, false, logger)
 	if err != nil {
 		return ex.Logs, err
 	}

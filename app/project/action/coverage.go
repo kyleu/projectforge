@@ -25,7 +25,7 @@ func runCoverage(ctx context.Context, fs filesystem.FileLoader, scope string, lo
 	}
 
 	testCmd := "go test -race -coverprofile ./tmp/coverage.out " + scope
-	testOut, err := ex.Cmd(ctx, "coverage-test", testCmd, fs.Root(), logger)
+	testOut, err := ex.Cmd(ctx, "coverage-test", testCmd, fs.Root(), false, logger)
 	if err != nil {
 		return nil, ex.Logs, errors.Wrapf(err, "unable to run [%s] for test coverage", testCmd)
 	}
@@ -45,7 +45,7 @@ func runCoverage(ctx context.Context, fs filesystem.FileLoader, scope string, lo
 	ret := &Coverage{Packages: testMap}
 
 	treemapCmd := "go-cover-treemap -padding 0 -coverprofile ./tmp/coverage.out > ./tmp/coverage.svg"
-	if _, err := ex.Cmd(ctx, "coverage-run", treemapCmd, fs.Root(), logger); err != nil {
+	if _, err := ex.Cmd(ctx, "coverage-run", treemapCmd, fs.Root(), false, logger); err != nil {
 		return nil, ex.Logs, errors.Wrapf(err, "unable to run [%s] for treemap generation", testCmd)
 	}
 
