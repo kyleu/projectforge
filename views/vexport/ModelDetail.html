@@ -141,6 +141,7 @@
       <thead>
         <tr>
           <th class="shrink">Name</th>
+          <th>PK</th>
           <th>Type</th>
           <th>Format</th>
           <th>Example</th>
@@ -156,6 +157,7 @@
         {%- for _, col := range model.Columns -%}
         <tr>
           <td>{%s col.Name %}</td>
+          <td>{%= view.BoolIcon(col.PK, 15, "icon", ps) %}</td>
           <td>{%s col.Type.String() %}</td>
           <td>{%s col.Format %}</td>
           <td>{%s col.Example %}</td>

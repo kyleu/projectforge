@@ -143,7 +143,7 @@ func parseRef(prop *jsonschema.Schema, required bool) *types.Wrapped {
 		}
 		p := util.NewPkgSplit(ref.String(), "/")
 		n := p.Last()
-		if hasRef {
+		if hasRef && !required {
 			n = "*" + n
 		}
 		return types.NewReferenceArgs(p.Shift(), n)

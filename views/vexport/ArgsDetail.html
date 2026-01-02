@@ -12,149 +12,149 @@
   {%- code ea = &metamodel.Args{} %}
   {%- endif -%}
   <ul class="accordion">
-    <li>
-      <input id="accordion-{%s key %}-config" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-config">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("file", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(argsLogs), "Logs") %}
-      </label>
-      <div class="bd"><div><div>
-        {%= components.Terminal("argsLogs", argsLogs...) %}
-      </div></div></div>
-    </li>
-    {%- if ea.Config != nil && !ea.Config.Empty() -%}
-    <li>
-      <input id="accordion-{%s key %}-config" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-config">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("print", 16, 16, "icon", ps) %}
-        Export Configuration
-      </label>
-      <div class="bd"><div><div>
-        {%= view.Map(true, ea.Config, ps) %}
-      </div></div></div>
-    </li>
-    {%- endif -%}
-    {%- if len(ea.Groups) > 0 -%}
-    <li>
-      <input id="accordion-{%s key %}-groups" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-groups">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("users", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(ea.Groups), "Group") %}
-      </label>
-      <div class="bd"><div><div>
-        {%= GroupList(ea.Groups, 4) %}
-      </div></div></div>
-    </li>
-    {%- endif -%}
-    {%- if len(ea.Enums) > 0 -%}
-    <li>
-      <input id="accordion-{%s key %}-enums" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-enums">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("hammer", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(ea.Enums), "Enum") %}
-      </label>
-      <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, enum := range ea.Enums -%}
-        <li>
-          <input id="accordion-{%s key %}-enum-{%s enum.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-enum-{%s enum.Name %}">
-            {%= components.ExpandCollapse(3, ps) %} {%s enum.Name %}
-          </label>
-          <div class="bd"><div><div>
-            {%= enumDetail(as, "", enum, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
-      </div></div></div>
-    </li>
-    {%- endif -%}
-    {%- if len(ea.Events) > 0 -%}
-    <li>
-      <input id="accordion-{%s key %}-events" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-events">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("list", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(ea.Events), "Event") %}
-      </label>
-      <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, event := range ea.Events -%}
-        <li>
-          <input id="accordion-{%s key %}-event-{%s event.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-event-{%s event.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s event.Name %}</label>
-          <div class="bd"><div><div>
-            {%= eventDetail(as, "", event, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
-      </div></div></div>
-    </li>
-    {%- endif -%}
-    {%- if len(ea.Models) > 0 -%}
-    <li>
-      <input id="accordion-{%s key %}-models" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-models">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("list", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(ea.Models), "Model") %}
-      </label>
-      <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, model := range ea.Models -%}
-        <li>
-          {%- code id := util.RandomID() %}
-          <input id="accordion-{%s key %}-model-{%s model.Name %}-{%s id %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-model-{%s model.Name %}-{%s id %}">{%= components.ExpandCollapse(3, ps) %} {%s model.Name %}</label>
-          <div class="bd"><div><div>
-            {%= modelDetail(as, "", model, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
-      </div></div></div>
-    </li>
-    {%- endif -%}
-    {%- if len(ea.ExtraTypes) > 0 -%}
-    <li>
-      <input id="accordion-{%s key %}-extra" type="checkbox" hidden />
-      <label for="accordion-{%s key %}-extra">
-        {%= components.ExpandCollapse(3, ps) %}
-        {%= components.SVGRef("list", 16, 16, "icon", ps) %}
-        {%s util.StringPlural(len(ea.ExtraTypes), "Extra Type") %}
-      </label>
-      <div class="bd"><div><div>
-        <ul class="accordion">
-        {%- for _, extra := range ea.ExtraTypes -%}
-        <li>
-          <input id="accordion-{%s key %}-extra-{%s extra.Name %}" type="checkbox" hidden />
-          <label for="accordion-{%s key %}-extra-{%s extra.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s extra.Name %}</label>
-          <div class="bd"><div><div>
-            {%= modelDetail(as, "", extra, nil, ps) %}
-          </div></div></div>
-        </li>
-        {%- endfor -%}
-        </ul>
-      </div></div></div>
-    </li>
-    {%- endif -%}
+    {%= renderLogs(as, key, argsLogs, ps) %}
+    {%- if ea.Config != nil && !ea.Config.Empty() -%}{%= renderConfig(as, key, ea, ps) %}{%- endif -%}
+    {%- if len(ea.Groups) > 0 -%}{%= renderGroups(as, key, ea, ps) %}{%- endif -%}
+    {%- if len(ea.Enums) > 0 -%}{%= renderEnums(as, key, ea, ps) %}{%- endif -%}
+    {%- if len(ea.Events) > 0 -%}{%= renderEvents(as, key, ea, ps) %}{%- endif -%}
+    {%- if len(ea.Models) > 0 -%}{%= renderModels(as, key, ea, ps) %}{%- endif -%}
+    {%- if len(ea.ExtraTypes) > 0 -%}{%= renderExtraTypes(as, key, ea, ps) %}{%- endif -%}
     {%- if ea.Empty() -%}{%= emptyArgs(key, ps) %}{%- endif -%}
   </ul>
+{%- endfunc -%}
+
+{% func renderLogs(as *app.State, key string, argsLogs []string, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-config" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-config">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("file", 16, 16, "icon", ps) %} {%s util.StringPlural(len(argsLogs), "Logs") %}
+    </label>
+    <div class="bd"><div><div>
+      {%= components.Terminal("argsLogs", argsLogs...) %}
+    </div></div></div>
+  </li>
+{%- endfunc -%}
+
+{% func renderConfig(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-config" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-config">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("print", 16, 16, "icon", ps) %} Export Configuration
+    </label>
+    <div class="bd"><div><div>
+      {%= view.Map(true, ea.Config, ps) %}
+    </div></div></div>
+  </li>
+{%- endfunc -%}
+
+{% func renderGroups(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-groups" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-groups">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("users", 16, 16, "icon", ps) %} {%s util.StringPlural(len(ea.Groups), "Group") %}
+    </label>
+    <div class="bd"><div><div>
+      {%= GroupList(ea.Groups, 4) %}
+    </div></div></div>
+  </li>
+{%- endfunc -%}
+
+{% func renderEnums(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-enums" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-enums">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("hammer", 16, 16, "icon", ps) %} {%s util.StringPlural(len(ea.Enums), "Enum") %}
+    </label>
+    <div class="bd"><div><div>
+      <ul class="accordion">
+      {%- for _, enum := range ea.Enums -%}
+      <li>
+        <input id="accordion-{%s key %}-enum-{%s enum.Name %}" type="checkbox" hidden />
+        <label for="accordion-{%s key %}-enum-{%s enum.Name %}">
+          {%= components.ExpandCollapse(3, ps) %} {%s enum.Name %}
+        </label>
+        <div class="bd"><div><div>
+          {%= enumDetail(as, "", enum, nil, ps) %}
+        </div></div></div>
+      </li>
+      {%- endfor -%}
+      </ul>
+    </div></div></div>
+  </li>
+{%- endfunc -%}
+
+{% func renderEvents(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-events" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-events">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("list", 16, 16, "icon", ps) %} {%s util.StringPlural(len(ea.Events), "Event") %}
+    </label>
+    <div class="bd"><div><div>
+      <ul class="accordion">
+      {%- for _, event := range ea.Events -%}
+      <li>
+        <input id="accordion-{%s key %}-event-{%s event.Name %}" type="checkbox" hidden />
+        <label for="accordion-{%s key %}-event-{%s event.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s event.Name %}</label>
+        <div class="bd"><div><div>
+          {%= eventDetail(as, "", event, nil, ps) %}
+        </div></div></div>
+      </li>
+      {%- endfor -%}
+      </ul>
+    </div></div></div>
+  </li>
+{%- endfunc -%}
+
+{% func renderModels(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-models" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-models">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("list", 16, 16, "icon", ps) %} {%s util.StringPlural(len(ea.Models), "Model") %}
+    </label>
+    <div class="bd"><div><div>
+      <ul class="accordion">
+      {%- for _, model := range ea.Models -%}
+      <li>
+        {%- code id := util.RandomID() %}
+        <input id="accordion-{%s key %}-model-{%s model.Name %}-{%s id %}" type="checkbox" hidden />
+        <label for="accordion-{%s key %}-model-{%s model.Name %}-{%s id %}">{%= components.ExpandCollapse(3, ps) %} {%s model.Name %}</label>
+        <div class="bd"><div><div>
+          {%= modelDetail(as, "", model, nil, ps) %}
+        </div></div></div>
+      </li>
+      {%- endfor -%}
+      </ul>
+    </div></div></div>
+  </li>
+{%- endfunc -%}
+
+{% func renderExtraTypes(as *app.State, key string, ea *metamodel.Args, ps *cutil.PageState) %}
+  <li>
+    <input id="accordion-{%s key %}-extra" type="checkbox" hidden />
+    <label for="accordion-{%s key %}-extra">
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("list", 16, 16, "icon", ps) %} {%s util.StringPlural(len(ea.ExtraTypes), "Extra Type") %}
+    </label>
+    <div class="bd"><div><div>
+      <ul class="accordion">
+      {%- for _, extra := range ea.ExtraTypes -%}
+      <li>
+        <input id="accordion-{%s key %}-extra-{%s extra.Name %}" type="checkbox" hidden />
+        <label for="accordion-{%s key %}-extra-{%s extra.Name %}">{%= components.ExpandCollapse(3, ps) %} {%s extra.Name %}</label>
+        <div class="bd"><div><div>
+          {%= modelDetail(as, "", extra, nil, ps) %}
+        </div></div></div>
+      </li>
+      {%- endfor -%}
+      </ul>
+    </div></div></div>
+  </li>
 {%- endfunc -%}
 
 {% func emptyArgs(key string, ps *cutil.PageState) %}
   <li>
     <input id="accordion-{%s key %}-empty" type="checkbox" hidden />
     <label for="accordion-{%s key %}-empty">
-      {%= components.ExpandCollapse(3, ps) %}
-      {%= components.SVGRef("error", 16, 16, "icon", ps) %}
-      No Exported Data
+      {%= components.ExpandCollapse(3, ps) %} {%= components.SVGRef("error", 16, 16, "icon", ps) %} No Exported Data
     </label>
     <div class="bd"><div><div>
       <em>No exportable data found for these arguments</em>

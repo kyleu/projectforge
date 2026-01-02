@@ -72,103 +72,103 @@ func StreamRenderResult(qw422016 *qt422016.Writer,
 //line views/vjsonschema/Result.html:24
 	qw422016.E().S(id)
 //line views/vjsonschema/Result.html:24
-	qw422016.N().S(`-results" type="checkbox" hidden />
-      <label for="accordion-`)
-//line views/vjsonschema/Result.html:25
-	qw422016.E().S(id)
-//line views/vjsonschema/Result.html:25
-	qw422016.N().S(`-results">`)
-//line views/vjsonschema/Result.html:25
-	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vjsonschema/Result.html:25
-	qw422016.N().S(` Results</label>
-      <div class="bd"><div><div>
-        <div class="flex">
-          <div class="flex-item">
-            <strong>Old</strong>
-            <div class="mt">`)
-//line views/vjsonschema/Result.html:30
-	components.StreamJSON(qw422016, oldResult)
-//line views/vjsonschema/Result.html:30
-	qw422016.N().S(`</div>
-          </div>
-          <div class="flex-item">
-            <strong>New</strong>
-            <div class="mt">`)
-//line views/vjsonschema/Result.html:34
-	components.StreamJSON(qw422016, newResult)
-//line views/vjsonschema/Result.html:34
-	qw422016.N().S(`</div>
-          </div>
-        </div>
-      </div></div></div>
-    </li>
-    <li>
-      <input id="accordion-`)
-//line views/vjsonschema/Result.html:40
-	qw422016.E().S(id)
-//line views/vjsonschema/Result.html:40
-	qw422016.N().S(`-diffs" type="checkbox" hidden />
-      <label for="accordion-`)
-//line views/vjsonschema/Result.html:41
-	qw422016.E().S(id)
-//line views/vjsonschema/Result.html:41
-	qw422016.N().S(`-diffs">`)
-//line views/vjsonschema/Result.html:41
-	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vjsonschema/Result.html:41
-	qw422016.N().S(` Diffs</label>
-      <div class="bd"><div><div>
-        <div class="flex">
-          <div class="flex-item">
-            <strong>Old</strong>
-            <div class="mt">`)
-//line views/vjsonschema/Result.html:46
-	view.StreamDiffs(qw422016, oldDiffs.Sorted())
-//line views/vjsonschema/Result.html:46
-	qw422016.N().S(`</div>
-          </div>
-          <div class="flex-item">
-            <strong>New</strong>
-            <div class="mt">`)
-//line views/vjsonschema/Result.html:50
-	view.StreamDiffs(qw422016, newDiffs.Sorted())
-//line views/vjsonschema/Result.html:50
-	qw422016.N().S(`</div>
-          </div>
-        </div>
-      </div></div></div>
-    </li>
-    <li>
-      <input id="accordion-`)
-//line views/vjsonschema/Result.html:56
-	qw422016.E().S(id)
-//line views/vjsonschema/Result.html:56
 	qw422016.N().S(`-schema" type="checkbox" hidden />
       <label for="accordion-`)
-//line views/vjsonschema/Result.html:57
+//line views/vjsonschema/Result.html:25
 	qw422016.E().S(id)
-//line views/vjsonschema/Result.html:57
+//line views/vjsonschema/Result.html:25
 	qw422016.N().S(`-schema">`)
-//line views/vjsonschema/Result.html:57
+//line views/vjsonschema/Result.html:25
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vjsonschema/Result.html:57
+//line views/vjsonschema/Result.html:25
 	qw422016.N().S(` Schema</label>
       <div class="bd"><div><div>
         <div class="flex">
           <div class="flex-item">
             <strong>Content</strong>
             <div class="mt">`)
-//line views/vjsonschema/Result.html:62
+//line views/vjsonschema/Result.html:30
 	components.StreamJSON(qw422016, sch)
-//line views/vjsonschema/Result.html:62
+//line views/vjsonschema/Result.html:30
 	qw422016.N().S(`</div>
           </div>
           <div class="flex-item">
             <strong>Rendered</strong>
             <div class="mt">`)
-//line views/vjsonschema/Result.html:66
+//line views/vjsonschema/Result.html:34
 	view.StreamJSONSchema(qw422016, sch, ps)
+//line views/vjsonschema/Result.html:34
+	qw422016.N().S(`</div>
+          </div>
+        </div>
+      </div></div></div>
+    </li>
+    <li>
+      <input id="accordion-`)
+//line views/vjsonschema/Result.html:40
+	qw422016.E().S(id)
+//line views/vjsonschema/Result.html:40
+	qw422016.N().S(`-results" type="checkbox" hidden />
+      <label for="accordion-`)
+//line views/vjsonschema/Result.html:41
+	qw422016.E().S(id)
+//line views/vjsonschema/Result.html:41
+	qw422016.N().S(`-results">`)
+//line views/vjsonschema/Result.html:41
+	components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vjsonschema/Result.html:41
+	qw422016.N().S(` Results</label>
+      <div class="bd"><div><div>
+        <div class="flex">
+          <div class="flex-item">
+            <strong>Old</strong>
+            <div class="mt">`)
+//line views/vjsonschema/Result.html:46
+	components.StreamJSON(qw422016, oldResult)
+//line views/vjsonschema/Result.html:46
+	qw422016.N().S(`</div>
+          </div>
+          <div class="flex-item">
+            <strong>New</strong>
+            <div class="mt">`)
+//line views/vjsonschema/Result.html:50
+	components.StreamJSON(qw422016, newResult)
+//line views/vjsonschema/Result.html:50
+	qw422016.N().S(`</div>
+          </div>
+        </div>
+      </div></div></div>
+    </li>
+    <li>
+      <input id="accordion-`)
+//line views/vjsonschema/Result.html:56
+	qw422016.E().S(id)
+//line views/vjsonschema/Result.html:56
+	qw422016.N().S(`-diffs" type="checkbox" hidden />
+      <label for="accordion-`)
+//line views/vjsonschema/Result.html:57
+	qw422016.E().S(id)
+//line views/vjsonschema/Result.html:57
+	qw422016.N().S(`-diffs">`)
+//line views/vjsonschema/Result.html:57
+	components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vjsonschema/Result.html:57
+	qw422016.N().S(` Diffs</label>
+      <div class="bd"><div><div>
+        <div class="flex">
+          <div class="flex-item">
+            <strong>Old</strong>
+            <div class="mt">`)
+//line views/vjsonschema/Result.html:62
+	view.StreamDiffs(qw422016, oldDiffs.Sorted())
+//line views/vjsonschema/Result.html:62
+	qw422016.N().S(`</div>
+          </div>
+          <div class="flex-item">
+            <strong>New</strong>
+            <div class="mt">`)
+//line views/vjsonschema/Result.html:66
+	view.StreamDiffs(qw422016, newDiffs.Sorted())
 //line views/vjsonschema/Result.html:66
 	qw422016.N().S(`</div>
           </div>

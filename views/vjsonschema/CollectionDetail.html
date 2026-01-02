@@ -27,6 +27,12 @@
     </div>
     <h3>{%= components.SVGIcon(`table`, ps) %} {%s ps.Title %}</h3>
   </div>
+  {%= p.RenderEnums(as, ps) %}
+  {%= p.RenderModels(as, ps) %}
+  {%= p.RenderExtra(as, ps) %}
+{% endfunc %}
+
+{% func (p *CollectionDetail) RenderEnums(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`hammer`, ps) %} {%s util.StringPlural(len(p.Args.Enums), "Enum") %}</h3>
     <div class="mt">
@@ -55,6 +61,9 @@
       </ul>
     </div>
   </div>
+{% endfunc %}
+
+{% func (p *CollectionDetail) RenderModels(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGIcon(`list`, ps) %} {%s util.StringPlural(len(p.Args.Models), "Model") %}</h3>
     <div class="mt">
@@ -83,6 +92,9 @@
       </ul>
     </div>
   </div>
+{% endfunc %}
+
+{% func (p *CollectionDetail) RenderExtra(as *app.State, ps *cutil.PageState) %}
   {%- code ex := p.Unrelated -%}
   {%- if len(ex) > 0 -%}
   <div class="card">
@@ -95,7 +107,16 @@
           <label for="accordion-extra-{%s sch.ID() %}">{%= components.ExpandCollapse(3, ps) %} {%s sch.ID() %}</label>
           <div class="bd"><div><div>
             {%- code res := p.OldResults.Models.Get(sch.ID()) -%}
-            {%= RenderExtra(as, sch, res, ps) %}
+            <div class="flex">
+              <div class="flex-item">
+                <strong>Schema</strong>
+                <div class="mt">{%= components.JSON(sch) %}</div>
+              </div>
+              <div class="flex-item">
+                <strong>Result</strong>
+                <div class="mt">{%= components.JSON(res) %}</div>
+              </div>
+            </div>
           </div></div></div>
         </li>
         {%- endfor -%}
@@ -103,17 +124,4 @@
     </div>
   </div>
   {%- endif -%}
-{% endfunc %}
-
-{% func RenderExtra(as *app.State, sch *jsonschema.Schema, result any, ps *cutil.PageState) %}
-  <div class="flex">
-    <div class="flex-item">
-      <strong>Schema</strong>
-      <div class="mt">{%= components.JSON(sch) %}</div>
-    </div>
-    <div class="flex-item">
-      <strong>Result</strong>
-      <div class="mt">{%= components.JSON(result) %}</div>
-    </div>
-  </div>
 {% endfunc %}

@@ -21,6 +21,22 @@
       </div></div></div>
     </li>
     <li>
+      <input id="accordion-{%s id %}-schema" type="checkbox" hidden />
+      <label for="accordion-{%s id %}-schema">{%= components.ExpandCollapse(3, ps) %} Schema</label>
+      <div class="bd"><div><div>
+        <div class="flex">
+          <div class="flex-item">
+            <strong>Content</strong>
+            <div class="mt">{%= components.JSON(sch) %}</div>
+          </div>
+          <div class="flex-item">
+            <strong>Rendered</strong>
+            <div class="mt">{%= view.JSONSchema(sch, ps) %}</div>
+          </div>
+        </div>
+      </div></div></div>
+    </li>
+    <li>
       <input id="accordion-{%s id %}-results" type="checkbox" hidden />
       <label for="accordion-{%s id %}-results">{%= components.ExpandCollapse(3, ps) %} Results</label>
       <div class="bd"><div><div>
@@ -48,22 +64,6 @@
           <div class="flex-item">
             <strong>New</strong>
             <div class="mt">{%= view.Diffs(newDiffs.Sorted()) %}</div>
-          </div>
-        </div>
-      </div></div></div>
-    </li>
-    <li>
-      <input id="accordion-{%s id %}-schema" type="checkbox" hidden />
-      <label for="accordion-{%s id %}-schema">{%= components.ExpandCollapse(3, ps) %} Schema</label>
-      <div class="bd"><div><div>
-        <div class="flex">
-          <div class="flex-item">
-            <strong>Content</strong>
-            <div class="mt">{%= components.JSON(sch) %}</div>
-          </div>
-          <div class="flex-item">
-            <strong>Rendered</strong>
-            <div class="mt">{%= view.JSONSchema(sch, ps) %}</div>
           </div>
         </div>
       </div></div></div>
