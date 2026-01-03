@@ -18,6 +18,8 @@ type Doc struct {
 
 type Docs []*Doc
 
+var DocsExample = Docs{{Name: "Linux", Provider: "github", URL: "https://github.com/torvalds/linux"}}
+
 type ModuleDef struct {
 	Key  string `json:"key"`
 	Path string `json:"path"`

@@ -17,8 +17,11 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	if prj == nil {
 		prj = project.NewProject(params.ProjectKey, path)
 	}
-	prj = projectFromCfg(prj, params.Cfg)
 	ret := newResult(TypeCreate, prj, params.Cfg, params.Logger)
+	err := ProjectFromMap(prj, params.Cfg, true)
+	if err != nil {
+		return ret.WithError(err)
+	}
 	if params.CLI {
 		err := cliProject(ctx, prj, params.MSvc.Modules(), params.Logger)
 		if err != nil {
@@ -33,7 +36,7 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	}
 
 	params.Logger.Info("Saving project...")
-	err := params.PSvc.Save(prj, params.Logger)
+	err = params.PSvc.Save(prj, params.Logger)
 	if err != nil {
 		return ret.WithError(err)
 	}

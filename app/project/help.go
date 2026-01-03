@@ -1,6 +1,10 @@
 package project
 
-import "strings"
+import (
+	"strings"
+
+	"projectforge.dev/projectforge/app/util"
+)
 
 var Helpers = func() map[string][]string {
 	ret := map[string][]string{}
@@ -51,6 +55,8 @@ var Helpers = func() map[string][]string {
 	add("dockerPackages", "Additional packages to install for the Docker image")
 	add("docs", "Documentation resources for this project")
 	add("acronyms", "Custom acronyms, intended to be displayed capitalized")
+
+	add("docs_example", util.ToJSON(DocsExample))
 
 	return ret
 }()

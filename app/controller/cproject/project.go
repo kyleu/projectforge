@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller"
 	"projectforge.dev/projectforge/app/controller/cutil"
 	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/app/project/action"
 	"projectforge.dev/projectforge/views/vproject"
 )
 
@@ -44,7 +45,7 @@ func ProjectCreate(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		prj := project.NewProject("", "")
-		err = projectFromForm(frm, prj)
+		err = action.ProjectFromMap(prj, frm, true)
 		if err != nil {
 			return "", err
 		}
@@ -96,7 +97,7 @@ func ProjectSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		err = projectFromForm(frm, prj)
+		err = action.ProjectFromMap(prj, frm, false)
 		if err != nil {
 			return "", err
 		}
