@@ -26,7 +26,7 @@ Import the components package and use the provided template functions:
 {%= components.JSON(myObject) %}
 
 <!-- Display JSON in a modal dialog -->
-{%= components.JSONModal("config-modal", "Configuration", configObject, ps) %}
+{%= components.JSONModal("config", "Configuration", configObject, ps) %}
 ```
 
 ### 3. Go Code Integration

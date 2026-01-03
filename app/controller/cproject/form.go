@@ -29,7 +29,7 @@ func projectFromForm(frm util.ValueMap, prj *project.Project) error {
 	if prj.Port == 0 {
 		prj.Port = 10000
 	}
-	prj.Modules = getSplit("modules", prj.Modules, dblpipe).Strings()
+	prj.Modules = util.ArraySorted(getSplit("modules", prj.Modules, dblpipe).Strings())
 	if len(prj.Modules) == 0 {
 		prj.Modules = []string{"core"}
 	}

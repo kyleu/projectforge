@@ -6,8 +6,13 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/util"
 )
+
+var ExampleProject = &Project{Key: "example", Name: "Example Project", Modules: []string{"core"}, Info: &Info{
+	Description: "This is an example project to show how to use Project Forge.",
+}, Theme: theme.Default, Build: &Build{}}
 
 func (s *Service) add(path string, parent *Project) (*Project, error) {
 	if parent != nil && !strings.HasPrefix(path, "/") {

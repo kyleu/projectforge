@@ -41,7 +41,20 @@ type Project struct {
 
 func NewProject(key string, path string) *Project {
 	_, key = util.StringSplitPath(key)
-	return &Project{Key: key, Version: "0.0.0", Path: path, Modules: []string{"core"}, Theme: theme.Default}
+	return &Project{Key: key, Version: "0.0.0", Path: path, Modules: []string{"core"}, Info: &Info{}, Theme: theme.Default, Build: &Build{}}
+}
+
+func (p *Project) Sanitize() *Project {
+	if p.Info == nil {
+		p.Info = &Info{}
+	}
+	if p.Theme == nil {
+		p.Theme = theme.Default
+	}
+	if p.Build == nil {
+		p.Build = &Build{}
+	}
+	return p
 }
 
 func (p *Project) Title() string {
