@@ -3,6 +3,7 @@
   touch-action: none;
   display: flex;
   flex-wrap: wrap;
+  float: left;
 }
 
 .tag-editor .tags .item,
