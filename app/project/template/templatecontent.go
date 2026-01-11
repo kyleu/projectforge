@@ -36,6 +36,13 @@ func (t *Context) ConfigVarsContent() string {
 	return ret
 }
 
+func (t *Context) DockerPorts() string {
+	x := append([]int{t.Port}, util.ArraySorted(lo.Values(t.Info.AdditionalPorts))...)
+	return util.StringJoin(lo.Map(x, func(port int, _ int) string {
+		return fmt.Sprintf(" -p %d:%d", port, port)
+	}), "")
+}
+
 func (t *Context) SettingsPageCall() string {
 	args := []string{"BuildInfo: as.BuildInfo"}
 	if t.HasAccount() {

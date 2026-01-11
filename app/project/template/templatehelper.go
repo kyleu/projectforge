@@ -31,6 +31,10 @@ func (t *Context) NotebookPort() int {
 	return t.Port + 10
 }
 
+func (t *Context) AdditionalPortList() []int {
+	return util.ArraySorted(lo.Values(t.PortOffsets))
+}
+
 func (t *Context) KeyProper() string {
 	return strings.ToUpper(t.Key[:1]) + t.Key[1:]
 }

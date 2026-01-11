@@ -267,7 +267,7 @@ See [technology.md](doc/technology.md) for a complete list.
 
 - Air: Live reload for development
 - gofumpt: Opinionated Go formatting
-- golangci-lint-v2: Comprehensive Go linting
+- golangci-lint: Comprehensive Go linting
 - gotestsum: Enhanced test runner
 
 ## Common Patterns

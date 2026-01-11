@@ -13,8 +13,8 @@ Download the .deb, .rpm or .apk packages from the [release page]({{{ .Info.Sourc
 {{{ end }}}
 ## Running with Docker
 ```shell
-docker run -p {{{ .Port }}}:{{{ .Port }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest
-docker run -p {{{ .Port }}}:{{{ .Port }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug
+docker run{{{ .DockerPorts }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest
+docker run{{{ .DockerPorts }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug
 ```
 
 ## Built from source

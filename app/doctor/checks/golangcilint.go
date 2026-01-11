@@ -14,7 +14,7 @@ var Golangcilint = &doctor.Check{
 	Summary: "Check for style and linting errors",
 	URL:     "https://golangci-lint.run",
 	UsedBy:  "[bin/check.sh]",
-	Fn:      simpleOut(".", "golangci-lint-v2", nil, noop),
+	Fn:      simpleOut(".", "golangci-lint", nil, noop),
 	Solve:   solveGolangcilint,
 }
 

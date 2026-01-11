@@ -70,6 +70,9 @@ linters:
     dupl:
       threshold: 512
     exhaustive:
+      check:
+        - switch
+        - map
       default-signifies-exhaustive: true
     funlen:
       lines: 100
