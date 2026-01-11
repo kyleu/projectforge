@@ -43,6 +43,26 @@ brew install kyleu/kyleu/projectforge
 </picture>
 
 
+## 5-minute Quick Start
+
+1. Create a new directory and run the project wizard (accept defaults to start quickly):
+    ```sh
+    mkdir hello-forge
+    cd hello-forge
+    projectforge create
+    ```
+
+2. Start the dev server:
+    ```sh
+    ./bin/dev.sh
+    # or: make dev
+    ```
+
+3. Open http://localhost:20000 (or the port you picked).
+
+4. When you're ready to change features, edit `.projectforge/project.json` and run `projectforge generate`.
+
+
 ## Why it is worth using
 
 - Lifecycle-aware generation, not a one-time scaffold; updates improve your codebase on your schedule
