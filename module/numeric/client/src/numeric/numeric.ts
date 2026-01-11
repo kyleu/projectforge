@@ -238,7 +238,8 @@ export class Numeric {
   }
 
   public toInt(): number {
-    return 0; // TODO
+    const result = Math.trunc(this.toNumber());
+    return result === 0 ? 0 : result;
   }
 
   public add(v: NumericSource): Numeric {
