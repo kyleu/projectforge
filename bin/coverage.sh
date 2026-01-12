@@ -5,6 +5,7 @@
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/.."
+mkdir -p ./tmp
 
 do_clean=false
 
