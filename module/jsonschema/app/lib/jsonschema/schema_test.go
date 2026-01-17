@@ -16,7 +16,7 @@ func TestSchemaType(t *testing.T) {
 		json string
 	}{
 		{name: "empty", sch: &jsonschema.Schema{}, typ: "empty", json: "true"},
-		{name: "ref", sch: jsonschema.NewRefSchema("test"), typ: "ref", json: `{"$ref":"ref:test"}`},
+		{name: "ref", sch: jsonschema.NewRefSchema("test"), typ: "ref", json: `{"$ref":"test"}`},
 		{name: "true", sch: jsonschema.NewTrueSchema(), typ: "empty", json: "true"},
 		{name: "false", sch: jsonschema.NewFalseSchema(), typ: "not", json: "false"},
 		{name: "string", sch: jsonschema.NewSchema(jsonschema.SchemaTypeString), typ: "string", json: `{"type":"string"}`},
