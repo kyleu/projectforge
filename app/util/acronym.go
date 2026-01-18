@@ -2,21 +2,27 @@ package util
 
 import (
 	"strings"
+	"sync"
 	"unicode"
 
 	"github.com/samber/lo"
 )
 
 var (
+	acronymMu  sync.RWMutex
 	acronymMap = map[string]string{}
 	acronyms   []string
 )
 
 func ConfigureAcronym(key, val string) {
+	acronymMu.Lock()
+	defer acronymMu.Unlock()
 	acronymMap[key] = val
 }
 
 func InitAcronyms(extras ...string) error {
+	acronymMu.Lock()
+	defer acronymMu.Unlock()
 	x := make([]string, 0, 12+len(extras))
 	x = append(x, "Api", "Html", "Id", "Ip", "Json", "Md5", "Sha", "Sku", "Sql", "Xml", "Uri", "Url")
 	x = append(x, lo.Map(extras, func(s string, _ int) string {
@@ -29,7 +35,16 @@ func InitAcronyms(extras ...string) error {
 	return nil
 }
 
+func Acronym(s string) string {
+	acronymMu.Lock()
+	defer acronymMu.Unlock()
+	return acronymMap[s]
+}
+
 func acr(ret string, extraAcronyms ...string) string {
+	acronymMu.RLock()
+	activeAcronyms := append([]string(nil), acronyms...)
+	acronymMu.RUnlock()
 	proc := func(a string) {
 		var lastIdx int
 		for {
@@ -54,7 +69,7 @@ func acr(ret string, extraAcronyms ...string) string {
 			}
 		}
 	}
-	for _, a := range acronyms {
+	for _, a := range activeAcronyms {
 		proc(a)
 	}
 	for _, a := range extraAcronyms {

@@ -39,7 +39,7 @@ if [ -f "test.env" ]; then
 fi
 
 if [ -f "./bin/test-setup.sh" ]; then
-	./bin/test-setup.sh
+  ./bin/test-setup.sh
 fi
 
 gotestsum${test_args} -- -race ./app/...

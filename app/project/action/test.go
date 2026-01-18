@@ -11,7 +11,7 @@ import (
 )
 
 func onBuildTest(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
-	return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension), pm.Prj.Path, ret, pm.Logger)
+	return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension+" -c"), pm.Prj.Path, ret, pm.Logger)
 }
 
 func onTest(ctx context.Context, params *Params) *Result {
