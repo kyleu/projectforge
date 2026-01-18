@@ -21,7 +21,7 @@ var nativeModuleKeys = []string{
 	"marketing", "mcp", "migration", "metamodel", "metaschema", util.DatabaseMySQL, "notebook", "notarize", "numeric",
 	"oauth", "openapi", "playwright", "plot", util.DatabasePostgreSQL, "process", "proxy", "queue", "reactive", "readonlydb", "richedit",
 	"sandbox", "schedule", "scripting", "search", "settings", util.DatabaseSQLite, util.DatabaseSQLServer,
-	"task", "themecatalog", "types", "upgrade", "user", "wasmclient", "wasmserver", "websocket",
+	"task", "themecatalog", "types", "uidocs", "upgrade", "user", "wasmclient", "wasmserver", "websocket",
 }
 
 type Service struct {

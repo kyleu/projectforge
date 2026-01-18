@@ -31,6 +31,7 @@
     "task",
     "themecatalog",
     "types",
+    "uidocs",
     "upgrade",
     "wasmserver",
     "websocket"

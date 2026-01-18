@@ -1,0 +1,10 @@
+{
+  "name": "UI Docs",
+  "icon": "cog",
+  "description": "Markdown documentation for common UI components",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/uidocs",
+  "hidden": true
+}
