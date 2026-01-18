@@ -4,29 +4,27 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
 
-var acronymMap = map[string]string{}
+var (
+	acronymMap = map[string]string{}
+	acronyms   []string
+)
 
 func ConfigureAcronym(key, val string) {
 	acronymMap[key] = val
 }
 
-var acronyms []string
-
 func InitAcronyms(extras ...string) error {
-	if len(acronyms) > 0 {
-		return errors.New("double initialization of acronyms")
-	}
-	x := []string{"Api", "Html", "Id", "Ip", "Json", "Md5", "Sha", "Sku", "Sql", "Xml", "Uri", "Url"}
+	x := make([]string, 0, 12+len(extras))
+	x = append(x, "Api", "Html", "Id", "Ip", "Json", "Md5", "Sha", "Sku", "Sql", "Xml", "Uri", "Url")
 	x = append(x, lo.Map(extras, func(s string, _ int) string {
 		return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 	})...)
-	lo.ForEach(x, func(x string, _ int) {
-		ConfigureAcronym(strings.ToUpper(x), strings.ToLower(x))
-	})
+	for _, a := range x {
+		acronymMap[strings.ToUpper(a)] = strings.ToLower(a)
+	}
 	acronyms = x
 	return nil
 }
@@ -56,11 +54,11 @@ func acr(ret string, extraAcronyms ...string) string {
 			}
 		}
 	}
-	lo.ForEach(acronyms, func(a string, _ int) {
+	for _, a := range acronyms {
 		proc(a)
-	})
-	lo.ForEach(extraAcronyms, func(a string, _ int) {
+	}
+	for _, a := range extraAcronyms {
 		proc(a)
-	})
+	}
 	return ret
 }

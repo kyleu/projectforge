@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
@@ -11,19 +12,24 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var memFS, osFS afero.Fs
+var (
+	memFS     afero.Fs
+	osFS      afero.Fs
+	memFSOnce sync.Once
+	osFSOnce  sync.Once
+)
 
 func MemFS() afero.Fs {
-	if memFS == nil {
+	memFSOnce.Do(func() {
 		memFS = afero.NewMemMapFs()
-	}
+	})
 	return memFS
 }
 
 func OSFS() afero.Fs {
-	if osFS == nil {
+	osFSOnce.Do(func() {
 		osFS = afero.NewOsFs()
-	}
+	})
 	return osFS
 }
 

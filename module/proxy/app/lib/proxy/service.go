@@ -1,10 +1,12 @@
 package proxy
 
 import (
+	"compress/gzip"
 	"context"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"slices"
 	"strings"
 
@@ -35,7 +37,7 @@ func (s *Service) List() []string {
 }
 
 func (s *Service) Handle(ctx context.Context, svc string, w http.ResponseWriter, r *http.Request, pth string, logger util.Logger) error {
-	url, err := s.urlFor(svc, pth)
+	url, err := s.urlFor(svc, pth, r.URL.Query())
 	if err != nil {
 		return err
 	}
@@ -50,7 +52,23 @@ func (s *Service) Handle(ctx context.Context, svc string, w http.ResponseWriter,
 	if err != nil {
 		return err
 	}
-	rspBody, err := io.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+
+	// Check if response is compressed
+	var reader io.Reader = rsp.Body
+	contentEncoding := rsp.Header.Get("Content-Encoding")
+	if contentEncoding == "gzip" {
+		gzReader, err := gzip.NewReader(rsp.Body)
+		if err != nil {
+			return errors.Wrap(err, "failed to create gzip reader")
+		}
+		defer gzReader.Close()
+		reader = gzReader
+		// Remove Content-Encoding header since we're sending uncompressed data
+		rsp.Header.Del("Content-Encoding")
+	}
+
+	rspBody, err := io.ReadAll(reader)
 	if err != nil {
 		return err
 	}
@@ -72,7 +90,7 @@ func (s *Service) Handle(ctx context.Context, svc string, w http.ResponseWriter,
 	return nil
 }
 
-func (s *Service) urlFor(svc string, pth string) (string, error) {
+func (s *Service) urlFor(svc string, pth string, q url.Values) (string, error) {
 	u, ok := s.proxies[svc]
 	if !ok {
 		return "", errors.Errorf("service [%s] is not registered", svc)
@@ -82,6 +100,9 @@ func (s *Service) urlFor(svc string, pth string) (string, error) {
 		pth = "/" + pth
 	}
 	u += pth
+	if len(q) > 0 {
+		u += "?" + q.Encode()
+	}
 	return u, nil
 }
 
@@ -99,10 +120,8 @@ func replaceHeaders(src http.Header, dst http.Header, contentLength ...int) {
 		for _, v := range vv {
 			if cl >= 0 && k == "Content-Length" {
 				dst.Add(k, fmt.Sprintf("%d", cl))
-			} else {
-				if !slices.Contains(badHeaders, v) {
-					dst.Add(k, v)
-				}
+			} else if !slices.Contains(badHeaders, v) {
+				dst.Add(k, v)
 			}
 		}
 	}
