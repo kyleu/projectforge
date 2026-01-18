@@ -1,7 +1,7 @@
 {
   "name": "Types",
   "icon": "tags",
-  "description": "Classes for representing common data types",
+  "description": "Classes for representing common data types, along with helpers for converting and rendering them",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

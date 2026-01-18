@@ -22,7 +22,7 @@ This module adds **SQLite embedded database support** to your application and re
 
 ### Performance
 - In-process database access (no network overhead)
-- WAL mode for improved concurrency
+- `busy_timeout` set to 10 seconds to reduce lock errors
 - Connection pooling for multi-threaded access
 - Optimized for read-heavy workloads
 
@@ -44,24 +44,28 @@ This module adds **SQLite embedded database support** to your application and re
 
 The module reads configuration from environment variables (with optional prefix):
 
-- **`db_file`** - SQLite database file path (relative to project root)
-- **`db_schema`** - Default schema to use (optional)
+- **`db_file`** - SQLite database file path (defaults to `<config_dir>/<app_key>.sqlite`)
+- **`db_user`** - Optional auth username (requires `db_password`)
+- **`db_password`** - Optional auth password (requires `db_user`)
+- **`db_schema`** - Default schema to use (optional, defaults to `public`, SQLite typically uses `main`)
 - **`db_debug`** - Enable SQL statement logging (`true`/`false`)
+
+When using `SQLiteParamsFromEnv`, the default file path is derived from `<config_dir>/<app_key>` and `.sqlite` is appended if missing.
 
 ### File Path Examples
 
 ```bash
-# Relative to project root
-db_file=data/app.db
+# Default (if db_file is unset)
+# <config_dir>/<app_key>.sqlite
+
+# Relative path (resolved from the current working directory)
+db_file=data/app.sqlite
 
 # Absolute path
-db_file=/var/lib/myapp/database.db
+db_file=/var/lib/myapp/app.sqlite
 
 # Memory database (for testing)
 db_file=:memory:
-
-# Temporary database
-db_file=""  # Uses temporary file
 ```
 
 ## Usage
@@ -69,11 +73,11 @@ db_file=""  # Uses temporary file
 ### Basic Setup
 
 ```go
-// Load configuration from environment
-params := SQLiteParamsFromEnv("")
+logger := util.RootLogger
+ctx := context.Background()
 
-// Open database connection
-db, err := database.OpenSQLiteDatabase(params)
+// Open database connection using environment defaults
+db, err := database.OpenDefaultSQLite(ctx, logger)
 if err != nil {
     return err
 }
@@ -85,12 +89,12 @@ defer db.Close()
 ```go
 // Manual configuration
 params := &SQLiteParams{
-    File:   "data/myapp.db",
+    File:   "data/myapp.sqlite",
     Schema: "main",
     Debug:  false,
 }
 
-db, err := database.OpenSQLiteDatabase(params)
+db, err := database.OpenSQLiteDatabase(ctx, "myapp", params, logger)
 ```
 
 ### Memory Database (Testing)
@@ -102,7 +106,7 @@ params := &SQLiteParams{
     Debug: true,
 }
 
-db, err := database.OpenSQLiteDatabase(params)
+db, err := database.OpenSQLiteDatabase(ctx, "test", params, logger)
 ```
 
 ### With Environment Prefix
@@ -110,18 +114,21 @@ db, err := database.OpenSQLiteDatabase(params)
 ```go
 // Use custom environment variable prefix
 // Reads myapp_db_file, myapp_db_schema, etc.
-params := SQLiteParamsFromEnv("myapp_")
+params := SQLiteParamsFromEnv("myapp", "myapp_")
+db, err := database.OpenSQLiteDatabase(ctx, "myapp", params, logger)
 ```
 
 ## SQLite-Specific Features
 
-### WAL Mode
+### Connection Pragmas
 
-SQLite databases automatically use WAL mode for better concurrency:
+SQLite connections are opened with:
 
-- WAL mode is enabled automatically
-- Allows concurrent readers with single writer
-- Better performance for web applications
+- `foreign_keys=1`
+- `busy_timeout=10000` (10 seconds)
+- `trusted_schema=0`
+
+To enable WAL mode, run `pragma journal_mode = wal` once per database.
 
 ### JSON Support
 
@@ -129,13 +136,13 @@ Modern SQLite includes JSON1 extension:
 
 ```go
 // Insert JSON data
-_, err := db.Exec(`insert into users (data) values (?)`, `{"name": "John", "preferences": {"theme": "dark"}}`)
+_, err := db.Exec(ctx, `insert into users (data) values (?)`, nil, 1, logger, `{"name": "John", "preferences": {"theme": "dark"}}`)
 
 // Query with JSON functions
-rows, err := db.Query(`select json_extract(data, '$.name') from users`)
+rows, err := db.Query(ctx, `select json_extract(data, '$.name') from users`, nil, logger)
 
 // JSON array operations
-rows, err := db.Query(`select * from users where json_extract(data, '$.active') = 'true'`)
+rows, err := db.Query(ctx, `select * from users where json_extract(data, '$.active') = 'true'`, nil, logger)
 ```
 
 ### Full-Text Search
@@ -144,23 +151,23 @@ SQLite's FTS5 extension provides powerful text search:
 
 ```go
 // Create FTS table
-_, err := db.Exec(`create virtual table posts_fts using fts5(title, content)`)
+_, err := db.Exec(ctx, `create virtual table posts_fts using fts5(title, content)`, nil, -1, logger)
 
 // Full-text search
-rows, err := db.Query(`select * from posts_fts where posts_fts match 'database and sqlite'`)
+rows, err := db.Query(ctx, `select * from posts_fts where posts_fts match 'database and sqlite'`, nil, logger)
 ```
 
 ### File Operations
 
 ```go
 // Backup database
-_, err := db.Exec(`vacuum into 'backup.db'`)
+_, err := db.Exec(ctx, `vacuum into 'backup.db'`, nil, -1, logger)
 
 // Attach additional database
-_, err := db.Exec(`attach database 'other.db' as other`)
+_, err := db.Exec(ctx, `attach database 'other.db' as other`, nil, -1, logger)
 
 // Database integrity check
-rows, err := db.Query(`pragma integrity_check`)
+rows, err := db.Query(ctx, `pragma integrity_check`, nil, logger)
 ```
 
 ## Development Workflow
@@ -174,9 +181,11 @@ rows, err := db.Query(`pragma integrity_check`)
 
 ```go
 // Use in-memory database for tests
-func setupTestDB() *sql.DB {
+func setupTestDB() *database.Service {
+    logger := util.RootLogger
+    ctx := context.Background()
     params := &SQLiteParams{File: ":memory:"}
-    db, _ := database.OpenSQLiteDatabase(params)
+    db, _ := database.OpenSQLiteDatabase(ctx, "test", params, logger)
     return db
 }
 ```
@@ -208,6 +217,11 @@ This module requires:
 - Database size practical limit (~1TB)
 - No built-in replication or clustering
 - Limited concurrent write performance
+
+## Build Support
+
+The SQLite module is enabled for darwin, linux (386/amd64/arm/arm64/riscv64), and windows/amd64 builds.
+Other targets use a stub that returns "SQLite is not enabled in this build".
 
 ## Source Code
 

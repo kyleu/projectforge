@@ -4,7 +4,17 @@ This directory contains the files used by the "settings" module of [Project Forg
 
 ## Purpose
 
-Provides a framework for managing file-backed application settings
+Provides a framework for managing file-backed application settings.
+
+When enabled, this module:
+
+- Persists a typed `Settings` struct to `settings.json` in the config directory
+- Exposes admin UI pages at `/admin` and `/admin/settings`
+- Uses `SettingsFieldDescs` to render editable fields in the UI
+
+Customize `app/lib/settings/settings.go` to add or rename settings, and keep the field descriptors in sync so the admin editor renders correctly.
+
+This module depends on the filesystem module for storage.
 
 ## Usage
 

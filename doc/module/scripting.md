@@ -5,10 +5,13 @@ This module provides server-side JavaScript execution capabilities for your appl
 ## Features
 
 - **JavaScript Execution**: Run ES5+ JavaScript files using the Goja interpreter
-- **Web-based Script Management**: Create, edit, and execute scripts through a web UI at `/admin/scripting`
+- **Web-based Script Management**: Create, edit, and view script execution and example results in a web UI at `/admin/scripting`
 - **Automatic Testing**: Scripts can include example test cases that are automatically executed
 - **Filesystem Integration**: Scripts are stored as `.js` files and managed through the filesystem module
+- **Built-in Helpers**: Console logging plus a small set of utility helpers
 - **Search Integration**: Scripts are indexed and searchable within your application
+
+WARNING: This module is marked as dangerous because it executes arbitrary JavaScript on the server. Restrict access to trusted admins.
 
 ## Installation
 
@@ -43,14 +46,18 @@ scriptService := scripting.NewService(fs, "scripts")
 
 Access the scripting interface at `/admin/scripting` to:
 - List all available scripts
-- View script content and execution results
+- View script content, load results, and example output
 - Create and edit scripts
-- Run scripts and view output
-- Test example functions automatically
+- Delete scripts
+- Run example functions automatically
 
 ### JavaScript Environment
 
-Each script runs in an isolated JavaScript VM
+Each script runs in an isolated JavaScript VM. The runtime exposes a small set of helpers:
+
+- `console.debug`, `console.log`, `console.info`, `console.warn`, `console.error` (server logging)
+- `randomString(length)` - Generate random strings
+- `microsToMillis(value)` - Convert microseconds to millisecond strings
 
 ### Example Testing
 
@@ -89,7 +96,7 @@ The `examples` object maps function names to arrays of parameter sets. Each para
 
 ### Script Management
 
-Scripts are stored as `.js` files in the configured directory. The service provides methods to:
+Scripts are stored as `.js` files in the configured directory (by default under the filesystem root at `scripts/`). The service provides methods to:
 
 - `ListScripts()` - Get all JavaScript files
 - `LoadScript(path)` - Load script content
@@ -108,10 +115,12 @@ Scripts are executed in isolated VMs with comprehensive error handling:
 The module provides these routes:
 
 - `GET /admin/scripting` - List all scripts
-- `GET /admin/scripting/{path}` - View specific script and run examples
-- `POST /admin/scripting/{path}` - Execute script with custom parameters
-- `PUT /admin/scripting/{path}` - Save script content
-- `DELETE /admin/scripting/{path}` - Delete script
+- `GET /admin/scripting/new` - New script form
+- `POST /admin/scripting/new` - Create a new script
+- `GET /admin/scripting/{key}` - View a script (loads it and runs examples)
+- `GET /admin/scripting/{key}/edit` - Edit script form
+- `POST /admin/scripting/{key}/edit` - Save script updates
+- `GET /admin/scripting/{key}/delete` - Delete script
 
 ## Security Considerations
 
@@ -119,7 +128,7 @@ The module provides these routes:
 - No sandboxing beyond VM isolation is provided
 - Scripts have access to all functions exposed to the JavaScript environment
 - Only deploy in trusted environments where script execution is acceptable
-- Consider network restrictions if scripts might make external calls
+- Restrict access to admin-only routes and consider network restrictions if scripts might make external calls
 
 ## Source Code
 

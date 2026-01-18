@@ -4,7 +4,8 @@ This directory contains the files used by the "richedit" module of [Project Forg
 
 ## Purpose
 
-It provides a rich editing experience with a decent fallback when scripting is disabled
+Provides an in-browser editor for JSON data with progressive enhancement.
+It renders a table UI when JavaScript is enabled and falls back to raw JSON editing when it is not.
 
 ## Usage
 

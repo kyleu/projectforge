@@ -50,15 +50,16 @@ The module reads configuration from environment variables (with optional prefix)
 - **`db_password`** - Password for database connections (optional)
 - **`db_database`** - Database name to connect to
 - **`db_schema`** - Default schema to use (optional, default: `dbo`)
-- **`db_max_connections`** - Maximum number of active and idle connections
+- **`db_max_connections`** - Maximum number of open connections
 - **`db_debug`** - Enable SQL statement logging (`true`/`false`)
 
 ### Windows Authentication
 
 ```bash
-# Use Windows Authentication (omit user/password)
-DB_HOST=localhost\\SQLEXPRESS
-DB_DATABASE=MyDatabase
+# Use Windows Authentication (set db_user to local/native and omit password)
+db_host=localhost\\SQLEXPRESS
+db_database=MyDatabase
+db_user=local
 ```
 
 ## Usage
@@ -66,69 +67,74 @@ DB_DATABASE=MyDatabase
 ### Basic Setup
 
 ```go
-// Load configuration from environment
-params := SQLServerParamsFromEnv("")
+ctx := context.Background()
+logger := util.RootLogger
 
-// Open database connection
-db, err := database.OpenSQLServerDatabase(params)
+// Open database connection from environment variables
+svc, err := database.OpenDefaultSQLServer(ctx, logger)
 if err != nil {
     return err
 }
-defer db.Close()
+defer svc.Close()
 ```
+
+Other examples below assume `ctx` and `logger` are already available.
 
 ### Custom Configuration
 
 ```go
 // Manual configuration
-params := &SQLServerParams{
-    Host:           "sqlserver.example.com",
-    Port:           1433,
-    User:           "app_user",
-    Password:       "secure_password",
-    Database:       "app_database",
-    Schema:         "app_schema",
-    MaxConnections: 25,
-    Debug:          false,
+params := &database.SQLServerParams{
+    Host:     "sqlserver.example.com",
+    Port:     1433,
+    Username: "app_user",
+    Password: "secure_password",
+    Database: "app_database",
+    Schema:   "app_schema",
+    MaxConns: 25,
+    Debug:    false,
 }
 
-db, err := database.OpenSQLServerDatabase(params)
+svc, err := database.OpenSQLServerDatabase(ctx, "app", params, logger)
 ```
 
 ### Windows Authentication
 
 ```go
 // Windows Authentication (no username/password)
-params := &SQLServerParams{
+params := &database.SQLServerParams{
     Host:     "localhost\\SQLEXPRESS",
     Database: "MyDatabase",
     Schema:   "dbo",
+    Username: "local",
 }
 
-db, err := database.OpenSQLServerDatabase(params)
+svc, err := database.OpenSQLServerDatabase(ctx, "MyDatabase", params, logger)
 ```
 
 ### With Environment Prefix
 
 ```go
 // Use custom environment variable prefix
-// Reads MYAPP_DB_HOST, MYAPP_DB_PORT, etc.
-params := SQLServerParamsFromEnv("MYAPP_")
+// Reads myapp_db_host, myapp_db_port, etc.
+svc, err := database.OpenSQLServer(ctx, "mydb", "myapp_", logger)
 ```
 
 ## SQL Server-Specific Features
+
+The examples below assume `svc`, `ctx`, and `logger` are already available.
 
 ### Stored Procedures
 
 ```go
 // Execute stored procedure with parameters
-_, err := db.Exec(`exec GetUsersByRole @Role = ?`, "admin")
+_, err := svc.Exec(ctx, `exec GetUsersByRole @Role = ?`, nil, -1, logger, "admin")
 
 // Stored procedure with output parameters
-rows, err := db.Query(`
+rows, err := svc.Query(ctx, `
     declare @Count int
     exec GetUserCount @Role = ?, @Count = @Count output
-    select @Count`, "admin")
+    select @Count`, nil, logger, "admin")
 ```
 
 ### Table-Valued Parameters
@@ -146,39 +152,47 @@ userTVP := mssql.TVP{
     },
 }
 
-_, err := db.Exec(`exec BulkInsertUsers @Users = ?`, userTVP)
+_, err := svc.Exec(ctx, `exec BulkInsertUsers @Users = ?`, nil, -1, logger, userTVP)
 ```
 
 ### JSON Operations
 
 ```go
 // Insert JSON data
-_, err := db.Exec(`insert into users (data) values (?)`, `{"name": "John", "preferences": {"theme": "dark"}}`)
+_, err := svc.Exec(ctx, `insert into users (data) values (?)`, nil, -1, logger,
+    `{"name": "John", "preferences": {"theme": "dark"}}`)
 
 // Query with JSON functions
-rows, err := db.Query(`select json_value(data, '$.name') from users where json_value(data, '$.active') = 'true'`)
+rows, err := svc.Query(ctx,
+    `select json_value(data, '$.name') from users where json_value(data, '$.active') = 'true'`,
+    nil, logger)
 
 // JSON path operations
-rows, err := db.Query(`select * from users where json_value(data, '$.preferences.theme') = 'dark'`)
+rows, err := svc.Query(ctx,
+    `select * from users where json_value(data, '$.preferences.theme') = 'dark'`,
+    nil, logger)
 ```
 
 ### Spatial Data Types
 
 ```go
 // Insert geometry data
-_, err := db.Exec(`insert into locations (point) values (geometry::Point(?, ?, 4326))`, longitude, latitude)
+_, err := svc.Exec(ctx,
+    `insert into locations (point) values (geometry::Point(?, ?, 4326))`,
+    nil, -1, logger, longitude, latitude)
 
 // Spatial queries
-rows, err := db.Query(`
+rows, err := svc.Query(ctx, `
     select name from locations
-    where point.STDistance(geometry::Point(?, ?, 4326)) < 1000`, userLong, userLat)
+    where point.STDistance(geometry::Point(?, ?, 4326)) < 1000`,
+    nil, logger, userLong, userLat)
 ```
 
 ### MERGE Operations (Upsert)
 
 ```go
 // SQL Server MERGE statement
-_, err := db.Exec(`
+_, err := svc.Exec(ctx, `
     merge users as target
     using (values (?, ?)) as source (email, name)
     on target.email = source.email
@@ -186,7 +200,7 @@ _, err := db.Exec(`
         update set name = source.name, updated_at = getdate()
     when not matched then
         insert (email, name, created_at) values (source.email, source.name, getdate());`,
-    email, name)
+    nil, -1, logger, email, name)
 ```
 
 ### Bulk Operations
@@ -194,7 +208,8 @@ _, err := db.Exec(`
 ```go
 // Bulk copy for large data inserts
 // Uses SqlBulkCopy equivalent functionality
-txn, err := db.Begin()
+
+txn, err := svc.StartTransaction(logger)
 stmt, err := txn.Prepare(mssql.CopyIn("users", mssql.BulkOptions{}, "name", "email"))
 
 for _, user := range largeUserList {
@@ -243,10 +258,10 @@ Special considerations for Azure SQL Database:
 
 ```go
 // Azure SQL Database connection
-params := &SQLServerParams{
+params := &database.SQLServerParams{
     Host:     "myserver.database.windows.net",
     Port:     1433,
-    User:     "myuser@myserver",
+    Username: "myuser@myserver",
     Password: "mypassword",
     Database: "mydatabase",
 }

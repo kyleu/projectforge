@@ -1,7 +1,7 @@
 {
   "name": "WASM Server",
   "icon": "server",
-  "description": "Build your normal app as an http server, but load it as a WebAssembly module or Service Worker",
+  "description": "Build your normal app as an HTTP server, but load it as a WebAssembly module or Service Worker in the browser",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

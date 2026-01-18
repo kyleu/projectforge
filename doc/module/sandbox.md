@@ -1,7 +1,7 @@
 # Sandbox
 
 The **`sandbox`** module provides interactive testing environments for your application.
-It enables developers to create custom playgrounds for experimenting with application features, testing new functionality, and prototyping code in a safe, isolated environment.
+It enables developers to create custom playgrounds for experimenting with application features, testing new functionality, and prototyping code in a controlled, in-process environment.
 
 ## Overview
 
@@ -11,7 +11,7 @@ This module provides:
 - **Dynamic Arguments**: Form-based parameter collection for sandbox functions
 - **Admin Integration**: Seamless integration with the admin interface
 - **Extensible Framework**: Easy addition of new sandbox environments
-- **Safe Execution**: Isolated execution context for experimental code
+- **Explicit Execution**: Only registered handlers run, keeping experiments controlled
 
 ## Key Features
 
@@ -20,6 +20,8 @@ This module provides:
 - Dynamic form generation for function parameters
 - Real-time execution and result display
 - Integration with application telemetry and logging
+- Built-in `testbed` sandbox for UI and JS helpers
+- Optional `wasm` sandbox when `wasmclient` is enabled
 
 ### Customization
 - Easy creation of new sandbox environments
@@ -28,7 +30,7 @@ This module provides:
 - Conditional module integration (e.g., WASM support)
 
 ### Safety & Monitoring
-- Isolated execution context for experimental code
+- Explicitly registered handlers only (no dynamic code execution)
 - Comprehensive logging and tracing integration
 - Error handling and recovery
 - Performance monitoring with telemetry spans
@@ -39,7 +41,8 @@ This module provides:
 
 - **`lib/sandbox/`** - Core sandbox infrastructure
   - **`sandbox.go`** - Main sandbox framework and types
-  - **`testbed.go`** - Default testbed implementation
+  - **`testbed.go`** - Default UI testbed sandbox
+  - **`wasm.go`** - WASM testbed (requires `wasmclient`)
   - Dynamic sandbox registration and discovery
   - Menu integration for admin interface
 
@@ -57,6 +60,7 @@ This module provides:
   - Sandbox listing and navigation
   - Parameter input forms
   - Result display and visualization
+  - Custom renderers for `testbed` and `wasm`
 
 ## Usage
 
@@ -72,6 +76,7 @@ var mySandbox = &Sandbox{
     Args: util.FieldDescs{
         {Key: "message", Title: "Message", Type: "string", Default: "Hello"},
         {Key: "count", Title: "Count", Type: "int", Default: "5"},
+        {Key: "tone", Title: "Tone", Type: "select", Choices: []string{"friendly", "formal"}, Default: "friendly"},
     },
     Run: onMyTest,
 }
@@ -79,10 +84,12 @@ var mySandbox = &Sandbox{
 func onMyTest(ctx context.Context, st *app.State, args util.ValueMap, logger util.Logger) (any, error) {
     message := args.GetStringOr("message", "default")
     count := args.GetIntOr("count", 1)
+    tone := args.GetStringOr("tone", "friendly")
 
     result := util.ValueMap{
         "message": message,
         "repeated": strings.Repeat(message+" ", count),
+        "tone": tone,
         "timestamp": util.TimeCurrent(),
     }
 
@@ -104,6 +111,11 @@ Sandboxes are accessible through the admin web interface:
 - **List**: `/admin/sandbox` - Shows all available sandboxes
 - **Run**: `/admin/sandbox/{key}` - Executes a specific sandbox
 - **Parameters**: Query parameters or form submission for sandbox arguments
+
+## Built-in Sandboxes
+
+- **`testbed`** - UI component demo (tabs, accordion, modal, icons, timestamps)
+- **`wasm`** - WASM loader/test page when `wasmclient` is enabled
 
 ## Integration
 
@@ -134,17 +146,26 @@ Specific sandboxes can have custom result templates:
 
 ### Parameter Types
 Supports various parameter types through field descriptors:
-- **string**: Text input
-- **int**: Numeric input
-- **bool**: Checkbox input
-- **select**: Dropdown selection
+- **string**: Text input (default, uses datalist when choices are provided)
 - **textarea**: Multi-line text input
+- **bool/boolean**: Checkbox input
+- **int/number**: Integer input
+- **float**: Decimal input
+- **uuid**: UUID input
+- **select**: Dropdown selection
+- **radio**: Radio selection
+
+Values are collected as strings and can be parsed with `util.ValueMap` helpers (for example, `GetIntOr`, `GetFloatOr`, `ParseTime`, `ParseUUID`).
 
 ### Security Considerations
 - Admin-only access through existing authentication
-- Isolated execution context
+- Runs in-process; register only trusted handlers
 - Input validation and sanitization
 - Safe error handling without exposing internals
+
+## Configuration
+
+No additional configuration is required. The module registers admin routes and menu entries automatically.
 
 ## Source Code
 

@@ -1,172 +1,121 @@
 # Task Engine
 
-The **`task`** module provides a comprehensive task execution engine for your application.
-It enables registration, execution, and monitoring of background tasks with real-time progress tracking and a rich web interface.
+The `task` module provides a task registry and execution flow with an admin UI. Tasks are registered in code, accept query/field inputs, and return a structured Result with logs and data. Runs can be synchronous or streamed asynchronously over WebSocket.
 
 ## Overview
 
-This module provides:
-
-- **Task Registration**: Define and register executable tasks with metadata and parameters
-- **Execution Engine**: Synchronous and asynchronous task execution with concurrency control
-- **Progress Monitoring**: Real-time progress streaming via WebSocket connections
-- **Web Interface**: Rich UI for browsing, configuring, and executing tasks
-- **Result Management**: Detailed task results with logging, timing, and structured output
-
-## Key Features
-
-### Task Management
-- Register tasks with titles, descriptions, categories, and icons
-- Support for task parameters with validation and form generation
-- Task categorization and tagging for organization
-- Optional danger warnings and expense flags for critical operations
-
-### Execution Engine
-- **Synchronous execution**: Immediate task execution with direct results
-- **Asynchronous execution**: Background task processing with progress streaming
-- **Concurrency control**: Configurable maximum concurrent tasks (defaults to CPU count)
-- **Rate limiting**: Prevents system overload during intensive operations
-
-### Real-time Monitoring
-- WebSocket-based progress streaming with terminal-style output
-- Live status updates during task execution
-- Detailed timing information and performance metrics
-- Error handling and failure reporting
-
-### Web Interface
-- Task browser with search and filtering capabilities
-- Dynamic form generation based on task parameters
-- Real-time progress display with streaming logs
-- Result viewer with structured data presentation
+- Register tasks with metadata (title, category, icon, tags, warnings)
+- Define input fields using `util.FieldDesc` for UI forms and query parsing
+- Execute tasks synchronously or via WebSocket-backed async runs
+- Capture structured results, logs, tags, and timing details
 
 ## Package Structure
 
 ### Core Components
 
-- **`app/lib/task/`** - Task engine implementation
-  - Task registration and management
-  - Execution orchestration and scheduling
-  - Progress tracking and result collection
-  - WebSocket streaming infrastructure
+- `app/lib/task/` - task types and execution helpers
+  - `Task`, `Result`, and `Service`
+  - Task registration and execution
+  - Result logging helpers
 
-- **`app/controller/task.go`** - HTTP request handlers
-  - Task listing and detail pages
-  - Task execution endpoints (sync/async)
-  - WebSocket connection management
-  - Result display and export
+- `app/controller/clib/task.go` - HTTP handlers for the admin UI
+- `views/vtask/` - task list, detail, and result views
 
-### UI Components
-
-- **`views/vtask/`** - Task management interface
-  - Task browser and search functionality
-  - Parameter form generation and validation
-  - Real-time progress display
-  - Result presentation and formatting
-
-## Usage Examples
+## Usage
 
 ### Registering a Task
 
 ```go
-// Register a simple task
-taskService.Register("backup", &task.Task{
-    Title:       "Database Backup",
-    Description: "Creates a backup of the application database",
-    Category:    "maintenance",
-    Icon:        "database",
-    Fields: field.Fields{
-        field.NewField("format", "", "backup format", field.Select, field.Options{
-            "sql": "SQL Dump",
-            "tar": "Compressed Archive",
-        }),
-    },
-    Fn: func(ctx context.Context, logger util.Logger, ps *cutil.PageState, args map[string]any) (any, error) {
-        format := args["format"].(string)
-        // Perform backup logic
-        return map[string]any{"file": "backup.sql", "size": 1024000}, nil
-    },
-})
+tf := func(ctx context.Context, res *task.Result, logger util.Logger) *task.Result {
+    res.Log("starting backup")
+    format := res.Args.GetStringOpt("format")
+    if format == "" {
+        format = "sql"
+    }
+    // Perform backup logic...
+    return res.Complete(util.ValueMap{"file": "backup." + format})
+}
+
+t := task.NewTask("backup", "Database Backup", "maintenance", "database", "Creates a database backup", tf)
+t.Fields = util.FieldDescs{
+    {Key: "format", Title: "Format", Type: "string", Default: "sql", Choices: []string{"sql", "tar"}},
+}
+t.Expensive = true
+t.Dangerous = "May lock tables during backup"
+t.Tags = []string{"db", "maintenance"}
+
+if err := as.Services.Task.RegisterTask(t); err != nil {
+    return err
+}
 ```
 
-### Executing Tasks
+### Running Tasks in Code
 
-**Synchronous execution:**
 ```go
-result, err := taskService.Run(ctx, "backup", args, logger, ps)
+args := util.ValueMap{"format": "tar"}
+res := t.Run(ctx, "ad-hoc", args, logger)
+if !res.IsOK() {
+    logger.Warnf("task failed: %s", res.Error)
+}
 ```
 
-**Asynchronous execution with progress:**
+For batch execution with rate limiting, use the service helper:
+
 ```go
-run, err := taskService.Start(ctx, "backup", args, logger, ps)
-// Monitor progress via run.Status() and run.Progress()
+t.MaxConcurrent = 4
+results, err := as.Services.Task.RunAll(ctx, t, "batch", []util.ValueMap{
+    {"format": "sql"},
+    {"format": "tar"},
+}, logger)
 ```
 
-### Task Parameters
+### Running Tasks via HTTP/UI
 
-Tasks support various parameter types:
-- **Text fields**: String input with validation
-- **Select fields**: Dropdown choices with predefined options
-- **Boolean flags**: Checkbox inputs for feature toggles
-- **File uploads**: File selection for data processing tasks
+A full UI is provided at `/admin/task`.
+
+Task routes accept query parameters for task fields. The `category` query parameter is reserved for the run label.
+
+- `GET /admin/task` - list registered tasks
+- `GET /admin/task/{key}` - task detail + form
+- `GET /admin/task/{key}/run` - execute synchronously and render result
+- `GET /admin/task/{key}/run?async=true` - render the async UI, which opens a WebSocket to start the task
+- `GET /admin/task/{key}/start` - WebSocket upgrade endpoint used by the async UI
+- `GET /admin/task/{key}/remove` - remove a dynamically registered task
+
+All task pages support the standard `?format=` query param (json, csv, xml, yaml, debug).
+
+## Task Fields and Metadata
+
+`Task.Fields` uses `util.FieldDesc` to describe input fields:
+
+- `Type` supports `string`, `int`, `float`, `bool`, `[]string`, and `time`
+- `Default` provides fallback values when missing
+- `Choices` populates select lists in the UI
+
+Additional metadata:
+
+- `Dangerous` (string) and `Expensive` (bool) for warnings/labels
+- `Tags` for categorization
+- `WebURL` to override the default `/admin/task/{key}` URL
+
+## Concurrency and Rate Limiting
+
+`Service.RunAll` uses `Task.MaxConcurrent` to limit parallelism:
+
+- `0` uses `runtime.NumCPU()`
+- `-1` uses a fixed limit of `128`
+
+Single `Run` calls are not rate limited by default.
 
 ## Configuration
 
-The task module supports configuration through environment variables:
-
-### Execution Control
-- `TASK_MAX_CONCURRENT` - Maximum concurrent task executions (default: CPU count)
-- `TASK_TIMEOUT` - Default timeout for task execution (default: 5 minutes)
-- `TASK_WEBSOCKET_ENABLED` - Enable real-time progress streaming (default: true)
-
-### Performance Tuning
-- `TASK_BUFFER_SIZE` - WebSocket message buffer size (default: 1000)
-- `TASK_LOG_LEVEL` - Task-specific logging level
-- `TASK_RETENTION_DAYS` - Days to retain completed task results
+This module does not define environment variables. Configure behavior per task using `Task.MaxConcurrent`, `Task.Fields`, and your task function implementation.
 
 ## Dependencies
 
-This module requires:
-
-- **[process](../process/process.md)** - Process management and execution infrastructure
-- **Core WebSocket support** - For real-time progress streaming
-- **Telemetry integration** - Task execution metrics and tracing
-
-## Integration Points
-
-### Service Registration
-The task service is automatically registered with the application's service container and available via dependency injection.
-
-### Web Routes
-- `/admin/task` - Task browser and management interface
-- `/admin/task/{key}` - Individual task detail and execution
-- `/admin/task/{key}/start` - Asynchronous task execution endpoint
-- `/admin/task/{key}/run` - Synchronous task execution endpoint
-
-### WebSocket Endpoints
-- `/ws/task/{runID}` - Real-time progress streaming for running tasks
-
-## Advanced Features
-
-### Custom Task Categories
-Organize tasks by category for better navigation:
-- `maintenance` - System maintenance and cleanup tasks
-- `data` - Data processing and migration tasks
-- `admin` - Administrative and configuration tasks
-- `report` - Report generation and analytics tasks
-
-### Task Metadata
-Enhance tasks with rich metadata:
-- **Icons**: Visual indicators using the application's icon system
-- **Danger flags**: Warnings for potentially destructive operations
-- **Expense flags**: Indicators for resource-intensive tasks
-- **Tags**: Additional categorization and filtering options
-
-### Error Handling
-Comprehensive error management:
-- Detailed error messages with context
-- Stack trace collection for debugging
-- Automatic retry mechanisms for transient failures
-- Graceful degradation for partial failures
+- **[process](process.md)**
+- **[exec](exec.md)** (optional, for OS process-backed execution)
+- **[websocket](websocket.md)** (optional, for live monitoring UI)
 
 ## Source Code
 
@@ -176,5 +125,5 @@ Comprehensive error management:
 
 ## See Also
 
-- [Process Module Documentation](process.md) - Required process management functionality
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation
+- [Process Module Documentation](process.md)
+- [Project Forge Documentation](https://projectforge.dev)

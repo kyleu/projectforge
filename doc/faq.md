@@ -261,17 +261,23 @@ Assuming you've got access, going to `/admin` will show you the available action
 
 ## How can I secure my application?<a name="faq-15"></a>
 
-TODO
+Use the `user` or `oauth` modules to require authentication, and restrict admin routes to admin users.
+Set the encryption key environment variable (see `doc/running.md`) so sessions are not signed with defaults, and keep secrets out of source control.
+Run behind TLS, configure CORS/allowed origins for APIs, and disable or restrict debug endpoints in production.
 
 
 ## What options are available for the HTML menu and breadcrumbs?<a name="faq-16"></a>
 
-TODO
+Menus are assembled from module-provided items; you can override them by setting `ps.Menu` or hide them with `ps.HideMenu`.
+Breadcrumbs are set by passing segments to `controller.Render`, and support icons (`Title**icon`) or explicit routes (`Title||/path`).
+Use `ps.RootTitle` and `ps.RootPath` to customize the root entry shown in the header.
 
 
 ## What search facilities are available?<a name="faq-17"></a>
 
-TODO
+Use the global search box (`/search?q=...`) to search across modules and system data.
+Project search is available at `/p/search` (all projects) and `/p/{key}/search` (single project), and modules can expose `/m/{key}/search`.
+Results are text-based and capped for performance.
 
 
 ## What utility methods are available for my app?<a name="faq-18"></a>

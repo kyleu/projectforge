@@ -63,7 +63,7 @@ var CustomTool = &Tool{
 		{Key: "id", Description: "The id to us"},
 	},
 	Fn: func(_ context.Context, as *app.State, req mcp.CallToolRequest, args util.ValueMap, logger util.Logger) (any, error) {
-		return "TODO", nil
+		return "ok", nil
 	},
 }
 

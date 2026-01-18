@@ -1,7 +1,7 @@
 {
   "name": "Upgrade",
   "icon": "dna",
-  "description": "Provides in-place version upgrades using GitHub Releases",
+  "description": "Provides a CLI command that upgrades the current binary using GitHub Releases",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

@@ -1,85 +1,90 @@
 # WASM Server
 
-The **`wasmserver`** module for your application allows building your HTTP server application as a WebAssembly module that runs in web browsers using Service Workers.
-This allows your Go application to run entirely client-side without requiring a traditional server infrastructure.
+The **`wasmserver`** module builds your existing HTTP server as a WebAssembly binary and runs it in the browser via a Service Worker. The result is a static bundle that behaves like your server routes, without a server process.
 
 ## Overview
 
-This module transforms your application into a WebAssembly binary that can be executed in web browsers, enabling:
+This module provides:
 
-- **Client-side execution**: Full application logic runs in the browser
-- **Service Worker integration**: Intercepts HTTP requests within the browser
-- **Serverless deployment**: Host static files without server infrastructure
-- **Offline capabilities**: Applications can work without network connectivity
+- **Client-side execution**: Full server router runs in the browser
+- **Service Worker integration**: Intercepts same-origin requests and dispatches them to Go
+- **Static hosting**: Deploy to any static file host
+- **Offline support**: Service Worker caching and offline behavior
 
-## Key Features
+## How It Works
 
-### WebAssembly Compilation
-- Compiles Go HTTP server to WASM binary
-- Maintains full application functionality
-- Uses Go's built-in WASM target (`GOOS=js GOARCH=wasm`)
+1. `./bin/build/wasmserver.sh` compiles your server with `GOOS=js GOARCH=wasm`
+2. Static wrapper files (`index.html`, `server.js`, `sw.js`, `wasm_exec.js`) are copied into `./build/wasm`
+3. `server.js` registers `sw.js`, which loads `{{{ .Exec }}}.wasm`
+4. The Service Worker calls `goFetch` (from the Go WASM runtime) to handle requests with your router
+5. The Service Worker checks for updated WASM binaries by ETag on install/activate and every 15 minutes
 
-### Service Worker Integration
-- Automatically generates Service Worker wrapper
-- Intercepts HTTP requests within browser context
-- Provides seamless request/response handling
-- Enables progressive web app capabilities
-
-### Static File Generation
-- Creates deployable static file structure
-- Includes necessary WASM runtime files
-- Generates HTML wrapper for application bootstrap
-- Provides hosting-ready file structure
-
-## Build Process
-
-### Building WASM Server
+## Usage
 
 ```bash
-# Build the WASM server
+# Build the WASM server bundle
 ./bin/build/wasmserver.sh
 
-# Files are generated in ./tools/wasmserver/
+# Serve the output (uses npx http-server on port 40009)
+./bin/wasmdev.sh
 ```
 
-### Generated Files
+Then visit `http://localhost:40009` in a browser. After the Service Worker takes control (refresh once), normal routes are handled by your Go server code in the browser.
 
-The build process creates:
+## Configuration
 
-- **`main.wasm`** - Compiled Go application
-- **`wasm_exec.js`** - Go WASM runtime support
-- **`sw.js`** - Service Worker implementation
-- **`index.html`** - Application bootstrap page
-- **Static assets** - CSS, JavaScript, and other resources
+Configuration lives in `.projectforge/project.json`:
 
-## Deployment
+- `build.wasm`: Enables WASM outputs in release builds
+- `info.homepage`: Used by `tools/wasmserver/sw.js` to skip intercepting the bootstrap URL; set it to your deployed origin, e.g. `https://example.com`
 
-### Requirements
+Template files you can customize:
 
-- **HTTPS required**: Service Workers require secure context (except `localhost`)
-- **Web server**: Cannot use `file://` protocol, requires HTTP server
-- **Modern browser**: Supports WebAssembly and Service Workers
+- `tools/wasmserver/index.html`: bootstrap HTML
+- `tools/wasmserver/server.js`: Service Worker registration
+- `tools/wasmserver/sw.js`: request interception and WASM lifecycle
 
-### Hosting Options
+## CLI And URLs
+
+Commands:
+
+- `./bin/build/wasmserver.sh`: Build `./build/wasm`
+- `./bin/build/wasmrelease.sh <version>`: Create `./build/dist/{{{ .Exec }}}_<version>_wasm_html.zip`
+- `./bin/wasmdev.sh`: Serve `./build/wasm` on `http://localhost:40009`
+- `{{{ .Exec }}} wasm`: Internal entrypoint used by the Service Worker (not for direct CLI use)
+
+Static URLs served from `./build/wasm`:
+
+- `/index.html`
+- `/sw.js`
+- `/server.js`
+- `/{{{ .Exec }}}.wasm`
+- `/wasm_exec.js`
+- `/assets/*`, `/favicon.ico`, `/logo.svg`
+
+## Dependencies
+
+- Go {{{ .GoMajorVersionSafe }}}+ with WASM support
+- A static web server (Node `npx http-server`, `python3 -m http.server`, or equivalent)
+- `zip` if you run `./bin/build/wasmrelease.sh`
+- A modern browser with WebAssembly + Service Worker support (HTTPS required in production)
+
+## Examples
+
+Local dev:
 
 ```bash
-# Local development
-cd tools/wasmserver
-python3 -m http.server 8080
-
-# Or using Node.js
-npx serve .
-
-# Or any static file server
+./bin/build/wasmserver.sh
+./bin/wasmdev.sh
+# open http://localhost:40009
 ```
 
-### Production Deployment
+Release bundle:
 
-Deploy the `tools/wasmserver` directory contents to any static hosting service:
-- Netlify, Vercel, GitHub Pages
-- AWS S3 + CloudFront
-- Traditional web hosting
-- CDN services
+```bash
+./bin/build/wasmrelease.sh 1.2.3
+# upload build/dist/{{{ .Exec }}}_1.2.3_wasm_html.zip to static hosting
+```
 
 ## Limitations
 

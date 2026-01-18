@@ -1,144 +1,45 @@
 # Types
 
-The **`types`** module provides a comprehensive type system for your application.
-It offers a collection of structured data types with built-in validation, serialization, and type safety features.
+The **`types`** module provides a shared type catalog and helpers used across generated apps. It defines type metadata, JSON-friendly type definitions, and view helpers for rendering or editing values by type.
 
 ## Overview
 
-This module provides a unified type system for representing and working with common data types in your application. It focuses on:
+- `types.Type` describes a value's key, sortability, scalar-ness, conversion (`From`), and default value (`Default`).
+- `types.Wrapped` wraps concrete types for JSON round-tripping and convenience constructors (`NewString`, `NewList`, and friends).
+- Helper utilities: `TypeAs`, `IsString`/`IsBool`/`IsInt`/`IsList`, `Bits`, and `FromReflect`.
+- View components: `views/components/view/AnyByType` and `views/components/edit/AnyByType` render values and inputs based on a `types.Wrapped`.
 
-- **Type Safety**: Strongly typed representations with compile-time guarantees
-- **JSON Serialization**: Built-in support for JSON marshaling and unmarshaling
-- **Validation**: Configurable constraints and validation rules
-- **Extensibility**: Composable type system with interfaces for custom types
+## Type Catalog
 
-## Key Features
+- **Primitive**: `any`, `bit`, `bool`, `byte`, `char`, `int`, `float`, `numeric`, `string`
+- **Temporal**: `date`, `time`, `timestamp`, `timestampZoned`
+- **Identifiers / references**: `uuid`, `enum`, `enumValue`, `reference`
+- **Structured**: `list`, `map`, `orderedMap`, `set`, `valueMap`, `numericMap`, `option`, `range`, `union`, `method`
+- **Special**: `json`, `xml`, `nil`, `unknown`, `error`
 
-### Comprehensive Type Coverage
-- **Primitive Types**: String, Int, Float, Bool, Byte, Char
-- **Complex Types**: List, Map, Set, OrderedMap, ValueMap
-- **Temporal Types**: Date, Time, Timestamp, TimestampZoned
-- **Special Types**: UUID, JSON, XML, Enum, Reference, Option
-- **Utility Types**: Nil, Any, Unknown, Wrapped, Error
+Notes:
+- `valueMap` is a string-keyed map of arbitrary values.
+- `numeric` and `numericMap` are intended to pair with the `numeric` module's implementations.
 
-### Advanced Features
-- **Type Conversion**: Safe conversion between compatible types
-- **Default Values**: Configurable default value generation
-- **Sorting Support**: Built-in sortability indicators
-- **Scalar Detection**: Distinction between scalar and composite types
-- **Range Constraints**: Min/max validation for numeric and string types
+## Usage
 
-### JSON Integration
-- **Custom Marshaling**: Optimized JSON serialization for all types
-- **Flexible Parsing**: Intelligent type detection from JSON values
-- **Wrapped Types**: Support for complex nested type structures
-
-## Package Structure
-
-### Core Types
-
-- **`type.go`** - Core type interface and utilities
-  - `Type` interface definition
-  - Type casting and conversion utilities
-  - Common type checking functions
-
-- **`string.go`** - String type with length and pattern validation
-- **`int.go`** - Integer type with range constraints
-- **`float.go`** - Floating-point type with precision controls
-- **`bool.go`** - Boolean type representation
-
-### Collection Types
-
-- **`list.go`** - Ordered collections with type constraints
-- **`map.go`** - Key-value mappings with typed keys and values
-- **`set.go`** - Unique value collections
-- **`orderedmap.go`** - Ordered key-value mappings
-- **`valuemap.go`** - Specialized value mappings
-
-### Temporal Types
-
-- **`date.go`** - Date-only representations
-- **`time.go`** - Time-only representations
-- **`timestamp.go`** - Combined date and time
-- **`timestampzoned.go`** - Timezone-aware timestamps
-
-### Specialized Types
-
-- **`uuid.go`** - UUID type with validation
-- **`json.go`** - Raw JSON value handling
-- **`xml.go`** - XML document representation
-- **`enum.go`** - Enumeration type definitions
-- **`option.go`** - Optional value handling
-
-### Utility Types
-
-- **`any.go`** - Dynamic type representation
-- **`nil.go`** - Null value handling
-- **`unknown.go`** - Unknown type representation
-- **`wrapped.go`** - Type composition and nesting
-- **`reference.go`** - Reference type for complex relationships
-
-## Usage Examples
-
-### Basic Type Usage
+### Define types
 
 ```go
-// String type with constraints
-stringType := &types.String{
-    MinLength: 1,
-    MaxLength: 100,
-    Pattern:   "^[a-zA-Z0-9]+$",
-}
-
-// Integer type with range
-intType := &types.Int{
-    Min: 0,
-    Max: 1000,
-}
-
-// Convert and validate values
-value := stringType.From("hello")
-if stringType.Sortable() {
-    // Handle sortable type
-}
+str := types.NewString()
+name := types.NewStringArgs(1, 80, "^[a-zA-Z0-9_-]+$")
+scores := types.NewList(types.NewInt(64))
+valueMap := types.NewValueMap()
 ```
 
-### Collection Types
+### JSON definitions
 
 ```go
-// List of strings
-listType := &types.List{
-    Val: &types.String{MaxLength: 50},
-}
+_ = util.ToJSONCompact(types.NewString()) // "string"
+_ = util.ToJSONCompact(types.NewList(types.NewString())) // {"k":"list","t":{"v":"string"}}
 
-// Map with string keys and integer values
-mapType := &types.Map{
-    K: &types.String{},
-    V: &types.Int{Min: 0},
-}
+_, _ = util.FromJSONObj[*types.Wrapped]([]byte(`"int"`))
 ```
-
-### Type Checking
-
-```go
-if types.IsString(someType) {
-    // Handle string type
-}
-
-if types.IsList(someType) {
-    listType := types.TypeAs[*types.List](someType)
-    // Work with list type
-}
-```
-
-## Configuration
-
-The types module supports various configuration options through individual type properties:
-
-- **String constraints**: MinLength, MaxLength, Pattern
-- **Numeric ranges**: Min, Max values for Int and Float
-- **Collection settings**: Value types for List, key/value types for Map
-- **Temporal formats**: Custom formatting for date/time types
 
 ## Source Code
 
@@ -148,4 +49,5 @@ The types module supports various configuration options through individual type 
 
 ## See Also
 
+- [Numeric Module](numeric.md) - Numeric runtime types
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation

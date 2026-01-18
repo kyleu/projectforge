@@ -1,7 +1,7 @@
 {
   "name": "Rich Editor",
   "icon": "pencil",
-  "description": "It provides a rich editing experience with a decent fallback when scripting is disabled",
+  "description": "Provides an in-browser editor for JSON data with progressive enhancement. It renders a table UI when JavaScript is enabled",
   "authorName": "Kyle U",
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",

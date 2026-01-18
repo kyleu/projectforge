@@ -4,7 +4,7 @@ This directory contains the files used by the "wasmserver" module of [Project Fo
 
 ## Purpose
 
-Build your normal app as an http server, but load it as a WebAssembly module or Service Worker
+Build your normal app as an HTTP server, but load it as a WebAssembly module or Service Worker in the browser.
 
 ## Usage
 

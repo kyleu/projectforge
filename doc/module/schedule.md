@@ -1,30 +1,29 @@
 # Scheduled Jobs
 
-The **`schedule`** module provides a scheduled job engine and web UI for your application, based on [gocron](https://github.com/go-co-op/gocron).
+The **`schedule`** module provides a scheduled job engine and admin UI for your application, built on [gocron](https://github.com/go-co-op/gocron) v2.
 
 ## Overview
 
-The schedule module enables applications to run jobs on a schedule using cron expressions or intervals. It provides:
+The schedule module enables applications to run jobs on cron expressions, fixed intervals, or calendar-based schedules. It provides:
 
-- **Job scheduling** with cron expressions and interval-based execution
+- **Job scheduling** with cron, duration, daily/weekly/monthly, and one-time schedules
 - **Web UI** for monitoring job status, execution history, and results
 - **Telemetry integration** with distributed tracing support
 - **Error handling** with panic recovery and structured logging
-- **Execution tracking** with run counts and result storage
+- **Execution tracking** with run counts and last-result storage
 
 ## Features
 
 ### Job Management
 - Create jobs with custom functions, schedules, and metadata
-- Singleton mode to prevent overlapping executions
+- Singleton mode to prevent overlapping executions (reschedules when busy)
 - Job tagging for organization and filtering
-- Execution count tracking per job
+- UUID identifiers with optional friendly names
 
-### Monitoring & Debugging
+### Monitoring and Debugging
 - Web interface showing all scheduled jobs
-- Individual job details with execution history
-- Last and next execution times
-- Result storage with return values and errors
+- Individual job details with last and next execution times
+- Execution count tracking and last result capture
 - Optional debug logging control
 
 ### Integration
@@ -32,11 +31,16 @@ The schedule module enables applications to run jobs on a schedule using cron ex
 - Structured logging with configurable verbosity
 - Panic recovery to prevent job failures from crashing the scheduler
 
+### Storage and Retention
+- Execution counts and results are kept in memory only
+- Only the most recent result is stored per job
+- Restarting the app resets counts and results
+
 ## Usage
 
 ### Basic Setup
 
-The schedule service is automatically initialized and started when the module is included:
+The schedule service is created and started automatically when the module is included:
 
 ```go
 // Service is available in app.State
@@ -56,12 +60,15 @@ jobFunc := func(ctx context.Context, logger util.Logger) (any, error) {
 // Schedule the job
 job, err := as.Services.Schedule.NewJob(
     ctx,
-    "daily-cleanup",           // job name
-    gocron.DailyAt("02:00"),  // schedule (cron or interval)
-    jobFunc,                  // function to execute
-    true,                     // singleton mode
-    logger,                   // logger instance
-    "maintenance", "cleanup", // tags
+    "daily-cleanup",
+    gocron.DailyJob(
+        1,
+        gocron.NewAtTimes(gocron.NewAtTime(2, 0, 0)),
+    ),
+    jobFunc,
+    true,
+    logger,
+    "maintenance", "cleanup",
 )
 ```
 
@@ -70,13 +77,20 @@ job, err := as.Services.Schedule.NewJob(
 The module supports various schedule types through gocron:
 
 ```go
-// Cron expressions
-gocron.CronJob("0 2 * * *", false) // Daily at 2 AM
+// Cron expressions (set withSeconds true for 6-field cron)
+gocron.CronJob("0 2 * * *", false)
 
-// Intervals
-gocron.DurationJob(time.Hour)       // Every hour
-gocron.DailyAt("15:30")            // Daily at 3:30 PM
-gocron.WeeklyOn(time.Monday, "09:00") // Weekly on Monday at 9 AM
+// Fixed interval
+gocron.DurationJob(time.Hour)
+
+// Daily at 3:30 PM
+gocron.DailyJob(1, gocron.NewAtTimes(gocron.NewAtTime(15, 30, 0)))
+
+// Weekly on Monday at 9 AM
+gocron.WeeklyJob(1, gocron.NewWeekdays(time.Monday), gocron.NewAtTimes(gocron.NewAtTime(9, 0, 0)))
+
+// One-time run 10 minutes from now
+gocron.OneTimeJob(gocron.OneTimeJobStartDateTime(time.Now().Add(10 * time.Minute)))
 ```
 
 ### Job Function Pattern
@@ -99,6 +113,8 @@ func myJob(ctx context.Context, logger util.Logger) (any, error) {
 }
 ```
 
+Return values are stored as the most recent result and rendered in the admin UI. Prefer JSON-friendly types for easy display.
+
 ### Accessing Job Information
 
 ```go
@@ -108,66 +124,56 @@ jobs := as.Services.Schedule.ListJobs()
 // Get specific job
 job := as.Services.Schedule.GetJob(jobID)
 
-// Check execution counts
+// Check execution counts (in memory)
 count := as.Services.Schedule.ExecCounts[jobID]
 
-// Get last result
+// Get last result (in memory)
 result := as.Services.Schedule.Results[jobID]
 ```
 
-## Web Interface
+## Web Interface and URLs
 
 The module provides admin pages for job monitoring:
 
 - **`/admin/schedule`** - Lists all scheduled jobs with status
 - **`/admin/schedule/{id}`** - Detailed view for a specific job
 
-The interface shows:
-- Job ID, name, and tags
-- Last and next execution times
-- Total execution count
-- Latest execution result and any errors
+These endpoints respect the standard Project Forge rendering formats via `?format=` (json, yaml, xml, csv) or the `Accept` header.
+
+## CLI
+
+There are no CLI commands for this module. Manage jobs in code or through the admin UI.
 
 ## Configuration
 
-### Environment Variables
+No environment variables are required. The scheduler is started automatically.
 
-- Jobs inherit the application's logging configuration
-- Debug logging for job execution can be controlled programmatically:
+### Logging Control
+
+Debug logging is enabled by default. Disable it if you want quieter logs:
 
 ```go
-as.Services.Schedule.EnableLogging(false) // Disable debug logs
+as.Services.Schedule.EnableLogging(false)
 ```
 
-### Service Options
+### Advanced Scheduling
 
-When creating jobs, you can specify:
-- **Singleton mode**: Prevents overlapping executions
-- **Tags**: For categorization and filtering
-- **Custom names**: For easier identification in logs and UI
+For advanced gocron options (updates, removal, or global job options), use the underlying scheduler directly:
 
-## Implementation Details
+```go
+engine := as.Services.Schedule.Engine
+```
 
-### Components
+## Dependencies
 
-- **`Service`**: Main scheduler service wrapping gocron
-- **`Job`**: Job metadata and execution information
-- **`Result`**: Execution results with timing and error data
-- **Controllers**: Web interface for job monitoring
+### Required Modules
+- **core** - Provides admin routing and layout (always included)
 
-### Thread Safety
+### Recommended Modules
+- **user** - Access control for admin routes
 
-The service uses mutexes to ensure thread-safe access to:
-- Execution counts map
-- Results storage
-- Job state information
-
-### Error Handling
-
-- Panics are recovered and logged as errors
-- Job errors are captured and stored in results
-- Failed jobs don't affect other scheduled jobs
-- Scheduler continues running even after job failures
+### External Libraries
+- **[gocron v2](https://pkg.go.dev/github.com/go-co-op/gocron/v2)** - Scheduling engine
 
 ## Source Code
 
@@ -177,4 +183,5 @@ The service uses mutexes to ensure thread-safe access to:
 
 ## See Also
 
+- [User Module](user.md) - Access control for admin routes
 - [Project Forge Documentation](https://projectforge.dev) - Complete documentation

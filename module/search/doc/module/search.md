@@ -1,92 +1,111 @@
 # Search
 
-The **`search`** module provides comprehensive search functionality for your application.
-It adds a powerful, extensible search system with a clean UI integrated into the application navigation.
+The **`search`** module adds a global search bar and a `/search` results page to your Project Forge application. Results come from provider functions you register in `app/lib/search/search.go`.
 
 ## Overview
 
-This module provides:
+- Global search form in the main nav (core layout)
+- GET `/search` results page with auto-redirect for a single match
+- Provider-based search pipeline with async fan-out
+- Query parsing helpers for general terms and `key:value` pairs
+- Match highlighting in the results UI
 
-- **Global Search Bar**: Integrated search interface in the navigation header
-- **Provider-Based Architecture**: Extensible system for searching different data sources
-- **Advanced Query Parsing**: Support for general queries and keyed search syntax (`key:value`)
-- **Results Highlighting**: Automatic match highlighting with query term detection
-- **Smart Navigation**: Auto-redirect for single results, grouped display for multiple matches
+## URLs and Formats
 
-## Key Features
+- `GET /search?q=<query>` renders HTML results by default.
+- Alternate formats are available via `?format=json` (CSV/XML/YAML as supported by `controller.Render`).
 
-### Search Architecture
-- Provider-based search system for easy extensibility
-- Async result collection from multiple data sources
-- Type-safe result structures with metadata
-- Configurable result limits and scoring
+## Configuration
 
-### User Experience
-- Clean, responsive search interface
-- Real-time search suggestions
-- Match highlighting with context
-- Error handling and user feedback
-- Mobile-friendly design
+There are no module-specific config keys. To control where the search form points or to hide it per-page:
 
-### Query Support
-- General text search across all providers
-- Keyed search syntax: `user:john`, `status:active`
-- Multiple query terms with AND logic
-- Case-insensitive matching
+```go
+// Set a custom search endpoint (default is /search)
+ps.SearchPath = "/search"
+
+// Hide the nav search form for a handler
+ps.SearchPath = "-"
+```
 
 ## Usage
 
-### Basic Implementation
+1. Enable the `search` module in your project configuration.
+2. Register providers in `app/lib/search/search.go` under the `PF_SECTION_START(search_functions)` block.
+3. Use `search.Params` helpers to parse queries and return `result.Result` entries.
 
-1. **Enable the module** in your application's configuration
-
-2. **Implement search providers** by modifying `./app/lib/search/search.go`:
+Provider signature:
 
 ```go
-func Search(ctx context.Context, params *Params, ps *cutil.PageState, logger util.Logger) *Results {
-    ret := NewResults(params)
+type Provider func(
+    ctx context.Context,
+    params *search.Params,
+    as *app.State,
+    ps *cutil.PageState,
+    logger util.Logger,
+) (result.Results, error)
+```
 
-    // Add your search providers
-    if params.Q != "" {
-        // Search users
-        if userResults := searchUsers(ctx, params.Q); len(userResults) > 0 {
-            ret.Results = append(ret.Results, userResults...)
-        }
+### Query Helpers
 
-        // Search content
-        if contentResults := searchContent(ctx, params.Q); len(contentResults) > 0 {
-            ret.Results = append(ret.Results, contentResults...)
-        }
+- `params.Parts()` splits the query on spaces.
+- `params.General()` returns terms without `:`.
+- `params.Keyed()` returns a `map[string]string` for `key:value` terms.
+
+### Result Fields
+
+`result.Result` supports:
+
+- `Type`, `ID`, `Title`, `Icon`, `URL`
+- `Matches` for highlighted text (use `result.MatchesFor`)
+- `Data` to expose JSON in a modal when `ID` is set
+- `HTML` for extra inline content
+
+## Examples
+
+A provider that supports `user:` keyed searches and highlights matches:
+
+```go
+func searchUsers(ctx context.Context, params *search.Params, as *app.State, ps *cutil.PageState, logger util.Logger) (result.Results, error) {
+    keyed := params.Keyed()
+    q := params.Q
+
+    if userQuery, ok := keyed["user"]; ok {
+        q = userQuery
     }
 
-    return ret
-}
-```
-
-3. **Create search providers** for your data sources:
-
-```go
-func searchUsers(ctx context.Context, query string) result.Results {
-    // Implement user search logic
-    // Return result.Result instances with proper highlighting
-}
-```
-
-### Advanced Features
-
-Create typed results for better UX:
-
-```go
-func NewUserResult(user *User, query string) *result.Result {
-    return &result.Result{
-        Type:    "user",
-        Title:   user.Name,
-        Summary: user.Email,
-        URL:     fmt.Sprintf("/users/%d", user.ID),
-        Matches: result.HighlightMatches(user.Name, query),
+    users := loadUsersMatching(q)
+    ret := make(result.Results, 0, len(users))
+    for _, u := range users {
+        ret = append(ret, &result.Result{
+            Type:    "user",
+            ID:      u.ID,
+            Title:   u.Name,
+            Icon:    "profile",
+            URL:     "/users/" + u.ID,
+            Matches: result.MatchesFor("user", u, q),
+            Data:    u,
+        })
     }
+    return ret, nil
 }
 ```
+
+Register it:
+
+```go
+// $PF_SECTION_START(search_functions)$
+allProviders = append(allProviders, searchUsers)
+// $PF_SECTION_END(search_functions)$
+```
+
+## Dependencies
+
+- Requires the `core` module for navigation rendering and the `/search` route.
+- If the `export` module is enabled with models, additional generated search providers are appended automatically.
+
+## CLI
+
+This module does not add CLI commands. Use the `/search` HTTP endpoint.
 
 ## Source Code
 

@@ -4,7 +4,7 @@ This directory contains the files used by the "types" module of [Project Forge](
 
 ## Purpose
 
-Classes for representing common data types
+Classes for representing common data types, along with helpers for converting and rendering them.
 
 ## Usage
 
