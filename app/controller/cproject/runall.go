@@ -106,6 +106,6 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 }
 
 func runAllStart(w http.ResponseWriter, r *http.Request, as *app.State, ps *cutil.PageState) (string, error) {
-	ps.SetTitleAndData("Start All", "TODO")
+	ps.SetTitleAndData("Start All", "Starting all projects at once is not available yet. Use the Start action on each project.")
 	return controller.Render(r, as, &views.Debug{}, ps, "projects", "Start**play")
 }

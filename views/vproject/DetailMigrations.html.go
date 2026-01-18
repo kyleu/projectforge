@@ -8,52 +8,111 @@ package vproject
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
+	"projectforge.dev/projectforge/app/project"
+	"projectforge.dev/projectforge/views/components"
 )
 
-//line views/vproject/DetailMigrations.html:6
+//line views/vproject/DetailMigrations.html:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vproject/DetailMigrations.html:6
+//line views/vproject/DetailMigrations.html:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vproject/DetailMigrations.html:6
+//line views/vproject/DetailMigrations.html:8
 func StreamDetailMigrations(qw422016 *qt422016.Writer, as *app.State, key string, ea any, ps *cutil.PageState) {
-//line views/vproject/DetailMigrations.html:6
+//line views/vproject/DetailMigrations.html:8
 	qw422016.N().S(`
-  TODO
 `)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:9
+	migs, _ := ea.(project.Migrations)
+
+//line views/vproject/DetailMigrations.html:10
+	if len(migs) == 0 {
+//line views/vproject/DetailMigrations.html:10
+		qw422016.N().S(`  <div class="mt"><em>No migrations found in <code>queries/migrations</code>.</em></div>
+`)
+//line views/vproject/DetailMigrations.html:12
+	} else {
+//line views/vproject/DetailMigrations.html:12
+		qw422016.N().S(`  <ul class="accordion mt">
+`)
+//line views/vproject/DetailMigrations.html:14
+		for _, m := range migs {
+//line views/vproject/DetailMigrations.html:14
+			qw422016.N().S(`    <li>
+      <input id="accordion-`)
+//line views/vproject/DetailMigrations.html:16
+			qw422016.E().S(m.Filename)
+//line views/vproject/DetailMigrations.html:16
+			qw422016.N().S(`" type="checkbox" hidden="hidden" />
+      <label for="accordion-`)
+//line views/vproject/DetailMigrations.html:17
+			qw422016.E().S(m.Filename)
+//line views/vproject/DetailMigrations.html:17
+			qw422016.N().S(`">`)
+//line views/vproject/DetailMigrations.html:17
+			components.StreamExpandCollapse(qw422016, 3, ps)
+//line views/vproject/DetailMigrations.html:17
+			qw422016.N().S(` `)
+//line views/vproject/DetailMigrations.html:17
+			qw422016.E().S(m.Filename)
+//line views/vproject/DetailMigrations.html:17
+			qw422016.N().S(`</label>
+      <div class="bd"><div><div>
+        `)
+//line views/vproject/DetailMigrations.html:19
+			qw422016.N().S(cutil.FormatLangIgnoreErrors(m.Content, "sql"))
+//line views/vproject/DetailMigrations.html:19
+			qw422016.N().S(`
+      </div></div></div>
+    </li>
+`)
+//line views/vproject/DetailMigrations.html:22
+		}
+//line views/vproject/DetailMigrations.html:22
+		qw422016.N().S(`  </ul>
+`)
+//line views/vproject/DetailMigrations.html:24
+	}
+//line views/vproject/DetailMigrations.html:24
+	qw422016.N().S(`  <div class="mt"><a href="/p/`)
+//line views/vproject/DetailMigrations.html:25
+	qw422016.E().S(key)
+//line views/vproject/DetailMigrations.html:25
+	qw422016.N().S(`/migrations">Open full migration list</a></div>
+`)
+//line views/vproject/DetailMigrations.html:26
 }
 
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 func WriteDetailMigrations(qq422016 qtio422016.Writer, as *app.State, key string, ea any, ps *cutil.PageState) {
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	StreamDetailMigrations(qw422016, as, key, ea, ps)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	qt422016.ReleaseWriter(qw422016)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 }
 
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 func DetailMigrations(as *app.State, key string, ea any, ps *cutil.PageState) string {
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	WriteDetailMigrations(qb422016, as, key, ea, ps)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	qs422016 := string(qb422016.B)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 	return qs422016
-//line views/vproject/DetailMigrations.html:8
+//line views/vproject/DetailMigrations.html:26
 }

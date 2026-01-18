@@ -1,8 +1,26 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
+  "projectforge.dev/projectforge/app/project"
+  "projectforge.dev/projectforge/views/components"
 ) %}
 
 {% func DetailMigrations(as *app.State, key string, ea any, ps *cutil.PageState) %}
-  TODO
+  {%- code migs, _ := ea.(project.Migrations) -%}
+  {%- if len(migs) == 0 -%}
+  <div class="mt"><em>No migrations found in <code>queries/migrations</code>.</em></div>
+  {%- else -%}
+  <ul class="accordion mt">
+    {%- for _, m := range migs -%}
+    <li>
+      <input id="accordion-{%s m.Filename %}" type="checkbox" hidden="hidden" />
+      <label for="accordion-{%s m.Filename %}">{%= components.ExpandCollapse(3, ps) %} {%s m.Filename %}</label>
+      <div class="bd"><div><div>
+        {%s= cutil.FormatLangIgnoreErrors(m.Content, "sql") %}
+      </div></div></div>
+    </li>
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
+  <div class="mt"><a href="/p/{%s key %}/migrations">Open full migration list</a></div>
 {%- endfunc -%}

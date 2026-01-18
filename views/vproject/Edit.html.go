@@ -49,7 +49,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="card" id="demo-content">
       <h3>Project Creation Demo</h3>
       <div class="mt">
-        <em>TODO!</em>
+        <em>This demo lets you explore the project creation flow. Saving and generation are disabled.</em>
       </div>
     </div>
 `)
