@@ -56,7 +56,12 @@ var Helpers = func() map[string][]string {
 	add("docs", "Documentation resources for this project")
 	add("acronyms", "Custom acronyms, intended to be displayed capitalized")
 
+	add("additionalPorts_example", util.ToJSON(AdditionalPortsExample))
+	add("configVars_example", util.ToJSON(ConfigVarsExample))
+	add("dockerPackages_example", util.ToJSON(DockerPackagesExample))
 	add("docs_example", util.ToJSON(DocsExample))
+	add("envvars_example", util.ToJSON(EnvVarsExample))
+	add("extraFiles_example", util.ToJSON(ExtraFilesExample))
 
 	return ret
 }()

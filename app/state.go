@@ -74,7 +74,7 @@ func Bootstrap(ctx context.Context, bi *BuildInfo, cfgDir string, port uint16, d
 		return nil, err
 	}
 
-	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	telemetryDisabled := util.GetEnvBoolAny(false, "disable_telemetry", "telemetry_disabled")
 	st, err := NewState(ctx, debug, bi, fs, !telemetryDisabled, port, logger)
 	if err != nil {
 		return nil, err

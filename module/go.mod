@@ -1,4 +1,4 @@
-module {{{ .Package }}}/module
+module {invalid-module}
 
 go 1.25.0
 

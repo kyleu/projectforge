@@ -568,7 +568,7 @@ func streamrenderMetadataForm(qw422016 *qt422016.Writer, prj *project.Project, p
 	qw422016.N().S(`
       `)
 //line views/vproject/Edit.html:156
-	edit.StreamTextareaTable(qw422016, "additionalPorts", "", "Additional Ports", 5, util.ToJSON(info.AdditionalPorts), 5, project.Helpers["additionalPorts"]...)
+	streamrenderArray(qw422016, "additionalPorts", "Additional Ports", info.AdditionalPorts, len(info.AdditionalPorts))
 //line views/vproject/Edit.html:156
 	qw422016.N().S(`
       `)
@@ -746,11 +746,11 @@ func streamrenderArray(qw422016 *qt422016.Writer, key string, title string, v an
 	if len(example) > 0 {
 //line views/vproject/Edit.html:192
 		qw422016.N().S(`
-        <a href="#modal-form-`)
+        <div class="mts"><a href="#modal-form-`)
 //line views/vproject/Edit.html:193
 		qw422016.E().S(key)
 //line views/vproject/Edit.html:193
-		qw422016.N().S(`"><button type="button">Example</button></a>
+		qw422016.N().S(`"><button type="button">Example</button></a></div>
         `)
 //line views/vproject/Edit.html:194
 		components.StreamJSONBytesModal(qw422016, "form-"+key, "["+key+"] Example", []byte(util.StringJoin(example, "\n")), 3)

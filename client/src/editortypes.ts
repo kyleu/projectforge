@@ -39,5 +39,6 @@ export interface Editor {
   columns: Column[];
   textarea: HTMLTextAreaElement;
   rows: Record<string, unknown>[];
-  table?: Element;
+  table?: HTMLTableElement;
+  tableWrapper?: HTMLDivElement;
 }

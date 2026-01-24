@@ -52,6 +52,15 @@ func GetEnvBool(name string, defaultValue bool) bool {
 	return GetEnv(name, fmt.Sprint(defaultValue)) == BoolTrue
 }
 
+func GetEnvBoolAny(defaultValue bool, names ...string) bool {
+	for _, name := range names {
+		if v := GetEnv(name, ""); v != "" {
+			return v == BoolTrue
+		}
+	}
+	return defaultValue
+}
+
 func GetEnvInt(name string, defaultValue int) int {
 	v := GetEnv(name, "")
 	i, err := strconv.ParseInt(v, 10, 32)

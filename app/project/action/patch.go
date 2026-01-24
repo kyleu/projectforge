@@ -11,13 +11,19 @@ type PatchSection struct {
 	Lines []string `json:"lines"`
 }
 
+const (
+	patchTypeAdded     = "added"
+	patchTypeRemoved   = "removed"
+	patchTypeUnchanged = "unchanged"
+)
+
 func (p *PatchSection) CSSClass() string {
 	switch p.Type {
-	case "unchanged":
+	case patchTypeUnchanged:
 		return "color-muted"
-	case "added":
+	case patchTypeAdded:
 		return "success"
-	case "removed":
+	case patchTypeRemoved:
 		return "error"
 	default:
 		return ""
@@ -34,7 +40,7 @@ func (p *PatchSection) Render() string {
 }
 
 func (p *PatchSection) Useful() bool {
-	return p.Type == "added" || p.Type == "removed"
+	return p.Type == patchTypeAdded || p.Type == patchTypeRemoved
 }
 
 type PatchSections []*PatchSection
@@ -58,11 +64,11 @@ func ParsePatchString(s string) PatchSections {
 		if line != "" {
 			switch line[0] {
 			case ' ':
-				ret = ret.AddLine("unchanged", line)
+				ret = ret.AddLine(patchTypeUnchanged, line)
 			case '+':
-				ret = ret.AddLine("added", line)
+				ret = ret.AddLine(patchTypeAdded, line)
 			case '-':
-				ret = ret.AddLine("removed", line)
+				ret = ret.AddLine(patchTypeRemoved, line)
 			default:
 				ret = ret.AddLine("location", line)
 			}

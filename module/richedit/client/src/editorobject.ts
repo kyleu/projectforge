@@ -82,8 +82,10 @@ function createEditor(e: Editor, x: Record<string, unknown>, onComplete: (row: R
 function onEditComplete(e: Editor, idx: number, row: Record<string, unknown>) {
   e.rows[idx] = row;
   e.textarea.value = JSON.stringify(e.rows, null, 2);
-  if (e.table) {
-    e.table.replaceWith(createTable(e));
+  const prevWrapper = e.tableWrapper;
+  const nextWrapper = createTable(e);
+  if (prevWrapper) {
+    prevWrapper.replaceWith(nextWrapper);
   }
   window.location.href = "#";
 }

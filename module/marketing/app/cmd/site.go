@@ -50,7 +50,7 @@ func loadSite(ctx context.Context, flags *Flags, logger util.Logger) (http.Handl
 		return nil, logger, err
 	}
 
-	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	telemetryDisabled := util.GetEnvBoolAny(false, "disable_telemetry", "telemetry_disabled")
 	st, err := app.NewState(ctx, flags.Debug, _buildInfo, f, !telemetryDisabled, flags.Port, logger)
 	if err != nil {
 		return nil, logger, err

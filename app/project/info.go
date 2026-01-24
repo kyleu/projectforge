@@ -18,7 +18,14 @@ type Doc struct {
 
 type Docs []*Doc
 
-var DocsExample = Docs{{Name: "Linux", Provider: "github", URL: "https://github.com/torvalds/linux"}}
+var (
+	AdditionalPortsExample = map[string]int{"port1": 8080, "port2": 9090}
+	ConfigVarsExample      = map[string]string{"VAR1": "foo", "VAR2": "bar"}
+	DockerPackagesExample  = []string{"package1", "package2"}
+	DocsExample            = Docs{{Name: "Linux", Provider: "github", URL: "https://github.com/torvalds/linux"}}
+	EnvVarsExample         = []string{"VAR1=foo", "VAR2=bar"}
+	ExtraFilesExample      = []string{"file1", "file2"}
+)
 
 type ModuleDef struct {
 	Key  string `json:"key"`

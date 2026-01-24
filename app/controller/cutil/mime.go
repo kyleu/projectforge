@@ -147,6 +147,9 @@ func GetContentTypes(r *http.Request) (string, string) {
 		ret = ret[0:idx]
 	}
 	t := QueryStringString(r.URL, "t")
+	if t == "" {
+		t = QueryStringString(r.URL, "format")
+	}
 	switch t {
 	case util.KeyDebug:
 		return mimeDebug, t

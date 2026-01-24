@@ -110,6 +110,24 @@ func (s *Service) EnableLogging(enabled bool) {
 }
 
 func (s *Service) Testbed(ctx context.Context, logger util.Logger) (any, error) {
-	ret := "TODO"
+	_ = ctx
+	_ = logger
+	jobs := s.ListJobs()
+	s.resultMu.Lock()
+	results := make(map[uuid.UUID]*Result, len(s.Results))
+	for k, v := range s.Results {
+		results[k] = v
+	}
+	counts := make(map[uuid.UUID]int, len(s.ExecCounts))
+	for k, v := range s.ExecCounts {
+		counts[k] = v
+	}
+	s.resultMu.Unlock()
+	ret := util.ValueMap{
+		"jobCount":   len(jobs),
+		"jobs":       jobs,
+		"execCounts": counts,
+		"results":    results,
+	}
 	return ret, nil
 }

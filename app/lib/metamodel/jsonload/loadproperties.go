@@ -77,6 +77,12 @@ func parseProperty(sch *jsonschema.Schema, name string, required bool, prop *jso
 	if ret.SQLDefault == "" && prop.Default != nil {
 		ret.SQLDefault = fmt.Sprint(prop.Default)
 	}
+	if len(ret.Values) == 0 && len(prop.Enum) > 0 {
+		ret.Values = make([]string, 0, len(prop.Enum))
+		for _, v := range prop.Enum {
+			ret.Values = append(ret.Values, fmt.Sprint(v))
+		}
+	}
 	return ret, nil
 }
 
@@ -103,7 +109,10 @@ func parseType(prop *jsonschema.Schema, required bool) *types.Wrapped {
 	case jsonschema.SchemaTypeObject:
 		return parseObj(prop)
 	case jsonschema.SchemaTypeEnum:
-		return types.NewEnum("TODO")
+		if prop.Ref != "" {
+			return types.NewEnum(enumRefName(prop.Ref))
+		}
+		return types.NewString()
 	case jsonschema.SchemaTypeArray:
 		return types.NewList(parseType(prop.Items, true))
 	case jsonschema.SchemaTypeRef:
@@ -113,7 +122,7 @@ func parseType(prop *jsonschema.Schema, required bool) *types.Wrapped {
 	case jsonschema.SchemaTypeEmpty:
 		return types.NewAny()
 	case jsonschema.SchemaTypeNot:
-		return types.NewError("TODO: not")
+		return types.NewError("unsupported JSON schema type [not]")
 	case jsonschema.SchemaTypeUnknown:
 		return types.NewUnknown("unknown")
 	default:
@@ -125,7 +134,28 @@ func parseObj(prop *jsonschema.Schema) *types.Wrapped {
 	if !prop.HasProperties() {
 		return types.NewStringKeyedMap()
 	}
-	return types.NewReferenceArgs(util.Pkg{"obj"}, "TODO")
+	return types.NewValueMap()
+}
+
+func enumRefName(ref string) string {
+	id := util.Str(ref)
+	if id.HasPrefix("ref:") {
+		id = id.TrimPrefix("ref:")
+	}
+	if idx := id.Index("://"); idx > -1 {
+		id = id.Substring(idx+3, id.Length())
+	}
+	if id.HasSuffix(".json") {
+		id = id.TrimSuffix(".json")
+	}
+	if id.HasSuffix(".schema") {
+		id = id.TrimSuffix(".schema")
+	}
+	parts := id.Split("/")
+	if len(parts) == 0 {
+		return ""
+	}
+	return parts[len(parts)-1].String()
 }
 
 func parseRef(prop *jsonschema.Schema, required bool) *types.Wrapped {

@@ -31,7 +31,7 @@ func Static(w http.ResponseWriter, r *http.Request) {
 func assetResponse(w http.ResponseWriter, e *assets.Entry, err error) {
 	if err == nil {
 		w.Header().Set(cutil.HeaderContentType, e.Mime)
-		w.Header().Set(cutil.HeaderCacheControl, "public, max-age=3600")
+		w.Header().Set(cutil.HeaderCacheControl, "public, max-age=86400") // 24 hours
 		w.WriteHeader(http.StatusOK)
 		cutil.WriteCORS(w)
 		_, _ = w.Write(e.Bytes)

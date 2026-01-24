@@ -23,7 +23,7 @@ func (e *ExecHelper) AddLog(msg string, args ...any) {
 }
 
 func (e *ExecHelper) AddLogOutput(key string, out string) {
-	if len(out) == 0 {
+	if out == "" {
 		return
 	}
 	e.AddLog("%s output: %s", key, out)

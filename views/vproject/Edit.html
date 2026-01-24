@@ -153,7 +153,7 @@
       {%= edit.StringTable("goVersion", "", "Go Version", info.GoVersion, 5, project.Helpers["goVersion"]...) %}
       {%= edit.StringTable("goBinary", "", "Go Binary", info.GoBinary, 5, project.Helpers["goBinary"]...) %}
       {%= renderArray("configVars", "Config Vars", info.ConfigVars, len(info.ConfigVars)) %}
-      {%= edit.TextareaTable("additionalPorts", "", "Additional Ports", 5, util.ToJSON(info.AdditionalPorts), 5, project.Helpers["additionalPorts"]...) %}
+      {%= renderArray("additionalPorts", "Additional Ports", info.AdditionalPorts, len(info.AdditionalPorts)) %}
       {%= edit.StringTable("extraFiles", "", "Extra Files", util.StringJoin(info.ExtraFiles, ", "), 5, project.Helpers["extraFiles"]...) %}
       {%= edit.StringTable("ignoredFiles", "", "Ignored Files", util.StringJoin(info.IgnoredFiles, ", "), 5, project.Helpers["ignoredFiles"]...) %}
       {%= edit.StringTable("deployments", "", "Deployments", util.StringJoin(info.Deployments, ", "), 5, project.Helpers["deployments"]...) %}
@@ -190,7 +190,7 @@
     <th class="shrink">
       <label for="{%s id %}"{%= components.TitleFor(help) %}>{%s title %}</label>
       {%- if len(example) > 0 %}
-        <a href="#modal-form-{%s key %}"><button type="button">Example</button></a>
+        <div class="mts"><a href="#modal-form-{%s key %}"><button type="button">Example</button></a></div>
         {%= components.JSONBytesModal("form-" + key, "["+key+"] Example", []byte(util.StringJoin(example, "\n")), 3) %}
       {%- endif %}
     </th>

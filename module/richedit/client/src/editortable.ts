@@ -52,7 +52,7 @@ function createTableRow(e: Editor, idx: number, x: Record<string, unknown>): HTM
   return r;
 }
 
-export function createTable(e: Editor): HTMLElement {
+export function createTable(e: Editor): HTMLDivElement {
   const tbl = document.createElement("table");
   e.table = tbl;
   tbl.classList.add("min-200");
@@ -64,9 +64,10 @@ export function createTable(e: Editor): HTMLElement {
   });
   tbl.appendChild(tbody);
 
-  const div = document.createElement("div");
-  div.classList.add("overflow");
-  div.classList.add("full-width");
-  div.appendChild(tbl);
-  return div;
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("overflow");
+  wrapper.classList.add("full-width");
+  wrapper.appendChild(tbl);
+  e.tableWrapper = wrapper;
+  return wrapper;
 }

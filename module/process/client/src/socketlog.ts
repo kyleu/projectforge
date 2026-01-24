@@ -30,6 +30,9 @@ export function socketLog(
   };
 
   let currRow: HTMLElement | null = null;
+  const appendText = (row: HTMLElement, text: string) => {
+    row.appendChild(document.createTextNode(text));
+  };
   const r = (m: SocketMessage) => {
     if (m.cmd !== "output") {
       if (extraHandlers.length === 0) {
@@ -41,19 +44,25 @@ export function socketLog(
       }
       return;
     }
-    if (m.param.html === undefined) {
+    const htmlParam = m.param.html;
+    if (htmlParam === undefined) {
       console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
     }
-    const html = m.param.html as string[];
+    let html: string[] = [];
+    if (Array.isArray(htmlParam)) {
+      html = htmlParam.filter((item): item is string => typeof item === "string");
+    } else if (typeof htmlParam === "string") {
+      html = [htmlParam];
+    }
 
     let content = "";
     for (const x of html) {
       currRow ??= newRow();
       if (x === "\n") {
         if (content === "") {
-          content = "&nbsp;";
+          content = "\u00a0";
         }
-        currRow.innerHTML += content;
+        appendText(currRow, content);
         content = "";
         currRow = null;
       } else {
@@ -61,7 +70,7 @@ export function socketLog(
       }
     }
     if (currRow) {
-      currRow.innerHTML += content;
+      appendText(currRow, content);
     }
     const c = req("#content");
     c.scrollTo(0, c.scrollHeight);

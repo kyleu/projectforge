@@ -103,7 +103,7 @@ func Bootstrap(ctx context.Context, bi *BuildInfo{{{ if .HasModule "filesystem" 
 		return nil, err
 	}
 
-	{{{ end }}}telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	{{{ end }}}telemetryDisabled := util.GetEnvBoolAny(false, "disable_telemetry", "telemetry_disabled")
 	st, err := NewState(ctx, debug, bi{{{ if .HasModule "filesystem" }}}, fs{{{ end }}}, !telemetryDisabled, port, logger)
 	if err != nil {
 		return nil, err

@@ -1,4 +1,6 @@
 let appUnloading = false;
+let unloadHandlerAttached = false;
+const maxPendingMessages = 100;
 
 export interface SocketMessage {
   readonly channel: string;
@@ -55,9 +57,12 @@ export class Socket {
   }
 
   connect() {
-    window.onbeforeunload = () => {
-      appUnloading = true;
-    };
+    if (!unloadHandlerAttached) {
+      window.addEventListener("beforeunload", () => {
+        appUnloading = true;
+      });
+      unloadHandlerAttached = true;
+    }
     this.connectTime = Date.now();
     this.sock = new WebSocket(socketUrl(this.url));
     const s = this; // eslint-disable-line @typescript-eslint/no-this-alias
@@ -73,7 +78,13 @@ export class Socket {
       s.open();
     };
     this.sock.onmessage = (event) => {
-      const msg = JSON.parse(event.data as string) as SocketMessage;
+      let msg: SocketMessage;
+      try {
+        msg = JSON.parse(String(event.data)) as SocketMessage;
+      } catch (err) {
+        s.err("socket", `invalid message payload: ${String(err)}`);
+        return;
+      }
       if (s.debug) {
         console.debug("[socket]: receive", msg);
       }
@@ -129,6 +140,9 @@ export class Socket {
       this.sock.send(m);
     } else {
       this.pendingMessages.push(msg);
+      if (this.pendingMessages.length > maxPendingMessages) {
+        this.pendingMessages.shift();
+      }
     }
   }
 }

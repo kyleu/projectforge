@@ -22,6 +22,21 @@ var (
 	MaxBodySize  = int64(1024 * 1024 * 128) // 128MB
 )
 
+func shouldReadBody(r *http.Request) bool {
+	if r.Body == nil || r.Body == http.NoBody {
+		return false
+	}
+	switch r.Method {
+	case http.MethodPost, http.MethodPut, http.MethodPatch, http.MethodDelete:
+	default:
+		return false
+	}
+	if r.ContentLength == 0 && r.Header.Get("Transfer-Encoding") == "" {
+		return false
+	}
+	return true
+}
+
 // @contextcheck(req_has_ctx).
 func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, logger util.Logger) *PageState {
 	parentCtx, logger := httpmetrics.ExtractHeaders(r, logger)
@@ -48,8 +63,11 @@ func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, 
 	}
 	span.Attribute("browser", browser)
 	span.Attribute("os", os)
-	b, _ := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodySize))
-	r.Body = io.NopCloser(bytes.NewBuffer(b))
+	var b []byte
+	if shouldReadBody(r) {
+		b, _ = io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodySize))
+		r.Body = io.NopCloser(bytes.NewBuffer(b))
+	}
 
 	return &PageState{
 		Action: key, Method: r.Method, URI: r.URL, Flashes: flashes, Session: session,

@@ -74,7 +74,7 @@ bin/                  # Build and development scripts
 client/               # TypeScript/JavaScript client code
 doc/                  # Project documentation
 help/                 # Embedded help files
-module/               # Available Project Forge modules
+module/               # Template files for Project Forge modules
 test/                 # Integration and E2E tests
 tools/                # Platform-specific build tools
 views/                # HTML templates (quicktemplate)
@@ -85,7 +85,7 @@ views/                # HTML templates (quicktemplate)
 - `/app/controller/`: HTTP handlers organized by feature area
 - `/app/lib/`: Module-provided logic, organized by module
 - `/views/`: HTML templates using quicktemplate syntax
-- `/module/`: Self-contained feature modules
+- `/module/`: Template files for modules, one per directory
 - `/bin/`: Development and build automation scripts
 
 ## Development Workflow
@@ -110,6 +110,12 @@ views/                # HTML templates (quicktemplate)
 make build
 
 ./build/debug/projectforge
+```
+
+```bash
+make build-release
+
+./build/release/projectforge
 ```
 
 ### 2. Before Committing

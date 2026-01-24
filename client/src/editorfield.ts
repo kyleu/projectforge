@@ -6,7 +6,7 @@ function stringInput(id: string, col: Column, x: Record<string, unknown>, onChan
   input.name = col.key;
   input.id = id;
   const v = x[col.key];
-  if (v !== null && v) {
+  if (v !== null && v !== undefined) {
     input.value = unknownToString(v);
   }
   onChange ??= () => {

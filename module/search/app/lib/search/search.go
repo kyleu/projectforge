@@ -26,7 +26,7 @@ func Search(ctx context.Context, as *app.State, params *Params, page *cutil.Page
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
 	// add your custom search functions here
-	testFunc := func(ctx context.Context, as *app.State, p *Params, page *cutil.PageState) (result.Results, error) {
+	testFunc := func(ctx context.Context, p *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if p.Q == "test" {
 			return result.Results{{URL: "/about", Title: "Test Result", Icon: "star", Matches: nil}}, nil
 		}

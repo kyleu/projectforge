@@ -6,34 +6,50 @@
   "projectforge.dev/projectforge/views/components"
 ) %}
 
-{% func Table(mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) %}
+{% func Table(mods module.Modules, full bool, as *app.State, ps *cutil.PageState) %}
+  <table class="mt min-200">
+    {%- if full -%}
+    <thead>
+      <tr>
+        <th class="shrink">Title</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    {%- endif -%}
+    <tbody>
+      {%- for _, mod := range mods -%}
+      <tr>
+        <td class="shrink">
+          <a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.IconSafe(), 16, 16, "icon", ps) %}</a>
+          <a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a>
+        </td>
+        <td>{%s mod.Description %}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+{% endfunc %}
+
+{% func TableCard(mods module.Modules, full bool, dir string, as *app.State, ps *cutil.PageState) %}
   <div class="card">
     {%- if dir != "" -%}
     <div class="right"><em>{%s dir %}</em></div>
     {%- endif -%}
     <h3><a href="/m">{%= components.SVGIcon(`archive`, ps) %}</a> <a href="/m">{%s util.StringPlural(len(mods), "Available Module") %}</a></h3>
     <div class="overflow full-width">
-      <table class="mt min-200">
-        {%- if full -%}
-        <thead>
-          <tr>
-            <th class="shrink">Title</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        {%- endif -%}
-        <tbody>
-          {%- for _, mod := range mods -%}
-          <tr>
-            <td class="shrink">
-              <a href="/m/{%s mod.Key %}">{%= components.SVGRef(mod.IconSafe(), 16, 16, "icon", ps) %}</a>
-              <a href="/m/{%s mod.Key %}">{%s mod.Title() %}</a>
-            </td>
-            <td>{%s mod.Description %}</td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      {%= Table(mods, full, as, ps) %}
     </div>
   </div>
+{% endfunc %}
+
+{% func TableAccordion(mods module.Modules, as *app.State, ps *cutil.PageState) %}
+  <ul class="accordion">
+    <li>
+      <input id="accordion-modules" type="checkbox" hidden />
+      <label for="accordion-modules">{%= components.ExpandCollapse(3, ps) %} {%s util.StringPlural(len(mods), "Available Module") %}</label>
+      <div class="bd"><div><div>
+        {%= Table(mods, false, as, ps) %}
+      </div></div></div>
+    </li>
+  </ul>
 {% endfunc %}

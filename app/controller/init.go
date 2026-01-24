@@ -16,7 +16,7 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome"}
+var allowedRoutes = []string{"/about", "/admin", "/testbed", "/welcome", "/welcome/process"}
 
 func initApp(ctx context.Context, as *app.State, logger util.Logger) error {
 	tf := func(ctx context.Context, res *task.Result, logger util.Logger) *task.Result {
@@ -44,7 +44,7 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 	if root == nil {
 		root = &project.Project{Key: "root"}
 	}
-	if root.Info == nil {
+	if root.Missing() {
 		allowed := lo.ContainsBy(allowedRoutes, func(r string) bool {
 			return strings.HasSuffix(ps.URI.Path, r)
 		})
@@ -52,7 +52,6 @@ func initAppRequest(as *app.State, ps *cutil.PageState) error {
 			ps.ForceRedirect = "/welcome"
 		}
 	}
-	as.Services.Task.RegisteredTasks.Get("testbed").Fields[0].Choices = as.Services.Projects.Keys()
 	return nil
 }
 

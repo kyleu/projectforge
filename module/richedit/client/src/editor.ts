@@ -33,8 +33,8 @@ function extractEditor(el: HTMLElement) {
 
   const e: Editor = { key: key, title: title, columns: columns, textarea: inp, rows: curr };
 
-  const tbl = createTable(e);
-  el.appendChild(tbl);
+  const wrapper = createTable(e);
+  el.appendChild(wrapper);
 
   return e;
 }
@@ -44,11 +44,9 @@ function editorShow(el: HTMLElement, e: Editor) {
     toggle.innerText = rawLabel;
   });
   e.rows = parseRows(e.textarea.value, "editor [" + e.key + "]");
-  e.table?.remove();
-  createTable(e);
-  if (e.table) {
-    el.appendChild(e.table);
-  }
+  e.tableWrapper?.remove();
+  const wrapper = createTable(e);
+  el.appendChild(wrapper);
   e.textarea.hidden = true;
 }
 
@@ -56,7 +54,7 @@ function editorHide(e: Editor, editorLabel: string) {
   els(".toggle-editor-" + e.key).forEach((toggle) => {
     toggle.innerText = editorLabel;
   });
-  e.table?.remove();
+  e.tableWrapper?.remove();
   e.textarea.value = JSON.stringify(e.rows, null, 2);
   e.textarea.hidden = false;
 }

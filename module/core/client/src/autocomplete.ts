@@ -5,7 +5,7 @@ function debounce(callback: (...args: unknown[]) => void, wait: number) {
       window.clearTimeout(timeoutId);
     }
     timeoutId = window.setTimeout(() => {
-      callback(null, ...args);
+      callback(...args);
     }, wait);
   };
 }
@@ -29,20 +29,17 @@ function autocomplete(
   }
   const listId = el.id + "-list";
   const list = document.createElement("datalist");
-
   const loadingOpt = document.createElement("option");
   loadingOpt.value = "";
   loadingOpt.innerText = "Loading...";
   list.appendChild(loadingOpt);
-
   list.id = listId;
   el.parentElement?.prepend(list);
-
   el.setAttribute("autocomplete", "off");
   el.setAttribute("list", listId);
-
   const cache: Record<string, AutocompleteEntry> = {};
   let lastQuery = "";
+  let requestSeq = 0;
 
   function getURL(q: string): string {
     const dest = url;
@@ -81,10 +78,14 @@ function autocomplete(
       datalistUpdate(q);
       return;
     }
-
+    const currentSeq = ++requestSeq;
+    const query = q;
     void fetch(dest, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
+        if (currentSeq !== requestSeq || el.value !== query) {
+          return;
+        }
         if (!data) {
           return;
         }
@@ -104,9 +105,11 @@ function autocomplete(
         }
         cache[q] = { url: dest, data: arr, frag: frag, complete: false };
         datalistUpdate(q);
+      })
+      .catch((err: unknown) => {
+        console.warn("autocomplete fetch failed", err);
       });
   }
-
   el.oninput = debounce(f, 250);
   console.log("managing [" + el.id + "] autocomplete");
 }

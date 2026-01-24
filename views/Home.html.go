@@ -82,59 +82,68 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	vproject.StreamTable(qw422016, p.Projects, nil, false, p.Execs, as, ps)
 //line views/Home.html:34
 	qw422016.N().S(`
-  `)
-//line views/Home.html:35
-	vmodule.StreamTable(qw422016, p.Modules, false, "", as, ps)
-//line views/Home.html:35
+  <div class="card">
+    <h3><a href="/m">`)
+//line views/Home.html:36
+	components.StreamSVGIcon(qw422016, `archive`, ps)
+//line views/Home.html:36
+	qw422016.N().S(`</a> <a href="/m">Modules</a></h3>
+    <div class="mts">
+      `)
+//line views/Home.html:38
+	vmodule.StreamTableAccordion(qw422016, p.Modules, as, ps)
+//line views/Home.html:38
 	qw422016.N().S(`
-`)
-//line views/Home.html:36
-	if len(p.Execs) > 0 {
-//line views/Home.html:36
-		qw422016.N().S(`  <div class="card">
-    <h3>`)
-//line views/Home.html:38
-		components.StreamSVGIcon(qw422016, `play`, ps)
-//line views/Home.html:38
-		qw422016.N().S(` `)
-//line views/Home.html:38
-		qw422016.E().S(util.StringPlural(len(p.Execs), "Process"))
-//line views/Home.html:38
-		qw422016.N().S(`</h3>
-    `)
-//line views/Home.html:39
-		vexec.StreamTable(qw422016, as, p.Execs, ps)
-//line views/Home.html:39
-		qw422016.N().S(`
+    </div>
   </div>
 `)
 //line views/Home.html:41
+	if len(p.Execs) > 0 {
+//line views/Home.html:41
+		qw422016.N().S(`  <div class="card">
+    <h3>`)
+//line views/Home.html:43
+		components.StreamSVGIcon(qw422016, `play`, ps)
+//line views/Home.html:43
+		qw422016.N().S(` `)
+//line views/Home.html:43
+		qw422016.E().S(util.StringPlural(len(p.Execs), "Process"))
+//line views/Home.html:43
+		qw422016.N().S(`</h3>
+    `)
+//line views/Home.html:44
+		vexec.StreamTable(qw422016, as, p.Execs, ps)
+//line views/Home.html:44
+		qw422016.N().S(`
+  </div>
+`)
+//line views/Home.html:46
 	}
-//line views/Home.html:42
+//line views/Home.html:47
 }
 
-//line views/Home.html:42
+//line views/Home.html:47
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:42
+//line views/Home.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:42
+//line views/Home.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:42
+//line views/Home.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:42
+//line views/Home.html:47
 }
 
-//line views/Home.html:42
+//line views/Home.html:47
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:42
+//line views/Home.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:42
+//line views/Home.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:42
+//line views/Home.html:47
 	qs422016 := string(qb422016.B)
-//line views/Home.html:42
+//line views/Home.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:42
+//line views/Home.html:47
 	return qs422016
-//line views/Home.html:42
+//line views/Home.html:47
 }

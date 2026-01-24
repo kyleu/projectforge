@@ -58,7 +58,7 @@ brew install kyleu/kyleu/projectforge
     # or: make dev
     ```
 
-3. Open http://localhost:20000 (or the port you picked).
+3. Open http://localhost:20000 (or whatever port you've picked).
 
 4. When you're ready to change features, edit `.projectforge/project.json` and run `projectforge generate`.
 

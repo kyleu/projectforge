@@ -158,3 +158,7 @@ func (p *Project) Strings() []string {
 		util.StringJoin(p.Ignore, ","), util.StringJoin(p.Tags, ","), p.Theme.Key, p.Path, p.Parent, p.Error,
 	}
 }
+
+func (p *Project) Missing() bool {
+	return p.Name == "" || strings.HasSuffix(p.Name, "(missing)")
+}
