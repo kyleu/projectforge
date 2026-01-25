@@ -9,6 +9,7 @@ import (
 )
 
 func TestWriteCounterTracksBytesAndStatus(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 
@@ -37,6 +38,7 @@ func TestWriteCounterTracksBytesAndStatus(t *testing.T) {
 }
 
 func TestWriteCounterHijackUnsupported(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 	if _, _, err := wc.Hijack(); err == nil {

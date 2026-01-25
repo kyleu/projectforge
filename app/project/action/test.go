@@ -14,6 +14,10 @@ func onBuildTest(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
 	return simpleProc(ctx, util.StringFilePath("bin", "test."+build.ScriptExtension+" -c"), pm.Prj.Path, ret, pm.Logger)
 }
 
+func onBuildClientTest(ctx context.Context, pm *PrjAndMods, ret *Result) *Result {
+	return simpleProc(ctx, util.StringFilePath("bin", "test-client."+build.ScriptExtension+" -c"), pm.Prj.Path, ret, pm.Logger)
+}
+
 func onTest(ctx context.Context, params *Params) *Result {
 	methodName := params.Cfg.GetStringOpt("method")
 	params.Logger.Infof("running test method [%s]...", methodName)

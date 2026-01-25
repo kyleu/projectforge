@@ -10,6 +10,7 @@ import (
 )
 
 func TestParseFormJSON(t *testing.T) {
+	t.Parallel()
 	req := httptest.NewRequest(http.MethodPost, "http://example.com", strings.NewReader(`{"a":"b"}`))
 	req.Header.Set(cutil.HeaderContentType, "application/json")
 
@@ -23,6 +24,7 @@ func TestParseFormJSON(t *testing.T) {
 }
 
 func TestParseFormAsMapsJSONArray(t *testing.T) {
+	t.Parallel()
 	body := `[{"a":1},{"a":2}]`
 	req := httptest.NewRequest(http.MethodPost, "http://example.com", strings.NewReader(body))
 	req.Header.Set(cutil.HeaderContentType, "application/json")
@@ -37,6 +39,7 @@ func TestParseFormAsMapsJSONArray(t *testing.T) {
 }
 
 func TestParseFormHTTPFallback(t *testing.T) {
+	t.Parallel()
 	body := "a=1&b=two"
 	req := httptest.NewRequest(http.MethodPost, "http://example.com", strings.NewReader(body))
 	req.Header.Set(cutil.HeaderContentType, "application/x-www-form-urlencoded")
@@ -51,6 +54,7 @@ func TestParseFormHTTPFallback(t *testing.T) {
 }
 
 func TestCleanID(t *testing.T) {
+	t.Parallel()
 	if got := cutil.CleanID("key", "id"); got != "id" {
 		t.Fatalf("CleanID returned [%v]", got)
 	}

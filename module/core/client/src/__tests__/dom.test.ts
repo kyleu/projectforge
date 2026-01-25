@@ -1,6 +1,7 @@
 /* @vitest-environment happy-dom */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { clear, els, opt, req, setDisplay, setHTML, setText } from "../dom";
+import { requireNonNull } from "./testUtils";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -10,7 +11,7 @@ afterEach(() => {
 describe("dom helpers", () => {
   it("els returns matching elements within a context", () => {
     document.body.innerHTML = '<div class="root"><span class="item"></span><span class="item"></span></div>';
-    const root = document.querySelector(".root") as HTMLElement;
+    const root = requireNonNull(document.querySelector<HTMLElement>(".root"), "root");
     const items = els<HTMLElement>(".item", root);
     expect(items).toHaveLength(2);
   });
@@ -41,7 +42,7 @@ describe("dom helpers", () => {
 
   it("setDisplay toggles display values", () => {
     document.body.innerHTML = '<div id="slot"></div>';
-    const el = document.getElementById("slot") as HTMLElement;
+    const el = requireNonNull(document.querySelector<HTMLElement>("#slot"), "slot");
 
     setDisplay(el, false);
     expect(el.style.display).toBe("none");
@@ -52,7 +53,7 @@ describe("dom helpers", () => {
 
   it("setText and clear update text and HTML", () => {
     document.body.innerHTML = '<div id="slot"><span>keep</span></div>';
-    const el = document.getElementById("slot") as HTMLElement;
+    const el = requireNonNull(document.querySelector<HTMLElement>("#slot"), "slot");
     setText(el, "hello");
     expect(el.innerText).toBe("hello");
 

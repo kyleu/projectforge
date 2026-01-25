@@ -78,6 +78,7 @@ var (
 	buildThemeRebuild  = &Build{Key: "themeRebuild", Title: "Theme Rebuild", Description: "Rebuilds the theme", Run: onThemeRebuild}
 	buildDeployments   = &Build{Key: "deployments", Title: "Deployments", Description: "Manages deployments", Run: onDeployments}
 	buildTest          = &Build{Key: "test", Title: "Test", Description: "Runs unit tests", Run: onBuildTest, Expensive: true}
+	buildTestClient    = &Build{Key: "test-client", Title: "Test Client", Description: "Runs client unit tests", Run: onBuildClientTest, Expensive: true}
 	buildCoverage      = &Build{Key: "coverage", Title: "Code Coverage", Description: "Runs a coverage report", Run: onCoverage, Expensive: true}
 	buildCustom        = &Build{Key: "custom", Title: "Custom Command", Description: "Runs a custom command", Run: onCustom, Expensive: true}
 )
@@ -85,7 +86,7 @@ var (
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
 	buildTidy, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientUpdate, buildClientBuild,
-	buildThemeRebuild, buildDeployments, buildTest, buildCoverage, buildCustom,
+	buildThemeRebuild, buildDeployments, buildTest, buildTestClient, buildCoverage, buildCustom,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

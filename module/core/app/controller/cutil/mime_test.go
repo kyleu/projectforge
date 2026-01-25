@@ -11,6 +11,7 @@ import (
 )
 
 func TestWriteCORSUsesReferer(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	rr.Header().Set(cutil.HeaderReferer, "http://example.com:8080/path")
 
@@ -28,7 +29,8 @@ func TestWriteCORSUsesReferer(t *testing.T) {
 }
 
 func TestGetContentTypesFormatOverride(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/?format=csv", nil)
+	t.Parallel()
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/?format=csv", http.NoBody)
 	req.Header.Set(cutil.HeaderAccept, "application/json")
 
 	ct, format := cutil.GetContentTypes(req)
@@ -36,7 +38,7 @@ func TestGetContentTypesFormatOverride(t *testing.T) {
 		t.Fatalf("GetContentTypes returned [%v], [%v]", ct, format)
 	}
 
-	req2 := httptest.NewRequest(http.MethodGet, "http://example.com/", nil)
+	req2 := httptest.NewRequest(http.MethodGet, "http://example.com/", http.NoBody)
 	req2.Header.Set(cutil.HeaderAccept, "text/html; charset=UTF-8")
 	ct2, format2 := cutil.GetContentTypes(req2)
 	if ct2 != "text/html" || format2 != "" {
@@ -45,6 +47,7 @@ func TestGetContentTypesFormatOverride(t *testing.T) {
 }
 
 func TestRespondMIMEWritesHeadersAndBody(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 	payload := []byte("hello")
@@ -75,6 +78,7 @@ func TestRespondMIMEWritesHeadersAndBody(t *testing.T) {
 }
 
 func TestRespondMIMERejectsEmptyPayload(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 	if _, err := cutil.RespondMIME("", "text/plain", nil, wc); err == nil {
@@ -83,6 +87,7 @@ func TestRespondMIMERejectsEmptyPayload(t *testing.T) {
 }
 
 func TestWriteCORSNetworkScheme(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	rr.Header().Set(cutil.HeaderReferer, "http://example.network/path")
 	cutil.WriteCORS(rr)
@@ -93,7 +98,8 @@ func TestWriteCORSNetworkScheme(t *testing.T) {
 }
 
 func TestGetContentTypesFromContentType(t *testing.T) {
-	req := httptest.NewRequest(http.MethodPost, "http://example.com/?t=yml", nil)
+	t.Parallel()
+	req := httptest.NewRequest(http.MethodPost, "http://example.com/?t=yml", http.NoBody)
 	req.Header.Set(cutil.HeaderContentType, "application/x-yaml")
 
 	ct, format := cutil.GetContentTypes(req)
@@ -103,6 +109,7 @@ func TestGetContentTypesFromContentType(t *testing.T) {
 }
 
 func TestGetContentTypesFromQueryParam(t *testing.T) {
+	t.Parallel()
 	u, _ := url.Parse("http://example.com/?t=debug")
 	req := &http.Request{URL: u, Header: http.Header{}}
 	ct, format := cutil.GetContentTypes(req)

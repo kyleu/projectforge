@@ -9,16 +9,20 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func TestPageStateTitleAndData(t *testing.T) {
-	ps := &cutil.PageState{}
-	ps.SetTitleAndData("Hello", 123)
+const pageTitle = "Hello"
 
-	if ps.Title != "Hello" || ps.Data != 123 {
+func TestPageStateTitleAndData(t *testing.T) {
+	t.Parallel()
+	ps := &cutil.PageState{}
+	ps.SetTitleAndData(pageTitle, 123)
+
+	if ps.Title != pageTitle || ps.Data != 123 {
 		t.Fatalf("SetTitleAndData set [%v], [%v]", ps.Title, ps.Data)
 	}
 }
 
 func TestPageStateTitleString(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{}
 	if got := ps.TitleString(); got != util.AppName {
 		t.Fatalf("TitleString was [%v]", got)
@@ -29,13 +33,14 @@ func TestPageStateTitleString(t *testing.T) {
 		t.Fatalf("TitleString was [%v]", got)
 	}
 
-	ps.Title = "Hello"
-	if got := ps.TitleString(); got != "Hello - "+util.AppName {
+	ps.Title = pageTitle
+	if got := ps.TitleString(); got != pageTitle+" - "+util.AppName {
 		t.Fatalf("TitleString was [%v]", got)
 	}
 }
 
 func TestPageStateAddIcon(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{}
 	ps.AddIcon("a", "b", "a")
 
@@ -45,6 +50,7 @@ func TestPageStateAddIcon(t *testing.T) {
 }
 
 func TestPageStateClassDecl(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{Icons: []string{"icon"}, Profile: &user.Profile{Mode: "dark"}}
 	ps.Browser = "firefox"
 	ps.OS = "linux"
@@ -61,6 +67,7 @@ func TestPageStateClassDecl(t *testing.T) {
 }
 
 func TestPageStateMainClasses(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{HideHeader: true, HideMenu: true}
 	if got := ps.MainClasses(); got != "noheader nomenu" {
 		t.Fatalf("MainClasses was [%v]", got)
@@ -68,6 +75,7 @@ func TestPageStateMainClasses(t *testing.T) {
 }
 
 func TestPageStateExtra(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{ExtraContent: map[string]string{"x": "y"}}
 	if got := ps.Extra("x"); got != "y" {
 		t.Fatalf("Extra was [%v]", got)
@@ -78,6 +86,7 @@ func TestPageStateExtra(t *testing.T) {
 }
 
 func TestPageStateAddHeaderScript(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{}
 	ps.AddHeaderScript("client.js", true)
 
@@ -87,6 +96,7 @@ func TestPageStateAddHeaderScript(t *testing.T) {
 }
 
 func TestPageStateUsername(t *testing.T) {
+	t.Parallel()
 	ps := &cutil.PageState{Profile: &user.Profile{Name: "alice"}}
 	if got := ps.Username(); got != "alice" {
 		t.Fatalf("Username was [%v]", got)

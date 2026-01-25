@@ -15,8 +15,9 @@ import (
 )
 
 func TestPathHelpers(t *testing.T) {
+	t.Parallel()
 	u := uuid.New()
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/items/123", nil)
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/items/123", http.NoBody)
 	req = mux.SetURLVars(req, map[string]string{
 		"id":   "123",
 		"flag": "true",
@@ -51,6 +52,7 @@ func TestPathHelpers(t *testing.T) {
 }
 
 func TestQueryStringHelpers(t *testing.T) {
+	t.Parallel()
 	u := uuid.New()
 	uri, err := url.Parse("http://example.com/?a=1&b=true&c=foo&uuid=" + u.String() + "&multi=a&multi=b")
 	if err != nil {
@@ -80,7 +82,8 @@ func TestQueryStringHelpers(t *testing.T) {
 }
 
 func TestHeaderMaps(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
+	t.Parallel()
+	req := httptest.NewRequest(http.MethodGet, "http://example.com", http.NoBody)
 	req.Header.Add("X-Test", "a")
 	req.Header.Add("X-Multi", "a")
 	req.Header.Add("X-Multi", "b")

@@ -76,7 +76,7 @@ func NewState(ctx context.Context, debug bool, bi *BuildInfo{{{ if .HasModule "f
 	}, nil
 }
 
-func (s State) Close(ctx context.Context, logger util.Logger) error {
+func (s *State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
 	{{{ if .HasModule "migration" }}}if err := s.DB.Close(); err != nil {
 		logger.Errorf("error closing database: %+v", err)
@@ -90,8 +90,8 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 	{{{ end }}}return s.Services.Close(ctx, logger)
 }{{{ if .HasUser }}}
 
-func (s State) User(ctx context.Context, id uuid.UUID, logger util.Logger) (*user.User, error) {
-	if s.Services == nil || s.Services.User == nil {
+func (s *State) User(ctx context.Context, id uuid.UUID, logger util.Logger) (*user.User, error) {
+	if s == nil || s.Services == nil || s.Services.User == nil {
 		return nil, nil
 	}
 	return s.Services.User.Get(ctx, nil, id, logger)

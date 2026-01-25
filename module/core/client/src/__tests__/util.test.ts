@@ -18,7 +18,7 @@ describe("util", () => {
     expect(unknownToString(date)).toBe(date.toISOString());
 
     expect(unknownToString(["a", 1])).toBe("[a, 1]");
-    expect(unknownToString({ a: 1 })).toBe("{\n  \"a\": 1\n}");
+    expect(unknownToString({ a: 1 })).toBe('{\n  "a": 1\n}');
 
     function namedFn() {
       return true;
@@ -34,13 +34,13 @@ describe("util", () => {
   });
 
   it("jsonParse returns values or null", () => {
-    expect(jsonParse<{ a: number }>("{\"a\": 1}")).toEqual({ a: 1 });
+    expect(jsonParse<{ a: number }>('{"a": 1}')).toEqual({ a: 1 });
     expect(jsonParse("{not json}")).toBeNull();
   });
 
   it("svgRef and expandCollapse output expected markup", () => {
     const svg = svgRef("check");
-    expect(svg).toContain("class=\"icon\"");
+    expect(svg).toContain('class="icon"');
     expect(svg).toContain("width: 18px");
     expect(svg).toContain("height: 18px");
     expect(svg).toContain("#svg-check");

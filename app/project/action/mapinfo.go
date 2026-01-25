@@ -34,7 +34,7 @@ func infoFromCfg(proto *project.Project, cfg util.ValueMap) *project.Info {
 	}
 	license := str("license", i.License)
 	if license == "" {
-		license = "Proprietary"
+		license = licenseProprietary
 	}
 
 	md := i.ModuleDefs

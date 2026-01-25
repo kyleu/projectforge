@@ -10,6 +10,8 @@ import (
 	projecttemplate "projectforge.dev/projectforge/app/project/template"
 )
 
+const licenseProprietary = "Proprietary"
+
 func runTemplate(path string, content string, ctx *projecttemplate.Context) (string, error) {
 	t, err := template.New(path).Delims(delimStart, delimEnd).Parse(content)
 	if err != nil {

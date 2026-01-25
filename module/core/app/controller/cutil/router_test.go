@@ -9,6 +9,7 @@ import (
 )
 
 func TestAddRoute(t *testing.T) {
+	t.Parallel()
 	orig := cutil.AppRoutesList
 	cutil.AppRoutesList = map[string][]string{}
 	defer func() { cutil.AppRoutesList = orig }()
@@ -23,6 +24,7 @@ func TestAddRoute(t *testing.T) {
 }
 
 func TestURLAddQuery(t *testing.T) {
+	t.Parallel()
 	u, _ := url.Parse("http://example.com/?a=1")
 	cutil.URLAddQuery(u, "b", "2")
 

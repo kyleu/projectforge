@@ -15,6 +15,7 @@ import (
 )
 
 func TestERsp(t *testing.T) {
+	t.Parallel()
 	msg, err := controller.ERsp("boom %d", 1)
 	if err == nil || !strings.Contains(err.Error(), "boom 1") {
 		t.Fatalf("ERsp error was [%v]", err)
@@ -25,6 +26,7 @@ func TestERsp(t *testing.T) {
 }
 
 func TestFlashAndRedir(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 	ps := &cutil.PageState{
@@ -60,6 +62,7 @@ func TestFlashAndRedir(t *testing.T) {
 }
 
 func TestFlashAndRedirRejectsExternal(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 	ps := &cutil.PageState{
@@ -78,6 +81,7 @@ func TestFlashAndRedirRejectsExternal(t *testing.T) {
 }
 
 func TestReturnToReferrer(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
 	ps := &cutil.PageState{
@@ -99,8 +103,9 @@ func TestReturnToReferrer(t *testing.T) {
 }
 
 func TestOptionsAndHead(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
-	controller.Options(rr, httptest.NewRequest(http.MethodOptions, "http://example.com", nil))
+	controller.Options(rr, httptest.NewRequest(http.MethodOptions, "http://example.com", http.NoBody))
 	if rr.Code != http.StatusOK {
 		t.Fatalf("Options status was [%d]", rr.Code)
 	}
@@ -109,7 +114,7 @@ func TestOptionsAndHead(t *testing.T) {
 	}
 
 	rr = httptest.NewRecorder()
-	controller.Head(rr, httptest.NewRequest(http.MethodHead, "http://example.com", nil))
+	controller.Head(rr, httptest.NewRequest(http.MethodHead, "http://example.com", http.NoBody))
 	if rr.Code != http.StatusOK {
 		t.Fatalf("Head status was [%d]", rr.Code)
 	}

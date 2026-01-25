@@ -1,6 +1,7 @@
 /* @vitest-environment happy-dom */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { flashCreate, flashInit } from "../flash";
+import { requireNonNull } from "./testUtils";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -18,7 +19,7 @@ describe("flash", () => {
     const flash = container?.querySelector(".flash");
     expect(flash).not.toBeNull();
 
-    const content = container?.querySelector(".content") as HTMLElement;
+    const content = requireNonNull(container?.querySelector<HTMLElement>(".content") ?? null, "flash content");
     expect(content.className).toContain("flash-success");
     expect(content.innerText).toBe("Hello");
   });
@@ -27,7 +28,7 @@ describe("flash", () => {
     vi.useFakeTimers();
     flashCreate("k2", "error", "Oops");
 
-    const flash = document.querySelector(".flash") as HTMLElement;
+    const flash = requireNonNull(document.querySelector<HTMLElement>(".flash"), "flash element");
     expect(flash).not.toBeNull();
 
     vi.advanceTimersByTime(5000);

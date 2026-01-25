@@ -31,8 +31,8 @@ describe("modal", () => {
     const modal = modalNew("existing", "Title");
     const existing = modalGetOrCreate("existing", "Ignored");
     expect(existing).toBe(modal);
-    expect(modalGetBody(existing as HTMLElement)).toBeInstanceOf(HTMLElement);
-    expect(modalGetHeader(existing as HTMLElement)).toBeInstanceOf(HTMLElement);
+    expect(modalGetBody(existing)).toBeInstanceOf(HTMLElement);
+    expect(modalGetHeader(existing)).toBeInstanceOf(HTMLElement);
 
     const bad = document.createElement("div");
     bad.id = "modal-bad";

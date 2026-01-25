@@ -12,12 +12,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const testCookieValue = "value"
+
 func TestNewCookie(t *testing.T) {
-	c := csession.NewCookie("value")
+	t.Parallel()
+	c := csession.NewCookie(testCookieValue)
 	if c.Name != util.AppKey {
 		t.Fatalf("cookie name was [%v]", c.Name)
 	}
-	if c.Value != "value" {
+	if c.Value != testCookieValue {
 		t.Fatalf("cookie value was [%v]", c.Value)
 	}
 	if c.Path != "/" {
@@ -35,9 +38,10 @@ func TestNewCookie(t *testing.T) {
 }
 
 func TestGetFromSession(t *testing.T) {
-	sess := util.ValueMap{"ok": "value", "bad": 12}
+	t.Parallel()
+	sess := util.ValueMap{"ok": testCookieValue, "bad": 12}
 
-	if got, err := csession.GetFromSession("ok", sess); err != nil || got != "value" {
+	if got, err := csession.GetFromSession("ok", sess); err != nil || got != testCookieValue {
 		t.Fatalf("GetFromSession returned [%v], err=[%v]", got, err)
 	}
 
@@ -51,6 +55,7 @@ func TestGetFromSession(t *testing.T) {
 }
 
 func TestSaveProfileDefaultRemoves(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	sess := util.ValueMap{"profile": "{\"name\":\"Bob\"}"}
 
@@ -66,6 +71,7 @@ func TestSaveProfileDefaultRemoves(t *testing.T) {
 }
 
 func TestSaveProfileCustomStores(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	sess := util.ValueMap{}
 
@@ -84,6 +90,7 @@ func TestSaveProfileCustomStores(t *testing.T) {
 }
 
 func TestSaveProfileNilRemoves(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	sess := util.ValueMap{"profile": "{\"name\":\"Bob\"}"}
 

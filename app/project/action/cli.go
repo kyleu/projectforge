@@ -83,7 +83,7 @@ func cliProject(ctx context.Context, p *project.Project, mods module.Modules, lo
 	p.Modules = promptModules(p.Modules, mods)
 
 	if p.Info.License == "" {
-		p.Info.License = "Proprietary"
+		p.Info.License = licenseProprietary
 	}
 	p.Info.License = promptString("Enter the license used by this project", p.Info.License)
 

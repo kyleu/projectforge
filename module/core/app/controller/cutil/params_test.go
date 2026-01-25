@@ -10,7 +10,8 @@ import (
 )
 
 func TestParamSetFromRequest(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/?user.o=name&user.l=200001&user.x=5&order.o=title.d", nil)
+	t.Parallel()
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/?user.o=name&user.l=200001&user.x=5&order.o=title.d", http.NoBody)
 
 	ps := cutil.ParamSetFromRequest(req)
 	user := ps["user"]

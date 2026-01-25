@@ -1,5 +1,6 @@
 /* @vitest-environment happy-dom */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { requireNonNull } from "./testUtils";
 
 let socketLog: typeof import("../socketlog").socketLog;
 let lastSocketInstance: {
@@ -23,7 +24,7 @@ vi.mock("../socket", () => {
       this.open = o;
       this.recv = r;
       this.err = e;
-      lastSocketInstance = this;
+      lastSocketInstance = { open: o, recv: r, err: e };
     }
   }
   return { Socket: MockSocket };
@@ -42,7 +43,8 @@ describe("socketlog", () => {
   it("renders output rows and scrolls", () => {
     const content = document.createElement("div");
     content.id = "content";
-    content.scrollTo = vi.fn();
+    const scrollSpy = vi.fn();
+    content.scrollTo = scrollSpy;
     document.body.appendChild(content);
 
     const parent = document.createElement("div");
@@ -60,13 +62,14 @@ describe("socketlog", () => {
     expect(parent.children).toHaveLength(2);
     expect(parent.children[0]?.textContent).toBe("hello");
     expect(parent.children[1]?.textContent).toBe("world");
-    expect(content.scrollTo).toHaveBeenCalled();
+    expect(scrollSpy).toHaveBeenCalled();
   });
 
   it("renders terminal output into table rows", () => {
     const content = document.createElement("div");
     content.id = "content";
-    content.scrollTo = vi.fn();
+    const scrollSpy = vi.fn();
+    content.scrollTo = scrollSpy;
     document.body.appendChild(content);
 
     const parent = document.createElement("tbody");
@@ -79,9 +82,9 @@ describe("socketlog", () => {
       param: { html: ["x"] }
     });
 
-    const row = parent.querySelector("tr") as HTMLTableRowElement;
-    const th = row.querySelector("th") as HTMLTableCellElement;
-    const td = row.querySelector("td") as HTMLTableCellElement;
+    const row = requireNonNull(parent.querySelector<HTMLTableRowElement>("tr"), "table row");
+    const th = requireNonNull(row.querySelector<HTMLTableCellElement>("th"), "table header");
+    const td = requireNonNull(row.querySelector<HTMLTableCellElement>("td"), "table cell");
 
     expect(th.textContent).toBe("0");
     expect(td.textContent).toBe("x");

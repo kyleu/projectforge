@@ -47,11 +47,6 @@ class MockWebSocket {
   }
 }
 
-declare global {
-  // eslint-disable-next-line no-var
-  var WebSocket: typeof MockWebSocket;
-}
-
 beforeEach(() => {
   MockWebSocket.instances = [];
   globalThis.WebSocket = MockWebSocket as unknown as typeof WebSocket;
@@ -65,7 +60,13 @@ afterEach(() => {
 
 describe("socket", () => {
   it("queues messages until connected", () => {
-    const sock = new Socket(false, () => undefined, () => undefined, () => undefined, "ws://example");
+    const sock = new Socket(
+      false,
+      () => undefined,
+      () => undefined,
+      () => undefined,
+      "ws://example"
+    );
     const ws = MockWebSocket.instances[0];
 
     sock.send({ channel: "c", cmd: "ping", param: { ok: true } });
@@ -76,14 +77,23 @@ describe("socket", () => {
     expect(sock.pendingMessages).toHaveLength(0);
     expect(ws.sent).toHaveLength(1);
 
-    const payload = JSON.parse(ws.sent[0] ?? "{}");
+    const payload = JSON.parse(ws.sent[0] ?? "{}") as {
+      cmd?: string;
+      param?: { ok?: boolean };
+    };
     expect(payload.cmd).toBe("ping");
-    expect(payload.param.ok).toBe(true);
+    expect(payload.param?.ok).toBe(true);
   });
 
   it("handles close-connection and disconnects", () => {
     vi.useFakeTimers();
-    const sock = new Socket(false, () => undefined, () => undefined, () => undefined, "ws://example");
+    const sock = new Socket(
+      false,
+      () => undefined,
+      () => undefined,
+      () => undefined,
+      "ws://example"
+    );
     const ws = MockWebSocket.instances[0];
     ws.triggerOpen();
 
@@ -96,7 +106,13 @@ describe("socket", () => {
 
   it("reports invalid message payloads", () => {
     const err = vi.fn();
-    const sock = new Socket(false, () => undefined, () => undefined, err, "ws://example");
+    const sock = new Socket(
+      false,
+      () => undefined,
+      () => undefined,
+      err,
+      "ws://example"
+    );
     const ws = MockWebSocket.instances[0];
     ws.triggerOpen();
 
@@ -111,7 +127,13 @@ describe("socket", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2024-01-01T00:00:00Z"));
 
-    const sock = new Socket(false, () => undefined, () => undefined, () => undefined, "ws://example");
+    const sock = new Socket(
+      false,
+      () => undefined,
+      () => undefined,
+      () => undefined,
+      "ws://example"
+    );
     const ws = MockWebSocket.instances[0];
 
     vi.advanceTimersByTime(1);

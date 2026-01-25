@@ -63,7 +63,7 @@ func NewState(ctx context.Context, debug bool, bi *BuildInfo, f filesystem.FileL
 	}, nil
 }
 
-func (s State) Close(ctx context.Context, logger util.Logger) error {
+func (s *State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
 	return s.Services.Close(ctx, logger)
 }

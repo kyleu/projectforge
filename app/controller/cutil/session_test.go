@@ -14,10 +14,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const requestBody = "hello"
+
 func TestLoadPageStateNoCookie(t *testing.T) {
+	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/path", nil)
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/path", http.NoBody)
 
 	ps := cutil.LoadPageState(nil, wc, req, "test", zap.NewNop().Sugar())
 	if ps.Profile == nil || ps.Profile.Name != user.DefaultProfile.Name {
@@ -32,10 +35,11 @@ func TestLoadPageStateNoCookie(t *testing.T) {
 }
 
 func TestLoadPageStateWithCookieAndFlashes(t *testing.T) {
+	t.Parallel()
 	logger := zap.NewNop().Sugar()
 	sess := util.ValueMap{
 		csession.WebFlashKey: "success:ok;error:bad",
-		"profile":           util.ToJSON(&user.Profile{Name: "", Mode: "dark"}),
+		"profile":            util.ToJSON(&user.Profile{Name: "", Mode: "dark"}),
 	}
 	enc, err := util.EncryptMessage(nil, util.ToJSONCompact(sess), logger)
 	if err != nil {
@@ -44,7 +48,7 @@ func TestLoadPageStateWithCookieAndFlashes(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
-	req := httptest.NewRequest(http.MethodPost, "http://example.com/path", bytes.NewBufferString("hello"))
+	req := httptest.NewRequest(http.MethodPost, "http://example.com/path", bytes.NewBufferString(requestBody))
 	req.AddCookie(csession.NewCookie(enc))
 
 	ps := cutil.LoadPageState(nil, wc, req, "test", logger)
@@ -57,7 +61,7 @@ func TestLoadPageStateWithCookieAndFlashes(t *testing.T) {
 	if ps.Profile == nil || ps.Profile.Name != user.DefaultProfile.Name || ps.Profile.Mode != "dark" {
 		t.Fatalf("profile was [%v]", ps.Profile)
 	}
-	if string(ps.RequestBody) != "hello" {
+	if string(ps.RequestBody) != requestBody {
 		t.Fatalf("RequestBody was [%s]", string(ps.RequestBody))
 	}
 	if len(rr.Result().Cookies()) == 0 {
