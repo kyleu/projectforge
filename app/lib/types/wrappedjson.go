@@ -100,6 +100,13 @@ func (x *Wrapped) UnmarshalJSON(data []byte) error {
 			tgt.V = NewAny()
 		}
 		t = tgt
+	case KeyOrderedMap:
+		var tgt *OrderedMap
+		tgt, err = util.FromJSONObj[*OrderedMap](wu.T)
+		if err == nil && tgt.V == nil {
+			tgt.V = NewAny()
+		}
+		t = tgt
 	case KeyRange:
 		var tgt *Range
 		tgt, err = util.FromJSONObj[*Range](wu.T)

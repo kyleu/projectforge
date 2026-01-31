@@ -103,21 +103,27 @@ func AsyncRateLimit[T any, R any](key string, items []T, f func(x T) (R, error),
 				if str == "" {
 					str = "item"
 				}
+				mu.Lock()
 				started++
-				log("[%d/%d] starting to process [%s]...", started, size, str)
+				startedCount := started
+				mu.Unlock()
+				log("[%d/%d] starting to process [%s]...", startedCount, size, str)
 				r, err := f(item)
 				mu.Lock()
 				defer mu.Unlock()
 				processed++
+				processedCount := processed
 				if err == nil {
 					ret = append(ret, r)
 				} else {
 					errs = append(errs, errors.Wrapf(err, "error running async function for item [%v]", item))
 				}
-				log("[%d/%d] processing [%s] complete in [%s]", processed, size, str, t.EndString())
+				log("[%d/%d] processing [%s] complete in [%s]", processedCount, size, str, t.EndString())
 			}(item, idx)
 		case <-time.After(timeout):
+			mu.Lock()
 			errs = append(errs, errors.Errorf("job timed out after [%v]", timeout))
+			mu.Unlock()
 			return ret, errs
 		}
 	}

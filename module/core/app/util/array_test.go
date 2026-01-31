@@ -206,6 +206,43 @@ func TestArraySorted(t *testing.T) {
 	}
 }
 
+func TestArrayToAnyArray(t *testing.T) {
+	t.Parallel()
+	src := []int{1, 2, 3}
+	got := util.ArrayToAnyArray(src)
+	if len(got) != 3 || got[0].(int) != 1 || got[2].(int) != 3 {
+		t.Fatalf("unexpected ArrayToAnyArray result: %v", got)
+	}
+}
+
+func TestArrayFindDuplicates(t *testing.T) {
+	t.Parallel()
+	dups := util.ArrayFindDuplicates([]int{1, 2, 2, 3, 1})
+	if len(dups) != 2 {
+		t.Fatalf("expected 2 duplicates, got %v", dups)
+	}
+	seen := map[int]bool{}
+	for _, v := range dups {
+		seen[v] = true
+	}
+	if !seen[1] || !seen[2] {
+		t.Fatalf("unexpected duplicates: %v", dups)
+	}
+}
+
+func TestArrayFromAnyOK(t *testing.T) {
+	t.Parallel()
+	if got := util.ArrayFromAnyOK[int]([]int{1, 2}); !reflect.DeepEqual(got, []int{1, 2}) {
+		t.Fatalf("unexpected ArrayFromAnyOK slice result: %v", got)
+	}
+	if got := util.ArrayFromAnyOK[int](3); !reflect.DeepEqual(got, []int{3}) {
+		t.Fatalf("unexpected ArrayFromAnyOK scalar result: %v", got)
+	}
+	if got := util.ArrayFromAnyOK[int]("x"); got != nil {
+		t.Fatalf("expected nil for invalid ArrayFromAnyOK, got %v", got)
+	}
+}
+
 func TestArrayLimit(t *testing.T) {
 	t.Parallel()
 	tests := []struct {

@@ -50,7 +50,10 @@ func toProperCase(s string, initCase bool) string {
 	if s == "" {
 		return s
 	}
-	if a, ok := acronymMap[s]; ok {
+	acronymMu.RLock()
+	a, ok := acronymMap[s]
+	acronymMu.RUnlock()
+	if ok {
 		s = a
 	}
 
