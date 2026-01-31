@@ -3,10 +3,8 @@
 ## Runs goreleaser in snapshot (test) mode.
 ##
 ## Usage:
-##   ./bin/build/release-test.sh [-y|--yes]
+##   ./bin/build/release-test.sh
 ##
-## Arguments:
-##   -y, --yes  Skip the confirmation prompt.
 ##
 ## Environment:
 ##   - PUBLISH_TEST=true (set by this script)

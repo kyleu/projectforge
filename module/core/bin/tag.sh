@@ -3,12 +3,11 @@
 ## Bumps version, builds, commits, tags, and pushes.
 ##
 ## Usage:
-##   ./bin/tag.sh [version|tag] [--dry-run] [-y|--yes]
+##   ./bin/tag.sh [version|tag] [--dry-run]
 ##
 ## Arguments:
 ##   version|tag  If omitted, increments the patch segment of the latest vX.Y.Z tag.
 ##   --dry-run    Print intended actions and exit without changing the repo.
-##   -y, --yes    Skip the confirmation prompt.
 ##
 ## Requires:
 ##   - Clean git working tree
@@ -34,13 +33,11 @@ require_cmd sed "install GNU sed (or use macOS default)"
 require_cmd awk "install awk (typically preinstalled)"
 require_cmd make "install Xcode Command Line Tools or build-essential"
 
-auto_yes=false
 dry_run=false
 TGT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -y|--yes) auto_yes=true; shift;;
     --dry-run) dry_run=true; shift;;
     --) shift; break;;
     -*)
@@ -100,14 +97,6 @@ echo "$TGT"
 if $dry_run; then
   echo "dry run: would update version strings (if numeric), build, commit, tag, and push"
   exit 0
-fi
-
-if ! $auto_yes; then
-  read -r -p "Tag ${TGT} and push to origin? [y/N] " confirm
-  case "$confirm" in
-    [yY][eE][sS]|[yY]) ;;
-    *) echo "aborted"; exit 0;;
-  esac
 fi
 
 pat="^[0-9]"

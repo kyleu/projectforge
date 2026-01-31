@@ -7,7 +7,6 @@
 ##
 ## Arguments:
 ##   version  Version tag for output filenames (default: v0.0.0).
-##   -y, --yes  Skip the confirmation prompt.
 ##
 ## Requires:
 ##   - Docker
@@ -46,12 +45,10 @@ require_cmd codesign "requires macOS codesign tool"
 require_cmd lipo "requires macOS Xcode command line tools"
 require_env APPLE_SIGNING_IDENTITY
 
-auto_yes=false
 TGT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -y|--yes) auto_yes=true; shift;;
     --) shift; break;;
     -*)
       echo "unknown option: $1" >&2
@@ -70,14 +67,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 TGT=${TGT:-v0.0.0}
-
-if ! $auto_yes; then
-  read -r -p "Build desktop release artifacts for ${TGT}? [y/N] " confirm
-  case "$confirm" in
-    [yY][eE][sS]|[yY]) ;;
-    *) echo "aborted"; exit 0;;
-  esac
-fi
 
 if command -v retry &> /dev/null
 then
