@@ -6,6 +6,7 @@ package vaction
 
 //line views/vaction/Diff.html:1
 import (
+	"slices"
 	"strings"
 
 	"projectforge.dev/projectforge/app"
@@ -17,328 +18,343 @@ import (
 	"projectforge.dev/projectforge/views/components/view"
 )
 
-//line views/vaction/Diff.html:13
+//line views/vaction/Diff.html:14
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vaction/Diff.html:13
+//line views/vaction/Diff.html:14
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vaction/Diff.html:13
+//line views/vaction/Diff.html:14
 func streamrenderDiffs(qw422016 *qt422016.Writer, as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) {
-//line views/vaction/Diff.html:13
+//line views/vaction/Diff.html:14
 	qw422016.N().S(`<h4 class="mt">Diffs</h4>`)
-//line views/vaction/Diff.html:15
+//line views/vaction/Diff.html:16
 	switch act.Key {
-//line views/vaction/Diff.html:16
+//line views/vaction/Diff.html:17
 	case "audit":
-//line views/vaction/Diff.html:16
+//line views/vaction/Diff.html:17
 		qw422016.N().S(`<div class="mt"><a href="/run/`)
-//line views/vaction/Diff.html:18
+//line views/vaction/Diff.html:19
 		qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:18
+//line views/vaction/Diff.html:19
 		qw422016.N().S(`/audit?fix=remove" title="Remove all audited files from project"><button>Purge All</button></a>`)
-//line views/vaction/Diff.html:19
+//line views/vaction/Diff.html:20
 		if diffs.HasStatus(diff.StatusDifferent) {
-//line views/vaction/Diff.html:19
+//line views/vaction/Diff.html:20
 			qw422016.N().S(` `)
-//line views/vaction/Diff.html:19
+//line views/vaction/Diff.html:20
 			qw422016.N().S(`<a href="/run/`)
-//line views/vaction/Diff.html:20
+//line views/vaction/Diff.html:21
 			qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:20
+//line views/vaction/Diff.html:21
 			qw422016.N().S(`/audit?fix=header" title="Remove header from all audited files"><button>Fix All</button></a>`)
-//line views/vaction/Diff.html:21
+//line views/vaction/Diff.html:22
 		}
-//line views/vaction/Diff.html:21
+//line views/vaction/Diff.html:22
 		qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:23
+//line views/vaction/Diff.html:24
 	case "build":
-//line views/vaction/Diff.html:24
+//line views/vaction/Diff.html:25
 		if cfg.GetStringOpt("phase") == "imports" {
-//line views/vaction/Diff.html:24
+//line views/vaction/Diff.html:25
 			qw422016.N().S(`<div class="mt"><a href="/run/`)
-//line views/vaction/Diff.html:26
+//line views/vaction/Diff.html:27
 			qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:26
+//line views/vaction/Diff.html:27
 			qw422016.N().S(`/build?phase=imports&fix=true" title="Fix all imports for incorrect files"><button>Fix All</button></a></div>`)
-//line views/vaction/Diff.html:28
+//line views/vaction/Diff.html:29
 		}
-//line views/vaction/Diff.html:29
+//line views/vaction/Diff.html:30
 	}
-//line views/vaction/Diff.html:29
+//line views/vaction/Diff.html:30
 	qw422016.N().S(`<div class="overflow full-width"><table><thead><tr><th class="shrink">Path</th><th class="shrink">Status</th><th class="shrink">Actions</th><th class="shrink">Patch</th></tr></thead><tbody>`)
-//line views/vaction/Diff.html:41
+//line views/vaction/Diff.html:42
+	upstreamCapableFiles := cfg.GetStringArrayOpt("upstreamCapableFiles")
+
+//line views/vaction/Diff.html:43
 	for _, d := range diffs {
-//line views/vaction/Diff.html:41
+//line views/vaction/Diff.html:43
 		qw422016.N().S(`<tr><td class="shrink">`)
-//line views/vaction/Diff.html:44
-		if strings.Contains(d.Path, "..") || d.Status.Matches(diff.StatusNew) {
-//line views/vaction/Diff.html:45
-			qw422016.E().S(d.Path)
 //line views/vaction/Diff.html:46
-		} else {
+		if strings.Contains(d.Path, "..") || d.Status.Matches(diff.StatusNew) {
 //line views/vaction/Diff.html:47
+			qw422016.E().S(d.Path)
+//line views/vaction/Diff.html:48
+		} else {
+//line views/vaction/Diff.html:49
 			view.StreamURL(qw422016, "/p/"+prjKey+"/fs/"+d.Path, d.Path, true, ps)
-//line views/vaction/Diff.html:48
+//line views/vaction/Diff.html:50
 		}
-//line views/vaction/Diff.html:48
+//line views/vaction/Diff.html:50
 		qw422016.N().S(`</td><td>`)
-//line views/vaction/Diff.html:50
-		qw422016.E().S(d.Status.StringFor(act.Key))
-//line views/vaction/Diff.html:50
-		qw422016.N().S(`</td><td class="nowrap">`)
 //line views/vaction/Diff.html:52
+		qw422016.E().S(d.Status.StringFor(act.Key))
+//line views/vaction/Diff.html:52
+		qw422016.N().S(`</td><td class="nowrap">`)
+//line views/vaction/Diff.html:54
 		switch act.Key {
-//line views/vaction/Diff.html:53
+//line views/vaction/Diff.html:55
 		case "audit":
-//line views/vaction/Diff.html:53
+//line views/vaction/Diff.html:55
 			qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:54
+//line views/vaction/Diff.html:56
 			qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:54
+//line views/vaction/Diff.html:56
 			qw422016.N().S(`/audit" method="get"><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:55
+//line views/vaction/Diff.html:57
 			qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:55
+//line views/vaction/Diff.html:57
 			qw422016.N().S(`" /><button type="submit" name="fix" value="remove" title="Remove file from project">Purge</button>`)
-//line views/vaction/Diff.html:56
+//line views/vaction/Diff.html:58
 			qw422016.N().S(` `)
-//line views/vaction/Diff.html:56
+//line views/vaction/Diff.html:58
 			qw422016.N().S(`</form>`)
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:60
 		case "preview":
-//line views/vaction/Diff.html:58
+//line views/vaction/Diff.html:60
 			qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:59
+//line views/vaction/Diff.html:61
 			qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:59
+//line views/vaction/Diff.html:61
 			qw422016.N().S(`/generate" method="get"><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:60
+//line views/vaction/Diff.html:62
 			qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:60
+//line views/vaction/Diff.html:62
 			qw422016.N().S(`" />`)
-//line views/vaction/Diff.html:61
+//line views/vaction/Diff.html:63
 			if d.Status.String() != "new" {
-//line views/vaction/Diff.html:61
+//line views/vaction/Diff.html:63
 				qw422016.N().S(`<button type="submit" name="to" value="ignore" title="Mark file as ignored">`)
-//line views/vaction/Diff.html:62
+//line views/vaction/Diff.html:64
 				components.StreamSVGButton(qw422016, "close", ps)
-//line views/vaction/Diff.html:62
+//line views/vaction/Diff.html:64
 				qw422016.N().S(`</button>`)
-//line views/vaction/Diff.html:62
+//line views/vaction/Diff.html:64
 				qw422016.N().S(` `)
-//line views/vaction/Diff.html:63
-			}
-//line views/vaction/Diff.html:63
-			qw422016.N().S(`<button type="submit" name="to" value="project" title="Overwrite project changes with module version">`)
-//line views/vaction/Diff.html:64
-			components.StreamSVGButton(qw422016, "forward", ps)
-//line views/vaction/Diff.html:64
-			qw422016.N().S(`</button></form>`)
+//line views/vaction/Diff.html:65
+				if slices.Contains(upstreamCapableFiles, d.Path) {
+//line views/vaction/Diff.html:65
+					qw422016.N().S(`<button type="submit" name="to" value="rebuild" title="Attempt merging local changes into module source">`)
 //line views/vaction/Diff.html:66
-		case "build":
+					components.StreamSVGButton(qw422016, "backward", ps)
+//line views/vaction/Diff.html:66
+					qw422016.N().S(`</button>`)
+//line views/vaction/Diff.html:66
+					qw422016.N().S(` `)
 //line views/vaction/Diff.html:67
-			switch cfg.GetStringOpt("phase") {
-//line views/vaction/Diff.html:68
-			case "imports":
-//line views/vaction/Diff.html:68
-				qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:69
-				qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:69
-				qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="imports" /><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:72
-				qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:72
-				qw422016.N().S(`" /><button type="submit" title="Reorder modules">Fix</button></form>`)
-//line views/vaction/Diff.html:75
-			case "deployments":
-//line views/vaction/Diff.html:76
-				if d.Status != diff.StatusIdentical {
-//line views/vaction/Diff.html:76
-					qw422016.N().S(`<form action="/run/`)
-//line views/vaction/Diff.html:77
-					qw422016.E().S(prjKey)
-//line views/vaction/Diff.html:77
-					qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="deployments" /><input type="hidden" name="file" value="`)
-//line views/vaction/Diff.html:80
-					qw422016.E().S(d.Path)
-//line views/vaction/Diff.html:80
-					qw422016.N().S(`" /><button type="submit" title="Update deployment">Fix</button></form>`)
-//line views/vaction/Diff.html:83
 				}
-//line views/vaction/Diff.html:84
+//line views/vaction/Diff.html:68
 			}
+//line views/vaction/Diff.html:68
+			qw422016.N().S(`<button type="submit" name="to" value="project" title="Overwrite project changes with module version">`)
+//line views/vaction/Diff.html:69
+			components.StreamSVGButton(qw422016, "forward", ps)
+//line views/vaction/Diff.html:69
+			qw422016.N().S(`</button></form>`)
+//line views/vaction/Diff.html:71
+		case "build":
+//line views/vaction/Diff.html:72
+			switch cfg.GetStringOpt("phase") {
+//line views/vaction/Diff.html:73
+			case "imports":
+//line views/vaction/Diff.html:73
+				qw422016.N().S(`<form action="/run/`)
+//line views/vaction/Diff.html:74
+				qw422016.E().S(prjKey)
+//line views/vaction/Diff.html:74
+				qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="imports" /><input type="hidden" name="file" value="`)
+//line views/vaction/Diff.html:77
+				qw422016.E().S(d.Path)
+//line views/vaction/Diff.html:77
+				qw422016.N().S(`" /><button type="submit" title="Reorder modules">Fix</button></form>`)
+//line views/vaction/Diff.html:80
+			case "deployments":
+//line views/vaction/Diff.html:81
+				if d.Status != diff.StatusIdentical {
+//line views/vaction/Diff.html:81
+					qw422016.N().S(`<form action="/run/`)
+//line views/vaction/Diff.html:82
+					qw422016.E().S(prjKey)
+//line views/vaction/Diff.html:82
+					qw422016.N().S(`/build" method="get"><input type="hidden" name="fix" value="true" /><input type="hidden" name="phase" value="deployments" /><input type="hidden" name="file" value="`)
 //line views/vaction/Diff.html:85
+					qw422016.E().S(d.Path)
+//line views/vaction/Diff.html:85
+					qw422016.N().S(`" /><button type="submit" title="Update deployment">Fix</button></form>`)
+//line views/vaction/Diff.html:88
+				}
+//line views/vaction/Diff.html:89
+			}
+//line views/vaction/Diff.html:90
 		}
-//line views/vaction/Diff.html:85
+//line views/vaction/Diff.html:90
 		qw422016.N().S(`</td><td>`)
-//line views/vaction/Diff.html:87
+//line views/vaction/Diff.html:92
 		streamrenderPatch(qw422016, as, d.Patch, ps)
-//line views/vaction/Diff.html:87
+//line views/vaction/Diff.html:92
 		qw422016.N().S(`</td></tr>`)
-//line views/vaction/Diff.html:89
+//line views/vaction/Diff.html:94
 	}
-//line views/vaction/Diff.html:89
+//line views/vaction/Diff.html:94
 	qw422016.N().S(`</tbody></table></div>`)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 }
 
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 func writerenderDiffs(qq422016 qtio422016.Writer, as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) {
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	streamrenderDiffs(qw422016, as, prjKey, act, diffs, cfg, ps)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 }
 
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 func renderDiffs(as *app.State, prjKey string, act action.Type, diffs diff.Diffs, cfg util.ValueMap, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	writerenderDiffs(qb422016, as, prjKey, act, diffs, cfg, ps)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 	return qs422016
-//line views/vaction/Diff.html:93
+//line views/vaction/Diff.html:98
 }
 
-//line views/vaction/Diff.html:95
+//line views/vaction/Diff.html:100
 func streamrenderPatch(qw422016 *qt422016.Writer, as *app.State, patch string, ps *cutil.PageState) {
-//line views/vaction/Diff.html:96
+//line views/vaction/Diff.html:101
 	sections := action.ParsePatchString(patch)
 
-//line views/vaction/Diff.html:96
+//line views/vaction/Diff.html:101
 	qw422016.N().S(`<pre>`)
-//line views/vaction/Diff.html:98
+//line views/vaction/Diff.html:103
 	for _, sec := range sections {
-//line views/vaction/Diff.html:99
+//line views/vaction/Diff.html:104
 		if sec.Useful() {
-//line views/vaction/Diff.html:100
+//line views/vaction/Diff.html:105
 			secID := util.RandomID()
 
-//line views/vaction/Diff.html:100
-			qw422016.N().S(`<div id="`)
-//line views/vaction/Diff.html:101
-			qw422016.E().S(secID)
-//line views/vaction/Diff.html:101
-			qw422016.N().S(`-data" hidden="hidden" style="display:none;">`)
-//line views/vaction/Diff.html:101
-			qw422016.E().S(sec.Render())
-//line views/vaction/Diff.html:101
-			qw422016.N().S(`</div><div title="`)
-//line views/vaction/Diff.html:102
-			qw422016.E().S(sec.Type)
-//line views/vaction/Diff.html:102
-			qw422016.N().S(` `)
-//line views/vaction/Diff.html:102
-			qw422016.N().S(`(click to copy)" class="`)
-//line views/vaction/Diff.html:102
-			qw422016.E().S(sec.CSSClass())
-//line views/vaction/Diff.html:102
-			qw422016.N().S(`" style="cursor: pointer;" onclick="clipDiff('`)
-//line views/vaction/Diff.html:102
-			qw422016.E().S(secID)
-//line views/vaction/Diff.html:102
-			qw422016.N().S(`');">`)
-//line views/vaction/Diff.html:103
-		} else {
-//line views/vaction/Diff.html:103
-			qw422016.N().S(`<div title="`)
-//line views/vaction/Diff.html:104
-			qw422016.E().S(sec.Type)
-//line views/vaction/Diff.html:104
-			qw422016.N().S(`" class="`)
-//line views/vaction/Diff.html:104
-			qw422016.E().S(sec.CSSClass())
-//line views/vaction/Diff.html:104
-			qw422016.N().S(`">`)
 //line views/vaction/Diff.html:105
-		}
+			qw422016.N().S(`<div id="`)
 //line views/vaction/Diff.html:106
-		for _, line := range sec.Lines {
+			qw422016.E().S(secID)
+//line views/vaction/Diff.html:106
+			qw422016.N().S(`-data" hidden="hidden" style="display:none;">`)
+//line views/vaction/Diff.html:106
+			qw422016.E().S(sec.Render())
+//line views/vaction/Diff.html:106
+			qw422016.N().S(`</div><div title="`)
 //line views/vaction/Diff.html:107
-			if len(line) > 0 {
+			qw422016.E().S(sec.Type)
+//line views/vaction/Diff.html:107
+			qw422016.N().S(` `)
+//line views/vaction/Diff.html:107
+			qw422016.N().S(`(click to copy)" class="`)
+//line views/vaction/Diff.html:107
+			qw422016.E().S(sec.CSSClass())
+//line views/vaction/Diff.html:107
+			qw422016.N().S(`" style="cursor: pointer;" onclick="clipDiff('`)
+//line views/vaction/Diff.html:107
+			qw422016.E().S(secID)
+//line views/vaction/Diff.html:107
+			qw422016.N().S(`');">`)
 //line views/vaction/Diff.html:108
-				if sec.Type == "location" {
+		} else {
 //line views/vaction/Diff.html:108
-					qw422016.N().S(`<div>`)
+			qw422016.N().S(`<div title="`)
 //line views/vaction/Diff.html:109
-					qw422016.E().S(line)
+			qw422016.E().S(sec.Type)
 //line views/vaction/Diff.html:109
-					qw422016.N().S(`</div>`)
+			qw422016.N().S(`" class="`)
+//line views/vaction/Diff.html:109
+			qw422016.E().S(sec.CSSClass())
+//line views/vaction/Diff.html:109
+			qw422016.N().S(`">`)
 //line views/vaction/Diff.html:110
-				} else {
-//line views/vaction/Diff.html:110
-					qw422016.N().S(`<div>`)
-//line views/vaction/Diff.html:111
-					qw422016.E().S(line[1:])
-//line views/vaction/Diff.html:111
-					if len(line) == 1 {
-//line views/vaction/Diff.html:111
-						qw422016.N().S(`&nbsp;`)
-//line views/vaction/Diff.html:111
-					}
-//line views/vaction/Diff.html:111
-					qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:112
-				}
-//line views/vaction/Diff.html:113
-			}
-//line views/vaction/Diff.html:114
 		}
+//line views/vaction/Diff.html:111
+		for _, line := range sec.Lines {
+//line views/vaction/Diff.html:112
+			if len(line) > 0 {
+//line views/vaction/Diff.html:113
+				if sec.Type == "location" {
+//line views/vaction/Diff.html:113
+					qw422016.N().S(`<div>`)
 //line views/vaction/Diff.html:114
+					qw422016.E().S(line)
+//line views/vaction/Diff.html:114
+					qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:115
+				} else {
+//line views/vaction/Diff.html:115
+					qw422016.N().S(`<div>`)
+//line views/vaction/Diff.html:116
+					qw422016.E().S(line[1:])
+//line views/vaction/Diff.html:116
+					if len(line) == 1 {
+//line views/vaction/Diff.html:116
+						qw422016.N().S(`&nbsp;`)
+//line views/vaction/Diff.html:116
+					}
+//line views/vaction/Diff.html:116
+					qw422016.N().S(`</div>`)
+//line views/vaction/Diff.html:117
+				}
+//line views/vaction/Diff.html:118
+			}
+//line views/vaction/Diff.html:119
+		}
+//line views/vaction/Diff.html:119
 		qw422016.N().S(`</div>`)
-//line views/vaction/Diff.html:116
+//line views/vaction/Diff.html:121
 	}
-//line views/vaction/Diff.html:116
+//line views/vaction/Diff.html:121
 	qw422016.N().S(`</pre>`)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 }
 
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 func writerenderPatch(qq422016 qtio422016.Writer, as *app.State, patch string, ps *cutil.PageState) {
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	streamrenderPatch(qw422016, as, patch, ps)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 }
 
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 func renderPatch(as *app.State, patch string, ps *cutil.PageState) string {
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	writerenderPatch(qb422016, as, patch, ps)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 	return qs422016
-//line views/vaction/Diff.html:118
+//line views/vaction/Diff.html:123
 }
 
-//line views/vaction/Diff.html:120
+//line views/vaction/Diff.html:125
 func streamrenderDiffScript(qw422016 *qt422016.Writer) {
-//line views/vaction/Diff.html:120
+//line views/vaction/Diff.html:125
 	qw422016.N().S(`
   <script>
     function clipDiff(k) {
@@ -350,31 +366,31 @@ func streamrenderDiffScript(qw422016 *qt422016.Writer) {
     }
   </script>
 `)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 }
 
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 func writerenderDiffScript(qq422016 qtio422016.Writer) {
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	streamrenderDiffScript(qw422016)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 }
 
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 func renderDiffScript() string {
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	writerenderDiffScript(qb422016)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	qs422016 := string(qb422016.B)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 	return qs422016
-//line views/vaction/Diff.html:130
+//line views/vaction/Diff.html:135
 }

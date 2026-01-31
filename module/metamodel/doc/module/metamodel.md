@@ -33,20 +33,6 @@ This module enables applications to define and manipulate data structures as fir
 - Extensible configuration system
 - Cross-reference relationship handling
 
-## Package Structure
-
-### Core Components
-
-- **`metamodel/model/`** - Database model representations
-  - [`Model`](file:///Users/kyle/kyleu/projectforge/module/metamodel/app/lib/metamodel/model/model.go#L14-L39) - Complete table definition with columns, relations, indexes
-  - [`Column`](file:///Users/kyle/kyleu/projectforge/module/metamodel/app/lib/metamodel/model/column.go#L32-L54) - Column specification with type, constraints, validation
-  - [`Relation`](file:///Users/kyle/kyleu/projectforge/module/metamodel/app/lib/metamodel/model/relation.go) - Foreign key and association definitions
-  - [`Index`](file:///Users/kyle/kyleu/projectforge/module/metamodel/app/lib/metamodel/model/index.go) - Database index specifications
-
-- **`metamodel/enum/`** - Enumeration type definitions
-  - [`Enum`](file:///Users/kyle/kyleu/projectforge/module/metamodel/app/lib/metamodel/enum/enum.go#L15-L29) - Enumeration with values and configuration
-  - [`Value`](file:///Users/kyle/kyleu/projectforge/module/metamodel/app/lib/metamodel/enum/value.go) - Individual enum value definitions
-
 ### Support Utilities
 
 - **Model Validation** - Schema validation and constraint checking

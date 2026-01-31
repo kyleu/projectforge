@@ -91,7 +91,7 @@
   {% default %}
     <div class="two-pane">
       <div class="l">{%= AnyByType(x, t.V, ps) %}</div>
-      <div class="r"><button title="click to set field to null" type="button" onclick="projectforge.setSiblingToNull(this);">∅</button></div>
+      <div class="r"><button title="click to set field to null" type="button" onclick="{{{ .CleanKey }}}.setSiblingToNull(this);">∅</button></div>
     </div>
   {% endswitch %}
 {% endstripspace %}{% endfunc %}

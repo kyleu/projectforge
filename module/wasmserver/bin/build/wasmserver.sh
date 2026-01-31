@@ -1,10 +1,30 @@
 #!/bin/bash
 
-## Builds the application as a WebAssembly library
+## Builds the WASM server assets and binary.
+##
+## Usage:
+##   ./bin/build/wasmserver.sh
+##
+## Requires:
+##   - Go toolchain
+##   - Built client assets in ./assets (for maps/icons)
+##
+## Outputs:
+##   - build/wasm/{{{ .Exec }}}.wasm
+##   - build/wasm/* (html/js/sw/assets)
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/../.."
+
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "error: required command '$1' not found${2:+ ($2)}" >&2
+    exit 1
+  fi
+}
+
+require_cmd go "install Go from https://go.dev/dl/"
 
 mkdir -p ./build/wasm/assets
 
@@ -21,3 +41,4 @@ cp ./assets/logo.svg ./build/wasm/logo.svg
 
 echo "building {{{ .Name }}} WASM server library..."
 GOOS=js GOARCH=wasm go build -o ./build/wasm/{{{ .Exec }}}.wasm .
+echo "Output written to ./build/wasm ({{{ .Exec }}}.wasm and assets)"

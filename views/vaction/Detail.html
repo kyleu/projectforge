@@ -4,6 +4,7 @@
   "projectforge.dev/projectforge/app/project/action"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
 ) %}
 
 {% func Detail(as *app.State, cfg util.ValueMap, res *action.Result, includeSkipped bool, ps *cutil.PageState) %}
@@ -12,16 +13,7 @@
   <div class="card">
     <h3>{%= components.SVGIcon(`cog`, ps) %} Config</h3>
     <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          {%- for _, k := range trimmedCfg.Keys() -%}
-          <tr>
-            <th class="shrink">{%s k %}</th>
-            <td>{%v trimmedCfg[k] %}</td>
-          </tr>
-          {%- endfor -%}
-        </tbody>
-      </table>
+      {%= view.Any(trimmedCfg, ps) %}
     </div>
   </div>
   {%- endif -%}

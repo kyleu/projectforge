@@ -17,6 +17,7 @@ import (
 const (
 	ignoreKey  = "ignore"
 	projectKey = "project"
+	rebuildKey = "rebuild"
 )
 
 func onGenerate(pm *PrjAndMods) *Result {
@@ -45,6 +46,10 @@ func onGenerate(pm *PrjAndMods) *Result {
 				ret = ignoreFile(pm, f.Path, ret)
 			case projectKey:
 				ret = gen(srcFiles, f, ret, pm.FS)
+			case rebuildKey:
+				ret = rebuild(srcFiles, f, ret, pm.FS)
+			default:
+				return ret.WithError(errors.Errorf("unknown target [%s]", to))
 			}
 		default:
 			return ret.WithError(errors.Errorf("unhandled diff status [%s]", f.Status))
@@ -98,4 +103,9 @@ func gen(srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS filesystem.FileLo
 		return ret.WithError(errors.Wrapf(err, "unable to write updated content to [%s]", f.Path))
 	}
 	return ret
+}
+
+func rebuild(srcFiles file.Files, f *diff.Diff, ret *Result, tgtFS filesystem.FileLoader) *Result {
+	ret.AddLog("rebuilding file [%s]", f.Path)
+	return ret.WithError(errors.Errorf("unable to rebuild [%s]", f.Path))
 }

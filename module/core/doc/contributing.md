@@ -5,8 +5,8 @@ Source code is available at [GitHub]({{{ .Info.Sourcecode }}}).
 ## Setup
 
 ```
-git clone https://github.com/kyleu/projectforge
-cd projectforge
+git clone {{{ .Info.Sourcecode }}}
+cd {{{ .CleanKey }}}
 ./bin/bootstrap.sh
 ```
 
@@ -14,7 +14,7 @@ cd projectforge
 
 ```
 make build
-./build/debug/projectforge --help
+./build/debug/{{{ .Exec }}} --help
 ./bin/dev.sh
 ```
 

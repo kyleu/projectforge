@@ -73,10 +73,10 @@ Add permission rules to your application initialization:
 // Basic permission setup
 user.SetPermissions(false, // default deny
     // Grant admin access to GitHub users from specific domain
-    user.Perm("/admin", "github:@projectforge.dev", true),
+    user.Perm("/admin", "github:@mycompany.com", true),
 
-    // Allow specific GitHub organization members
-    user.Perm("/admin", "github:org:mycompany", true),
+    // Grant admin access to all Google users from specific domain
+    user.Perm("/admin", "google:@mycompany.com", true),
 
     // Deny admin access to others
     user.Perm("/admin", "*", false),

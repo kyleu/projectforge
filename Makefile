@@ -17,6 +17,11 @@ build: export GOEXPERIMENT=jsonv2
 build: templates ## Build all binaries
 	@go build -gcflags "all=-N -l" -o build/debug/projectforge .
 
+.PHONY: build-verbose
+build-verbose: export GOEXPERIMENT=jsonv2
+build-verbose: templates ## Build all binaries
+	@go build -v -x -gcflags "all=-N -l" -o build/debug/projectforge .
+
 .PHONY: build-release
 build-release: export GOEXPERIMENT=jsonv2
 build-release: templates ## Build all binaries without debug information, clean up after

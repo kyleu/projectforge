@@ -1,6 +1,16 @@
 #!/bin/bash
 
-## Links the application support directory for the current user to ./cfg
+## Symlinks the macOS Application Support directory to ./cfg.
+##
+## Usage:
+##   ./bin/util/link-config-directory.sh
+##
+## Requires:
+##   - macOS (uses ~/Library/Application Support)
+##
+## Notes:
+##   - Creates the target directory if needed.
+##   - Fails if ./cfg already exists.
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

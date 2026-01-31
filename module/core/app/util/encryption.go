@@ -9,12 +9,16 @@ import (
 	"hash/fnv"
 	"io"
 	"strings"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )
 
-var _encryptKey string
+var (
+	_encryptKey     string
+	_encryptKeyOnce sync.Once
+)
 
 func EncodeBytes(b []byte) string {
 	return base64.StdEncoding.EncodeToString(b)
@@ -117,12 +121,12 @@ func HashSHA256(s string) string {
 }
 
 func getKey(logger Logger) []byte {
-	if _encryptKey == "" {
-		env := strings.ReplaceAll(AppKey, "-", "_") + "_encryption_key"
-		_encryptKey = GetEnv(env)
+	_encryptKeyOnce.Do(func() {
+		envName := strings.ReplaceAll(AppKey, "-", "_") + "_encryption_key"
+		_encryptKey = GetEnv(envName)
 		if _encryptKey == "" {
 			if logger != nil {
-				logger.Warnf("using default encryption key; set environment variable [%s] to save sessions between restarts", env)
+				logger.Warnf("using default encryption key; set environment variable [%s] to save sessions between restarts", envName)
 			}
 			_encryptKey = AppKey + "_secret"
 		}
@@ -130,6 +134,6 @@ func getKey(logger Logger) []byte {
 			_encryptKey += " "
 		}
 		_encryptKey = _encryptKey[:16]
-	}
+	})
 	return []byte(_encryptKey)
 }

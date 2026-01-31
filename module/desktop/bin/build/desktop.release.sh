@@ -1,13 +1,83 @@
 #!/bin/bash
 
-## Meant to be run as part of the release process, builds desktop apps
+## Builds desktop release artifacts for macOS, Linux, and Windows.
+##
+## Usage:
+##   ./bin/build/desktop.release.sh [version] [-y|--yes]
+##
+## Arguments:
+##   version  Version tag for output filenames (default: v0.0.0).
+##   -y, --yes  Skip the confirmation prompt.
+##
+## Requires:
+##   - Docker
+##   - appdmg, codesign, lipo (macOS)
+##   - APPLE_SIGNING_IDENTITY set for codesign
+##   - curl and zip
+##
+## Outputs:
+##   - build/dist/{{{ .Exec }}}_<version>_darwin_*_desktop.(dmg|zip)
+##   - build/dist/{{{ .Exec }}}_<version>_linux_amd64_desktop.zip
+##   - build/dist/{{{ .Exec }}}_<version>_windows_amd64_desktop.zip
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/../.."
 
-TGT=$1
-[ "$TGT" ] || TGT="v0.0.0"
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "error: required command '$1' not found${2:+ ($2)}" >&2
+    exit 1
+  fi
+}
+
+require_env() {
+  if [[ -z "${!1:-}" ]]; then
+    echo "error: required environment variable '$1' is not set" >&2
+    exit 1
+  fi
+}
+
+require_cmd docker "install Docker Desktop from https://www.docker.com/products/docker-desktop/"
+require_cmd zip "install zip from your package manager"
+require_cmd curl "install curl from your package manager"
+require_cmd appdmg "install via npm i -g appdmg"
+require_cmd codesign "requires macOS codesign tool"
+require_cmd lipo "requires macOS Xcode command line tools"
+require_env APPLE_SIGNING_IDENTITY
+
+auto_yes=false
+TGT=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -y|--yes) auto_yes=true; shift;;
+    --) shift; break;;
+    -*)
+      echo "unknown option: $1" >&2
+      exit 1
+      ;;
+    *)
+      if [[ -z "$TGT" ]]; then
+        TGT="$1"
+        shift
+      else
+        echo "unexpected argument: $1" >&2
+        exit 1
+      fi
+      ;;
+  esac
+done
+
+TGT=${TGT:-v0.0.0}
+
+if ! $auto_yes; then
+  read -r -p "Build desktop release artifacts for ${TGT}? [y/N] " confirm
+  case "$confirm" in
+    [yY][eE][sS]|[yY]) ;;
+    *) echo "aborted"; exit 0;;
+  esac
+fi
 
 if command -v retry &> /dev/null
 then
@@ -97,3 +167,6 @@ mv "./{{{ .Key }}}_${TGT}_darwin_all_desktop.dmg" "../../build/dist"
 mv "./{{{ .Key }}}_${TGT}_darwin_all_desktop.zip" "../../build/dist"
 mv "./{{{ .Key }}}_${TGT}_linux_amd64_desktop.zip" "../../build/dist"
 mv "./{{{ .Key }}}_${TGT}_windows_amd64_desktop.zip" "../../build/dist"
+
+cd "$dir/../.."
+echo "Builds written to ./build/dist ({{{ .Key }}}_${TGT}_*_desktop.*)"

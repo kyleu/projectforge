@@ -73,7 +73,7 @@
   </div>
   <script>
     window.addEventListener('load', () => {
-      projectforge.socketLog(true, document.getElementById("{%s id %}"), true, "{%s= p.URL %}", [{%s= util.StringJoin(p.ExtraHandlers, `, `) %}]);
+      {{{ .CleanKey }}}.socketLog(true, document.getElementById("{%s id %}"), true, "{%s= p.URL %}", [{%s= util.StringJoin(p.ExtraHandlers, `, `) %}]);
     });
   </script>
 {% endfunc %}{{{ end }}}{{{ end }}}

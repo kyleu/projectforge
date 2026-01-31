@@ -1,5 +1,16 @@
 #!/usr/bin/osascript
 
+-- Opens an iTerm2 workspace with Project Forge running.
+--
+-- Usage:
+--   ./bin/workspace.sh
+--
+-- Requires:
+--   - iTerm2 installed
+--
+-- Notes:
+--   - Runs `bin/dev.sh` and splits the current window vertically.
+
 set scriptPath to POSIX path of ((path to me as text) & "::")
 set scriptDir to do shell script "dirname " & quoted form of scriptPath
 

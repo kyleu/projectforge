@@ -1,4 +1,5 @@
 {% import (
+  "slices"
   "strings"
 
   "projectforge.dev/projectforge/app"
@@ -38,6 +39,7 @@
           </tr>
         </thead>
         <tbody>
+        {%- code upstreamCapableFiles := cfg.GetStringArrayOpt("upstreamCapableFiles") -%}
         {%- for _, d := range diffs -%}
           <tr>
             <td class="shrink">
@@ -60,6 +62,9 @@
                 <input type="hidden" name="file" value="{%s d.Path %}" />
                 {%- if d.Status.String() != "new" -%}
                 <button type="submit" name="to" value="ignore" title="Mark file as ignored">{%= components.SVGButton("close", ps) %}</button>{% space %}
+                {%- if slices.Contains(upstreamCapableFiles, d.Path) -%}
+                <button type="submit" name="to" value="rebuild" title="Attempt merging local changes into module source">{%= components.SVGButton("backward", ps) %}</button>{% space %}
+                {%- endif -%}
                 {%- endif -%}
                 <button type="submit" name="to" value="project" title="Overwrite project changes with module version">{%= components.SVGButton("forward", ps) %}</button>
               </form>

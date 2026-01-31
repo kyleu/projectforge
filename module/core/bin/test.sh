@@ -1,20 +1,47 @@
 #!/bin/bash
 
-## Runs all the tests. Pass "-c" to clear the cache first, "-w" to watch for changes.
+## Runs Go tests with gotestsum.
+##
+## Usage:
+##   ./bin/test.sh [-c|--clean] [-w|--watch]
+##
+## Arguments:
+##   -c, --clean  Clear the Go test cache before running.
+##   -w, --watch  Watch mode (passes --watch to gotestsum).
+##
+## Environment:
+##   - Loads env vars from ./test.env if present.
+##
+## Requires:
+##   - Go toolchain
+##   - gotestsum in PATH
+##
+## Notes:
+##   - Runs ./bin/test-setup.sh if it exists.
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$dir/.."
 
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "error: required command '$1' not found${2:+ ($2)}" >&2
+    exit 1
+  fi
+}
+
+require_cmd go "Go toolchain"
+require_cmd gotestsum "install via 'go install gotest.tools/gotestsum@latest'"
+
 do_clean=false
 do_watch=false
 
-while getopts cw option
-do
-  case "${option}" in
-    c) do_clean=true;;
-    w) do_watch=true;;
-    *) echo "unknown option"; exit 1;;
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -c|--clean) do_clean=true; shift;;
+    -w|--watch) do_watch=true; shift;;
+    --) shift; break;;
+    *) echo "unknown option: $1" >&2; exit 1;;
   esac
 done
 
