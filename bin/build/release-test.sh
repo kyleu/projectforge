@@ -28,23 +28,6 @@ require_cmd() {
 
 require_cmd goreleaser "install from https://goreleaser.com/install/"
 
-auto_yes=false
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -y|--yes) auto_yes=true; shift;;
-    --) shift; break;;
-    *) echo "unknown option: $1" >&2; exit 1;;
-  esac
-done
-
-if ! $auto_yes; then
-  read -r -p "Run goreleaser in snapshot mode? [y/N] " confirm
-  case "$confirm" in
-    [yY][eE][sS]|[yY]) ;;
-    *) echo "aborted"; exit 0;;
-  esac
-fi
-
 [[ -f "$HOME/bin/oauth" ]] && . "$HOME/bin/oauth"
 
 export PUBLISH_TEST=true
