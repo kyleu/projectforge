@@ -10,6 +10,8 @@ import (
 )
 
 func TestMIMEHelpers(t *testing.T) {
+	t.Parallel()
+
 	if ext := util.ExtensionFromMIME(""); ext != "json" {
 		t.Fatalf("expected json extension, got %q", ext)
 	}

@@ -9,16 +9,20 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const richStringHello = "Hello"
+
 func TestRichString(t *testing.T) {
+	t.Parallel()
+
 	s := util.Str(" Hello ")
 	if !s.Contains("ell") {
 		t.Fatalf("expected Contains to match")
 	}
-	if s.TrimSpace().String() != "Hello" {
+	if s.TrimSpace().String() != richStringHello {
 		t.Fatalf("unexpected TrimSpace result: %q", s.TrimSpace())
 	}
 	left, right := s.TrimSpace().Cut('/', true)
-	if left.String() != "Hello" || right.String() != "" {
+	if left.String() != richStringHello || right.String() != "" {
 		t.Fatalf("unexpected Cut result: %q %q", left, right)
 	}
 

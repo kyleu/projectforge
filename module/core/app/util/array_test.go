@@ -210,7 +210,9 @@ func TestArrayToAnyArray(t *testing.T) {
 	t.Parallel()
 	src := []int{1, 2, 3}
 	got := util.ArrayToAnyArray(src)
-	if len(got) != 3 || got[0].(int) != 1 || got[2].(int) != 3 {
+	v0, ok0 := got[0].(int)
+	v2, ok2 := got[2].(int)
+	if len(got) != 3 || !ok0 || !ok2 || v0 != 1 || v2 != 3 {
 		t.Fatalf("unexpected ArrayToAnyArray result: %v", got)
 	}
 }

@@ -10,6 +10,7 @@ import (
 
 func TestToJSON(t *testing.T) {
 	t.Parallel()
+
 	tests := []struct {
 		name  string
 		input any
@@ -35,6 +36,7 @@ func TestToJSON(t *testing.T) {
 
 func TestToJSONCompact(t *testing.T) {
 	t.Parallel()
+
 	tests := []struct {
 		name  string
 		input any
@@ -60,6 +62,7 @@ func TestToJSONCompact(t *testing.T) {
 
 func TestFromJSON(t *testing.T) {
 	t.Parallel()
+
 	type testStruct struct {
 		A int
 		B string
@@ -90,6 +93,7 @@ func TestFromJSON(t *testing.T) {
 
 func TestFromJSONString(t *testing.T) {
 	t.Parallel()
+
 	tests := []struct {
 		name  string
 		input []byte
@@ -118,6 +122,8 @@ type jsonThing struct {
 }
 
 func TestFromJSONAnyAndStrict(t *testing.T) {
+	t.Parallel()
+
 	msg := []byte(`"{\"a\":1}"`)
 	res, err := util.FromJSONAny(msg)
 	if err != nil {
@@ -143,6 +149,8 @@ func TestFromJSONAnyAndStrict(t *testing.T) {
 }
 
 func TestCycleJSONHelpers(t *testing.T) {
+	t.Parallel()
+
 	src := jsonThing{A: 5}
 	var tgt jsonThing
 	if err := util.CycleJSON(src, &tgt); err != nil || tgt.A != 5 {
@@ -156,6 +164,8 @@ func TestCycleJSONHelpers(t *testing.T) {
 }
 
 func TestFromJSONBytesArrayAndMap(t *testing.T) {
+	t.Parallel()
+
 	vals := []jsontext.Value{jsontext.Value(`{"a":1}`), jsontext.Value(`{"a":2}`)}
 	arr, err := util.FromJSONBytesArray[jsonThing](vals...)
 	if err != nil || len(arr) != 2 || arr[1].A != 2 {

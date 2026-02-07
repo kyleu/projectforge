@@ -10,6 +10,8 @@ import (
 )
 
 func TestMarkdownTable(t *testing.T) {
+	t.Parallel()
+
 	header := []string{"A", "B"}
 	rows := [][]string{{"1", "2"}, {"3", "4"}}
 	md, err := util.MarkdownTable(header, rows, "\n")

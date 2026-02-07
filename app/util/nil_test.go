@@ -5,6 +5,7 @@ package util_test
 
 import (
 	"encoding/json"
+	"strconv"
 	"testing"
 
 	"projectforge.dev/projectforge/app/util"
@@ -275,13 +276,13 @@ func TestNilString_JSON(t *testing.T) {
 		t.Parallel()
 		ns := util.NilString{}
 		ns.Valid = true
-		ns.String = "hello"
+		ns.String = boolTestHello
 		data, err := json.Marshal(ns)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if string(data) != `"hello"` {
-			t.Errorf("expected '\"hello\"', got %s", string(data))
+		if string(data) != strconv.Quote(boolTestHello) {
+			t.Errorf("expected %q, got %s", strconv.Quote(boolTestHello), string(data))
 		}
 	})
 

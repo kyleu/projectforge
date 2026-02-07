@@ -11,13 +11,17 @@ import (
 const (
 	historyFieldDelim = "\u00bb\u00a6\u00ab"
 	historyLineDelim  = "\u00bb\u00a6\u00a6\u00a6\u00ab"
+	authorAliceName   = "Alice"
+	authorAliceEmail  = "alice@example.com"
+	authorBobName     = "Bob"
+	authorBobEmail    = "bob@example.com"
 )
 
 func TestParseResultsDelimited(t *testing.T) {
 	t.Parallel()
 	dateStr := "Mon May 15 14:30:45 2023 +0000"
-	entry1 := strings.Join([]string{"sha1", "Alice", "alice@example.com", dateStr, "First commit"}, historyFieldDelim)
-	entry2 := strings.Join([]string{"sha2", "Bob", "bob@example.com", dateStr, "Second commit"}, historyFieldDelim)
+	entry1 := strings.Join([]string{"sha1", authorAliceName, authorAliceEmail, dateStr, "First commit"}, historyFieldDelim)
+	entry2 := strings.Join([]string{"sha2", authorBobName, authorBobEmail, dateStr, "Second commit"}, historyFieldDelim)
 	output := entry1 + historyLineDelim + entry2
 
 	res, err := git.ParseResultsDelimited(output)
@@ -30,7 +34,7 @@ func TestParseResultsDelimited(t *testing.T) {
 	if res[0].SHA != "sha1" {
 		t.Errorf("unexpected sha for entry 0: %s", res[0].SHA)
 	}
-	if res[0].AuthorName != "Alice" || res[0].AuthorEmail != "alice@example.com" {
+	if res[0].AuthorName != authorAliceName || res[0].AuthorEmail != authorAliceEmail {
 		t.Errorf("unexpected author for entry 0: %s <%s>", res[0].AuthorName, res[0].AuthorEmail)
 	}
 	if res[0].Message != "First commit" {
@@ -44,7 +48,7 @@ func TestParseResultsDelimited(t *testing.T) {
 
 func TestParseResultsDelimitedInvalidParts(t *testing.T) {
 	t.Parallel()
-	output := strings.Join([]string{"sha1", "Alice", "alice@example.com", "First commit"}, historyFieldDelim)
+	output := strings.Join([]string{"sha1", authorAliceName, authorAliceEmail, "First commit"}, historyFieldDelim)
 	_, err := git.ParseResultsDelimited(output)
 	if err == nil {
 		t.Fatal("expected error for invalid parts, got nil")
@@ -53,7 +57,7 @@ func TestParseResultsDelimitedInvalidParts(t *testing.T) {
 
 func TestParseResultsDelimitedInvalidTime(t *testing.T) {
 	t.Parallel()
-	output := strings.Join([]string{"sha1", "Alice", "alice@example.com", "not-a-time", "First commit"}, historyFieldDelim)
+	output := strings.Join([]string{"sha1", authorAliceName, authorAliceEmail, "not-a-time", "First commit"}, historyFieldDelim)
 	_, err := git.ParseResultsDelimited(output)
 	if err == nil {
 		t.Fatal("expected error for invalid time, got nil")
@@ -64,9 +68,9 @@ func TestHistoryEntriesGetAndAuthors(t *testing.T) {
 	t.Parallel()
 	when := time.Date(2023, 5, 15, 14, 30, 45, 0, time.UTC)
 	entries := git.HistoryEntries{
-		&git.HistoryEntry{SHA: "a", AuthorName: "Alice", AuthorEmail: "alice@example.com", Occurred: when},
-		&git.HistoryEntry{SHA: "b", AuthorName: "Bob", AuthorEmail: "bob@example.com", Occurred: when},
-		&git.HistoryEntry{SHA: "c", AuthorName: "Alice", AuthorEmail: "alice@example.com", Occurred: when},
+		&git.HistoryEntry{SHA: "a", AuthorName: authorAliceName, AuthorEmail: authorAliceEmail, Occurred: when},
+		&git.HistoryEntry{SHA: "b", AuthorName: authorBobName, AuthorEmail: authorBobEmail, Occurred: when},
+		&git.HistoryEntry{SHA: "c", AuthorName: authorAliceName, AuthorEmail: authorAliceEmail, Occurred: when},
 	}
 	if got := entries.Get("b"); got == nil || got.SHA != "b" {
 		t.Errorf("unexpected entry for sha b: %v", got)
@@ -83,10 +87,10 @@ func TestHistoryEntriesGetAndAuthors(t *testing.T) {
 	for _, author := range authors {
 		byEmail[author.Key] = author
 	}
-	if got := byEmail["alice@example.com"]; got == nil || got.Count != 2 || got.Name != "Alice" {
+	if got := byEmail[authorAliceEmail]; got == nil || got.Count != 2 || got.Name != authorAliceName {
 		t.Errorf("unexpected author summary for Alice: %v", got)
 	}
-	if got := byEmail["bob@example.com"]; got == nil || got.Count != 1 || got.Name != "Bob" {
+	if got := byEmail[authorBobEmail]; got == nil || got.Count != 1 || got.Name != authorBobName {
 		t.Errorf("unexpected author summary for Bob: %v", got)
 	}
 }

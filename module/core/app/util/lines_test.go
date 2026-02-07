@@ -10,6 +10,8 @@ import (
 )
 
 func TestJoinLines(t *testing.T) {
+	t.Parallel()
+
 	lines := util.JoinLines([]string{"aa", "bb", "cc"}, ",", 4)
 	if len(lines) != 3 {
 		t.Fatalf("expected 3 lines, got %v", lines)

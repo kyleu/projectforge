@@ -23,7 +23,7 @@ var _router http.Handler
 func wasmCmd() *coral.Command {
 	short := "Starts the server and exposes a WebAssembly application to scripts"
 	f := func(*coral.Command, []string) error { return startWASM(rootCtx, _flags) }
-	ret := &coral.Command{Use: keyWASM, Short: short, RunE: f}
+	ret := newCmd(keyWASM, short, f)
 	return ret
 }
 

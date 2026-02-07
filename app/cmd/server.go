@@ -20,7 +20,7 @@ const keyServer = "server"
 func serverCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the http server on port %d (by default)", util.AppPort)
 	f := func(*coral.Command, []string) error { return startServer(rootCtx, _flags) }
-	ret := &coral.Command{Use: keyServer, Short: short, RunE: f}
+	ret := newCmd(keyServer, short, f)
 	return ret
 }
 

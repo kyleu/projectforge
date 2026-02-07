@@ -2,9 +2,10 @@ package exec_test
 
 import (
 	"bytes"
-	"errors"
 	"testing"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/exec"
 )

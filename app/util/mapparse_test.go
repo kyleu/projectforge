@@ -11,7 +11,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const mapParseStr = "str"
+
 func TestGetPathAndSetPath(t *testing.T) {
+	t.Parallel()
+
 	m := util.ValueMap{
 		"files": util.ValueMap{
 			"readme.txt": util.ValueMap{"size": 12},
@@ -49,8 +53,10 @@ func TestGetPathAndSetPath(t *testing.T) {
 }
 
 func TestMapGetHelpers(t *testing.T) {
+	t.Parallel()
+
 	m := util.ValueMap{
-		"s":    "str",
+		"s":    mapParseStr,
 		"i":    42,
 		"f":    1.5,
 		"b":    true,
@@ -58,7 +64,7 @@ func TestMapGetHelpers(t *testing.T) {
 		"json": []byte(`{"a":1}`),
 	}
 
-	if v, err := m.GetRequired("s"); err != nil || v != "str" {
+	if v, err := m.GetRequired("s"); err != nil || v != mapParseStr {
 		t.Fatalf("unexpected GetRequired result: %v %v", v, err)
 	}
 
@@ -66,7 +72,7 @@ func TestMapGetHelpers(t *testing.T) {
 		t.Fatalf("expected error for missing required key")
 	}
 
-	if v, err := m.GetString("s", false); err != nil || v != "str" {
+	if v, err := m.GetString("s", false); err != nil || v != mapParseStr {
 		t.Fatalf("unexpected GetString result: %v %v", v, err)
 	}
 

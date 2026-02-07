@@ -7,6 +7,8 @@ import (
 )
 
 func TestParseArrayHelpers(t *testing.T) {
+	t.Parallel()
+
 	arr, err := util.ParseArray("[1,2]", "p", false, false)
 	if err != nil || len(arr) != 2 {
 		t.Fatalf("unexpected ParseArray result: %v %v", arr, err)

@@ -15,7 +15,7 @@ const keyAll = "all"
 func allCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the main http server on port %d and the marketing site on port %d", util.AppPort, util.AppPort+1)
 	f := func(*coral.Command, []string) error { return allF(rootCtx) }
-	ret := &coral.Command{Use: keyAll, Short: short, RunE: f}
+	ret := newCmd(keyAll, short, f)
 	return ret
 }
 

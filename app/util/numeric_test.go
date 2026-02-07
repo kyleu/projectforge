@@ -57,3 +57,11 @@ func TestMicrosToMillis(t *testing.T) {
 		})
 	}
 }
+
+func TestPercent(t *testing.T) {
+	t.Parallel()
+
+	if got := util.Percent(1.2); got != "1.200%" {
+		t.Fatalf("unexpected percent: %q", got)
+	}
+}

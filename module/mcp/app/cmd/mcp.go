@@ -15,7 +15,7 @@ import (
 
 func mcpCmd() *coral.Command {
 	f := func(*coral.Command, []string) error { return runMCP(rootCtx) }
-	ret := &coral.Command{Use: "mcp", Short: "Handles Model Context Protocol requests", RunE: f}
+	ret := newCmd("mcp", "Handles Model Context Protocol requests", f)
 	return ret
 }
 

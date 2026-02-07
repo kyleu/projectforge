@@ -22,6 +22,8 @@ func (m mergeThing) Merge(other mergeThing) (mergeThing, error) {
 }
 
 func TestMergeSet(t *testing.T) {
+	t.Parallel()
+
 	ms := util.NewMergeSet[string, mergeThing]()
 	if err := ms.Set(mergeThing{ID: "a", Count: 1}); err != nil {
 		t.Fatalf("unexpected set error: %v", err)
@@ -64,11 +66,11 @@ func TestMergeSet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected marshal error: %v", err)
 	}
-	copy := util.NewMergeSet[string, mergeThing]()
-	if err := copy.UnmarshalJSON(data); err != nil {
+	roundTrip := util.NewMergeSet[string, mergeThing]()
+	if err := roundTrip.UnmarshalJSON(data); err != nil {
 		t.Fatalf("unexpected unmarshal error: %v", err)
 	}
-	if copy.Length() != 2 {
-		t.Fatalf("unexpected unmarshaled length: %d", copy.Length())
+	if roundTrip.Length() != 2 {
+		t.Fatalf("unexpected unmarshaled length: %d", roundTrip.Length())
 	}
 }

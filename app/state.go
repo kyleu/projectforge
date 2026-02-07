@@ -63,6 +63,13 @@ func NewState(ctx context.Context, debug bool, bi *BuildInfo, f filesystem.FileL
 	}, nil
 }
 
+func (s *State) AppVersion() string {
+	if s == nil || s.BuildInfo == nil || s.BuildInfo.Version == "" {
+		return "dev"
+	}
+	return s.BuildInfo.Version
+}
+
 func (s *State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
 	return s.Services.Close(ctx, logger)

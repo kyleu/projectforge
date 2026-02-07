@@ -14,6 +14,8 @@ import (
 )
 
 func TestHTTPRequest(t *testing.T) {
+	t.Parallel()
+
 	var gotHeader string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		gotHeader = r.Header.Get("X-Test")
@@ -41,7 +43,10 @@ func TestHTTPRequest(t *testing.T) {
 	}))
 	defer bad.Close()
 
-	_, _, _, err = util.NewHTTPGet(context.Background(), bad.URL).WithClient(bad.Client()).RunSimple()
+	status, headers, body, err := util.NewHTTPGet(context.Background(), bad.URL).WithClient(bad.Client()).RunSimple()
+	_ = status
+	_ = headers
+	_ = body
 	if err == nil || !strings.Contains(err.Error(), "expected [200]") {
 		t.Fatalf("expected RunSimple error for non-200")
 	}

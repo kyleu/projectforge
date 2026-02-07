@@ -19,7 +19,7 @@ func rootF(*coral.Command, []string) error {
 
 func rootCmd(ctx context.Context) *coral.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
-	ret := &coral.Command{Use: util.AppKey, Short: short, RunE: rootF}
+	ret := newCmd(util.AppKey, short, rootF)
 	ret.AddCommand(serverCmd(){{{ if .HasModule "marketing" }}}, siteCmd(), allCmd(){{{ end }}}{{{ if .HasModule "mcp" }}}, mcpCmd(){{{ end }}}{{{ if .HasModule "migration" }}}, migrateCmd(){{{ end }}}{{{ if .HasModule "upgrade" }}}, upgradeCmd(){{{ end }}}{{{ if .HasModule "wasmserver" }}}, wasmCmd(){{{ end }}})
 	// $PF_SECTION_START(cmds)$ - Add your commands here by calling ret.AddCommand
 	// $PF_SECTION_END(cmds)$

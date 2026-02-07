@@ -9,5 +9,5 @@ func versionF() error {
 
 func versionCmd() *coral.Command {
 	f := func(_ *coral.Command, _ []string) error { return versionF() }
-	return &coral.Command{Use: "version", Short: "Displays the version and exits", RunE: f}
+	return newCmd("version", "Displays the version and exits", f)
 }

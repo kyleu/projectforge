@@ -35,14 +35,14 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	case action.TypeGenerate.Key:
 		aliases = []string{"gen"}
 	}
-	ret := &coral.Command{Use: t.Key, Short: t.Description, RunE: f, Aliases: aliases}
+	ret := newCmd(t.Key, t.Description, f, aliases...)
 	if t.Matches(action.TypeBuild) {
 		lo.ForEach(action.AllBuilds, func(x *action.Build, _ int) {
 			k := x.Key
 			fx := func(_ *coral.Command, args []string) error {
 				return actionF(ctx, t, append(util.ArrayCopy(args), k))
 			}
-			ret.AddCommand(&coral.Command{Use: x.Key, Short: x.Description, RunE: fx})
+			ret.AddCommand(newCmd(x.Key, x.Description, fx))
 		})
 	}
 	return ret

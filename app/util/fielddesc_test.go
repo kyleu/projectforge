@@ -10,6 +10,8 @@ import (
 )
 
 func TestFieldDescParseAndCollect(t *testing.T) {
+	t.Parallel()
+
 	d := &util.FieldDesc{Key: "flag", Type: "bool"}
 	v, err := d.Parse("true")
 	if err != nil || v != true {

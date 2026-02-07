@@ -7,6 +7,25 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+type wrappedCheck func(t *testing.T, w *types.Wrapped)
+
+type wrappedDefaultTest struct {
+	name  string
+	input string
+	check wrappedCheck
+}
+
+var wrappedDefaultTests = []wrappedDefaultTest{
+	{name: "boolean-alias", input: `"boolean"`, check: checkWrappedBooleanAlias},
+	{name: "map-defaults", input: `"map"`, check: checkWrappedMapDefaults},
+	{name: "list-defaults", input: `"list"`, check: checkWrappedListDefaults},
+	{name: "orderedmap-defaults", input: `"orderedMap"`, check: checkWrappedOrderedMapDefaults},
+	{name: "option-defaults", input: `"option"`, check: checkWrappedOptionDefaults},
+	{name: "range-defaults", input: `"range"`, check: checkWrappedRangeDefaults},
+	{name: "set-defaults", input: `"set"`, check: checkWrappedSetDefaults},
+	{name: "method-defaults", input: `"method"`, check: checkWrappedMethodDefaults},
+}
+
 func TestWrappedMarshalJSONDefaults(t *testing.T) {
 	t.Parallel()
 
@@ -64,141 +83,7 @@ func TestWrappedMarshalJSONWithArgs(t *testing.T) {
 func TestWrappedUnmarshalJSONDefaults(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name  string
-		input string
-		check func(t *testing.T, w *types.Wrapped)
-	}{
-		{
-			name:  "boolean-alias",
-			input: `"boolean"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				if w.Key() != types.KeyBool {
-					t.Errorf("Key() = %s, want %s", w.Key(), types.KeyBool)
-				}
-				if types.TypeAs[*types.Bool](w) == nil {
-					t.Fatalf("expected Bool type, got %T", w.T)
-				}
-			},
-		},
-		{
-			name:  "map-defaults",
-			input: `"map"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				m := types.TypeAs[*types.Map](w)
-				if m == nil {
-					t.Fatalf("expected Map type, got %T", w.T)
-				}
-				if m.K == nil || m.V == nil {
-					t.Fatalf("expected map key/value to be set, got K=%v V=%v", m.K, m.V)
-				}
-				if m.K.Key() != types.KeyString {
-					t.Errorf("map key = %s, want %s", m.K.Key(), types.KeyString)
-				}
-				if m.V.Key() != types.KeyAny {
-					t.Errorf("map value = %s, want %s", m.V.Key(), types.KeyAny)
-				}
-			},
-		},
-		{
-			name:  "list-defaults",
-			input: `"list"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				l := types.TypeAs[*types.List](w)
-				if l == nil {
-					t.Fatalf("expected List type, got %T", w.T)
-				}
-				if l.V == nil {
-					t.Fatalf("expected list value to be set")
-				}
-				if l.V.Key() != types.KeyAny {
-					t.Errorf("list value = %s, want %s", l.V.Key(), types.KeyAny)
-				}
-			},
-		},
-		{
-			name:  "orderedmap-defaults",
-			input: `"orderedMap"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				m := types.TypeAs[*types.OrderedMap](w)
-				if m == nil {
-					t.Fatalf("expected OrderedMap type, got %T", w.T)
-				}
-				if m.V == nil {
-					t.Fatalf("expected ordered map value to be set")
-				}
-				if m.V.Key() != types.KeyAny {
-					t.Errorf("ordered map value = %s, want %s", m.V.Key(), types.KeyAny)
-				}
-			},
-		},
-		{
-			name:  "option-defaults",
-			input: `"option"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				o := types.TypeAs[*types.Option](w)
-				if o == nil {
-					t.Fatalf("expected Option type, got %T", w.T)
-				}
-				if o.V == nil {
-					t.Fatalf("expected option value to be set")
-				}
-				if o.V.Key() != types.KeyAny {
-					t.Errorf("option value = %s, want %s", o.V.Key(), types.KeyAny)
-				}
-			},
-		},
-		{
-			name:  "range-defaults",
-			input: `"range"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				r := types.TypeAs[*types.Range](w)
-				if r == nil {
-					t.Fatalf("expected Range type, got %T", w.T)
-				}
-				if r.V == nil {
-					t.Fatalf("expected range value to be set")
-				}
-				if r.V.Key() != types.KeyAny {
-					t.Errorf("range value = %s, want %s", r.V.Key(), types.KeyAny)
-				}
-			},
-		},
-		{
-			name:  "set-defaults",
-			input: `"set"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				s := types.TypeAs[*types.Set](w)
-				if s == nil {
-					t.Fatalf("expected Set type, got %T", w.T)
-				}
-				if s.V == nil {
-					t.Fatalf("expected set value to be set")
-				}
-				if s.V.Key() != types.KeyAny {
-					t.Errorf("set value = %s, want %s", s.V.Key(), types.KeyAny)
-				}
-			},
-		},
-		{
-			name:  "method-defaults",
-			input: `"method"`,
-			check: func(t *testing.T, w *types.Wrapped) {
-				m := types.TypeAs[*types.Method](w)
-				if m == nil {
-					t.Fatalf("expected Method type, got %T", w.T)
-				}
-				if m.Ret == nil {
-					t.Fatalf("expected method return type to be set")
-				}
-				if m.Ret.Key() != types.KeyAny {
-					t.Errorf("method return = %s, want %s", m.Ret.Key(), types.KeyAny)
-				}
-			},
-		},
-	}
-
-	for _, tt := range tests {
+	for _, tt := range wrappedDefaultTests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			var w types.Wrapped
@@ -207,6 +92,117 @@ func TestWrappedUnmarshalJSONDefaults(t *testing.T) {
 			}
 			tt.check(t, &w)
 		})
+	}
+}
+
+func checkWrappedBooleanAlias(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	if w.Key() != types.KeyBool {
+		t.Errorf("Key() = %s, want %s", w.Key(), types.KeyBool)
+	}
+	if types.TypeAs[*types.Bool](w) == nil {
+		t.Fatalf("expected Bool type, got %T", w.T)
+	}
+}
+
+func checkWrappedMapDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	m := types.TypeAs[*types.Map](w)
+	if m == nil {
+		t.Fatalf("expected Map type, got %T", w.T)
+	}
+	if m.K == nil || m.V == nil {
+		t.Fatalf("expected map key/value to be set, got K=%v V=%v", m.K, m.V)
+	}
+	if m.K.Key() != types.KeyString {
+		t.Errorf("map key = %s, want %s", m.K.Key(), types.KeyString)
+	}
+	if m.V.Key() != types.KeyAny {
+		t.Errorf("map value = %s, want %s", m.V.Key(), types.KeyAny)
+	}
+}
+
+func checkWrappedListDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	l := types.TypeAs[*types.List](w)
+	if l == nil {
+		t.Fatalf("expected List type, got %T", w.T)
+	}
+	if l.V == nil {
+		t.Fatalf("expected list value to be set")
+	}
+	if l.V.Key() != types.KeyAny {
+		t.Errorf("list value = %s, want %s", l.V.Key(), types.KeyAny)
+	}
+}
+
+func checkWrappedOrderedMapDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	m := types.TypeAs[*types.OrderedMap](w)
+	if m == nil {
+		t.Fatalf("expected OrderedMap type, got %T", w.T)
+	}
+	if m.V == nil {
+		t.Fatalf("expected ordered map value to be set")
+	}
+	if m.V.Key() != types.KeyAny {
+		t.Errorf("ordered map value = %s, want %s", m.V.Key(), types.KeyAny)
+	}
+}
+
+func checkWrappedOptionDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	o := types.TypeAs[*types.Option](w)
+	if o == nil {
+		t.Fatalf("expected Option type, got %T", w.T)
+	}
+	if o.V == nil {
+		t.Fatalf("expected option value to be set")
+	}
+	if o.V.Key() != types.KeyAny {
+		t.Errorf("option value = %s, want %s", o.V.Key(), types.KeyAny)
+	}
+}
+
+func checkWrappedRangeDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	r := types.TypeAs[*types.Range](w)
+	if r == nil {
+		t.Fatalf("expected Range type, got %T", w.T)
+	}
+	if r.V == nil {
+		t.Fatalf("expected range value to be set")
+	}
+	if r.V.Key() != types.KeyAny {
+		t.Errorf("range value = %s, want %s", r.V.Key(), types.KeyAny)
+	}
+}
+
+func checkWrappedSetDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	s := types.TypeAs[*types.Set](w)
+	if s == nil {
+		t.Fatalf("expected Set type, got %T", w.T)
+	}
+	if s.V == nil {
+		t.Fatalf("expected set value to be set")
+	}
+	if s.V.Key() != types.KeyAny {
+		t.Errorf("set value = %s, want %s", s.V.Key(), types.KeyAny)
+	}
+}
+
+func checkWrappedMethodDefaults(t *testing.T, w *types.Wrapped) {
+	t.Helper()
+	m := types.TypeAs[*types.Method](w)
+	if m == nil {
+		t.Fatalf("expected Method type, got %T", w.T)
+	}
+	if m.Ret == nil {
+		t.Fatalf("expected method return type to be set")
+	}
+	if m.Ret.Key() != types.KeyAny {
+		t.Errorf("method return = %s, want %s", m.Ret.Key(), types.KeyAny)
 	}
 }
 

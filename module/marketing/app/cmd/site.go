@@ -21,7 +21,7 @@ const keySite = "site"
 func siteCmd() *coral.Command {
 	short := fmt.Sprintf("Starts the marketing site on port %d (by default)", util.AppPort)
 	f := func(*coral.Command, []string) error { return startSite(rootCtx, _flags) }
-	ret := &coral.Command{Use: keySite, Short: short, RunE: f}
+	ret := newCmd(keySite, short, f)
 	return ret
 }
 

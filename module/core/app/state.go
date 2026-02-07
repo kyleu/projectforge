@@ -76,6 +76,13 @@ func NewState(ctx context.Context, debug bool, bi *BuildInfo{{{ if .HasModule "f
 	}, nil
 }
 
+func (s *State) AppVersion() string {
+	if s == nil || s.BuildInfo == nil || s.BuildInfo.Version == "" {
+		return "dev"
+	}
+	return s.BuildInfo.Version
+}
+
 func (s *State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
 	{{{ if .HasModule "migration" }}}if err := s.DB.Close(); err != nil {

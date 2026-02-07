@@ -4,16 +4,19 @@
 package util_test
 
 import (
-	"errors"
 	"sort"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"{{{ .Package }}}/app/util"
 )
 
 func TestAsyncCollect(t *testing.T) {
+	t.Parallel()
+
 	items := []int{1, 2, 3, 4}
 	res, errs := util.AsyncCollect(items, func(x int) (int, error) {
 		if x == 3 {
@@ -39,6 +42,8 @@ func TestAsyncCollect(t *testing.T) {
 }
 
 func TestAsyncCollectMap(t *testing.T) {
+	t.Parallel()
+
 	items := []string{"a", "b", "c"}
 	res, errs := util.AsyncCollectMap(items, strings.ToUpper, func(x string) (int, error) {
 		if x == "b" {
@@ -65,6 +70,8 @@ func TestAsyncCollectMap(t *testing.T) {
 }
 
 func TestAsyncRateLimit(t *testing.T) {
+	t.Parallel()
+
 	items := []int{1, 2, 3}
 	res, errs := util.AsyncRateLimit("test", items, func(x int) (int, error) {
 		time.Sleep(5 * time.Millisecond)
@@ -80,6 +87,8 @@ func TestAsyncRateLimit(t *testing.T) {
 }
 
 func TestAsyncRateLimitTimeout(t *testing.T) {
+	t.Parallel()
+
 	items := []int{1}
 	res, errs := util.AsyncRateLimit("timeout", items, func(x int) (int, error) {
 		return x, nil

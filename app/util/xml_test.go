@@ -12,12 +12,16 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+const xmlOK = "ok"
+
 type xmlThing struct {
 	XMLName xml.Name `xml:"thing"`
 	Name    string   `xml:"name"`
 }
 
 func TestTOMLAndXML(t *testing.T) {
+	t.Parallel()
+
 	src := map[string]any{"a": 1, "b": "two"}
 	msg := util.ToTOML(src)
 	if msg == "" {
@@ -43,7 +47,7 @@ func TestTOMLAndXML(t *testing.T) {
 		t.Fatalf("unexpected compact xml: %v %q", err, compact)
 	}
 
-	if err := util.CycleXML(xmlThing{Name: "ok"}, &decoded); err != nil || decoded.Name != "ok" {
+	if err := util.CycleXML(xmlThing{Name: xmlOK}, &decoded); err != nil || decoded.Name != xmlOK {
 		t.Fatalf("unexpected CycleXML result: %v %v", decoded, err)
 	}
 

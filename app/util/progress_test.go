@@ -11,6 +11,8 @@ import (
 )
 
 func TestProgressAndTimer(t *testing.T) {
+	t.Parallel()
+
 	var called bool
 	p := util.NewProgress("work", 0, func(p *util.Progress, delta int) {
 		if delta == 5 {
