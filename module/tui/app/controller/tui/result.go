@@ -7,7 +7,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-var screenResult = NewScreen("result", "Result Screen!", "", renderResult, `"any key": back`, `"q": quit`)
+var (
+	keysAnyBack  = []string{`"any key": back`, `"q": quit`}
+	screenResult = NewScreen("result", "Result Screen!", "", renderResult, keysAnyBack...)
+)
 
 func renderResult(t *TUI) string {
 	var b strings.Builder

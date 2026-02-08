@@ -33,7 +33,7 @@ type TUI struct {
 	height int
 
 	logs   []string
-	logsMu sync.Mutex
+	logsMu sync.RWMutex
 
 	ctx       context.Context //nolint:containedctx // lifecycle-owned by TUI; used to cancel background work
 	logger    util.Logger
@@ -140,7 +140,7 @@ func (t *TUI) AddLog(level string, occurred time.Time, loggerName string, messag
 	t.logsMu.Lock()
 	defer t.logsMu.Unlock()
 
-	logMsg := message // TODO: for now
+	logMsg := message // for now
 
 	t.logs = append(t.logs, logMsg)
 	if len(t.logs) > 50 {

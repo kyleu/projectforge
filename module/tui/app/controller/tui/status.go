@@ -9,11 +9,7 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var (
-	keysMenu    = []string{`"esc": back`, `"↑"/"↓" move`, `"enter" select`, `"q" quit`}
-	keysAnyBack = []string{`"any key": back`, `"q": quit`}
-	keysDefault = []string{`"q" quit`, `"↑"/"↓" move`, `"enter" select`}
-)
+var keysDefault = []string{`"q" quit`, `"↑"/"↓" move`, `"enter" select`}
 
 func (t *TUI) withStatus(content string) string {
 	return content + "\n" + t.renderStatusLine(t.width)

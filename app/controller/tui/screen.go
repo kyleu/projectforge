@@ -14,6 +14,7 @@ type Screen struct {
 	Help    string   `json:"help,omitzero"`
 	Hotkeys []string `json:"keys,omitzero"`
 
+	Update func(msg tea.Msg) tea.Cmd        `json:"-"`
 	Render func(t *TUI) string              `json:"-"`
 	OnKey  func(key string, t *TUI) tea.Cmd `json:"-"`
 

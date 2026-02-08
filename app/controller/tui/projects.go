@@ -8,7 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/menu"
 )
 
-var screenProjects = NewScreen("projects", "Projects", "", renderProjects, `"esc": back`, `"↑"/"↓": move`, `"r": reload`, `"q": quit`)
+var screenProjects = NewScreen("projects", "Projects", "", renderProjects, keysMenu...)
 
 func renderProjects(t *TUI) string {
 	var b strings.Builder

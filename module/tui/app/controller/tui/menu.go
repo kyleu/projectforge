@@ -11,7 +11,10 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var screenMenu = NewScreen("menu", "Menu Screen!", "", renderMenu)
+var (
+	keysMenu   = []string{`"esc": back`, `"↑"/"↓" move`, `"enter" select`, `"q" quit`}
+	screenMenu = NewScreen("menu", "Menu Screen!", "", renderMenu, keysMenu...)
+)
 
 var MainMenuItems = menu.Items{
 	// $PF_SECTION_START(tui-menu)$
