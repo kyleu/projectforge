@@ -25,11 +25,11 @@ func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.Va
 			mu.Lock()
 			defer mu.Unlock()
 		}
-		return funcName(prj, cfg, actT, as, logger, ctx)
+		return funcName(ctx, prj, cfg, actT, as, logger)
 	})
 	if len(prjs) > len(nonSelf) {
 		for _, self := range prjs.WithTags("self") {
-			x, _ := funcName(self, cfg, actT, as, logger, ctx)
+			x, _ := funcName(ctx, self, cfg, actT, as, logger)
 			results = append(results, x)
 		}
 	}
@@ -39,7 +39,7 @@ func ApplyAll(ctx context.Context, prjs project.Projects, actT Type, cfg util.Va
 	return results
 }
 
-func funcName(prj *project.Project, cfg util.ValueMap, actT Type, as *app.State, logger util.Logger, ctx context.Context) (*ResultContext, error) {
+func funcName(ctx context.Context, prj *project.Project, cfg util.ValueMap, actT Type, as *app.State, logger util.Logger) (*ResultContext, error) {
 	mSvc, pSvc, eSvc, xSvc := as.Services.Modules, as.Services.Projects, as.Services.Export, as.Services.Exec
 	c := cfg.Clone()
 	prms := &Params{ProjectKey: prj.Key, T: actT, Cfg: cfg, MSvc: mSvc, PSvc: pSvc, XSvc: xSvc, ESvc: eSvc, Logger: logger}

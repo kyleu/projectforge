@@ -14,13 +14,15 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+var errBoom = errors.New("boom")
+
 func TestAsyncCollect(t *testing.T) {
 	t.Parallel()
 
 	items := []int{1, 2, 3, 4}
 	res, errs := util.AsyncCollect(items, func(x int) (int, error) {
 		if x == 3 {
-			return 0, errors.New("boom")
+			return 0, errBoom
 		}
 		return x * x, nil
 	})
@@ -47,7 +49,7 @@ func TestAsyncCollectMap(t *testing.T) {
 	items := []string{"a", "b", "c"}
 	res, errs := util.AsyncCollectMap(items, strings.ToUpper, func(x string) (int, error) {
 		if x == "b" {
-			return 0, errors.New("boom")
+			return 0, errBoom
 		}
 		return len(x), nil
 	})

@@ -12,12 +12,12 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func Build(fs filesystem.FileLoader, logger util.Logger, prj *project.Project) (int, error) {
+func Build(fs filesystem.FileLoader, prj *project.Project, logger util.Logger) (int, error) {
 	tgt := "app/util/svg.go"
-	return Run(fs, tgt, logger, prj)
+	return Run(fs, tgt, prj, logger)
 }
 
-func Run(fs filesystem.FileLoader, tgt string, logger util.Logger, prj *project.Project) (int, error) {
+func Run(fs filesystem.FileLoader, tgt string, prj *project.Project, logger util.Logger) (int, error) {
 	svgs, err := loadSVGs(prj.Key, fs, logger)
 	if err != nil {
 		return 0, err

@@ -35,3 +35,9 @@ func (i Items) Keys() []string {
 		return x.Key
 	})
 }
+
+func (i Items) Titles() []string {
+	return lo.Map(i, func(x *Item, _ int) string {
+		return x.Title
+	})
+}

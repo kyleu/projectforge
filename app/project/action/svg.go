@@ -22,7 +22,7 @@ func onSVG(ctx context.Context, pm *PrjAndMods) *Result {
 		return ret
 	}
 
-	count, err := svg.Run(pm.FS, tgt, pm.Logger, pm.Prj)
+	count, err := svg.Run(pm.FS, tgt, pm.Prj, pm.Logger)
 	if err != nil {
 		return errorResult(err, TypeSVG, pm.Cfg, pm.Logger)
 	}

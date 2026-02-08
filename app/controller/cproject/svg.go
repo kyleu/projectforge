@@ -69,7 +69,7 @@ func SVGBuild(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		count, err := svg.Build(pfs, ps.Logger, prj)
+		count, err := svg.Build(pfs, prj, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -99,7 +99,7 @@ func SVGAddContent(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		_, err = svg.Build(pfs, ps.Logger, prj)
+		_, err = svg.Build(pfs, prj, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -128,7 +128,7 @@ func SVGAdd(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		_, err = svg.Build(pfs, ps.Logger, prj)
+		_, err = svg.Build(pfs, prj, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -160,7 +160,7 @@ func SVGSetApp(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to set app icon to ["+key+"]")
 		}
-		_, err = svg.Build(fs, ps.Logger, prj)
+		_, err = svg.Build(fs, prj, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -203,7 +203,7 @@ func SVGRemove(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to remove SVG ["+key+"]")
 		}
-		_, err = svg.Build(fs, ps.Logger, prj)
+		_, err = svg.Build(fs, prj, ps.Logger)
 		if err != nil {
 			return "", err
 		}

@@ -123,14 +123,18 @@ func serve(listener net.Listener, h http.Handler) error {
 	return nil
 }
 
+func newHTTPServer(h http.Handler) *http.Server {
+	return &http.Server{Handler: h, MaxHeaderBytes: maxHeaderSize, ReadHeaderTimeout: time.Minute}
+}
+
 func listenAndServe(ctx context.Context, addr string, port uint16, h http.Handler) (uint16, error) {
 	p, l, err := listen(ctx, addr, port)
 	if err != nil {
 		return p, err
 	}
-	err = serve(l, h)
-	if err != nil {
-		return p, err
+	x := newHTTPServer(h)
+	if err := x.Serve(l); err != nil {
+		return p, errors.Wrap(err, "unable to run http server")
 	}
 	return 0, nil
 }
