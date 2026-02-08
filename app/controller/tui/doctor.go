@@ -11,12 +11,10 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-var screenDoctor = &Screen{
-	Key:     "doctor",
-	Title:   "Doctor",
-	Hotkeys: []string{`"esc": back`, `"↑"/"↓": move`, `"enter": run check`, `"a": run all`, `"r": reload`, `"q": quit`},
-	Render:  renderDoctor,
-}
+var screenDoctor = NewScreen(
+	"doctor", "Doctor", "checks system health", renderDoctor,
+	`"esc": back`, `"↑"/"↓": move`, `"enter": run check`, `"a": run all`, `"r": reload`, `"q": quit`,
+)
 
 func renderDoctor(t *TUI) string {
 	var b strings.Builder
@@ -38,8 +36,9 @@ func renderDoctor(t *TUI) string {
 			b.WriteString(helpStyle.Render("Running check..."))
 			b.WriteString("\n\n")
 		}
-		if t.Screen.Cursor >= 0 && t.Screen.Cursor < len(t.doctorChecks) {
-			b.WriteString(resultStyle.Render(doctorDetails(t.doctorChecks[t.Screen.Cursor], t.doctorResults[t.doctorChecks[t.Screen.Cursor].Key])))
+		cursor := t.Screen.Cursor()
+		if cursor >= 0 && cursor < len(t.doctorChecks) {
+			b.WriteString(resultStyle.Render(doctorDetails(t.doctorChecks[cursor], t.doctorResults[t.doctorChecks[cursor].Key])))
 		}
 	}
 
@@ -59,7 +58,7 @@ func renderDoctorChecks(t *TUI) string {
 		}
 		items = append(items, &menu.Item{Key: c.Key, Title: label})
 	}
-	return RenderMenuOptions(t.Screen.Cursor, items)
+	return RenderMenuOptions(t.Screen.Cursor(), items)
 }
 
 func doctorDetails(c *doctor.Check, r *doctor.Result) string {
@@ -112,12 +111,12 @@ func onKeyDoctor(key string, t *TUI) tea.Cmd {
 
 	switch key {
 	case tuiKeyUp, "k":
-		if t.Screen.Cursor > 0 {
-			t.Screen.Cursor--
+		if t.Screen.Cursor() > 0 {
+			t.Screen.ModifyCursor(-1)
 		}
 	case tuiKeyDown, "j":
-		if t.Screen.Cursor < len(t.doctorChecks)-1 {
-			t.Screen.Cursor++
+		if t.Screen.Cursor() < len(t.doctorChecks)-1 {
+			t.Screen.ModifyCursor(1)
 		}
 	case "r":
 		t.doctorLoading = true
@@ -129,12 +128,13 @@ func onKeyDoctor(key string, t *TUI) tea.Cmd {
 		t.doctorErr = nil
 		return runDoctorAllCmd(t)
 	case tuiKeyEnter, " ":
-		if t.Screen.Cursor < 0 || t.Screen.Cursor >= len(t.doctorChecks) {
+		cursor := t.Screen.Cursor()
+		if cursor < 0 || cursor >= len(t.doctorChecks) {
 			return nil
 		}
 		t.doctorRunning = true
 		t.doctorErr = nil
-		return runDoctorCheckCmd(t, t.doctorChecks[t.Screen.Cursor].Key)
+		return runDoctorCheckCmd(t, t.doctorChecks[cursor].Key)
 	}
 	return nil
 }

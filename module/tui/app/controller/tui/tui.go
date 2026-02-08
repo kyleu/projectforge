@@ -7,10 +7,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"projectforge.dev/projectforge/app"
-	"projectforge.dev/projectforge/app/doctor"
-	"projectforge.dev/projectforge/app/project"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app"
+	"{{{ .Package }}}/app/util"
 )
 
 type TUI struct {
@@ -18,16 +16,6 @@ type TUI struct {
 
 	choice string
 	result string
-
-	projects        project.Projects
-	projectsLoading bool
-	projectsErr     error
-
-	doctorChecks  doctor.Checks
-	doctorResults map[string]*doctor.Result
-	doctorLoading bool
-	doctorRunning bool
-	doctorErr     error
 
 	width  int
 	height int
@@ -47,12 +35,11 @@ func NewTUI(ctx context.Context, st *app.State, serverURL string, logger util.Lo
 	initScreensIfNeeded()
 
 	return &TUI{
-		Screen:        screenSplash,
-		ctx:           ctx,
-		logger:        logger,
-		st:            st,
-		serverURL:     serverURL,
-		doctorResults: map[string]*doctor.Result{},
+		Screen:    screenSplash,
+		ctx:       ctx,
+		logger:    logger,
+		st:        st,
+		serverURL: serverURL,
 	}
 }
 
@@ -74,37 +61,10 @@ func (t *TUI) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		t.width = msg.Width
 		t.height = msg.Height
-	case projectsLoadedMsg:
-		t.projectsLoading = false
-		t.projectsErr = msg.err
-		t.projects = msg.projects
-		if t.Screen == screenProjects && t.Screen.Cursor() >= len(t.projects) {
-			t.Screen.ResetCursor()
-		}
-	case doctorChecksLoadedMsg:
-		t.doctorLoading = false
-		t.doctorErr = msg.err
-		t.doctorChecks = msg.checks
-		t.doctorResults = map[string]*doctor.Result{}
-		if t.Screen == screenDoctor && t.Screen.Cursor() >= len(t.doctorChecks) {
-			t.Screen.ResetCursor()
-		}
-	case doctorCheckResultMsg:
-		t.doctorRunning = false
-		t.doctorErr = msg.err
-		if msg.result != nil {
-			t.doctorResults[msg.result.Key] = msg.result
-		}
-	case doctorAllResultsMsg:
-		t.doctorRunning = false
-		t.doctorErr = msg.err
-		for _, r := range msg.results {
-			if r != nil {
-				t.doctorResults[r.Key] = r
-			}
-		}
+		return t, nil
+	default:
+		return t, t.Screen.Update(msg)
 	}
-	return t, nil
 }
 
 func (t *TUI) View() string {

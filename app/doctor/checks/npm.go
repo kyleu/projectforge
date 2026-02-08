@@ -8,7 +8,7 @@ import (
 )
 
 var NPM = &doctor.Check{
-	Key:     "node",
+	Key:     "npm",
 	Section: "build",
 	Title:   "NPM.js",
 	Summary: "Download JavaScript dependencies",

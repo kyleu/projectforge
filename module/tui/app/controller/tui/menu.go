@@ -7,18 +7,14 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"projectforge.dev/projectforge/app/lib/menu"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/lib/menu"
+	"{{{ .Package }}}/app/util"
 )
 
 var screenMenu = NewScreen("menu", "Menu Screen!", "", renderMenu)
 
 var MainMenuItems = menu.Items{
 	// $PF_SECTION_START(tui-menu)$
-	{Key: "projects", Title: "Projects"},
-	{Key: "doctor", Title: "Doctor"},
-	{Key: "settings", Title: "Settings"},
-	{Key: "quit", Title: "Exit"},
 	// $PF_SECTION_END(tui-menu)$
 }
 

@@ -8,12 +8,7 @@ import (
 	"projectforge.dev/projectforge/app/lib/menu"
 )
 
-var screenProjects = &Screen{
-	Key:     "projects",
-	Title:   "Projects",
-	Hotkeys: []string{`"esc": back`, `"↑"/"↓": move`, `"r": reload`, `"q": quit`},
-	Render:  renderProjects,
-}
+var screenProjects = NewScreen("projects", "Projects", "", renderProjects, `"esc": back`, `"↑"/"↓": move`, `"r": reload`, `"q": quit`)
 
 func renderProjects(t *TUI) string {
 	var b strings.Builder
@@ -33,10 +28,11 @@ func renderProjects(t *TUI) string {
 		for _, p := range t.projects {
 			items = append(items, &menu.Item{Key: p.Key, Title: p.Title()})
 		}
-		b.WriteString(RenderMenuOptions(t.Screen.Cursor, items))
+		cursor := t.Screen.Cursor()
+		b.WriteString(RenderMenuOptions(cursor, items))
 		b.WriteString("\n")
-		if t.Screen.Cursor >= 0 && t.Screen.Cursor < len(t.projects) {
-			b.WriteString(resultStyle.Render(projectDetails(t.projects[t.Screen.Cursor])))
+		if cursor >= 0 && cursor < len(t.projects) {
+			b.WriteString(resultStyle.Render(projectDetails(t.projects[cursor])))
 		}
 	}
 
@@ -51,12 +47,12 @@ func onKeyProjects(key string, t *TUI) tea.Cmd {
 	case tuiKeyEsc:
 		t.Screen = screenMenu
 	case tuiKeyUp, "k":
-		if t.Screen.Cursor > 0 {
-			t.Screen.Cursor--
+		if t.Screen.Cursor() > 0 {
+			t.Screen.ModifyCursor(-1)
 		}
 	case tuiKeyDown, "j":
-		if t.Screen.Cursor < len(t.projects)-1 {
-			t.Screen.Cursor++
+		if t.Screen.Cursor() < len(t.projects)-1 {
+			t.Screen.ModifyCursor(1)
 		}
 	case "r":
 		t.projectsLoading = true

@@ -24,10 +24,14 @@ func tuiCmd() *coral.Command {
 	return ret
 }
 
-func logFn(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap) {
-}
-
 func runTUI(ctx context.Context, flags *Flags) error {
+	var t *tui.TUI
+	logFn := func(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap) {
+		if t != nil {
+			t.AddLog(level, occurred, loggerName, message, caller, stack, fields)
+		}
+	}
+
 	l, err := log.InitQuietLogging(zapcore.DebugLevel, logFn)
 	if err != nil {
 		return errors.Wrap(err, "error initializing logging")
@@ -59,8 +63,8 @@ func runTUI(ctx context.Context, flags *Flags) error {
 	}()
 
 	serverURL := fmt.Sprintf("http://%s:%d", flags.Address, port)
-	tuiErr := tui.Run(ctx, st, serverURL, logger)
-
+	t = tui.NewTUI(ctx, st, serverURL, logger)
+	tuiErr := t.Run(ctx, logger)
 	shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		_ = srv.Close()

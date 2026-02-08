@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 type Screen struct {
@@ -14,6 +14,7 @@ type Screen struct {
 	Help    string   `json:"help,omitzero"`
 	Hotkeys []string `json:"keys,omitzero"`
 
+	Update func(msg tea.Msg) tea.Cmd        `json:"-"`
 	Render func(t *TUI) string              `json:"-"`
 	OnKey  func(key string, t *TUI) tea.Cmd `json:"-"`
 
@@ -41,10 +42,6 @@ var screensOnce sync.Once
 func initScreensIfNeeded() {
 	screensOnce.Do(func() {
 		// $PF_SECTION_START(tui-init)$
-		screenMenu.OnKey = onKeyMenu
-		screenProjects.OnKey = onKeyProjects
-		screenDoctor.OnKey = onKeyDoctor
-
 		screenSplash.OnKey = onKeySplash
 		screenResult.OnKey = onKeyReturn(screenMenu)
 		// $PF_SECTION_END(tui-init)$

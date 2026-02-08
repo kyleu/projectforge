@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/util"
 )
 
 var screenSplash = NewScreen("splash", util.AppName, "", renderSplash, `"any key": continue`, `"q": quit`)
