@@ -19,7 +19,7 @@ func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, logger util
 	if s.ReadOnly {
 		return errors.Errorf("cannot run [insert] statements in read-only database [%s]", q)
 	}
-	f := s.logQuery(ctx, "inserting row", q, logger, values)
+	f := s.logQuery(ctx, "inserting row", q, logger, values...)
 	aff, err := s.execUnknown(ctx, "insert", q, tx, logger, values...)
 	defer f(aff, fmt.Sprintf("inserted [%d] rows", aff), err)
 	if err != nil {
@@ -94,7 +94,7 @@ func (s *Service) process(
 		return 0, errors.Errorf("cannot run [%q] statements in read-only database [%s]", op, q)
 	}
 	msg := fmt.Sprintf("%s [%d] rows", key, expected)
-	f := s.logQuery(ctx, msg, q, logger, values)
+	f := s.logQuery(ctx, msg, q, logger, values...)
 	aff, err := s.execUnknown(ctx, op, q, tx, logger, values...)
 	defer f(aff, msg, err)
 	if err != nil {

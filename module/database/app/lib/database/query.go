@@ -17,7 +17,7 @@ func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, logger util.
 	var ret *sqlx.Rows
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	f := s.logQuery(ctx, "running raw query", q, logger, values)
+	f := s.logQuery(ctx, "running raw query", q, logger, values...)
 	if tx == nil {
 		ret, err = s.db.QueryxContext(ctx, q, values...)
 		defer f(0, "ran raw query without transaction", err)
@@ -117,7 +117,7 @@ func (s *Service) Select(ctx context.Context, dest any, q string, tx *sqlx.Tx, l
 	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	f := s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, logger, values)
+	f := s.logQuery(ctx, fmt.Sprintf("selecting rows of type [%T]", dest), q, logger, values...)
 	if tx == nil {
 		err = s.db.SelectContext(ctx, dest, q, values...)
 		defer f(util.LengthAny(dest), "ran select query without transaction", err, util.ArrayFromAnyOK[any](dest)...)
@@ -133,7 +133,7 @@ func (s *Service) Get(ctx context.Context, row any, q string, tx *sqlx.Tx, logge
 	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
-	f := s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", row), q, logger, values)
+	f := s.logQuery(ctx, fmt.Sprintf("getting single row of type [%T]", row), q, logger, values...)
 	if tx == nil {
 		err = s.db.GetContext(ctx, row, q, values...)
 		var count int

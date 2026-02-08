@@ -101,7 +101,7 @@ func sqlErrMessage(err error, t string, q string, values []any) error {
 
 type logFunc func(count int, msg string, err error, output ...any)
 
-func (s *Service) logQuery(ctx context.Context, msg string, q string, logger util.Logger, values []any) logFunc {
+func (s *Service) logQuery(ctx context.Context, msg string, q string, logger util.Logger, values ...any) logFunc {
 	if s.Debug {
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}{{{ if .HasModule "databaseui" }}}

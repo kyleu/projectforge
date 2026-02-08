@@ -34,13 +34,12 @@ func Lib(path string) int32 {
 
 	logger.Infof("%s library started on port [%d]", util.AppName, port)
 
+	srv := newHTTPServer(r)
 	go func() {
-		e := serve(listener, r)
-		if e != nil {
-			panic(errors.WithStack(e))
+		if err := srv.Serve(listener); err != nil {
+			panic(errors.WithStack(err))
 		}
-		err = st.Close(ctx, logger)
-		if err != nil {
+		if err := st.Close(ctx, logger); err != nil {
 			logger.Errorf("unable to close application: %s", err.Error())
 		}
 	}()
