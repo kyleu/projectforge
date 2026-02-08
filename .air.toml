@@ -2,7 +2,7 @@
 cmd = "make build"
 bin = "build/debug/projectforge"
 args_bin = ["-v", "--addr=0.0.0.0", "all", "projectforge"]
-include_ext = ["go", "html", "md", "mod", "sql", "js", "css"]
+include_ext = ["go", "html", "md", "mod", "js", "css"]
 exclude_dir = ["build", "client", "gen", "tools", "test/playwright", "data", "module", "testproject", "assets/module"]
 exclude_regex = ["\\.html\\.go$", "_test\\.go$"]
 exclude_unchanged = true

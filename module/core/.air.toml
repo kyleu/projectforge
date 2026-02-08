@@ -2,7 +2,7 @@
 cmd = "make build"
 bin = "build/debug/{{{ .Exec }}}"
 args_bin = [{{{ .ArgsQuoted }}}]
-include_ext = ["go", "html"{{{ if .HasModule "graphql" }}}, "graphql", "schema"{{{ end }}}, "md", "mod", "sql", "js", "css"]
+include_ext = ["go", "html"{{{ if .HasModule "graphql" }}}, "graphql", "schema"{{{ end }}}, "md", "mod"{{{ if .HasModule "database" }}}, "sql"{{{ end }}}, "js", "css"]
 exclude_dir = ["build", "client", "gen"{{{ if .HasModule "notebook" }}}, "notebook"{{{ end }}}, "tools"{{{ if .HasModule "playwright" }}}, "test/playwright"{{{ end }}}{{{ .IgnoredQuoted }}}]
 exclude_regex = ["\\.html\\.go$"{{{ if .HasModule "database" }}}, "\\.sql\\.go$"{{{ end }}}, "_test\\.go$"]
 exclude_unchanged = true
