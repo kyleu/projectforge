@@ -327,7 +327,7 @@ func ParseString(r any, path string, allowEmpty bool) (string, error) {
 		if (!allowEmpty) && (len(t) == 0 || t[0] == "") {
 			return "", errors.New("empty string")
 		}
-		return StringJoin(t, "||"), nil
+		return StringJoin(t, ","), nil
 	case map[string]any:
 		return ToJSONCompact(t), nil
 	case ValueMap:

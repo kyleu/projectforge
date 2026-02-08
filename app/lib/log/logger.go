@@ -24,13 +24,18 @@ func InitLogging(debug bool, fns ...ListenerFunc) (util.Logger, error) {
 	var logger *zap.Logger
 	var err error
 	lf := util.GetEnv("logging_format")
+	lvl := GetLevel(util.Choose(debug, zap.DebugLevel, zap.InfoLevel))
 	switch {
 	case strings.EqualFold(lf, util.KeyJSON):
-		logger, err = InitJSONLogging(GetLevel(zap.InfoLevel))
-	case debug:
-		logger, err = InitDevLogging(GetLevel(zap.DebugLevel), fns...)
+		logger, err = InitJSONLogging(lvl)
+	case strings.EqualFold(lf, "quiet"):
+		logger, err = InitQuietLogging(lvl)
 	default:
-		logger, err = InitSimpleLogging(GetLevel(zap.DebugLevel), fns...)
+		if debug {
+			logger, err = InitDevLogging(lvl, fns...)
+		} else {
+			logger, err = InitSimpleLogging(lvl, fns...)
+		}
 	}
 	if err != nil {
 		return nil, errors.Wrap(err, "error initializing logging")
@@ -63,6 +68,17 @@ func InitJSONLogging(lvl zapcore.Level) (*zap.Logger, error) {
 func InitSimpleLogging(lvl zapcore.Level, fns ...ListenerFunc) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
 		return createSimpleEncoder(cfg, fns...), nil
+	})
+	config := zap.NewDevelopmentConfig()
+	config.EncoderConfig = zapcore.EncoderConfig{}
+	config.Level = zap.NewAtomicLevelAt(lvl)
+	config.Encoding = keyCustom
+	return config.Build(zap.AddStacktrace(zap.PanicLevel), zap.AddCaller())
+}
+
+func InitQuietLogging(lvl zapcore.Level, fns ...ListenerFunc) (*zap.Logger, error) {
+	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
+		return createQuietEncoder(cfg, fns...), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}

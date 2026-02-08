@@ -23,6 +23,8 @@ var screensOnce sync.Once
 func initScreensIfNeeded() {
 	screensOnce.Do(func() {
 		screenMenu.OnKey = onKeyMenu
+		screenProjects.OnKey = onKeyProjects
+		screenDoctor.OnKey = onKeyDoctor
 
 		screenSplash.OnKey = onKeySplash
 		screenResult.OnKey = onKeyReturn(screenMenu)

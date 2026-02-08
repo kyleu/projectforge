@@ -1,0 +1,11 @@
+{
+  "name": "Terminal UI",
+  "icon": "exec",
+  "description": "Provides a rich terminal UI/UX using the charmbracelet/bubbletea suite",
+  "authorName": "Kyle U",
+  "authorEmail": "kyle@kyleu.com",
+  "license": "CC0",
+  "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/tui",
+  "priority": 40,
+  "technology": ["bubbletea"]
+}

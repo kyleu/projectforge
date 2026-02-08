@@ -74,6 +74,7 @@ All managed projects expose a web and CLI interface, and additional modules are 
 - `sqlite`: Provides an API for accessing SQLite databases
 - `system`: Provides logic and a UI for getting the status of the system the app is running on
 - `themecatalog`: A dozen default themes, and facilities to create additional
+- `tui`: Provides a rich terminal UI/UX using the charmbracelet/bubbletea suite
 - `types`: Classes for representing common data types
 - `upgrade`: In-place version upgrades using GitHub Releases
 - `user`: Classes for representing persistent user records, application usage

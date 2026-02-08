@@ -28,7 +28,7 @@ func logFn(level string, occurred time.Time, loggerName string, message string, 
 }
 
 func runTUI(ctx context.Context, flags *Flags) error {
-	l, err := log.InitSimpleLogging(zapcore.DebugLevel, logFn)
+	l, err := log.InitQuietLogging(zapcore.DebugLevel, logFn)
 	if err != nil {
 		return errors.Wrap(err, "error initializing logging")
 	}

@@ -8,12 +8,13 @@ import (
 	"github.com/charmbracelet/lipgloss"
 
 	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/util"
 )
 
 var screenMenu = &Screen{Key: "menu", Title: "Menu Screen!", Render: RenderMenu}
 
 var MainMenuItems = menu.Items{
-	{Key: "project", Title: "Your Project"},
+	{Key: "projects", Title: "Projects"},
 	{Key: "doctor", Title: "Doctor"},
 	{Key: "settings", Title: "Settings"},
 	{Key: "quit", Title: "Exit"},
@@ -22,7 +23,7 @@ var MainMenuItems = menu.Items{
 func RenderMenu(t *TUI) string {
 	var b strings.Builder
 
-	header := titleStyle.Render("AA Tech Tools")
+	header := titleStyle.Render(util.AppName)
 	b.WriteString(header)
 	b.WriteString("\n\n")
 
@@ -96,7 +97,21 @@ func onKeyMenu(key string, t *TUI) tea.Cmd {
 		t.choice = MainMenuItems[t.Screen.Cursor].Title
 
 		switch MainMenuItems[t.Screen.Cursor].Key {
+		case "projects":
+			t.Screen = screenProjects
+			t.Screen.Cursor = 0
+			t.projectsLoading = true
+			t.projectsErr = nil
+			return loadProjectsCmd(t)
+		case "doctor":
+			t.Screen = screenDoctor
+			t.Screen.Cursor = 0
+			t.doctorLoading = true
+			t.doctorRunning = false
+			t.doctorErr = nil
+			return loadDoctorChecksCmd(t)
 		case "quit":
+			t.quitting = true
 			return tea.Quit
 		default:
 			t.Screen = screenResult

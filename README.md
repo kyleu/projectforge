@@ -128,6 +128,7 @@ brew install kyleu/kyleu/projectforge
 
 - [OpenAPI](module/openapi/doc/module/openapi.md)/Swagger UI integration
 - [WebSocket](module/websocket/doc/module/websocket.md) support with reconnection, queueing, and admin observation
+- Rich [TUI](module/tui/doc/module/tui.md) using the charmbracelet/bubbletea suite
 - Secure [HTTP proxying](module/proxy/doc/module/proxy.md)
 - [GraphQL](module/graphql/doc/module/graphql.md) APIs with embedded GraphiQL UI
 - [HTTP Archive](module/har/doc/module/har.md) (HAR) parsing and tooling

@@ -6,8 +6,8 @@
   "package": "projectforge.dev/projectforge",
   "port": 40000,
   "modules": [
-    "core",
     "android",
+    "core",
     "demo",
     "desktop",
     "docbrowse",
@@ -30,6 +30,7 @@
     "search",
     "task",
     "themecatalog",
+    "tui",
     "types",
     "uidocs",
     "upgrade",

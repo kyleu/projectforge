@@ -21,7 +21,7 @@ func ProjectFromMap(prj *project.Project, m util.ValueMap, parseKey bool) error 
 		return m.GetRichStringOpt(k).OrDefault(def)
 	}
 	getSplit := func(k string, def []string) util.Strings {
-		delim := "||"
+		delim := ","
 		return get(k, util.StringJoin(def, delim)).SplitAndTrim(delim)
 	}
 	getInt := func(key string, def int) int {

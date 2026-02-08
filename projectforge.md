@@ -29,6 +29,7 @@ The following modules were used to build this project:
 - [search](./doc/module/search.md)
 - [task](./doc/module/task.md)
 - [themecatalog](./doc/module/themecatalog.md)
+- [tui](./doc/module/tui.md)
 - [types](./doc/module/types.md)
 - [uidocs](./doc/module/uidocs.md)
 - [upgrade](./doc/module/upgrade.md)

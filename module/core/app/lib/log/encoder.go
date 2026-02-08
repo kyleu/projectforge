@@ -81,7 +81,11 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 	}
 
 	if e.colored {
-		addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, Cyan.Add(msg)))
+		color := Cyan
+		if entry.Level.String() == "error" {
+			color = Red
+		}
+		addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, color.Add(msg)))
 	} else {
 		addLine(fmt.Sprintf("[%s] %s %s", lvl, tm, msg))
 	}
