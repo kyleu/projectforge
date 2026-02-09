@@ -9,10 +9,17 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-var keysDefault = []string{`"q" quit`, `"↑"/"↓" move`, `"enter" select`}
+var keysDefault = []string{`"↑"/"↓" move`, `"enter" select`, `"/" logs`, `"q" quit`}
 
 func (t *TUI) withStatus(content string) string {
-	return content + "\n" + t.renderStatusLine(t.width)
+	lines := []string{content}
+	if t.showLogs {
+		if logLines := t.logLineLimit(); logLines > 0 {
+			lines = append(lines, t.renderLogPanel(t.width, logLines))
+		}
+	}
+	lines = append(lines, t.renderStatusLine(t.width))
+	return strings.Join(lines, "\n")
 }
 
 func (t *TUI) renderStatusLine(width int) string {
@@ -34,6 +41,39 @@ func (t *TUI) renderStatusLine(width int) string {
 		text = joinStatusParts(leftText, rightText, contentWidth)
 	}
 	return statusLineStyle.Width(width).Render(text)
+}
+
+func (t *TUI) renderLogPanel(width int, limit int) string {
+	var b strings.Builder
+	b.WriteString(renderDivider(width))
+	b.WriteByte('\n')
+	b.WriteString(logHeaderStyle.Width(width).Render("Recent logs"))
+	b.WriteByte('\n')
+
+	logs := t.latestLogs(limit)
+	if len(logs) > limit {
+		logs = logs[len(logs)-limit:]
+	}
+
+	for i := 0; i < limit; i++ {
+		if i >= len(logs) {
+			b.WriteString(logLineStyle.Width(width).Render(""))
+			b.WriteByte('\n')
+			continue
+		}
+		log := logs[i]
+		line := strings.Join(strings.Fields(log), " ")
+		b.WriteString(logLineStyle.Width(width).Render(truncate(line, width)))
+		b.WriteByte('\n')
+	}
+	return strings.TrimRight(b.String(), "\n")
+}
+
+func renderDivider(width int) string {
+	if width <= 0 {
+		return ""
+	}
+	return logDividerStyle.Width(width).Render(strings.Repeat("─", width))
 }
 
 func joinStatusParts(left string, right string, width int) string {

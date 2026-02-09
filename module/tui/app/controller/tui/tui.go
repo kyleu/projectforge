@@ -12,16 +12,18 @@ import (
 )
 
 type TUI struct {
+	Config *Config
 	Screen *Screen
 
 	choice string
 	result string
 
-	width  int
-	height int
+	width    int
+	height   int
+	showLogs bool
 
 	logs   []string
-	logsMu sync.Mutex
+	logsMu sync.RWMutex
 
 	ctx       context.Context //nolint:containedctx // lifecycle-owned by TUI; used to cancel background work
 	logger    util.Logger
@@ -33,14 +35,7 @@ type TUI struct {
 
 func NewTUI(ctx context.Context, st *app.State, serverURL string, logger util.Logger) *TUI {
 	initScreensIfNeeded()
-
-	return &TUI{
-		Screen:    screenSplash,
-		ctx:       ctx,
-		logger:    logger,
-		st:        st,
-		serverURL: serverURL,
-	}
+	return &TUI{Config: &Config{}, Screen: screenSplash, ctx: ctx, logger: logger, st: st, serverURL: serverURL}
 }
 
 func (t *TUI) Init() tea.Cmd {
@@ -63,7 +58,7 @@ func (t *TUI) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		t.height = msg.Height
 		return t, nil
 	default:
-		return t, t.Screen.Update(msg)
+		return handleMessage(t, msg)
 	}
 }
 
@@ -80,7 +75,22 @@ func (t *TUI) View() string {
 	if t.height == 0 {
 		t.height = 1
 	}
-	return t.withStatus(t.Screen.Render(t))
+
+	reservedLines := 1 // status bar
+	if t.showLogs {
+		reservedLines += t.logPanelHeight()
+	}
+	contentHeight := t.height - reservedLines
+	if contentHeight < 1 {
+		contentHeight = 1
+	}
+
+	originalHeight := t.height
+	t.height = contentHeight
+	content := t.Screen.Render(t)
+	t.height = originalHeight
+
+	return t.withStatus(content)
 }
 
 func (t *TUI) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
@@ -88,6 +98,10 @@ func (t *TUI) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	if key == tuiKeyCtrlC {
 		t.quitting = true
 		return t, tea.Quit
+	}
+	if key == "/" {
+		t.showLogs = !t.showLogs
+		return t, nil
 	}
 	if t.Screen == nil {
 		t.quitting = true
@@ -106,4 +120,50 @@ func (t *TUI) AddLog(level string, occurred time.Time, loggerName string, messag
 	if len(t.logs) > 50 {
 		t.logs = t.logs[1:]
 	}
+}
+
+func (t *TUI) latestLogs(limit int) []string {
+	if limit <= 0 {
+		return nil
+	}
+
+	t.logsMu.RLock()
+	defer t.logsMu.RUnlock()
+
+	if len(t.logs) == 0 {
+		return nil
+	}
+
+	start := len(t.logs) - limit
+	if start < 0 {
+		start = 0
+	}
+
+	ret := make([]string, len(t.logs)-start)
+	copy(ret, t.logs[start:])
+	return ret
+}
+
+func (t *TUI) logPanelHeight() int {
+	lines := t.logLineLimit()
+	if !t.showLogs || lines == 0 {
+		return 0
+	}
+	return lines + 2 // divider + header + log lines
+}
+
+func (t *TUI) logLineLimit() int {
+	if !t.showLogs {
+		return 0
+	}
+	maxLogLines := 5
+	available := t.height - 2 // leave at least one line for main content and one for status
+	if available <= 2 {
+		return 0
+	}
+	lines := available - 2 // divider + header
+	if lines > maxLogLines {
+		lines = maxLogLines
+	}
+	return lines
 }

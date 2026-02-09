@@ -1,38 +1,45 @@
 package tui
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 
 	"projectforge.dev/projectforge/app/lib/menu"
+	"projectforge.dev/projectforge/app/project"
 )
 
 var screenProjects = NewScreen("projects", "Projects", "", renderProjects, keysMenu...)
+
+type projectsLoadedMsg struct {
+	err error
+}
 
 func renderProjects(t *TUI) string {
 	var b strings.Builder
 	b.WriteString(titleStyle.Render("Projects"))
 	b.WriteString("\n\n")
 
+	prjs := projectsFor(t)
 	switch {
-	case t.projectsLoading:
+	case t.Config.projectsLoading:
 		b.WriteString("Loading projects...")
-	case t.projectsErr != nil:
+	case t.Config.projectsErr != nil:
 		b.WriteString("Error loading projects:\n")
-		b.WriteString(t.projectsErr.Error())
-	case len(t.projects) == 0:
+		b.WriteString(t.Config.projectsErr.Error())
+	case len(prjs) == 0:
 		b.WriteString("No projects found.")
 	default:
-		items := make(menu.Items, 0, len(t.projects))
-		for _, p := range t.projects {
+		items := make(menu.Items, 0, len(prjs))
+		for _, p := range prjs {
 			items = append(items, &menu.Item{Key: p.Key, Title: p.Title()})
 		}
 		cursor := t.Screen.Cursor()
 		b.WriteString(RenderMenuOptions(cursor, items))
 		b.WriteString("\n")
-		if cursor >= 0 && cursor < len(t.projects) {
-			b.WriteString(resultStyle.Render(projectDetails(t.projects[cursor])))
+		if cursor >= 0 && cursor < len(prjs) {
+			b.WriteString(resultStyle.Render(projectDetails(prjs[cursor])))
 		}
 	}
 
@@ -51,13 +58,39 @@ func onKeyProjects(key string, t *TUI) tea.Cmd {
 			t.Screen.ModifyCursor(-1)
 		}
 	case tuiKeyDown, "j":
-		if t.Screen.Cursor() < len(t.projects)-1 {
+		prjs := projectsFor(t)
+		if t.Screen.Cursor() < len(prjs)-1 {
 			t.Screen.ModifyCursor(1)
 		}
 	case "r":
-		t.projectsLoading = true
-		t.projectsErr = nil
+		t.Config.projectsLoading = true
+		t.Config.projectsErr = nil
 		return loadProjectsCmd(t)
 	}
 	return nil
+}
+
+func loadProjectsCmd(t *TUI) tea.Cmd {
+	return func() tea.Msg {
+		_, err := t.st.Services.Projects.Refresh(t.logger)
+		return projectsLoadedMsg{err: err}
+	}
+}
+
+func projectsFor(t *TUI) project.Projects {
+	return t.st.Services.Projects.Projects()
+}
+
+func projectDetails(p *project.Project) string {
+	if p == nil {
+		return "No project selected."
+	}
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf("Name: %s\n", p.Title()))
+	b.WriteString(fmt.Sprintf("Key: %s\n", p.Key))
+	b.WriteString(fmt.Sprintf("Package: %s\n", orDash(p.Package)))
+	b.WriteString(fmt.Sprintf("Version: %s\n", orDash(p.Version)))
+	b.WriteString(fmt.Sprintf("Exec: %s\n", orDash(p.ExecSafe())))
+	b.WriteString(fmt.Sprintf("Path: %s\n", orDash(p.Path)))
+	return b.String()
 }

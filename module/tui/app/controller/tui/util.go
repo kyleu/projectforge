@@ -10,3 +10,10 @@ const (
 	tuiKeyCtrlC     = "ctrl+c"
 	tuiCursorSpacer = "  "
 )
+
+func orDash(s string) string {
+	if s == "" {
+		return "-"
+	}
+	return s
+}

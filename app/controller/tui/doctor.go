@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/doctor/checks"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -16,29 +18,44 @@ var screenDoctor = NewScreen(
 	`"esc": back`, `"↑"/"↓": move`, `"enter": run check`, `"a": run all`, `"r": reload`, `"q": quit`,
 )
 
+type doctorChecksLoadedMsg struct {
+	checks doctor.Checks
+	err    error
+}
+
+type doctorCheckResultMsg struct {
+	result *doctor.Result
+	err    error
+}
+
+type doctorAllResultsMsg struct {
+	results doctor.Results
+	err     error
+}
+
 func renderDoctor(t *TUI) string {
 	var b strings.Builder
 	b.WriteString(titleStyle.Render("Doctor"))
 	b.WriteString("\n\n")
 
 	switch {
-	case t.doctorLoading:
+	case t.Config.doctorLoading:
 		b.WriteString("Loading checks...")
-	case t.doctorErr != nil:
+	case t.Config.doctorErr != nil:
 		b.WriteString("Doctor error:\n")
-		b.WriteString(t.doctorErr.Error())
-	case len(t.doctorChecks) == 0:
+		b.WriteString(t.Config.doctorErr.Error())
+	case len(t.Config.doctorChecks) == 0:
 		b.WriteString("No doctor checks available for the current projects.")
 	default:
 		b.WriteString(renderDoctorChecks(t))
 		b.WriteString("\n")
-		if t.doctorRunning {
+		if t.Config.doctorRunning {
 			b.WriteString(helpStyle.Render("Running check..."))
 			b.WriteString("\n\n")
 		}
 		cursor := t.Screen.Cursor()
-		if cursor >= 0 && cursor < len(t.doctorChecks) {
-			b.WriteString(resultStyle.Render(doctorDetails(t.doctorChecks[cursor], t.doctorResults[t.doctorChecks[cursor].Key])))
+		if cursor >= 0 && cursor < len(t.Config.doctorChecks) {
+			b.WriteString(resultStyle.Render(doctorDetails(t.Config.doctorChecks[cursor], t.Config.doctorResults[t.Config.doctorChecks[cursor].Key])))
 		}
 	}
 
@@ -46,10 +63,10 @@ func renderDoctor(t *TUI) string {
 }
 
 func renderDoctorChecks(t *TUI) string {
-	items := make(menu.Items, 0, len(t.doctorChecks))
-	for _, c := range t.doctorChecks {
+	items := make(menu.Items, 0, len(t.Config.doctorChecks))
+	for _, c := range t.Config.doctorChecks {
 		label := c.Title
-		if r, ok := t.doctorResults[c.Key]; ok {
+		if r, ok := t.Config.doctorResults[c.Key]; ok {
 			status := "ok"
 			if r.Status == util.KeyError {
 				status = "error"
@@ -105,7 +122,7 @@ func onKeyDoctor(key string, t *TUI) tea.Cmd {
 		t.Screen = screenMenu
 		return nil
 	}
-	if t.doctorLoading || t.doctorRunning {
+	if t.Config.doctorLoading || t.Config.doctorRunning {
 		return nil
 	}
 
@@ -115,26 +132,68 @@ func onKeyDoctor(key string, t *TUI) tea.Cmd {
 			t.Screen.ModifyCursor(-1)
 		}
 	case tuiKeyDown, "j":
-		if t.Screen.Cursor() < len(t.doctorChecks)-1 {
+		if t.Screen.Cursor() < len(t.Config.doctorChecks)-1 {
 			t.Screen.ModifyCursor(1)
 		}
 	case "r":
-		t.doctorLoading = true
-		t.doctorErr = nil
-		t.doctorResults = map[string]*doctor.Result{}
+		t.Config.doctorLoading = true
+		t.Config.doctorErr = nil
+		t.Config.doctorResults = map[string]*doctor.Result{}
 		return loadDoctorChecksCmd(t)
 	case "a":
-		t.doctorRunning = true
-		t.doctorErr = nil
+		t.Config.doctorRunning = true
+		t.Config.doctorErr = nil
 		return runDoctorAllCmd(t)
 	case tuiKeyEnter, " ":
 		cursor := t.Screen.Cursor()
-		if cursor < 0 || cursor >= len(t.doctorChecks) {
+		if cursor < 0 || cursor >= len(t.Config.doctorChecks) {
 			return nil
 		}
-		t.doctorRunning = true
-		t.doctorErr = nil
-		return runDoctorCheckCmd(t, t.doctorChecks[cursor].Key)
+		t.Config.doctorRunning = true
+		t.Config.doctorErr = nil
+		return runDoctorCheckCmd(t, t.Config.doctorChecks[cursor].Key)
 	}
 	return nil
+}
+
+func loadDoctorChecksCmd(t *TUI) tea.Cmd {
+	return func() tea.Msg {
+		prjs, err := t.st.Services.Projects.Refresh(t.logger)
+		if err != nil {
+			return doctorChecksLoadedMsg{err: errors.Wrap(err, "unable to load projects")}
+		}
+		checks.SetModules(t.st.Services.Modules.Deps(), t.st.Services.Modules.Dangerous())
+		ret := checks.ForModules(prjs.AllModules())
+		return doctorChecksLoadedMsg{checks: ret}
+	}
+}
+
+func runDoctorCheckCmd(t *TUI, key string) tea.Cmd {
+	return func() tea.Msg {
+		c := checks.GetCheck(key)
+		if c == nil {
+			return doctorCheckResultMsg{err: errors.Errorf("no doctor check found for key [%s]", key)}
+		}
+		res := c.Check(t.ctx, t.logger)
+		if res == nil {
+			return doctorCheckResultMsg{err: errors.Errorf("doctor check [%s] does not apply to this platform", key)}
+		}
+		return doctorCheckResultMsg{result: res}
+	}
+}
+
+func runDoctorAllCmd(t *TUI) tea.Cmd {
+	return func() tea.Msg {
+		modules := projectsFor(t).AllModules()
+		if len(modules) == 0 {
+			prjs, err := t.st.Services.Projects.Refresh(t.logger)
+			if err != nil {
+				return doctorAllResultsMsg{err: errors.Wrap(err, "unable to load projects")}
+			}
+			modules = prjs.AllModules()
+		}
+		checks.SetModules(t.st.Services.Modules.Deps(), t.st.Services.Modules.Dangerous())
+		ret := checks.CheckAll(t.ctx, modules, t.logger)
+		return doctorAllResultsMsg{results: ret}
+	}
 }

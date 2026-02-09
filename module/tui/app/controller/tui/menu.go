@@ -18,6 +18,8 @@ var (
 
 var MainMenuItems = menu.Items{
 	// $PF_SECTION_START(tui-menu)$
+	{Key: "settings", Title: "Settings"},
+	{Key: "quit", Title: "Exit"},
 	// $PF_SECTION_END(tui-menu)$
 }
 
@@ -98,20 +100,8 @@ func onKeyMenu(key string, t *TUI) tea.Cmd {
 	case "enter", " ":
 		t.choice = MainMenuItems[cursor].Title
 
+		// $PF_SECTION_START(tui-menu-select)$
 		switch MainMenuItems[cursor].Key {
-		case "projects":
-			t.Screen = screenProjects
-			t.Screen.ResetCursor()
-			t.projectsLoading = true
-			t.projectsErr = nil
-			return loadProjectsCmd(t)
-		case "doctor":
-			t.Screen = screenDoctor
-			t.Screen.ResetCursor()
-			t.doctorLoading = true
-			t.doctorRunning = false
-			t.doctorErr = nil
-			return loadDoctorChecksCmd(t)
 		case "quit":
 			t.quitting = true
 			return tea.Quit
@@ -119,6 +109,7 @@ func onKeyMenu(key string, t *TUI) tea.Cmd {
 			t.Screen = screenResult
 			t.result = fmt.Sprintf("You selected:\n\n%s", t.choice)
 		}
+		// $PF_SECTION_END(tui-menu-select)$
 	}
 	return nil
 }

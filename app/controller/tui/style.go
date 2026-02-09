@@ -27,5 +27,8 @@ var (
 	resultStyle         = lipgloss.NewStyle().Foreground(hl).Bold(true).Border(lipgloss.RoundedBorder()).BorderForeground(acct).Padding(1, 3)
 	helpStyle           = lipgloss.NewStyle().Foreground(tm).MarginTop(1)
 	containerStyle      = lipgloss.NewStyle().Align(lipgloss.Center).AlignVertical(lipgloss.Center)
+	logDividerStyle     = lipgloss.NewStyle().Foreground(acct)
+	logHeaderStyle      = lipgloss.NewStyle().Foreground(tm).Bold(true)
+	logLineStyle        = lipgloss.NewStyle().Foreground(tl)
 	statusLineStyle     = lipgloss.NewStyle().Foreground(tl).Background(lipgloss.Color(colorPrimary)).Padding(0, 1)
 )
