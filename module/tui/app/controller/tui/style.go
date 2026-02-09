@@ -3,12 +3,12 @@ package tui
 import "github.com/charmbracelet/lipgloss"
 
 const (
-	colorPrimary    = "#0a2638"
-	colorAccent     = "#50677d"
-	colorHighlight  = "#cdd9e3"
-	colorTextLight  = "#eeeeee"
-	colorTextMuted  = "#93a1af"
-	colorBackground = "#121212"
+	colorPrimary    = "{{{ .Theme.Dark.NavBackground }}}"
+	colorAccent     = "{{{ .Theme.Dark.MenuSelectedBackground }}}"
+	colorHighlight  = "{{{ .Theme.Light.MenuBackground }}}"
+	colorTextLight  = "{{{ .Theme.Dark.MenuForeground }}}"
+	colorTextMuted  = "{{{ .Theme.Dark.ForegroundMuted }}}"
+	colorBackground = "{{{ .Theme.Dark.Background }}}"
 )
 
 var (
