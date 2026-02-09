@@ -7,6 +7,7 @@ import (
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -16,9 +17,9 @@ var (
 	currentDangerousModules []string
 )
 
-func SetModules(deps map[string][]string, dangerous []string) {
-	currentModuleDeps = deps
-	currentDangerousModules = dangerous
+func SetModules(svc *module.Service) {
+	currentModuleDeps = svc.Deps()
+	currentDangerousModules = svc.Dangerous()
 }
 
 var Project = &doctor.Check{

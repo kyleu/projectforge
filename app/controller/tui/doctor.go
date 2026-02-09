@@ -162,7 +162,7 @@ func loadDoctorChecksCmd(t *TUI) tea.Cmd {
 		if err != nil {
 			return doctorChecksLoadedMsg{err: errors.Wrap(err, "unable to load projects")}
 		}
-		checks.SetModules(t.st.Services.Modules.Deps(), t.st.Services.Modules.Dangerous())
+		checks.SetModules(t.st.Services.Modules)
 		ret := checks.ForModules(prjs.AllModules())
 		return doctorChecksLoadedMsg{checks: ret}
 	}
@@ -192,7 +192,7 @@ func runDoctorAllCmd(t *TUI) tea.Cmd {
 			}
 			modules = prjs.AllModules()
 		}
-		checks.SetModules(t.st.Services.Modules.Deps(), t.st.Services.Modules.Dangerous())
+		checks.SetModules(t.st.Services.Modules)
 		ret := checks.CheckAll(t.ctx, modules, t.logger)
 		return doctorAllResultsMsg{results: ret}
 	}

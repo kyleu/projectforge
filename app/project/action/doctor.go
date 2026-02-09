@@ -15,7 +15,7 @@ import (
 func onDoctor(ctx context.Context, cfg util.ValueMap, pSvc *project.Service, mSvc *module.Service, logger util.Logger) *Result {
 	ret := newResult(TypeDoctor, nil, cfg, logger)
 	prjs := pSvc.Projects()
-	checks.SetModules(mSvc.Deps(), mSvc.Dangerous())
+	checks.SetModules(mSvc)
 	res := checks.CheckAll(ctx, prjs.AllModules(), logger)
 	lo.ForEach(res, func(r *doctor.Result, _ int) {
 		ret.AddLog("%s: %s", r.Title, r.Status)

@@ -35,7 +35,7 @@ func DoctorRunAll(w http.ResponseWriter, r *http.Request) {
 			return controller.Render(r, as, page, ps, "Welcome")
 		}
 		prjs := as.Services.Projects.Projects()
-		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
+		checks.SetModules(as.Services.Modules)
 		ret := checks.CheckAll(ps.Context, prjs.AllModules(), ps.Logger)
 		ps.SetTitleAndData("Doctor Results", ret)
 		return controller.Render(r, as, &vdoctor.Results{Results: ret}, ps, "doctor", "All")
@@ -49,7 +49,7 @@ func DoctorRun(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		c := checks.GetCheck(key)
-		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
+		checks.SetModules(as.Services.Modules)
 		ret := c.Check(ps.Context, ps.Logger)
 		ps.SetTitleAndData(c.Title+" Result", ret)
 		return controller.Render(r, as, &vdoctor.Results{Results: doctor.Results{ret}}, ps, "doctor", c.Title)
@@ -64,7 +64,7 @@ func DoctorSolve(w http.ResponseWriter, r *http.Request) {
 		}
 		returnURL := util.OrDefault(cutil.QueryStringString(ps.URI, "return"), "/doctor/all")
 		c := checks.GetCheck(key)
-		checks.SetModules(as.Services.Modules.Deps(), as.Services.Modules.Dangerous())
+		checks.SetModules(as.Services.Modules)
 		ret := c.Check(ps.Context, ps.Logger)
 		if len(ret.Solutions) == 0 {
 			ps.SetTitleAndData(fmt.Sprintf("No solution available for [%s]", c.Title), c)
