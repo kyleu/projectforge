@@ -13,7 +13,21 @@ var screenSplash = NewScreen("splash", util.AppName, "", renderSplash, `"any key
 func renderSplash(t *TUI) string {
 	var b strings.Builder
 
-	b.WriteString(util.AppName)
+	art := util.ToASCIIArt(util.AppName)
+	lines := strings.Split(strings.TrimRight(art, "\n"), "\n")
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			b.WriteString("\n")
+			continue
+		}
+		style := splashTitleStyle.Foreground(acct)
+		b.WriteString(style.Render(line))
+		b.WriteString("\n")
+	}
+	b.WriteString("\n")
+	b.WriteString(splashSubtitleStyle.Render("Server is running at " + t.serverURL))
+	b.WriteString("\n\n")
+	b.WriteString(pressKeyStyle.Render("Press any key to continue..."))
 
 	content := b.String()
 

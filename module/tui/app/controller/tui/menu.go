@@ -86,7 +86,7 @@ func stringWidth(items []string) int {
 func onKeyMenu(key string, t *TUI) tea.Cmd {
 	cursor := t.Screen.Cursor()
 	switch key {
-	case "q":
+	case "q", "esc":
 		t.quitting = true
 		return tea.Quit
 	case "up", "k":

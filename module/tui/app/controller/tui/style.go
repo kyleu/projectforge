@@ -19,8 +19,8 @@ var (
 
 	titleStyle          = lipgloss.NewStyle().Foreground(tl).Background(lipgloss.Color(colorPrimary)).Bold(true).Padding(1, 4)
 	splashTitleStyle    = lipgloss.NewStyle().Foreground(hl).Bold(true)
-	splashSubtitleStyle = lipgloss.NewStyle().Foreground(acct).Italic(true)
-	pressKeyStyle       = lipgloss.NewStyle().Foreground(tm).Blink(true)
+	splashSubtitleStyle = lipgloss.NewStyle().Foreground(tm).Italic(true)
+	pressKeyStyle       = lipgloss.NewStyle().Foreground(acct).Blink(true)
 	menuItemStyle       = lipgloss.NewStyle().Foreground(tl).PaddingLeft(2)
 	menuSelectedStyle   = lipgloss.NewStyle().Foreground(tl).Background(acct).Bold(true).PaddingLeft(2)
 	menuCursorStyle     = lipgloss.NewStyle().Foreground(hl).Bold(true)
