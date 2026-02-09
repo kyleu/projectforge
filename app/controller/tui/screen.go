@@ -44,6 +44,7 @@ func initScreensIfNeeded() {
 		// $PF_SECTION_START(tui-init)$
 		screenMenu.OnKey = onKeyMenu
 		screenProjects.OnKey = onKeyProjects
+		screenProjectActions.OnKey = onKeyProjectActions
 		screenDoctor.OnKey = onKeyDoctor
 
 		screenSplash.OnKey = onKeySplash

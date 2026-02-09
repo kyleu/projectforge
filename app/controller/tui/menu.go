@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	keysMenu   = []string{`"esc": back`, `"↑"/"↓" move`, `"enter" select`, `"q" quit`}
-	screenMenu = NewScreen("menu", "Menu Screen!", "", renderMenu, keysMenu...)
+	keysMenu   = []string{`"esc": back`, `"↑"/"↓" move`, `"enter" select`, `"/" logs`, `"q" quit`}
+	screenMenu = NewScreen("menu", "Main Menu", "", renderMenu, keysMenu...)
 )
 
 var MainMenuItems = menu.Items{
@@ -109,6 +109,9 @@ func onKeyMenu(key string, t *TUI) tea.Cmd {
 			t.Screen.ResetCursor()
 			t.Config.projectsLoading = true
 			t.Config.projectsErr = nil
+			t.Config.projectKey = ""
+			t.Config.projectActionRunning = false
+			t.Config.projectActionErr = nil
 			return loadProjectsCmd(t)
 		case "doctor":
 			t.Screen = screenDoctor

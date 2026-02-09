@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	keysMenu   = []string{`"esc": back`, `"↑"/"↓" move`, `"enter" select`, `"q" quit`}
-	screenMenu = NewScreen("menu", "Menu Screen!", "", renderMenu, keysMenu...)
+	keysMenu   = []string{`"esc": back`, `"↑"/"↓" move`, `"enter" select`, `"/" logs`, `"q" quit`}
+	screenMenu = NewScreen("menu", "Main Menu", "", renderMenu, keysMenu...)
 )
 
 var MainMenuItems = menu.Items{

@@ -4,6 +4,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/project/action"
 )
 
 func handleMessage(t *TUI, msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -14,6 +15,18 @@ func handleMessage(t *TUI, msg tea.Msg) (tea.Model, tea.Cmd) {
 		prjs := projectsFor(t)
 		if t.Screen == screenProjects && t.Screen.Cursor() >= len(prjs) {
 			t.Screen.ResetCursor()
+		}
+		if selectedProject(t) == nil {
+			t.Config.projectKey = ""
+		}
+	case projectActionCompletedMsg:
+		t.Config.projectActionRunning = false
+		t.Config.projectActionErr = msg.err
+		if msg.result != nil {
+			if t.Config.projectActionResults == nil {
+				t.Config.projectActionResults = map[string]*action.Result{}
+			}
+			t.Config.projectActionResults[projectActionResultKey(msg.projectKey, msg.actionKey)] = msg.result
 		}
 	case doctorChecksLoadedMsg:
 		t.Config.doctorLoading = false
