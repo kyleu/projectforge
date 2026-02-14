@@ -30,7 +30,7 @@ func ProjectFromMap(prj *project.Project, m util.ValueMap, parseKey bool) error 
 	}
 
 	if parseKey {
-		prj.Key = clean(string(get("key", prj.Name).OrDefault(prj.Key)))
+		prj.Key = clean(string(get("key", prj.Key).OrDefault(prj.Name)))
 	}
 
 	prj.Name = clean(get("name", prj.Name).String())

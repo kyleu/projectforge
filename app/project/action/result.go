@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -33,7 +34,7 @@ func (r *Result) WithError(err error) *Result {
 	msg := "error encountered"
 	if err != nil {
 		msg = err.Error()
-		if r.logger != nil {
+		if r.logger != nil && !strings.HasSuffix(msg, " canceled") {
 			r.logger.Warnf("action error: %+v", err)
 		}
 	}

@@ -43,11 +43,19 @@ func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]stri
 		ret = append(ret, &ValidationError{Code: code, Message: msg})
 	}
 
+	if p == nil {
+		e("no-project", "a nil Project was passed for validation")
+	}
+
+	p = p.Sanitize()
+
 	validateBasic(p, e)
 	if fs != nil {
 		validateFilesystem(p, e, fs)
 	}
-	validateModuleDeps(p.Modules, moduleDeps, e)
+	if moduleDeps != nil {
+		validateModuleDeps(p.Modules, moduleDeps, e)
+	}
 	validateModuleConfig(p, e, dangerous)
 	validateInfo(p, e)
 	validateBuild(p, e)

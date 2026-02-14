@@ -2,38 +2,35 @@ package action
 
 import (
 	"fmt"
-	"slices"
+
+	"github.com/charmbracelet/huh"
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func promptModules(current []string, mods module.Modules) []string {
-	modKeys := util.ArraySorted(mods.Keys())
-	const msg = "Enter the modules your project will use as a comma-separated list\n" +
-		"  Type \"list\" to see the available choices, or \"all\" for everything."
-	modStrings := promptString(msg, util.StringJoin(current, ", "))
-	ret := util.StringSplitAndTrim(modStrings, ",")
-	if len(ret) == 1 {
-		switch ret[0] {
-		case "all":
-			return modKeys
-		case "list":
-			clilog("Available modules:")
-			for _, mod := range mods.Sorted() {
-				clilog(fmt.Sprintf(util.StringDefaultLinebreak+"  %12s %s", mod.Key+":", mod.Description))
-			}
-			clilog(util.StringDefaultLinebreak + util.StringDefaultLinebreak)
-			promptTotal--
-			return promptModules(current, mods)
+func promptModules(current []string, mods module.Modules) ([]string, error) {
+	promptTotal++
+	ret := append([]string{}, current...)
+	var opts []huh.Option[string]
+	for _, mod := range mods.Sorted() {
+		opts = append(opts, huh.NewOption(fmt.Sprintf("%s: %s", mod.Key, mod.Description), mod.Key))
+	}
+	f := huh.NewForm(huh.NewGroup(
+		huh.NewMultiSelect[string]().
+			Title(fmt.Sprintf("%d: Select the modules your project will use", promptTotal)).
+			Description("Use arrow keys to move and space to toggle modules").
+			Options(opts...).
+			Value(&ret),
+	))
+	if err := f.Run(); err != nil {
+		if errors.Is(err, huh.ErrUserAborted) {
+			return nil, errors.New("project creation canceled")
 		}
+		clilog("error: " + err.Error() + util.StringDefaultLinebreak)
+		return nil, err
 	}
 	ret = util.ArraySorted(util.ArrayRemoveDuplicates(ret))
-	for _, mod := range ret {
-		if !slices.Contains(modKeys, mod) {
-			clilog("error: unknown module: " + mod + util.StringDefaultLinebreak)
-			return promptModules(current, mods)
-		}
-	}
-	return ret
+	return ret, nil
 }

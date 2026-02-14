@@ -13,14 +13,24 @@ import (
 
 func onCreate(ctx context.Context, params *Params) *Result {
 	path := util.OrDefault(params.Cfg.GetStringOpt("path"), ".")
-	prj, _ := params.PSvc.Get(params.ProjectKey)
+
+	_, _ = params.PSvc.Refresh(params.Logger)
+
+	var prj *project.Project
+	if params.ProjectKey == "" {
+		prj = params.PSvc.ByPath(path)
+	} else {
+		prj, _ = params.PSvc.Get(params.ProjectKey)
+	}
 	if prj == nil {
 		prj = project.NewProject(params.ProjectKey, path)
 	}
 	ret := newResult(TypeCreate, prj, params.Cfg, params.Logger)
-	err := ProjectFromMap(prj, params.Cfg, true)
-	if err != nil {
-		return ret.WithError(err)
+	if len(params.Cfg) > 0 {
+		err := ProjectFromMap(prj, params.Cfg, true)
+		if err != nil {
+			return ret.WithError(err)
+		}
 	}
 	if params.CLI {
 		err := cliProject(ctx, prj, params.MSvc.Modules(), params.Logger)
@@ -36,7 +46,7 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	}
 
 	params.Logger.Info("Saving project...")
-	err = params.PSvc.Save(prj, params.Logger)
+	err := params.PSvc.Save(prj, params.Logger)
 	if err != nil {
 		return ret.WithError(err)
 	}
