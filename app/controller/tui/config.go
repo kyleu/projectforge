@@ -9,6 +9,7 @@ type Config struct {
 	projectsLoading bool
 	projectsErr     error
 	projectKey      string
+	projectActionsFromProjects bool
 
 	projectActionRunning bool
 	projectActionErr     error

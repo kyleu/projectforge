@@ -35,6 +35,7 @@ type TUI struct {
 
 func NewTUI(ctx context.Context, st *app.State, serverURL string, logger util.Logger) *TUI {
 	initScreensIfNeeded()
+	_, _ = st.Services.Projects.Refresh(logger)
 	return &TUI{Config: &Config{}, Screen: screenSplash, ctx: ctx, logger: logger, st: st, serverURL: serverURL}
 }
 

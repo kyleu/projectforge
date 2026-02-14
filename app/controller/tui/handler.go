@@ -28,6 +28,13 @@ func handleMessage(t *TUI, msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			t.Config.projectActionResults[projectActionResultKey(msg.projectKey, msg.actionKey)] = msg.result
 		}
+	case newProjectCompletedMsg:
+		t.Screen = screenResult
+		if msg.err != nil {
+			t.result = "New project creation failed:\n\n" + msg.err.Error()
+		} else {
+			t.result = "New project created successfully."
+		}
 	case doctorChecksLoadedMsg:
 		t.Config.doctorLoading = false
 		t.Config.doctorErr = msg.err

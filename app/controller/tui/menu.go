@@ -2,6 +2,9 @@ package tui
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -16,17 +19,23 @@ var (
 	screenMenu = NewScreen("menu", "Main Menu", "", renderMenu, keysMenu...)
 )
 
-var MainMenuItems = menu.Items{
+var mainMenuItems = menu.Items{
 	// $PF_SECTION_START(tui-menu)$
 	{Key: "projects", Title: "Projects"},
+	{Key: "new-project", Title: "New Project"},
 	{Key: "doctor", Title: "Doctor"},
 	{Key: "settings", Title: "Settings"},
 	{Key: "quit", Title: "Exit"},
 	// $PF_SECTION_END(tui-menu)$
 }
 
+type newProjectCompletedMsg struct {
+	err error
+}
+
 func renderMenu(t *TUI) string {
 	var b strings.Builder
+	items := mainMenuItemsFor(t)
 
 	header := titleStyle.Render(util.AppName)
 	b.WriteString(header)
@@ -34,7 +43,7 @@ func renderMenu(t *TUI) string {
 
 	b.WriteString("Select an option:\n\n")
 
-	b.WriteString(RenderMenuOptions(t.Screen.Cursor(), MainMenuItems))
+	b.WriteString(RenderMenuOptions(t.Screen.Cursor(), items))
 
 	content := b.String()
 
@@ -87,6 +96,7 @@ func stringWidth(items []string) int {
 
 func onKeyMenu(key string, t *TUI) tea.Cmd {
 	cursor := t.Screen.Cursor()
+	items := mainMenuItemsFor(t)
 	switch key {
 	case "q", "esc":
 		t.quitting = true
@@ -96,22 +106,40 @@ func onKeyMenu(key string, t *TUI) tea.Cmd {
 			t.Screen.ModifyCursor(-1)
 		}
 	case "down", "j":
-		if cursor < len(MainMenuItems)-1 {
+		if cursor < len(items)-1 {
 			t.Screen.ModifyCursor(1)
 		}
 	case "enter", " ":
-		t.choice = MainMenuItems[cursor].Title
+		if cursor < 0 || cursor >= len(items) {
+			return nil
+		}
+		t.choice = items[cursor].Title
 
 		// $PF_SECTION_START(tui-menu-select)$
-		switch MainMenuItems[cursor].Key {
+		switch items[cursor].Key {
+		case "new-project":
+			cmd, err := runNewProjectCmd(t)
+			if err != nil {
+				t.Screen = screenResult
+				t.result = "Unable to start project creation:\n\n" + err.Error()
+				return nil
+			}
+			return cmd
 		case "projects":
 			t.Screen = screenProjects
 			t.Screen.ResetCursor()
 			t.Config.projectsLoading = true
 			t.Config.projectsErr = nil
 			t.Config.projectKey = ""
+			t.Config.projectActionsFromProjects = false
 			t.Config.projectActionRunning = false
 			t.Config.projectActionErr = nil
+			if prjs := projectsFor(t); len(prjs) == 1 {
+				t.Config.projectKey = prjs[0].Key
+				screenProjectActions.ResetCursor()
+				t.Screen = screenProjectActions
+				return nil
+			}
 			return loadProjectsCmd(t)
 		case "doctor":
 			t.Screen = screenDoctor
@@ -130,4 +158,30 @@ func onKeyMenu(key string, t *TUI) tea.Cmd {
 		// $PF_SECTION_END(tui-menu-select)$
 	}
 	return nil
+}
+
+func mainMenuItemsFor(t *TUI) menu.Items {
+	ret := make(menu.Items, len(mainMenuItems))
+	copy(ret, mainMenuItems)
+	if len(ret) > 0 && len(projectsFor(t)) == 1 && ret[0].Key == "projects" {
+		ret[0] = &menu.Item{Key: ret[0].Key, Title: "Your Project"}
+	}
+	return ret
+}
+
+func runNewProjectCmd(t *TUI) (tea.Cmd, error) {
+	exePath, err := os.Executable()
+	if err != nil {
+		return nil, err
+	}
+	cfgDir := filepath.Dir(t.st.Services.Modules.ConfigDirectory())
+	args := []string{"create"}
+	if cfgDir != "" {
+		args = []string{"--config_dir", cfgDir, "create"}
+	}
+	cmd := exec.Command(exePath, args...)
+	cmd.Env = os.Environ()
+	return tea.ExecProcess(cmd, func(err error) tea.Msg {
+		return newProjectCompletedMsg{err: err}
+	}), nil
 }

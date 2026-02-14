@@ -133,6 +133,7 @@ func onKeyProjects(key string, t *TUI) tea.Cmd {
 			return nil
 		}
 		t.Config.projectKey = prjs[cursor].Key
+		t.Config.projectActionsFromProjects = true
 		t.Config.projectActionErr = nil
 		t.Config.projectActionRunning = false
 		screenProjectActions.ResetCursor()
@@ -152,7 +153,11 @@ func onKeyProjectActions(key string, t *TUI) tea.Cmd {
 	}
 	if key == tuiKeyEsc {
 		t.Config.projectActionErr = nil
-		t.Screen = screenProjects
+		if t.Config.projectActionsFromProjects {
+			t.Screen = screenProjects
+		} else {
+			t.Screen = screenMenu
+		}
 		return nil
 	}
 	if t.Config.projectActionRunning {
