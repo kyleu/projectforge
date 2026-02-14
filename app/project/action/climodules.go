@@ -2,7 +2,9 @@ package action
 
 import (
 	"fmt"
+	"strings"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/huh"
 	"github.com/pkg/errors"
 
@@ -12,6 +14,10 @@ import (
 
 func promptModules(current []string, mods module.Modules) ([]string, error) {
 	promptTotal++
+	title := fmt.Sprintf("%d: Select the modules your project will use", promptTotal)
+	if promptTotal > 1 {
+		title = util.StringDefaultLinebreak + title
+	}
 	ret := append([]string{}, current...)
 	var opts []huh.Option[string]
 	for _, mod := range mods.Sorted() {
@@ -19,11 +25,11 @@ func promptModules(current []string, mods module.Modules) ([]string, error) {
 	}
 	f := huh.NewForm(huh.NewGroup(
 		huh.NewMultiSelect[string]().
-			Title(fmt.Sprintf("%d: Select the modules your project will use", promptTotal)).
+			Title(title).
 			Description("Use arrow keys to move and space to toggle modules").
 			Options(opts...).
 			Value(&ret),
-	))
+	)).WithProgramOptions(tea.WithAltScreen())
 	if err := f.Run(); err != nil {
 		if errors.Is(err, huh.ErrUserAborted) {
 			return nil, errors.New("project creation canceled")
@@ -32,5 +38,6 @@ func promptModules(current []string, mods module.Modules) ([]string, error) {
 		return nil, err
 	}
 	ret = util.ArraySorted(util.ArrayRemoveDuplicates(ret))
+	logPromptAnswer("Modules", strings.Join(ret, ", "))
 	return ret, nil
 }
