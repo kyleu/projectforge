@@ -127,7 +127,7 @@ func (m *RootModel) View() string {
 		Height(max(1, rects.Status.H)).
 		MaxWidth(max(1, rects.Status.W)).
 		MaxHeight(max(1, rects.Status.H)).
-		Render(components.RenderStatus(curr.page.Status, curr.page.Error, help.Short, m.styles))
+		Render(components.RenderStatus(curr.page.Status, curr.page.Error, help.Short, m.state.ServerURL, rects.Status.W, m.styles))
 	frameParts := []string{top}
 	if m.showLogs {
 		frameParts = append(frameParts, m.logDrawer())

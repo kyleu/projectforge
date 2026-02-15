@@ -96,8 +96,14 @@ func (s *DoctorScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects
 
 	bodyH := max(1, rects.Main.H-1)
 	if rects.Compact {
-		list := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, bodyH/2)).Render(components.RenderMenuList(items, ps.Cursor, styles, max(1, rects.Main.W-4)))
-		output := styles.Sidebar.Width(max(1, rects.Main.W)).Height(max(1, bodyH-bodyH/2)).Render(result)
+		leftStyle := styles.Panel
+		rightStyle := styles.Sidebar
+		leftW := max(1, rects.Main.W-leftStyle.GetHorizontalFrameSize())
+		rightW := max(1, rects.Main.W-rightStyle.GetHorizontalFrameSize())
+		leftH := max(1, bodyH/2-leftStyle.GetVerticalFrameSize())
+		rightH := max(1, bodyH-bodyH/2-rightStyle.GetVerticalFrameSize())
+		list := leftStyle.Width(leftW).Height(leftH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftW))
+		output := rightStyle.Width(rightW).Height(rightH).Render(renderLines(strings.Split(result, "\n"), rightW))
 		return lipgloss.JoinVertical(lipgloss.Left, title, list, output)
 	}
 
@@ -106,8 +112,14 @@ func (s *DoctorScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects
 		leftW = max(1, rects.Main.W-20)
 	}
 	rightW := max(1, rects.Main.W-leftW)
-	list := styles.Panel.Width(leftW).Height(bodyH).Render(components.RenderMenuList(items, ps.Cursor, styles, max(1, leftW-4)))
-	output := styles.Sidebar.Width(rightW).Height(bodyH).Render(result)
+	leftStyle := styles.Panel
+	rightStyle := styles.Sidebar
+	leftCW := max(1, leftW-leftStyle.GetHorizontalFrameSize())
+	rightCW := max(1, rightW-rightStyle.GetHorizontalFrameSize())
+	leftCH := max(1, bodyH-leftStyle.GetVerticalFrameSize())
+	rightCH := max(1, bodyH-rightStyle.GetVerticalFrameSize())
+	list := leftStyle.Width(leftCW).Height(leftCH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftCW))
+	output := rightStyle.Width(rightCW).Height(rightCH).Render(renderLines(strings.Split(result, "\n"), rightCW))
 	return lipgloss.JoinVertical(lipgloss.Left, title, lipgloss.JoinHorizontal(lipgloss.Top, list, output))
 }
 

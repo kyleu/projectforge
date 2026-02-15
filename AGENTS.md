@@ -83,6 +83,7 @@ views/                # HTML templates (quicktemplate)
 ### Key Directories
 
 - `/app/controller/`: HTTP handlers organized by feature area
+- `/app/controller/tui/AGENTS.md`: TUI-specific architecture and extension guidance
 - `/app/lib/`: Module-provided logic, organized by module
 - `/views/`: HTML templates using quicktemplate syntax
 - `/module/`: Template files for modules, one per directory
