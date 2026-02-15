@@ -21,7 +21,7 @@ var Choco = &doctor.Check{
 }
 
 func solveChoco(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
+	if r.Errors.Find("missing") != nil || r.Errors.Find("exit-code") != nil {
 		r.AddSolution("#https://chocolatey.org/install")
 	}
 	return r

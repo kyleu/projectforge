@@ -19,7 +19,7 @@ var Git = &doctor.Check{
 }
 
 func solveGit(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
+	if r.Errors.Find("missing") != nil || r.Errors.Find("exit-code") != nil {
 		r.AddPackageSolution("git", "git")
 	}
 	return r

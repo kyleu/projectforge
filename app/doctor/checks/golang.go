@@ -33,7 +33,7 @@ var Golang = &doctor.Check{
 		}
 		v := "v" + out[startIdx+2:endIdx]
 		if semver.Compare(v, project.DefaultGoVersion) < 0 {
-			return r.WithError(&doctor.Error{Code: "minversion", Message: "Go version [" + v + "] must be equal or higher than [" + project.DefaultGoVersion + "]"})
+			return r.WithError(&doctor.Error{Code: "min-version", Message: "Go version [" + v + "] must be equal or higher than [" + project.DefaultGoVersion + "]"})
 		}
 		return r
 	}),
@@ -41,7 +41,7 @@ var Golang = &doctor.Check{
 }
 
 func solveGo(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil || r.Errors.Find("minversion") != nil {
+	if r.Errors.Find("missing") != nil || r.Errors.Find("exit-code") != nil || r.Errors.Find("min-version") != nil {
 		r.AddPackageSolution("Go", "golang")
 	}
 	return r

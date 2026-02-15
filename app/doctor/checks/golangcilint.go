@@ -19,7 +19,7 @@ var Golangcilint = &doctor.Check{
 }
 
 func solveGolangcilint(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exitcode") != nil {
+	if r.Errors.Find("missing") != nil || r.Errors.Find("exit-code") != nil {
 		r.AddSolution("!go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest")
 	}
 	return r
