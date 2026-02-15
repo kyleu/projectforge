@@ -41,7 +41,7 @@ var Golang = &doctor.Check{
 }
 
 func solveGo(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.HasMissing() || r.Errors.HasExitCode() != nil || r.Errors.Find("min-version") != nil {
+	if r.Errors.HasMissing() || r.Errors.HasExitCode() || r.Errors.Find("min-version") != nil {
 		r.AddPackageSolution("Go", "golang")
 	}
 	return r

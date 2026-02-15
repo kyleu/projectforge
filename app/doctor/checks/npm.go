@@ -20,7 +20,7 @@ var NPM = &doctor.Check{
 }
 
 func solveNPM(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.HasMissing() || r.Errors.HasExitCode() != nil {
+	if r.Errors.HasMissing() || r.Errors.HasExitCode() {
 		r.AddPackageSolution("NPM", "npm")
 	}
 	return r

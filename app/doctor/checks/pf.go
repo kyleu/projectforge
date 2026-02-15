@@ -20,7 +20,7 @@ var PF = &doctor.Check{
 }
 
 func solvePF(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.HasMissing() || r.Errors.HasExitCode() != nil {
+	if r.Errors.HasMissing() || r.Errors.HasExitCode() {
 		msg := "Install [%s] by following the instructions at [%s], and ensure [%s] is on your path"
 		r.AddSolution(fmt.Sprintf(msg, util.AppName, util.AppURL, util.AppKey))
 	}

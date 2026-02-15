@@ -20,7 +20,7 @@ var Node = &doctor.Check{
 }
 
 func solveNode(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.HasMissing() || r.Errors.HasExitCode() != nil {
+	if r.Errors.HasMissing() || r.Errors.HasExitCode() {
 		r.AddPackageSolution("Node.js", "nodejs")
 	}
 	return r

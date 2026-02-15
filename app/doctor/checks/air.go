@@ -27,7 +27,7 @@ var Air = &doctor.Check{
 }
 
 func solveAir(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.HasMissing() || r.Errors.HasExitCode() != nil {
+	if r.Errors.HasMissing() || r.Errors.HasExitCode() {
 		r.AddSolution("!go install github.com/cosmtrek/air@latest")
 	}
 	return r
