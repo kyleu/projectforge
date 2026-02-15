@@ -1,0 +1,66 @@
+package screens
+
+import (
+	"fmt"
+	"runtime"
+	"time"
+
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+
+	"projectforge.dev/projectforge/app/controller/tui/layout"
+	"projectforge.dev/projectforge/app/controller/tui/mvc"
+	"projectforge.dev/projectforge/app/controller/tui/style"
+	"projectforge.dev/projectforge/app/util"
+)
+
+type AboutScreen struct{}
+
+func NewAboutScreen() *AboutScreen {
+	return &AboutScreen{}
+}
+
+func (s *AboutScreen) Key() string {
+	return KeyAbout
+}
+
+func (s *AboutScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
+	ps.Title = "About"
+	started := ""
+	if ts.App != nil {
+		started = ts.App.Started.Format(time.RFC3339)
+	}
+	ps.EnsureData()["about"] = []string{
+		fmt.Sprintf("name: %s", util.AppName),
+		fmt.Sprintf("version: %s", ts.App.AppVersion()),
+		fmt.Sprintf("summary: %s", util.AppSummary),
+		fmt.Sprintf("url: %s", util.AppURL),
+		fmt.Sprintf("source: %s", util.AppSource),
+		fmt.Sprintf("runtime: %s/%s", runtime.GOOS, runtime.GOARCH),
+		fmt.Sprintf("started: %s", started),
+	}
+	ps.SetStatus("Application metadata")
+	return nil
+}
+
+func (s *AboutScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
+	if m, ok := msg.(tea.KeyMsg); ok {
+		switch m.String() {
+		case "esc", "backspace", "b":
+			return mvc.Pop(), nil, nil
+		}
+	}
+	return mvc.Stay(), nil, nil
+}
+
+func (s *AboutScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
+	styles := style.New(ts.Theme)
+	lines := ps.EnsureData().GetStringArrayOpt("about")
+	header := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
+	panel := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, rects.Main.H-1)).Render(lipgloss.JoinVertical(lipgloss.Left, lines...))
+	return lipgloss.JoinVertical(lipgloss.Left, header, panel)
+}
+
+func (s *AboutScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
+	return HelpBindings{Short: []string{"b: back"}}
+}
