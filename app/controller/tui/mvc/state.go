@@ -14,13 +14,14 @@ type State struct {
 	Logger    util.Logger
 	ServerURL string
 	Theme     *theme.Theme
+	LogTail   func(limit int) []string
 }
 
-func NewState(ctx context.Context, st *app.State, serverURL string, logger util.Logger) *State {
+func NewState(ctx context.Context, st *app.State, serverURL string, logger util.Logger, logTail func(limit int) []string) *State {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	ret := &State{App: st, Context: ctx, ServerURL: serverURL, Logger: logger, Theme: theme.Default}
+	ret := &State{App: st, Context: ctx, ServerURL: serverURL, Logger: logger, Theme: theme.Default, LogTail: logTail}
 	if st != nil && st.Themes != nil {
 		ret.Theme = st.Themes.Get("default", logger)
 	}

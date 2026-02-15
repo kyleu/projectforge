@@ -7,10 +7,9 @@ import (
 	"golang.org/x/mod/semver"
 
 	"projectforge.dev/projectforge/app/doctor"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
-
-const golangVersion = "v1.25.0"
 
 var Golang = &doctor.Check{
 	Key:     "golang",
@@ -33,8 +32,8 @@ var Golang = &doctor.Check{
 			return r.WithError(&doctor.Error{Code: util.KeyUnknown, Message: "can't parse end result of [go version]"})
 		}
 		v := "v" + out[startIdx+2:endIdx]
-		if semver.Compare(v, golangVersion) < 0 {
-			return r.WithError(&doctor.Error{Code: "minversion", Message: "Go version [" + v + "] must be equal or higher than [" + golangVersion + "]"})
+		if semver.Compare(v, project.DefaultGoVersion) < 0 {
+			return r.WithError(&doctor.Error{Code: "minversion", Message: "Go version [" + v + "] must be equal or higher than [" + project.DefaultGoVersion + "]"})
 		}
 		return r
 	}),

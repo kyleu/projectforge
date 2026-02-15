@@ -30,7 +30,7 @@ func NewTUI(st *app.State, serverURL string, logger util.Logger) (*TUI, error) {
 
 func (t *TUI) Run(ctx context.Context, logger util.Logger) error {
 	logger.Debugf("starting [%s] TUI...", util.AppName)
-	ts := mvc.NewState(ctx, t.st, t.serverURL, logger)
+	ts := mvc.NewState(ctx, t.st, t.serverURL, logger, t.LastLogs)
 	registry := screens.Bootstrap(ts)
 	root, err := framework.NewRootModel(ts, registry, screens.KeyMainMenu)
 	if err != nil {
@@ -48,4 +48,21 @@ func (t *TUI) AddLog(_ string, _ time.Time, _ string, message string, _ util.Val
 	if len(t.logs) > 200 {
 		t.logs = t.logs[1:]
 	}
+}
+
+func (t *TUI) LastLogs(limit int) []string {
+	t.logsMu.RLock()
+	defer t.logsMu.RUnlock()
+	if limit <= 0 || len(t.logs) == 0 {
+		return nil
+	}
+	if limit > len(t.logs) {
+		limit = len(t.logs)
+	}
+	start := len(t.logs) - limit
+	ret := make([]string, 0, limit)
+	for _, line := range t.logs[start:] {
+		ret = append(ret, line)
+	}
+	return ret
 }

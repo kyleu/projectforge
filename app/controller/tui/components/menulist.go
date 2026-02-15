@@ -23,7 +23,7 @@ func RenderMenuList(items menu.Items, cursor int, st style.Styles, width int) st
 	for i, item := range items {
 		line := renderMenuRow(item.Title, item.Description, width, titleStyle, descStyle)
 		if i == cursor {
-			line = st.Selected.Width(width).Render(stripANSI(line))
+			line = st.Selected.Render(stripANSI(line))
 		}
 		out = append(out, line)
 	}

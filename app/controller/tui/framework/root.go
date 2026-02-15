@@ -27,6 +27,7 @@ type RootModel struct {
 	width    int
 	height   int
 	styles   style.Styles
+	showLogs bool
 }
 
 func NewRootModel(state *mvc.State, registry *screens.Registry, initialScreen string) (*RootModel, error) {
@@ -58,6 +59,10 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width, m.height = x.Width, x.Height
 		return m, tea.ClearScreen
 	case tea.KeyMsg:
+		if x.String() == "/" {
+			m.showLogs = !m.showLogs
+			return m, tea.ClearScreen
+		}
 		if x.String() == "ctrl+c" {
 			m.closeAllPages()
 			return m, tea.Quit
@@ -87,6 +92,7 @@ func (m *RootModel) View() string {
 
 	rects := layout.Solve(m.width, m.height)
 	help := curr.screen.Help(m.state, curr.page)
+	help.Short = append(help.Short, "/: logs")
 	body := curr.screen.View(m.state, curr.page, rects)
 	main := lipgloss.NewStyle().
 		Width(max(1, rects.Main.W)).
@@ -122,13 +128,36 @@ func (m *RootModel) View() string {
 		MaxWidth(max(1, rects.Status.W)).
 		MaxHeight(max(1, rects.Status.H)).
 		Render(components.RenderStatus(curr.page.Status, curr.page.Error, help.Short, m.styles))
-	frame := lipgloss.JoinVertical(lipgloss.Left, top, editor, status)
+	frameParts := []string{top}
+	if m.showLogs {
+		frameParts = append(frameParts, m.logDrawer())
+	}
+	frameParts = append(frameParts, editor, status)
+	frame := lipgloss.JoinVertical(lipgloss.Left, frameParts...)
 	return m.styles.App.
 		Width(max(1, m.width)).
 		Height(max(1, m.height)).
 		MaxWidth(max(1, m.width)).
 		MaxHeight(max(1, m.height)).
 		Render(frame)
+}
+
+func (m *RootModel) logDrawer() string {
+	lines := []string{"Logs"}
+	if m.state.LogTail != nil {
+		for _, l := range m.state.LogTail(5) {
+			lines = append(lines, "  "+singleLine(l))
+		}
+	}
+	if len(lines) == 1 {
+		lines = append(lines, "  (no logs yet)")
+	}
+	content := strings.Join(lines, "\n")
+	return m.styles.Sidebar.
+		Width(max(1, m.width)).
+		Height(min(8, max(3, len(lines)+2))).
+		MaxWidth(max(1, m.width)).
+		Render(content)
 }
 
 func (m *RootModel) applyTransition(tr mvc.Transition) tea.Cmd {
@@ -199,4 +228,8 @@ func (m *RootModel) sidebarContent(curr *navEntry, rects layout.Rects) string {
 
 func (m *RootModel) editorHint(curr *navEntry) string {
 	return m.styles.Muted.Render(fmt.Sprintf("active: %s | use arrows + enter, b to go back", curr.page.Title))
+}
+
+func singleLine(s string) string {
+	return strings.Join(strings.Fields(s), " ")
 }

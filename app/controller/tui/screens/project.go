@@ -27,9 +27,9 @@ type projectResultMsg struct {
 }
 
 type actionChoice struct {
-	key     string
-	title   string
-	section string
+	key         string
+	title       string
+	description string
 }
 
 func NewProjectScreen() *ProjectScreen {
@@ -97,21 +97,32 @@ func (s *ProjectScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rect
 	header := styles.Header.Width(max(1, rects.Main.W)).Render(title)
 	items := make(menu.Items, 0, len(s.choices()))
 	for _, c := range s.choices() {
-		items = append(items, &menu.Item{Key: c.key, Title: c.title, Description: c.section})
+		items = append(items, &menu.Item{Key: c.key, Title: c.title, Description: c.description})
 	}
 
-	meta := "No project loaded"
+	metaLines := []string{"No project loaded"}
 	if prj != nil {
-		meta = fmt.Sprintf("Project: %s\nPath: %s\nModules: %s", prj.Title(), prj.Path, strings.Join(prj.Modules, ", "))
+		metaLines = []string{
+			fmt.Sprintf("Project: %s", prj.Title()),
+			fmt.Sprintf("Path: %s", prj.Path),
+		}
+		metaLines = append(metaLines, moduleLines(prj.Modules, 8)...)
 	}
 	if lines := ps.EnsureData().GetStringArrayOpt("result"); len(lines) > 0 {
-		meta += "\n\nResult:\n" + strings.Join(lines, "\n")
+		metaLines = append(metaLines, "", "Result:")
+		metaLines = append(metaLines, lines...)
 	}
 
 	bodyH := max(1, rects.Main.H-1)
 	if rects.Compact {
-		left := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, bodyH/2)).Render(components.RenderMenuList(items, ps.Cursor, styles, max(1, rects.Main.W-4)))
-		right := styles.Sidebar.Width(max(1, rects.Main.W)).Height(max(1, bodyH-bodyH/2)).Render(meta)
+		leftStyle := styles.Panel
+		rightStyle := styles.Sidebar
+		leftW := max(1, rects.Main.W-leftStyle.GetHorizontalFrameSize())
+		rightW := max(1, rects.Main.W-rightStyle.GetHorizontalFrameSize())
+		leftH := max(1, bodyH/2-leftStyle.GetVerticalFrameSize())
+		rightH := max(1, bodyH-bodyH/2-rightStyle.GetVerticalFrameSize())
+		left := leftStyle.Width(leftW).Height(leftH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftW))
+		right := rightStyle.Width(rightW).Height(rightH).Render(renderLines(metaLines, rightW))
 		return lipgloss.JoinVertical(lipgloss.Left, header, left, right)
 	}
 
@@ -120,8 +131,14 @@ func (s *ProjectScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rect
 		leftW = max(1, rects.Main.W-20)
 	}
 	rightW := max(1, rects.Main.W-leftW)
-	left := styles.Panel.Width(leftW).Height(bodyH).Render(components.RenderMenuList(items, ps.Cursor, styles, max(1, leftW-4)))
-	right := styles.Sidebar.Width(rightW).Height(bodyH).Render(meta)
+	leftStyle := styles.Panel
+	rightStyle := styles.Sidebar
+	leftCW := max(1, leftW-leftStyle.GetHorizontalFrameSize())
+	rightCW := max(1, rightW-rightStyle.GetHorizontalFrameSize())
+	leftCH := max(1, bodyH-leftStyle.GetVerticalFrameSize())
+	rightCH := max(1, bodyH-rightStyle.GetVerticalFrameSize())
+	left := leftStyle.Width(leftCW).Height(leftCH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftCW))
+	right := rightStyle.Width(rightCW).Height(rightCH).Render(renderLines(metaLines, rightCW))
 	return lipgloss.JoinVertical(lipgloss.Left, header, lipgloss.JoinHorizontal(lipgloss.Top, left, right))
 }
 
@@ -132,13 +149,13 @@ func (s *ProjectScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
 func (s *ProjectScreen) choices() []actionChoice {
 	ret := make([]actionChoice, 0, 16)
 	for _, t := range action.ProjectTypes {
-		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, section: "primary"})
+		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description})
 	}
 	for _, t := range []action.Type{action.TypeDebug, action.TypeRules, action.TypeSVG} {
-		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, section: "secondary"})
+		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description})
 	}
 	for _, ga := range []*git.Action{git.ActionStatus, git.ActionFetch, git.ActionPull, git.ActionPush, git.ActionCommit, git.ActionReset, git.ActionHistory, git.ActionMagic} {
-		ret = append(ret, actionChoice{key: "git:" + ga.Key, title: ga.Title, section: "git"})
+		ret = append(ret, actionChoice{key: "git:" + ga.Key, title: ga.Title, description: ga.Description})
 	}
 	return ret
 }
@@ -226,4 +243,51 @@ func selectedProject(ts *mvc.State, ps *mvc.PageState) *project.Project {
 		return nil
 	}
 	return prj
+}
+
+func moduleLines(mods []string, maxShown int) []string {
+	if len(mods) == 0 {
+		return []string{"Modules: (none)"}
+	}
+	if maxShown < 1 {
+		maxShown = 1
+	}
+	ret := []string{"Modules:"}
+	limit := len(mods)
+	if limit > maxShown {
+		limit = maxShown
+	}
+	for _, mod := range mods[:limit] {
+		ret = append(ret, "  - "+mod)
+	}
+	if len(mods) > maxShown {
+		ret = append(ret, fmt.Sprintf("  - ... (+%d more)", len(mods)-maxShown))
+	}
+	return ret
+}
+
+func renderLines(lines []string, width int) string {
+	ret := make([]string, 0, len(lines))
+	for _, line := range lines {
+		ret = append(ret, truncateLine(singleLine(line), width))
+	}
+	return strings.Join(ret, "\n")
+}
+
+func truncateLine(s string, width int) string {
+	if width < 1 {
+		return ""
+	}
+	r := []rune(s)
+	if len(r) <= width {
+		return s
+	}
+	if width == 1 {
+		return "…"
+	}
+	return string(r[:width-1]) + "…"
+}
+
+func singleLine(s string) string {
+	return strings.Join(strings.Fields(s), " ")
 }
