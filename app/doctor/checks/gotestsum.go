@@ -19,7 +19,7 @@ var Gotestsum = &doctor.Check{
 }
 
 func solveGotestsum(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil || r.Errors.Find("exit-code") != nil {
+	if r.Errors.HasMissing() || r.Errors.HasExitCode() != nil {
 		r.AddSolution("!go install gotest.tools/gotestsum@latest")
 	}
 	return r

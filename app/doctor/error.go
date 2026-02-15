@@ -27,3 +27,15 @@ func (e Errors) Find(code string) *Error {
 		return x.Code == code
 	})
 }
+
+func (e Errors) Has(code string) bool {
+	return e.Find(code) != nil
+}
+
+func (e Errors) HasMissing() bool {
+	return e.Has("missing")
+}
+
+func (e Errors) HasExitCode() bool {
+	return e.Has("exit-code")
+}

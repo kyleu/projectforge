@@ -45,7 +45,7 @@ func checkProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Re
 }
 
 func solveProject(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil {
+	if r.Errors.HasMissing() {
 		r.AddSolution("run [projectforge create] in this directory")
 	}
 	if r.Errors.Find("invalid") != nil {

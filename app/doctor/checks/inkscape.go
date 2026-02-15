@@ -23,7 +23,7 @@ func checkInkscape(_ context.Context, r *doctor.Result, _ string) *doctor.Result
 }
 
 func solveInkscape(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil {
+	if r.Errors.HasMissing() {
 		r.AddPackageSolution("Inkscape", "inkscape")
 	}
 	return r

@@ -27,7 +27,7 @@ func checkImageMagick(_ context.Context, r *doctor.Result, out string) *doctor.R
 }
 
 func solveImageMagick(_ context.Context, r *doctor.Result, _ util.Logger) *doctor.Result {
-	if r.Errors.Find("missing") != nil {
+	if r.Errors.HasMissing() {
 		r.AddPackageSolution("Imagemagick", "imagemagick")
 	}
 	return r
