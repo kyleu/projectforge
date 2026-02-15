@@ -63,7 +63,7 @@ func runTUI(ctx context.Context, flags *Flags) error {
 	}()
 
 	serverURL := fmt.Sprintf("http://%s:%d", flags.Address, port)
-	t = tui.NewTUI(ctx, st, serverURL, logger)
+	t = tui.NewTUI(st, serverURL, logger)
 	tuiErr := t.Run(ctx, logger)
 	shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	if err := srv.Shutdown(shutdownCtx); err != nil {
