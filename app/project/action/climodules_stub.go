@@ -1,5 +1,5 @@
-//go:build js
-// +build js
+//go:build js || aix
+// +build js aix
 
 package action
 
@@ -10,5 +10,5 @@ import (
 )
 
 func promptModules(_ []string, _ module.Modules) ([]string, error) {
-	return nil, errors.New("interactive prompts are unavailable in WebAssembly")
+	return nil, errors.New("interactive prompts are unavailable on this platform")
 }
