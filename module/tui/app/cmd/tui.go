@@ -1,3 +1,6 @@
+//go:build !js
+// +build !js
+
 package cmd
 
 import (
@@ -47,29 +50,48 @@ func runTUI(ctx context.Context, flags *Flags) error {
 		return err
 	}
 
+	var serverURL string
+	var serverErr string
+	var srv *http.Server
+	srvErr := make(chan error, 1)
+
 	port, ln, err := listen(ctx, flags.Address, flags.Port)
+	if err != nil {
+		serverErr = errors.Wrap(err, "unable to start http server").Error()
+	} else {
+		srv = newHTTPServer(r)
+		go func() {
+			serveErr := srv.Serve(ln)
+			if serveErr == nil || errors.Is(serveErr, http.ErrServerClosed) {
+				srvErr <- nil
+				return
+			}
+			srvErr <- errors.Wrap(serveErr, "http server exited")
+		}()
+		serverURL = fmt.Sprintf("http://%s:%d", flags.Address, port)
+		select {
+		case serveErr := <-srvErr:
+			if serveErr != nil {
+				serverErr = serveErr.Error()
+				serverURL = ""
+			}
+		default:
+		}
+	}
+
+	t, err = tui.NewTUI(st, serverURL, serverErr, logger)
 	if err != nil {
 		return err
 	}
-	srv := newHTTPServer(r)
-	srvErr := make(chan error, 1)
-	go func() {
-		err := srv.Serve(ln)
-		if err == nil || errors.Is(err, http.ErrServerClosed) {
-			srvErr <- nil
-			return
-		}
-		srvErr <- errors.Wrap(err, "http server exited")
-	}()
-
-	serverURL := fmt.Sprintf("http://%s:%d", flags.Address, port)
-	t = tui.NewTUI(ctx, st, serverURL, logger)
 	tuiErr := t.Run(ctx, logger)
-	shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	if err := srv.Shutdown(shutdownCtx); err != nil {
-		_ = srv.Close()
+
+	if srv != nil {
+		shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		if err := srv.Shutdown(shutdownCtx); err != nil {
+			_ = srv.Close()
+		}
+		cancel()
 	}
-	cancel()
 
 	select {
 	case err := <-srvErr:
