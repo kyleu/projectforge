@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/tui/framework"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
 	"projectforge.dev/projectforge/app/controller/tui/screens"
+	"projectforge.dev/projectforge/app/controller/tui/settings"
 	"projectforge.dev/projectforge/app/util"
 )
 
@@ -32,6 +33,7 @@ func (t *TUI) Run(ctx context.Context, logger util.Logger) error {
 	logger.Debugf("starting [%s] TUI...", util.AppName)
 	ts := mvc.NewState(ctx, t.st, t.serverURL, t.serverErr, logger, t.LastLogs)
 	registry := screens.Bootstrap(ts)
+	settings.Register(registry)
 	root, err := framework.NewRootModel(ts, registry, screens.KeyMainMenu)
 	if err != nil {
 		return err

@@ -209,7 +209,7 @@ func StreamFeedback(qw422016 *qt422016.Writer) {
     </p>
     <div class="mt">
       <h4>Get in Touch</h4>
-      <ul class="padded">
+      <ul class="padded mt">
         <li><strong>GitHub Issues</strong> - Report bugs, request features, or ask technical questions</li>
         <li><strong>Email</strong> - Reach out directly to <a href="mailto:projectforge@kyleu.com">the author</a> for general inquiries</li>
         <li><strong>Contributing</strong> - Submit pull requests to improve Project Forge for everyone</li>

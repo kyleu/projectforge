@@ -16,8 +16,6 @@ func Bootstrap(_ *mvc.State) *Registry {
 	reg.Register(docsScreenItem, NewDocumentationScreen())
 	doctorScreenItem := &menu.Item{Key: KeyDoctor, Title: "Doctor", Description: "Dependency and environment checks", Icon: "first-aid", Route: KeyDoctor}
 	reg.Register(doctorScreenItem, NewDoctorScreen())
-	settingsScreenItem := &menu.Item{Key: KeySettings, Title: "Settings", Description: "Runtime and diagnostics", Icon: "settings", Route: KeySettings}
-	reg.Register(settingsScreenItem, NewSettingsScreen())
 	aboutScreenItem := &menu.Item{Key: KeyAbout, Title: "About", Description: "Information about " + util.AppName, Icon: "info", Route: KeyAbout}
 	reg.Register(aboutScreenItem, NewAboutScreen())
 

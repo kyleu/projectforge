@@ -115,7 +115,7 @@ func (t *Context) Public() bool {
 }
 
 func (t *Context) Private() bool {
-	return t.Build == nil && t.Build.Private
+	return t.Build != nil && t.Build.Private
 }
 
 func (t *Context) DockerPackages() string {

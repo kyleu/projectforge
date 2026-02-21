@@ -27,6 +27,25 @@ func (r *Registry) Register(item *menu.Item, scr Screen) {
 	r.AddScreen(scr)
 }
 
+func (r *Registry) RegisterBefore(beforeKey string, item *menu.Item, scr Screen) {
+	if item.Route == "" {
+		item.Route = scr.Key()
+	}
+	idx := -1
+	for i, x := range r.menu {
+		if x != nil && x.Key == beforeKey {
+			idx = i
+			break
+		}
+	}
+	if idx < 0 {
+		r.menu = append(r.menu, item)
+	} else {
+		r.menu = append(r.menu[:idx], append(menu.Items{item}, r.menu[idx:]...)...)
+	}
+	r.AddScreen(scr)
+}
+
 func (r *Registry) Screen(key string) (Screen, error) {
 	ret, ok := r.screens[key]
 	if !ok {

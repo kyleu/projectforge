@@ -3,6 +3,7 @@ package framework
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -33,6 +34,11 @@ type RootModel struct {
 
 const logDrawerLines = 8
 
+type refreshTickMsg struct {
+	screen string
+	at     time.Time
+}
+
 func NewRootModel(state *mvc.State, registry *screens.Registry, initialScreen string) (*RootModel, error) {
 	s, err := registry.Screen(initialScreen)
 	if err != nil {
@@ -53,7 +59,7 @@ func (m *RootModel) Init() tea.Cmd {
 	if curr.screen == nil {
 		return nil
 	}
-	return curr.screen.Init(m.state, curr.page)
+	return tea.Batch(curr.screen.Init(m.state, curr.page), m.scheduleRefresh(curr))
 }
 
 func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -76,12 +82,17 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if curr.screen == nil {
 		return m, tea.Quit
 	}
+	tick, gotTick := msg.(refreshTickMsg)
+	if gotTick && tick.screen != curr.screen.Key() {
+		return m, nil
+	}
 	tr, cmd, err := curr.screen.Update(m.state, curr.page, msg)
 	if err != nil {
 		curr.page.SetError(err)
 	}
 	navCmd := m.applyTransition(tr)
-	return m, tea.Batch(cmd, navCmd)
+	refreshCmd := m.refreshCommand(tr, gotTick)
+	return m, tea.Batch(cmd, navCmd, refreshCmd)
 }
 
 func (m *RootModel) View() string {
@@ -187,6 +198,10 @@ func (m *RootModel) applyTransition(tr mvc.Transition) tea.Cmd {
 		if len(m.stack) > 1 {
 			m.current().page.Close()
 			m.stack = m.stack[:len(m.stack)-1]
+			curr := m.current()
+			if curr.screen != nil {
+				return curr.screen.Init(m.state, curr.page)
+			}
 		}
 		return nil
 	case mvc.TransitionPush, mvc.TransitionRoute, mvc.TransitionReplace:
@@ -205,6 +220,36 @@ func (m *RootModel) applyTransition(tr mvc.Transition) tea.Cmd {
 	default:
 		return nil
 	}
+}
+
+func (m *RootModel) refreshCommand(tr mvc.Transition, fromTick bool) tea.Cmd {
+	switch tr.Type {
+	case mvc.TransitionPush, mvc.TransitionReplace, mvc.TransitionPop, mvc.TransitionRoute:
+		return m.scheduleRefresh(m.current())
+	case mvc.TransitionStay:
+		if fromTick {
+			return m.scheduleRefresh(m.current())
+		}
+	}
+	return nil
+}
+
+func (m *RootModel) scheduleRefresh(curr *navEntry) tea.Cmd {
+	if curr == nil || curr.screen == nil || curr.page == nil {
+		return nil
+	}
+	ap, ok := curr.screen.(screens.AutoRefreshProvider)
+	if !ok {
+		return nil
+	}
+	interval := ap.RefreshInterval(m.state, curr.page)
+	if interval <= 0 {
+		return nil
+	}
+	key := curr.screen.Key()
+	return tea.Tick(interval, func(t time.Time) tea.Msg {
+		return refreshTickMsg{screen: key, at: t}
+	})
 }
 
 func (m *RootModel) current() *navEntry {

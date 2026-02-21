@@ -36,9 +36,24 @@
   </div>
 {% endfunc %}
 
-{% func Feedback() %}
+{% func Feedback() %}{{{ if .Public }}}
+  <div class="card">
+    <h3>Community & Support</h3>
+    <p>
+      {{{ .Name }}} thrives on community feedback and contributions. Whether you've found a bug, have a feature request, or want to share your success story, we'd love to hear from you.
+    </p>
+    <div class="mt">
+      <h4>Get in Touch</h4>
+      <ul class="padded mt">
+        <li><strong>GitHub Issues</strong> - Report bugs, request features, or ask technical questions</li>
+        <li><strong>Email</strong> - Reach out directly to <a href="mailto:projectforge@kyleu.com">the author</a> for general inquiries</li>
+        <li><strong>Contributing</strong> - Submit pull requests to improve {{{ .Name }}} for everyone</li>
+      </ul>
+    </div>
+  </div>{{{ else }}}
   <div class="card">
     <h3>Feedback</h3>
     <p>For now, email <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a></p>
   </div>
+{{{ end }}}
 {% endfunc %}
