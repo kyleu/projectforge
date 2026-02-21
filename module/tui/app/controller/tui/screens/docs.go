@@ -140,6 +140,36 @@ func (s *DocumentationScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Ms
 	return mvc.Stay(), nil, nil
 }
 
+func (s *DocumentationScreen) SidebarContent(_ *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
+	lines := []string{"Documentation", ""}
+	if s.activeFile == "" {
+		items := s.currentItems()
+		cursor := clampMenuCursor(ps.Cursor, len(items))
+		lines = append(lines, fmt.Sprintf("folder: %s", folderLabel(s.stack)), fmt.Sprintf("items: %d", len(items)))
+		if len(items) > 0 {
+			item := items[cursor]
+			kind := "file"
+			if len(item.Children) > 0 || item.Route == "" {
+				kind = "folder"
+			}
+			lines = append(lines, fmt.Sprintf("selected: %s", item.Title), fmt.Sprintf("type: %s", kind))
+		}
+		lines = append(lines, "", "keys:", "enter open", "b back")
+	} else {
+		lines = append(lines, fmt.Sprintf("file: %s", s.activeFile))
+		if s.loading {
+			lines = append(lines, "status: loading...")
+		} else {
+			lines = append(lines, fmt.Sprintf("lines: %d", len(s.lines)))
+			if len(s.lines) > 0 {
+				lines = append(lines, fmt.Sprintf("at: %d", min(len(s.lines), s.scroll+1)))
+			}
+		}
+		lines = append(lines, "", "keys:", "up/down scroll", "b back")
+	}
+	return strings.Join(lines, "\n"), true
+}
+
 func (s *DocumentationScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
 	styles := style.New(ts.Theme)
 	items := s.currentItems()

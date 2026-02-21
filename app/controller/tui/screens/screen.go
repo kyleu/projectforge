@@ -19,3 +19,9 @@ type Screen interface {
 	View(*mvc.State, *mvc.PageState, layout.Rects) string
 	Help(*mvc.State, *mvc.PageState) HelpBindings
 }
+
+// SidebarContentProvider optionally lets a screen override the shell sidebar content.
+// Return handled=false to fall back to the default sidebar.
+type SidebarContentProvider interface {
+	SidebarContent(*mvc.State, *mvc.PageState, layout.Rects) (content string, handled bool)
+}

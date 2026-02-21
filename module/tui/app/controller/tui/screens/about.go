@@ -3,6 +3,7 @@ package screens
 import (
 	"fmt"
 	"runtime"
+	"strings"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -51,6 +52,28 @@ func (s *AboutScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.T
 		}
 	}
 	return mvc.Stay(), nil, nil
+}
+
+func (s *AboutScreen) SidebarContent(ts *mvc.State, _ *mvc.PageState, _ layout.Rects) (string, bool) {
+	started := "unknown"
+	version := "unknown"
+	if ts.App != nil {
+		started = ts.App.Started.Format(time.RFC3339)
+		version = ts.App.AppVersion()
+	}
+	lines := []string{
+		"About",
+		"",
+		fmt.Sprintf("name: %s", util.AppName),
+		fmt.Sprintf("version: %s", version),
+		fmt.Sprintf("runtime: %s/%s", runtime.GOOS, runtime.GOARCH),
+		fmt.Sprintf("started: %s", started),
+		"",
+		"links:",
+		util.AppURL,
+		util.AppSource,
+	}
+	return strings.Join(lines, "\n"), true
 }
 
 func (s *AboutScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {

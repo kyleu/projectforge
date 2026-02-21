@@ -13,17 +13,17 @@ var rootCtx = context.Background()
 
 func rootF(*cobra.Command, []string) error {
 	// $PF_SECTION_START(rootAction)$
-	return startServer(rootCtx, _flags)
+	return runTUI(rootCtx, _flags)
 	// $PF_SECTION_END(rootAction)$
 }
 
 func rootCmd(ctx context.Context) *cobra.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := newCmd(util.AppKey, short, rootF)
-	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), mcpCmd(), upgradeCmd(), wasmCmd())
+	ret.AddCommand(tuiCmd(), serverCmd(), siteCmd(), allCmd(), mcpCmd(), upgradeCmd(), wasmCmd())
 	// $PF_SECTION_START(cmds)$
 	ret.AddCommand(actionCommands(ctx)...)
-	ret.AddCommand(tuiCmd(), updateCmd(), upCmd())
+	ret.AddCommand(updateCmd(), upCmd())
 	// $PF_SECTION_END(cmds)$
 	ret.AddCommand(versionCmd())
 

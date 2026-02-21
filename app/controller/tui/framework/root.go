@@ -221,7 +221,12 @@ func (m *RootModel) closeAllPages() {
 }
 
 func (m *RootModel) sidebarContent(curr *navEntry, rects layout.Rects) string {
-	_ = rects
+	if provider, ok := curr.screen.(screens.SidebarContentProvider); ok {
+		if content, handled := provider.SidebarContent(m.state, curr.page, rects); handled {
+			return content
+		}
+	}
+
 	lines := []string{fmt.Sprintf("section: %s", curr.page.Title)}
 	if curr.page.Data != nil {
 		for _, k := range curr.page.Data.Keys() {
