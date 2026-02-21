@@ -3,7 +3,6 @@ package tui
 import (
 	"context"
 	"sync"
-	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 
@@ -17,6 +16,7 @@ import (
 type TUI struct {
 	st        *app.State
 	serverURL string
+	serverErr string
 
 	logger util.Logger
 
@@ -24,13 +24,13 @@ type TUI struct {
 	logs   []string
 }
 
-func NewTUI(st *app.State, serverURL string, logger util.Logger) (*TUI, error) {
-	return InitTUI(&TUI{logger: logger, st: st, serverURL: serverURL})
+func NewTUI(st *app.State, serverURL string, serverErr string, logger util.Logger) (*TUI, error) {
+	return InitTUI(&TUI{logger: logger, st: st, serverURL: serverURL, serverErr: serverErr})
 }
 
 func (t *TUI) Run(ctx context.Context, logger util.Logger) error {
 	logger.Debugf("starting [%s] TUI...", util.AppName)
-	ts := mvc.NewState(ctx, t.st, t.serverURL, logger, t.LastLogs)
+	ts := mvc.NewState(ctx, t.st, t.serverURL, t.serverErr, logger, t.LastLogs)
 	registry := screens.Bootstrap(ts)
 	root, err := framework.NewRootModel(ts, registry, screens.KeyMainMenu)
 	if err != nil {
@@ -39,30 +39,4 @@ func (t *TUI) Run(ctx context.Context, logger util.Logger) error {
 	program := tea.NewProgram(root, tea.WithContext(ctx), tea.WithAltScreen(), tea.WithMouseCellMotion())
 	_, err = program.Run()
 	return err
-}
-
-func (t *TUI) AddLog(_ string, _ time.Time, _ string, message string, _ util.ValueMap, _ string, _ util.ValueMap) {
-	t.logsMu.Lock()
-	defer t.logsMu.Unlock()
-	t.logs = append(t.logs, message)
-	if len(t.logs) > 200 {
-		t.logs = t.logs[1:]
-	}
-}
-
-func (t *TUI) LastLogs(limit int) []string {
-	t.logsMu.RLock()
-	defer t.logsMu.RUnlock()
-	if limit <= 0 || len(t.logs) == 0 {
-		return nil
-	}
-	if limit > len(t.logs) {
-		limit = len(t.logs)
-	}
-	start := len(t.logs) - limit
-	ret := make([]string, 0, limit)
-	for _, line := range t.logs[start:] {
-		ret = append(ret, line)
-	}
-	return ret
 }

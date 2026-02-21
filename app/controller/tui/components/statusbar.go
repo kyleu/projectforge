@@ -8,10 +8,10 @@ import (
 	"projectforge.dev/projectforge/app/controller/tui/style"
 )
 
-func RenderStatus(status string, err string, shortHelp []string, serverURL string, width int, st style.Styles) string {
+func RenderStatus(status string, err string, shortHelp []string, serverURL string, serverErr string, width int, st style.Styles) string {
 	top := renderTopStatus(status, err, st)
 	helpText := strings.Join(shortHelp, " | ")
-	help := renderBottomStatus(helpText, serverURL, width, st)
+	help := renderBottomStatus(helpText, serverURL, serverErr, width, st)
 	return top + "\n" + help
 }
 
@@ -29,37 +29,53 @@ func renderTopStatus(status string, err string, st style.Styles) string {
 	return leftStyle.Render(leftText)
 }
 
-func renderBottomStatus(helpText string, serverURL string, width int, st style.Styles) string {
+func renderBottomStatus(helpText string, serverURL string, serverErr string, width int, st style.Styles) string {
 	helpStyle := st.Muted.Padding(0)
-	urlStyle := st.Muted.Padding(0).Underline(true)
+	rightStyle := st.Muted.Padding(0).Underline(true)
+	rightText := serverURL
+	if serverErr != "" {
+		rightStyle = st.Error.Padding(0)
+		rightText = lastErrorSegment(serverErr)
+	}
 	if width < 1 {
-		if serverURL == "" {
+		if rightText == "" {
 			return helpStyle.Render(helpText)
 		}
-		return helpStyle.Render(helpText) + " " + urlStyle.Render(serverURL)
+		return helpStyle.Render(helpText) + " " + rightStyle.Render(rightText)
 	}
 
 	helpText = truncateStatusEllipsis(helpText, width)
-	if serverURL == "" {
+	if rightText == "" {
 		return helpStyle.Render(helpText)
 	}
-	rightText := serverURL
 	rightW := lipgloss.Width(rightText)
 	if rightW >= width {
-		return urlStyle.Render(truncateStatusEllipsis(rightText, width))
+		return rightStyle.Render(truncateStatusEllipsis(rightText, width))
 	}
 	maxHelp := width - rightW - 1
 	if maxHelp < 1 {
-		return urlStyle.Render(truncateStatusEllipsis(rightText, width))
+		return rightStyle.Render(truncateStatusEllipsis(rightText, width))
 	}
 	helpText = truncateStatusEllipsis(helpText, maxHelp)
 	left := helpStyle.Render(helpText)
-	right := urlStyle.Render(rightText)
+	right := rightStyle.Render(rightText)
 	gap := width - lipgloss.Width(left) - lipgloss.Width(right)
 	if gap < 1 {
 		gap = 1
 	}
 	return left + strings.Repeat(" ", gap) + right
+}
+
+func lastErrorSegment(s string) string {
+	idx := strings.LastIndex(s, ":")
+	if idx < 0 {
+		return strings.TrimSpace(s)
+	}
+	ret := strings.TrimSpace(s[idx+1:])
+	if ret == "" {
+		return strings.TrimSpace(s)
+	}
+	return ret
 }
 
 func truncateStatusEllipsis(s string, width int) string {

@@ -9,7 +9,7 @@ import (
 )
 
 func randFloat64() float64 {
-	//nolint:gosec // G404: Using weak random is acceptable for benchmarks
+	//nolint:gosec // Using weak random is acceptable for benchmarks
 	return rand.Float64() * 1000
 }
 

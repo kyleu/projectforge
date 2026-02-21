@@ -6,6 +6,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/x/ansi"
 
 	"projectforge.dev/projectforge/app/controller/tui/components"
 	"projectforge.dev/projectforge/app/controller/tui/layout"
@@ -29,6 +30,8 @@ type RootModel struct {
 	styles   style.Styles
 	showLogs bool
 }
+
+const logDrawerLines = 8
 
 func NewRootModel(state *mvc.State, registry *screens.Registry, initialScreen string) (*RootModel, error) {
 	s, err := registry.Screen(initialScreen)
@@ -118,11 +121,11 @@ func (m *RootModel) View() string {
 		Height(max(1, rects.Status.H)).
 		MaxWidth(max(1, rects.Status.W)).
 		MaxHeight(max(1, rects.Status.H)).
-		Render(components.RenderStatus(curr.page.Status, curr.page.Error, help.Short, m.state.ServerURL, rects.Status.W, m.styles))
-	frameParts := []string{content}
+		Render(components.RenderStatus(curr.page.Status, curr.page.Error, help.Short, m.state.ServerURL, m.state.ServerErr, rects.Status.W, m.styles))
 	if m.showLogs {
-		frameParts = append(frameParts, m.logDrawer())
+		content = overlayBottom(content, m.logDrawer())
 	}
+	frameParts := []string{content}
 	frameParts = append(frameParts, editor, status)
 	frame := lipgloss.JoinVertical(lipgloss.Left, frameParts...)
 	return m.styles.App.
@@ -134,21 +137,43 @@ func (m *RootModel) View() string {
 }
 
 func (m *RootModel) logDrawer() string {
-	lines := []string{"Logs"}
+	outerW := max(1, m.width)
+	if outerW < 3 {
+		return strings.Repeat(" ", outerW)
+	}
+	innerW := outerW - 2
+
+	logLines := make([]string, 0, logDrawerLines)
 	if m.state.LogTail != nil {
-		for _, l := range m.state.LogTail(5) {
-			lines = append(lines, "  "+singleLine(l))
+		for _, l := range m.state.LogTail(logDrawerLines) {
+			logLines = append(logLines, singleLine(l))
 		}
 	}
-	if len(lines) == 1 {
-		lines = append(lines, "  (no logs yet)")
+	if len(logLines) == 0 {
+		logLines = append(logLines, "(no logs yet)")
 	}
+	for len(logLines) < logDrawerLines {
+		logLines = append(logLines, "")
+	}
+	if len(logLines) > logDrawerLines {
+		logLines = logLines[len(logLines)-logDrawerLines:]
+	}
+
+	lines := make([]string, 0, logDrawerLines+2)
+	lines = append(lines, logDrawerTopBorder(innerW))
+	for _, l := range logLines {
+		lines = append(lines, logDrawerBodyLine(l, innerW))
+	}
+	lines = append(lines, "╰"+strings.Repeat("─", innerW)+"╯")
+
 	content := strings.Join(lines, "\n")
-	return m.styles.Sidebar.
-		Width(max(1, m.width)).
-		Height(min(8, max(3, len(lines)+2))).
-		MaxWidth(max(1, m.width)).
-		Render(content)
+	drawerStyle := m.styles.Sidebar.
+		Padding(0).
+		BorderTop(false).
+		BorderBottom(false).
+		BorderLeft(false).
+		BorderRight(false)
+	return screens.Bounded(drawerStyle, outerW, len(lines), content)
 }
 
 func (m *RootModel) applyTransition(tr mvc.Transition) tea.Cmd {
@@ -223,4 +248,56 @@ func (m *RootModel) editorHint(curr *navEntry) string {
 
 func singleLine(s string) string {
 	return strings.Join(strings.Fields(s), " ")
+}
+
+func logDrawerTopBorder(innerW int) string {
+	if innerW < 1 {
+		return "╮"
+	}
+	prefix := "─ Logs "
+	if innerW <= lipgloss.Width(prefix) {
+		return "╭" + truncateRunes(prefix, innerW) + "╮"
+	}
+	return "╭" + prefix + strings.Repeat("─", innerW-lipgloss.Width(prefix)) + "╮"
+}
+
+func logDrawerBodyLine(line string, innerW int) string {
+	if innerW < 1 {
+		return "││"
+	}
+	prefix := " "
+	if innerW == 1 {
+		return "│ │"
+	}
+	maxText := innerW - lipgloss.Width(prefix)
+	text := truncateRunes(line, maxText)
+	body := prefix + text
+	pad := innerW - lipgloss.Width(body)
+	if pad > 0 {
+		body += strings.Repeat(" ", pad)
+	}
+	return "│" + body + "│"
+}
+
+func truncateRunes(s string, width int) string {
+	if width < 1 {
+		return ""
+	}
+	return ansi.Truncate(s, width, "…")
+}
+
+func overlayBottom(base string, overlay string) string {
+	baseLines := strings.Split(base, "\n")
+	overlayLines := strings.Split(overlay, "\n")
+	if len(baseLines) == 0 {
+		return overlay
+	}
+	if len(overlayLines) >= len(baseLines) {
+		return strings.Join(overlayLines[len(overlayLines)-len(baseLines):], "\n")
+	}
+	start := len(baseLines) - len(overlayLines)
+	for i, l := range overlayLines {
+		baseLines[start+i] = l
+	}
+	return strings.Join(baseLines, "\n")
 }

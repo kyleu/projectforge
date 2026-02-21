@@ -1,112 +1,116 @@
-# Database UI
+# Terminal UI/UX
 
-The **`databaseui`** module provides a comprehensive web-based administration interface for your application's database connectivity.
-It offers powerful database exploration, query execution, and monitoring capabilities through a modern, responsive web interface.
+The **`tui`** module adds a full-screen terminal interface built on Bubble Tea/Lip Gloss and wired into the same app services as the web UI.
+It is launched from the CLI and includes an HTTP server status indicator, optional documentation browsing, and any other screens you add.
 
 ## Overview
 
-This module is designed for applications that need **database administration capabilities** and provides:
+- `tui` CLI command that starts the terminal UI and the HTTP server lifecycle (`app/cmd/tui.go`)
+- Stack-based screen router and shared shell (`app/controller/tui/framework/root.go`)
+- Typed screen contract with per-page state and telemetry spans (`app/controller/tui/screens/screen.go`, `app/controller/tui/mvc/pagestate.go`)
+- Built-in screens for projects, docs, doctor, settings, and about (`app/controller/tui/screens/`)
+- Log drawer support for recent runtime logs (up to 200 retained entries)
 
-- **Multi-Database Support**: Seamless integration with MySQL, PostgreSQL, SQLite, and SQL Server
-- **Interactive SQL Editor**: Execute queries with syntax highlighting and real-time analysis
-- **Database Exploration**: Browse tables, view schemas, and analyze data structures
-- **Performance Monitoring**: Query tracing, execution timing, and performance diagnostics
-- **Safe Operations**: Transaction controls with commit/rollback capabilities
+## CLI Usage
 
-**Security Notice**: This module is marked as **dangerous** and provides direct database access. Use only in trusted environments with proper authentication.
+Run the TUI from your application binary:
 
-## Key Features
+```bash
+./build/debug/projectforge tui
+```
 
-### Database Management
-- Unified interface for multiple database connections
-- Automatic database registration and discovery
-- Connection health monitoring and diagnostics
-- Support for multiple concurrent database sessions
+You can use the standard root flags (for example):
 
-### SQL Operations
-- Query execution with real-time results
-- Transaction management (commit/rollback)
-- Query history and favorites
-- Bulk operations and batch processing
+```bash
+./build/debug/projectforge tui --addr 127.0.0.1 --port 9000 --working_dir .
+```
 
-### Performance & Monitoring
-- Query execution timing and performance metrics
-- Real-time tracing with configurable levels:
-  - **None**: No tracing (production mode)
-  - **Statements**: Log SQL statements only
-  - **Results**: Include result set information
-  - **Analysis**: Full query analysis and optimization hints
-- Query profiling and optimization suggestions
+Behavior notes from `app/cmd/tui.go`:
 
-### Data Exploration
-- Table browsing with pagination and filtering
-- Schema visualization and relationship mapping
-- Row count statistics and table size analysis
-- Data export capabilities (CSV, JSON, XML)
+- Initializes quiet logging and streams log messages into the TUI log drawer.
+- Initializes app state, loads server routes, and attempts to start the HTTP server.
+- Passes server URL (or startup error) into the status bar.
+- Runs the Bubble Tea program in the alternate screen.
+- Shuts down HTTP server and app state cleanly on exit.
 
-## Requirements
+On WebAssembly builds, this command is unavailable (`app/cmd/tui_stub.go`).
 
-### Dependencies
-- **`database`** module (required) - Provides core database connectivity
-- Supported database drivers automatically included
+## Screen Model
 
-### Supported Databases
-- **MySQL** 5.7+ / MariaDB 10.3+
-- **PostgreSQL** 11+
-- **SQLite** 3.35+
-- **SQL Server** 2017+
+The TUI bootstraps screens in `app/controller/tui/screens/bootstrap.go` and starts at `mainmenu`.
 
-## Getting Started
+Primary menu screens:
 
-### 1. Database Registration
+- `settings` - runtime diagnostics
+- `about` - build and metadata details
 
-Databases automatically register with the UI on startup. Ensure your database connections are configured in your application:
+Navigation uses typed transitions in `app/controller/tui/mvc/transition.go`:
 
-### 2. Access the Interface
+- `Stay`, `Push`, `Pop`, `Replace`, `Route`, `Quit`
 
-Navigate to `/admin/database` in your application to access the database administration interface.
+## Keybindings
 
-### 3. Basic Operations
+Global bindings from `app/controller/tui/framework/root.go`:
 
-- **Browse Tables**: Click on any database to explore its schema
-- **Execute Queries**: Use the SQL editor to run custom queries
-- **Monitor Performance**: Enable tracing to analyze query performance
-- **Manage Transactions**: Use commit/rollback controls for safe operations
+- `/` toggles the log drawer
+- `ctrl+c` quits immediately
 
-## Security Considerations
+Common screen bindings:
 
-- **Authentication Required**: Always enable authentication for production use
-- **Role-Based Access**: Implement proper role-based access controls
-- **Query Validation**: Consider implementing query whitelisting for production
-- **Connection Limits**: Monitor and limit concurrent database connections
-- **Audit Logging**: Enable audit logging for all database operations
+- `up/down` (and often `j/k`) move selection
+- `enter` opens or executes
+- `b`/`esc`/`backspace` goes back
 
-## Troubleshooting
+Main menu also supports `q` to quit.
 
-### Common Issues
+## Layout, Style, and Status
 
-**Database Not Appearing**:
-- Verify database module is properly configured
-- Check database connection health
-- Ensure proper permissions for schema access
+- Responsive layout solver in `app/controller/tui/layout/layout.go`
+- Compact mode when terminal is smaller than `100x24`
+- Theme-derived styles in `app/controller/tui/style/style.go`
+- Shared components for menu lists and two-line status bar in `app/controller/tui/components/`
+- Status bar displays action/help text and server URL or server startup error
 
-**Query Execution Fails**:
-- Check SQL syntax and permissions
-- Verify transaction state
-- Review error logs for connection issues
+## State and Telemetry
 
-**Performance Issues**:
-- Enable query tracing to identify bottlenecks
-- Check connection pool settings
-- Monitor database server resources
+Shared app dependencies live in `app/controller/tui/mvc/state.go`.
+Each pushed screen gets its own `PageState` with:
+
+- scoped context and logger
+- mutable UI fields (`Title`, `Cursor`, `Status`, `Error`, `Data`)
+- telemetry span `tui:<action>` closed on pop/replace/quit
+
+`mvc.Act` (`app/controller/tui/mvc/act.go`) provides optional panic-safe action wrappers with timing logs.
+
+## Development Workflow
+
+For rapid local iteration, use:
+
+```bash
+./bin/tui.sh
+```
+
+This helper rebuilds and reruns the TUI on file changes (requires `watchexec`).
+
+## Configuration
+
+This module does not introduce module-specific environment variables.
+Runtime behavior is primarily controlled via existing CLI flags (`--addr`, `--port`, `--working_dir`, `--config_dir`, `--verbose`).
+
+## Dependencies
+
+- Requires a non-WASM target (native terminal runtime)
+- Uses Charmbracelet libraries: Bubble Tea, Lip Gloss, Glamour
+- Integrates with existing app services (projects, modules, doctor checks, git helpers)
 
 ## Source Code
 
-- **Repository**: https://github.com/kyleu/projectforge/tree/main/module/databaseui
+- **Repository**: https://github.com/kyleu/projectforge/tree/main/module/tui
 - **License**: [CC0](https://creativecommons.org/publicdomain/zero/1.0) (Public Domain)
 - **Author**: Kyle U (kyle@kyleu.com)
 
 ## See Also
 
-- [Database Module](database.md) - Core database connectivity
-- [Project Forge Documentation](https://projectforge.dev) - Complete documentation
+- [Help Module](help.md)
+- [charmbracelet](https://github.com/charmbracelet)
+- [Project Forge Documentation](https://projectforge.dev)
