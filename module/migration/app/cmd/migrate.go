@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 
-	"github.com/spf13/cobra"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"{{{ .Package }}}/app/lib/database"
 	"{{{ .Package }}}/app/lib/database/migrate"
