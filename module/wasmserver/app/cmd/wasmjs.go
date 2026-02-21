@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"syscall/js"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"{{{ .Package }}}/app/controller/cutil"
 )
@@ -20,9 +20,9 @@ const keyWASM = "wasm"
 
 var _router http.Handler
 
-func wasmCmd() *coral.Command {
+func wasmCmd() *cobra.Command {
 	short := "Starts the server and exposes a WebAssembly application to scripts"
-	f := func(*coral.Command, []string) error { return startWASM(rootCtx, _flags) }
+	f := func(*cobra.Command, []string) error { return startWASM(rootCtx, _flags) }
 	ret := newCmd(keyWASM, short, f)
 	return ret
 }

@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
 	"{{{ .Package }}}/app"
@@ -13,8 +13,8 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
-func mcpCmd() *coral.Command {
-	f := func(*coral.Command, []string) error { return runMCP(rootCtx) }
+func mcpCmd() *cobra.Command {
+	f := func(*cobra.Command, []string) error { return runMCP(rootCtx) }
 	ret := newCmd("mcp", "Handles Model Context Protocol requests", f)
 	return ret
 }

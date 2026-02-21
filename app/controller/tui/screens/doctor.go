@@ -8,7 +8,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/samber/lo"
 
-	"projectforge.dev/projectforge/app/controller/tui/components"
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
 	"projectforge.dev/projectforge/app/controller/tui/style"
@@ -45,17 +44,14 @@ func (s *DoctorScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
 
 func (s *DoctorScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	ck := s.availableChecks(ts)
+	ps.Cursor = clampMenuCursor(ps.Cursor, len(ck))
+	if delta, moved := menuMoveDelta(msg); moved {
+		ps.Cursor = moveMenuCursor(ps.Cursor, len(ck), delta)
+		return mvc.Stay(), nil, nil
+	}
 	switch m := msg.(type) {
 	case tea.KeyMsg:
 		switch m.String() {
-		case "up", "k":
-			if ps.Cursor > 0 {
-				ps.Cursor--
-			}
-		case "down", "j":
-			if ps.Cursor < len(ck)-1 {
-				ps.Cursor++
-			}
 		case "a":
 			ps.SetStatus("Running all doctor checks...")
 			return mvc.Stay(), s.runAll(ts, ps), nil
@@ -83,27 +79,29 @@ func (s *DoctorScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mv
 func (s *DoctorScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
 	styles := style.New(ts.Theme)
 	ck := s.availableChecks(ts)
+	ps.Cursor = clampMenuCursor(ps.Cursor, len(ck))
 	items := lo.Map(ck, func(c *doctor.Check, _ int) *menu.Item {
 		return &menu.Item{Key: c.Key, Title: c.Title, Description: c.Summary}
 	})
-
-	title := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
 
 	result := "Run checks to see detailed output"
 	if lines := ps.EnsureData().GetStringArrayOpt("result"); len(lines) > 0 {
 		result = strings.Join(lines, "\n")
 	}
 
-	bodyH := max(1, rects.Main.H-1)
+	bodyH := max(1, rects.Main.H)
 	if rects.Compact {
+		title := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
 		leftStyle := styles.Panel
 		rightStyle := styles.Sidebar
-		leftW := max(1, rects.Main.W-leftStyle.GetHorizontalFrameSize())
-		rightW := max(1, rects.Main.W-rightStyle.GetHorizontalFrameSize())
-		leftH := max(1, bodyH/2-leftStyle.GetVerticalFrameSize())
-		rightH := max(1, bodyH-bodyH/2-rightStyle.GetVerticalFrameSize())
-		list := leftStyle.Width(leftW).Height(leftH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftW))
-		output := rightStyle.Width(rightW).Height(rightH).Render(renderLines(strings.Split(result, "\n"), rightW))
+		bodyH = max(1, rects.Main.H-1)
+		leftOuterW := max(1, rects.Main.W)
+		rightOuterW := max(1, rects.Main.W)
+		leftOuterH := max(1, bodyH/2)
+		rightOuterH := max(1, bodyH-bodyH/2)
+		list := renderMenuPanel(items, ps.Cursor, styles, leftStyle, leftOuterW, leftOuterH)
+		rightContentW, _ := panelContentSize(rightStyle, rightOuterW, rightOuterH)
+		output := renderTextPanel(renderLines(strings.Split(result, "\n"), rightContentW), rightStyle, rightOuterW, rightOuterH)
 		return lipgloss.JoinVertical(lipgloss.Left, title, list, output)
 	}
 
@@ -114,13 +112,10 @@ func (s *DoctorScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects
 	rightW := max(1, rects.Main.W-leftW)
 	leftStyle := styles.Panel
 	rightStyle := styles.Sidebar
-	leftCW := max(1, leftW-leftStyle.GetHorizontalFrameSize())
-	rightCW := max(1, rightW-rightStyle.GetHorizontalFrameSize())
-	leftCH := max(1, bodyH-leftStyle.GetVerticalFrameSize())
-	rightCH := max(1, bodyH-rightStyle.GetVerticalFrameSize())
-	list := leftStyle.Width(leftCW).Height(leftCH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftCW))
-	output := rightStyle.Width(rightCW).Height(rightCH).Render(renderLines(strings.Split(result, "\n"), rightCW))
-	return lipgloss.JoinVertical(lipgloss.Left, title, lipgloss.JoinHorizontal(lipgloss.Top, list, output))
+	list := renderMenuPanel(items, ps.Cursor, styles, leftStyle, leftW, bodyH)
+	rightContentW, _ := panelContentSize(rightStyle, rightW, bodyH)
+	output := renderTextPanel(renderLines(strings.Split(result, "\n"), rightContentW), rightStyle, rightW, bodyH)
+	return lipgloss.JoinHorizontal(lipgloss.Top, list, output)
 }
 
 func (s *DoctorScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {

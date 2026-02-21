@@ -4,17 +4,17 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"{{{ .Package }}}/app/util"
 )
 
 const keyAll = "all"
 
-func allCmd() *coral.Command {
+func allCmd() *cobra.Command {
 	short := fmt.Sprintf("Starts the main http server on port %d and the marketing site on port %d", util.AppPort, util.AppPort+1)
-	f := func(*coral.Command, []string) error { return allF(rootCtx) }
+	f := func(*cobra.Command, []string) error { return allF(rootCtx) }
 	ret := newCmd(keyAll, short, f)
 	return ret
 }

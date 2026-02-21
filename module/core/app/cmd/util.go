@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/kirsle/configdir"
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/lib/log"
@@ -50,8 +50,8 @@ func (f *Flags) Clone(port uint16) *Flags {
 	}
 }
 
-func newCmd(key string, short string, fn func(*coral.Command, []string) error, aliases ...string) *coral.Command {
-	return &coral.Command{Use: key, Short: short, RunE: fn, SilenceUsage: true, Aliases: aliases}
+func newCmd(key string, short string, fn func(*cobra.Command, []string) error, aliases ...string) *cobra.Command {
+	return &cobra.Command{Use: key, Short: short, RunE: fn, SilenceUsage: true, Aliases: aliases}
 }
 
 var initMu sync.Mutex

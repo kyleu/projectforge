@@ -51,9 +51,8 @@ func (s *SettingsScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rec
 	if len(lines) == 0 {
 		lines = []string{"No settings available"}
 	}
-	header := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
-	panel := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, rects.Main.H-1)).Render(lipgloss.JoinVertical(lipgloss.Left, lines...))
-	return lipgloss.JoinVertical(lipgloss.Left, header, panel)
+	body := lipgloss.JoinVertical(lipgloss.Left, lines...)
+	return renderScreenPanel(ps.Title, body, styles.Panel, styles, rects)
 }
 
 func (s *SettingsScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {

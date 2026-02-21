@@ -63,5 +63,5 @@
       "description": "encryption key for web sessions, defaults to `{key}_secret`, warns if missing"
     }
   ],
-  "technology": ["coral", "opentelemetry", "typescript"]
+  "technology": ["cobra", "fang", "opentelemetry", "typescript"]
 }

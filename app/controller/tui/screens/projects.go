@@ -5,9 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 
-	"projectforge.dev/projectforge/app/controller/tui/components"
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
 	"projectforge.dev/projectforge/app/controller/tui/style"
@@ -34,17 +32,14 @@ func (s *ProjectsScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
 
 func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	prjs := ts.App.Services.Projects.Projects()
+	ps.Cursor = clampMenuCursor(ps.Cursor, len(prjs))
+	if delta, moved := menuMoveDelta(msg); moved {
+		ps.Cursor = moveMenuCursor(ps.Cursor, len(prjs), delta)
+		return mvc.Stay(), nil, nil
+	}
 	switch m := msg.(type) {
 	case tea.KeyMsg:
 		switch m.String() {
-		case "up", "k":
-			if ps.Cursor > 0 {
-				ps.Cursor--
-			}
-		case "down", "j":
-			if ps.Cursor < len(prjs)-1 {
-				ps.Cursor++
-			}
 		case "enter":
 			if len(prjs) == 0 {
 				return mvc.Stay(), nil, nil
@@ -61,10 +56,8 @@ func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (
 func (s *ProjectsScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
 	styles := style.New(ts.Theme)
 	prjs := ts.App.Services.Projects.Projects()
-	title := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
-	list := components.RenderMenuList(projectItems(prjs), ps.Cursor, styles, max(1, rects.Main.W-4))
-	panel := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, rects.Main.H-1)).Render(list)
-	return lipgloss.JoinVertical(lipgloss.Left, title, panel)
+	items := projectItems(prjs)
+	return renderMainListScreen(ps.Title, items, clampMenuCursor(ps.Cursor, len(items)), styles, rects)
 }
 
 func (s *ProjectsScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {

@@ -18,18 +18,28 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-type ProjectScreen struct{}
+const (
+	dataInputActive       = "input_active"
+	dataInputChoiceKey    = "input_choice_key"
+	dataInputChoiceTitle  = "input_choice_title"
+	dataBuildCollapsed    = "build_collapsed"
+	dataGitCollapsed      = "git_collapsed"
+	dataListOffset        = "list_offset"
+	dataViewportHeight    = "viewport_height"
+	keyGroupBuild         = "group:build"
+	keyGroupGit           = "group:git"
+	prefixBuildSubActions = "action:build:"
+	maxProjectRows        = 24
+)
 
-type projectResultMsg struct {
-	title string
-	lines []string
-	err   error
-}
+type ProjectScreen struct{}
 
 type actionChoice struct {
 	key         string
 	title       string
 	description string
+	cfg         util.ValueMap
+	runnable    bool
 }
 
 func NewProjectScreen() *ProjectScreen {
@@ -48,41 +58,69 @@ func (s *ProjectScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
 		return nil
 	}
 	ps.Title = prj.Title()
+	d := ps.EnsureData()
+	d[dataBuildCollapsed] = true
+	d[dataGitCollapsed] = true
+	choices := s.visibleChoices(ps)
+	if len(choices) == 0 {
+		ps.Cursor = 0
+	} else if ps.Cursor >= len(choices) {
+		ps.Cursor = len(choices) - 1
+	}
+	ps.EnsureData()[dataListOffset] = 0
 	ps.SetStatus("Choose an action for [%s]", prj.Key)
 	return nil
 }
 
 func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	prj := selectedProject(ts, ps)
-	choices := s.choices()
+	allChoices := s.choices()
+	choices := s.visibleChoices(ps)
+	if len(choices) == 0 {
+		ps.Cursor = 0
+	} else if ps.Cursor >= len(choices) {
+		ps.Cursor = len(choices) - 1
+	}
+	s.ensureViewportState(ps, len(choices))
+	syncPromptChoice(ps, allChoices)
+
+	if isPromptActive(ps) {
+		return s.updatePrompt(ps, prj, msg)
+	}
+
 	switch m := msg.(type) {
 	case tea.KeyMsg:
 		switch m.String() {
 		case "up", "k":
-			if ps.Cursor > 0 {
-				ps.Cursor--
-			}
+			s.moveCursor(ps, len(choices), -1)
 		case "down", "j":
-			if ps.Cursor < len(choices)-1 {
-				ps.Cursor++
-			}
-		case "enter", "r":
+			s.moveCursor(ps, len(choices), 1)
+		case "enter", "r", " ":
 			if prj == nil || len(choices) == 0 {
 				return mvc.Stay(), nil, nil
 			}
 			choice := choices[ps.Cursor]
-			ps.SetStatus("Running [%s]...", choice.title)
-			return mvc.Stay(), s.runAction(ts, ps, prj, choice), nil
+			if s.isSection(choice.key) {
+				s.toggleSection(ps, choice.key)
+				post := s.visibleChoices(ps)
+				if len(post) > 0 && ps.Cursor >= len(post) {
+					ps.Cursor = len(post) - 1
+				}
+				s.ensureViewportState(ps, len(post))
+				return mvc.Stay(), nil, nil
+			}
+			if !choice.runnable {
+				ps.SetStatus("This row is not executable")
+				return mvc.Stay(), nil, nil
+			}
+			if requiresInput(choice) {
+				startInputPrompt(ps, choice)
+				return mvc.Stay(), nil, nil
+			}
+			return mvc.Push(KeyResults, actionData(prj, choice, "", true)), nil, nil
 		case "esc", "backspace", "b":
 			return mvc.Pop(), nil, nil
 		}
-	case projectResultMsg:
-		if m.err != nil {
-			ps.SetError(m.err)
-			return mvc.Stay(), nil, nil
-		}
-		ps.EnsureData()["result"] = m.lines
-		ps.SetStatusText(m.title)
 	}
 	return mvc.Stay(), nil, nil
 }
@@ -94,176 +132,312 @@ func (s *ProjectScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rect
 	if prj == nil {
 		title = "Project Not Found"
 	}
-	header := styles.Header.Width(max(1, rects.Main.W)).Render(title)
-	items := make(menu.Items, 0, len(s.choices()))
-	for _, c := range s.choices() {
-		items = append(items, &menu.Item{Key: c.key, Title: c.title, Description: c.description})
+
+	choices := s.visibleChoices(ps)
+	contentW, contentH, _ := mainPanelContentSize(styles.Panel, rects)
+	contentH = min(contentH, maxProjectRows)
+	ps.EnsureData()[dataViewportHeight] = contentH
+	s.ensureViewportState(ps, len(choices))
+	offset, end := s.viewportWindow(ps, len(choices))
+	cursor := ps.Cursor - offset
+	if cursor < 0 {
+		cursor = 0
+	}
+	items := make(menu.Items, 0, end-offset)
+	for idx := offset; idx < end; idx++ {
+		c := choices[idx]
+		items = append(items, &menu.Item{Key: c.key, Title: s.choiceTitle(ps, c), Description: c.description})
+	}
+	body := components.RenderMenuList(items, cursor, styles, contentW)
+	if isPromptActive(ps) {
+		body = lipgloss.JoinVertical(lipgloss.Left, body, styles.Muted.Render(renderPrompt(ps, contentW)))
 	}
 
-	metaLines := []string{"No project loaded"}
-	if prj != nil {
-		metaLines = []string{
-			fmt.Sprintf("Project: %s", prj.Title()),
-			fmt.Sprintf("Path: %s", prj.Path),
-		}
-		metaLines = append(metaLines, moduleLines(prj.Modules, 8)...)
-	}
-	if lines := ps.EnsureData().GetStringArrayOpt("result"); len(lines) > 0 {
-		metaLines = append(metaLines, "", "Result:")
-		metaLines = append(metaLines, lines...)
-	}
-
-	bodyH := max(1, rects.Main.H-1)
-	if rects.Compact {
-		leftStyle := styles.Panel
-		rightStyle := styles.Sidebar
-		leftW := max(1, rects.Main.W-leftStyle.GetHorizontalFrameSize())
-		rightW := max(1, rects.Main.W-rightStyle.GetHorizontalFrameSize())
-		leftH := max(1, bodyH/2-leftStyle.GetVerticalFrameSize())
-		rightH := max(1, bodyH-bodyH/2-rightStyle.GetVerticalFrameSize())
-		left := leftStyle.Width(leftW).Height(leftH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftW))
-		right := rightStyle.Width(rightW).Height(rightH).Render(renderLines(metaLines, rightW))
-		return lipgloss.JoinVertical(lipgloss.Left, header, left, right)
-	}
-
-	leftW := max(24, (rects.Main.W*2)/3)
-	if leftW > rects.Main.W-20 {
-		leftW = max(1, rects.Main.W-20)
-	}
-	rightW := max(1, rects.Main.W-leftW)
-	leftStyle := styles.Panel
-	rightStyle := styles.Sidebar
-	leftCW := max(1, leftW-leftStyle.GetHorizontalFrameSize())
-	rightCW := max(1, rightW-rightStyle.GetHorizontalFrameSize())
-	leftCH := max(1, bodyH-leftStyle.GetVerticalFrameSize())
-	rightCH := max(1, bodyH-rightStyle.GetVerticalFrameSize())
-	left := leftStyle.Width(leftCW).Height(leftCH).Render(components.RenderMenuList(items, ps.Cursor, styles, leftCW))
-	right := rightStyle.Width(rightCW).Height(rightCH).Render(renderLines(metaLines, rightCW))
-	return lipgloss.JoinVertical(lipgloss.Left, header, lipgloss.JoinHorizontal(lipgloss.Top, left, right))
+	panelOuterH := contentH + styles.Panel.GetVerticalFrameSize()
+	panel := renderTextPanel(body, styles.Panel, rects.Main.W, panelOuterH)
+	return renderScreenFrame(title, panel, styles, rects)
 }
 
-func (s *ProjectScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
-	return HelpBindings{Short: []string{"up/down: move", "enter: run", "b: back"}}
+func (s *ProjectScreen) Help(_ *mvc.State, ps *mvc.PageState) HelpBindings {
+	if isPromptActive(ps) {
+		return HelpBindings{Short: []string{"type: message", "enter: continue", "tab: toggle dry-run", "esc: cancel"}}
+	}
+	return HelpBindings{Short: []string{"up/down: move", "enter: run/toggle", "b: back"}}
 }
 
 func (s *ProjectScreen) choices() []actionChoice {
-	ret := make([]actionChoice, 0, 16)
+	ret := make([]actionChoice, 0, 40)
 	for _, t := range action.ProjectTypes {
-		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description})
+		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description, runnable: true})
 	}
 	for _, t := range []action.Type{action.TypeDebug, action.TypeRules, action.TypeSVG} {
-		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description})
+		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description, runnable: true})
 	}
+	ret = append(ret, actionChoice{key: keyGroupBuild, title: "Build", description: "Build phases", runnable: false})
+	for _, b := range action.AllBuilds {
+		if b == nil {
+			continue
+		}
+		desc := b.Description
+		if b.Expensive {
+			desc = "[expensive] " + desc
+		}
+		ret = append(ret, actionChoice{
+			key:         "action:" + action.TypeBuild.Key + ":" + b.Key,
+			title:       "-> " + b.Title,
+			description: desc,
+			cfg:         util.ValueMap{"phase": b.Key},
+			runnable:    true,
+		})
+	}
+	ret = append(ret, actionChoice{key: keyGroupGit, title: "Git", description: "Repository actions", runnable: false})
 	for _, ga := range []*git.Action{git.ActionStatus, git.ActionFetch, git.ActionPull, git.ActionPush, git.ActionCommit, git.ActionReset, git.ActionHistory, git.ActionMagic} {
-		ret = append(ret, actionChoice{key: "git:" + ga.Key, title: ga.Title, description: ga.Description})
+		ret = append(ret, actionChoice{key: "git:" + ga.Key, title: "-> " + ga.Title, description: ga.Description, runnable: true})
 	}
 	return ret
 }
 
-func (s *ProjectScreen) runAction(ts *mvc.State, ps *mvc.PageState, prj *project.Project, c actionChoice) tea.Cmd {
-	ctx := ps.Context
-	logger := ps.Logger
-	if logger == nil {
-		logger = ts.Logger
-	}
-	return func() tea.Msg {
-		if prj == nil {
-			return projectResultMsg{err: fmt.Errorf("project not found")}
-		}
-		if strings.HasPrefix(c.key, "action:") {
-			act := action.TypeFromString(strings.TrimPrefix(c.key, "action:"))
-			params := &action.Params{
-				ProjectKey: prj.Key,
-				T:          act,
-				Cfg:        util.ValueMap{},
-				MSvc:       ts.App.Services.Modules,
-				PSvc:       ts.App.Services.Projects,
-				ESvc:       ts.App.Services.Export,
-				XSvc:       ts.App.Services.Exec,
-				Logger:     logger,
+func (s *ProjectScreen) visibleChoices(ps *mvc.PageState) []actionChoice {
+	ret := make([]actionChoice, 0, 40)
+	buildCollapsed := ps.EnsureData().GetBoolOpt(dataBuildCollapsed)
+	gitCollapsed := ps.EnsureData().GetBoolOpt(dataGitCollapsed)
+	for _, c := range s.choices() {
+		switch {
+		case c.key == keyGroupBuild:
+			ret = append(ret, c)
+		case strings.HasPrefix(c.key, prefixBuildSubActions):
+			if !buildCollapsed {
+				ret = append(ret, c)
 			}
-			res := action.Apply(ctx, params)
-			lines := append([]string{fmt.Sprintf("status: %s", res.Status)}, res.Logs...)
-			lines = append(lines, res.Errors...)
-			return projectResultMsg{title: fmt.Sprintf("Completed [%s]", act.Title), lines: lines}
-		}
-		gs := git.NewService(prj.Key, prj.Path)
-		key := strings.TrimPrefix(c.key, "git:")
-		var (
-			res *git.Result
-			err error
-		)
-		switch key {
-		case git.ActionStatus.Key:
-			res, err = gs.Status(ctx, logger)
-		case git.ActionFetch.Key:
-			res, err = gs.Fetch(ctx, logger)
-		case git.ActionPull.Key:
-			res, err = gs.Pull(ctx, logger)
-		case git.ActionPush.Key:
-			res, err = gs.Push(ctx, logger)
-		case git.ActionCommit.Key:
-			res, err = gs.Commit(ctx, "Project Forge TUI commit", logger)
-		case git.ActionReset.Key:
-			res, err = gs.Reset(ctx, logger)
-		case git.ActionHistory.Key:
-			res, err = gs.History(ctx, &git.HistoryArgs{Limit: 25}, logger)
-		case git.ActionMagic.Key:
-			res, err = gs.Magic(ctx, "Project Forge TUI magic", true, logger)
+		case c.key == keyGroupGit:
+			ret = append(ret, c)
+		case strings.HasPrefix(c.key, "git:"):
+			if !gitCollapsed {
+				ret = append(ret, c)
+			}
 		default:
-			err = fmt.Errorf("unknown git action [%s]", key)
+			ret = append(ret, c)
 		}
-		if err != nil {
-			return projectResultMsg{err: err}
-		}
-		if res == nil {
-			return projectResultMsg{err: fmt.Errorf("no result returned")}
-		}
-		lines := []string{fmt.Sprintf("status: %s", res.Status)}
-		for _, k := range res.CleanData().Keys() {
-			lines = append(lines, fmt.Sprintf("%s: %v", k, res.CleanData()[k]))
-		}
-		if res.Error != "" {
-			lines = append(lines, "error: "+res.Error)
-		}
-		return projectResultMsg{title: fmt.Sprintf("Completed [%s]", c.title), lines: lines}
-	}
-}
-
-func selectedProject(ts *mvc.State, ps *mvc.PageState) *project.Project {
-	if ts == nil || ts.App == nil || ts.App.Services == nil || ts.App.Services.Projects == nil {
-		return nil
-	}
-	key := ps.EnsureData().GetStringOpt("project")
-	if key == "" {
-		return ts.App.Services.Projects.Default()
-	}
-	prj, err := ts.App.Services.Projects.Get(key)
-	if err != nil {
-		return nil
-	}
-	return prj
-}
-
-func moduleLines(mods []string, maxShown int) []string {
-	if len(mods) == 0 {
-		return []string{"Modules: (none)"}
-	}
-	if maxShown < 1 {
-		maxShown = 1
-	}
-	ret := []string{"Modules:"}
-	limit := len(mods)
-	if limit > maxShown {
-		limit = maxShown
-	}
-	for _, mod := range mods[:limit] {
-		ret = append(ret, "  - "+mod)
-	}
-	if len(mods) > maxShown {
-		ret = append(ret, fmt.Sprintf("  - ... (+%d more)", len(mods)-maxShown))
 	}
 	return ret
+}
+
+func (s *ProjectScreen) choiceTitle(ps *mvc.PageState, c actionChoice) string {
+	switch c.key {
+	case keyGroupBuild:
+		if ps.EnsureData().GetBoolOpt(dataBuildCollapsed) {
+			return "[+] Build"
+		}
+		return "[-] Build"
+	case keyGroupGit:
+		if ps.EnsureData().GetBoolOpt(dataGitCollapsed) {
+			return "[+] Git"
+		}
+		return "[-] Git"
+	default:
+		return c.title
+	}
+}
+
+func (s *ProjectScreen) isSection(key string) bool {
+	return key == keyGroupBuild || key == keyGroupGit
+}
+
+func (s *ProjectScreen) toggleSection(ps *mvc.PageState, key string) {
+	d := ps.EnsureData()
+	switch key {
+	case keyGroupBuild:
+		next := !d.GetBoolOpt(dataBuildCollapsed)
+		d[dataBuildCollapsed] = next
+		if next {
+			ps.SetStatus("Collapsed [Build]")
+		} else {
+			ps.SetStatus("Expanded [Build]")
+		}
+	case keyGroupGit:
+		next := !d.GetBoolOpt(dataGitCollapsed)
+		d[dataGitCollapsed] = next
+		if next {
+			ps.SetStatus("Collapsed [Git]")
+		} else {
+			ps.SetStatus("Expanded [Git]")
+		}
+	}
+}
+
+func (s *ProjectScreen) updatePrompt(ps *mvc.PageState, prj *project.Project, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
+	selected := promptChoice(ps)
+	d := ps.EnsureData()
+
+	k, isKey := msg.(tea.KeyMsg)
+	if !isKey {
+		return mvc.Stay(), nil, nil
+	}
+
+	switch k.String() {
+	case "esc":
+		stopInputPrompt(ps)
+		return mvc.Stay(), nil, nil
+	case "backspace":
+		v := d.GetStringOpt(dataInputMessage)
+		r := []rune(v)
+		if len(r) > 0 {
+			d[dataInputMessage] = string(r[:len(r)-1])
+		}
+		return mvc.Stay(), nil, nil
+	case "tab":
+		if selected.key == "git:"+git.ActionMagic.Key {
+			d[dataInputDryRun] = !d.GetBoolOpt(dataInputDryRun)
+		}
+		return mvc.Stay(), nil, nil
+	case "enter":
+		inputMessage := strings.TrimSpace(d.GetStringOpt(dataInputMessage))
+		if inputMessage == "" {
+			ps.SetStatus("Message is required")
+			return mvc.Stay(), nil, nil
+		}
+		dryRun := d.GetBoolOpt(dataInputDryRun)
+		stopInputPrompt(ps)
+		return mvc.Push(KeyResults, actionData(prj, selected, inputMessage, dryRun)), nil, nil
+	}
+
+	if len(k.Runes) > 0 {
+		d[dataInputMessage] = d.GetStringOpt(dataInputMessage) + string(k.Runes)
+	}
+	return mvc.Stay(), nil, nil
+}
+
+func requiresInput(c actionChoice) bool {
+	return c.key == "git:"+git.ActionCommit.Key || c.key == "git:"+git.ActionMagic.Key
+}
+
+func isPromptActive(ps *mvc.PageState) bool {
+	return ps.EnsureData().GetBoolOpt(dataInputActive)
+}
+
+func startInputPrompt(ps *mvc.PageState, c actionChoice) {
+	d := ps.EnsureData()
+	d[dataInputActive] = true
+	d[dataInputChoiceKey] = c.key
+	d[dataInputChoiceTitle] = c.title
+	d[dataInputMessage] = defaultInputMessage(c)
+	d[dataInputDryRun] = true
+	ps.SetStatus("Enter values for [%s]", c.title)
+}
+
+func stopInputPrompt(ps *mvc.PageState) {
+	d := ps.EnsureData()
+	delete(d, dataInputActive)
+	delete(d, dataInputChoiceKey)
+	delete(d, dataInputChoiceTitle)
+	delete(d, dataInputMessage)
+	delete(d, dataInputDryRun)
+	ps.SetStatus("Choose an action")
+}
+
+func promptChoice(ps *mvc.PageState) actionChoice {
+	d := ps.EnsureData()
+	return actionChoice{key: d.GetStringOpt(dataInputChoiceKey), title: d.GetStringOpt(dataInputChoiceTitle)}
+}
+
+func renderPrompt(ps *mvc.PageState, width int) string {
+	d := ps.EnsureData()
+	choice := promptChoice(ps)
+	text := fmt.Sprintf("%s message: %s", choice.title, d.GetStringOpt(dataInputMessage))
+	if choice.key == "git:"+git.ActionMagic.Key {
+		mode := "on"
+		if !d.GetBoolOpt(dataInputDryRun) {
+			mode = "off"
+		}
+		text += fmt.Sprintf(" | dry-run: %s (tab to toggle)", mode)
+	}
+	return truncateLine(singleLine(text), width)
+}
+
+func syncPromptChoice(ps *mvc.PageState, choices []actionChoice) {
+	if !isPromptActive(ps) {
+		return
+	}
+	selected := promptChoice(ps)
+	for _, c := range choices {
+		if c.key == selected.key {
+			ps.EnsureData()[dataInputChoiceTitle] = c.title
+			return
+		}
+	}
+	stopInputPrompt(ps)
+}
+
+func defaultInputMessage(c actionChoice) string {
+	if c.key == "git:"+git.ActionMagic.Key {
+		return "Project Forge TUI magic"
+	}
+	return "Project Forge TUI commit"
+}
+
+func (s *ProjectScreen) moveCursor(ps *mvc.PageState, count int, delta int) {
+	if count == 0 || delta == 0 {
+		return
+	}
+	next := ps.Cursor + delta
+	if next < 0 {
+		next = 0
+	}
+	if next >= count {
+		next = count - 1
+	}
+	ps.Cursor = next
+	s.ensureViewportState(ps, count)
+}
+
+func (s *ProjectScreen) ensureViewportState(ps *mvc.PageState, count int) {
+	d := ps.EnsureData()
+	if count <= 0 {
+		d[dataListOffset] = 0
+		return
+	}
+	height := d.GetIntOpt(dataViewportHeight)
+	if height < 1 {
+		height = 10
+	}
+	offset := d.GetIntOpt(dataListOffset)
+	if offset < 0 {
+		offset = 0
+	}
+	maxOffset := max(0, count-height)
+	if offset > maxOffset {
+		offset = maxOffset
+	}
+	if ps.Cursor < offset {
+		offset = ps.Cursor
+	}
+	if ps.Cursor >= offset+height {
+		offset = ps.Cursor - height + 1
+	}
+	if offset > maxOffset {
+		offset = maxOffset
+	}
+	d[dataListOffset] = offset
+}
+
+func (s *ProjectScreen) viewportWindow(ps *mvc.PageState, count int) (int, int) {
+	if count <= 0 {
+		return 0, 0
+	}
+	d := ps.EnsureData()
+	offset := d.GetIntOpt(dataListOffset)
+	height := d.GetIntOpt(dataViewportHeight)
+	if height < 1 {
+		height = 10
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	if offset > count-1 {
+		offset = count - 1
+	}
+	end := min(count, offset+height)
+	return offset, end
 }
 
 func renderLines(lines []string, width int) string {
@@ -290,4 +464,8 @@ func truncateLine(s string, width int) string {
 
 func singleLine(s string) string {
 	return strings.Join(strings.Fields(s), " ")
+}
+
+func runeLen(s string) int {
+	return len([]rune(s))
 }

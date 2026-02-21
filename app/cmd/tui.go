@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 	"go.uber.org/zap/zapcore"
 
 	"projectforge.dev/projectforge/app/controller/tui"
@@ -20,10 +20,10 @@ import (
 
 const keyTUI = "tui"
 
-func tuiCmd() *coral.Command {
+func tuiCmd() *cobra.Command {
 	short := fmt.Sprintf("Starts the terminal UI (and the http server on port %d)", util.AppPort)
-	f := func(*coral.Command, []string) error { return runTUI(rootCtx, _flags) }
-	ret := &coral.Command{Use: keyTUI, Short: short, RunE: f}
+	f := func(*cobra.Command, []string) error { return runTUI(rootCtx, _flags) }
+	ret := &cobra.Command{Use: keyTUI, Short: short, RunE: f}
 	return ret
 }
 

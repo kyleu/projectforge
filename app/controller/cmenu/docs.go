@@ -14,7 +14,7 @@ import (
 
 var docMenuCached *menu.Item
 
-func docMenu(logger util.Logger) *menu.Item {
+func DocsMenu(logger util.Logger) *menu.Item {
 	if docMenuCached == nil {
 		docMenuCached = docMenuCreate(logger)
 	}
@@ -76,7 +76,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 func addChild(p string, name string) *menu.Item {
 	r := "/" + util.StringPath("docs", p)
 	title := util.StringToProper(name)
-	b, err := doc.FS.ReadFile(p + util.ExtMarkdown)
+	b, err := doc.Content(p + util.ExtMarkdown)
 	if err != nil {
 		panic(err)
 	}

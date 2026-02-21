@@ -3,7 +3,7 @@ package cmd
 import (
 	"context"
 
-	"github.com/muesli/coral"
+	"github.com/spf13/cobra"
 
 	"projectforge.dev/projectforge/app/lib/log"
 	"projectforge.dev/projectforge/app/lib/upgrade"
@@ -23,8 +23,8 @@ func upgradeF(ctx context.Context) error {
 	return upgrade.NewService(ctx, l).UpgradeIfNeeded(ctx, _buildInfo.Version, _version, _force)
 }
 
-func upgradeCmd() *coral.Command {
-	f := func(_ *coral.Command, _ []string) error { return upgradeF(rootCtx) }
+func upgradeCmd() *cobra.Command {
+	f := func(_ *cobra.Command, _ []string) error { return upgradeF(rootCtx) }
 	ret := newCmd("upgrade", "Upgrades "+util.AppName+" to the latest published version", f)
 	ret.PersistentFlags().StringVar(&_version, "version", "", "version number to upgrade to")
 	ret.PersistentFlags().BoolVarP(&_force, "force", "f", false, "force upgrade, even if same or earlier")

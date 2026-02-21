@@ -4,20 +4,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/muesli/coral"
+	"github.com/spf13/cobra"
 
 	"projectforge.dev/projectforge/app/util"
 )
 
 var rootCtx = context.Background()
 
-func rootF(*coral.Command, []string) error {
+func rootF(*cobra.Command, []string) error {
 	// $PF_SECTION_START(rootAction)$
 	return startServer(rootCtx, _flags)
 	// $PF_SECTION_END(rootAction)$
 }
 
-func rootCmd(ctx context.Context) *coral.Command {
+func rootCmd(ctx context.Context) *cobra.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := newCmd(util.AppKey, short, rootF)
 	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), mcpCmd(), upgradeCmd(), wasmCmd())

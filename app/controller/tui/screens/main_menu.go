@@ -2,9 +2,7 @@ package screens
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 
-	"projectforge.dev/projectforge/app/controller/tui/components"
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
 	"projectforge.dev/projectforge/app/controller/tui/style"
@@ -31,17 +29,14 @@ func (s *MainMenuScreen) Init(_ *mvc.State, ps *mvc.PageState) tea.Cmd {
 
 func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	items := s.registry.Menu().Visible()
+	ps.Cursor = clampMenuCursor(ps.Cursor, len(items))
+	if delta, moved := menuMoveDelta(msg); moved {
+		ps.Cursor = moveMenuCursor(ps.Cursor, len(items), delta)
+		return mvc.Stay(), nil, nil
+	}
 	switch m := msg.(type) {
 	case tea.KeyMsg:
 		switch m.String() {
-		case "up", "k":
-			if ps.Cursor > 0 {
-				ps.Cursor--
-			}
-		case "down", "j":
-			if ps.Cursor < len(items)-1 {
-				ps.Cursor++
-			}
 		case "enter":
 			if len(items) == 0 {
 				return mvc.Stay(), nil, nil
@@ -57,10 +52,8 @@ func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 
 func (s *MainMenuScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
 	styles := style.New(ts.Theme)
-	title := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
-	body := components.RenderMenuList(s.registry.Menu().Visible(), ps.Cursor, styles, max(1, rects.Main.W-4))
-	panel := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, rects.Main.H-1)).Render(body)
-	return lipgloss.JoinVertical(lipgloss.Left, title, panel)
+	items := s.registry.Menu().Visible()
+	return renderMainListScreen(ps.Title, items, clampMenuCursor(ps.Cursor, len(items)), styles, rects)
 }
 
 func (s *MainMenuScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {

@@ -25,6 +25,7 @@ func RenderMenuList(items menu.Items, cursor int, st style.Styles, width int) st
 		if i == cursor {
 			line = st.Selected.Render(stripANSI(line))
 		}
+		line = strings.TrimRight(line, " \t")
 		out = append(out, line)
 	}
 	return strings.Join(out, "\n")
@@ -33,11 +34,12 @@ func RenderMenuList(items menu.Items, cursor int, st style.Styles, width int) st
 func renderMenuRow(title string, desc string, width int, titleStyle lipgloss.Style, descStyle lipgloss.Style) string {
 	const (
 		prefix = "  "
+		suffix = "  "
 		sep    = " - "
 	)
-	available := width - runeLen(prefix)
+	available := width - runeLen(prefix) - runeLen(suffix)
 	if available < 1 {
-		return prefix
+		return prefix + suffix
 	}
 
 	title = singleLine(title)
@@ -54,7 +56,7 @@ func renderMenuRow(title string, desc string, width int, titleStyle lipgloss.Sty
 	if descOut != "" {
 		ret += sep + descStyle.Render(descOut)
 	}
-	return ret
+	return ret + suffix
 }
 
 func truncateEllipsis(s string, width int) string {
@@ -65,14 +67,13 @@ func truncateEllipsis(s string, width int) string {
 	if len(r) <= width {
 		return s
 	}
-	if width <= 1 {
-		return string(r[:width])
+	if width <= 3 {
+		return "…"
 	}
-	return string(r[:width-1]) + "…"
+	return string(r[:width-3]) + "…"
 }
 
 func singleLine(s string) string {
-	// Collapse all whitespace (including newlines/tabs) so each row is always one visual line.
 	return strings.Join(strings.Fields(s), " ")
 }
 

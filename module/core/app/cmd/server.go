@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"runtime"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller"
@@ -17,9 +17,9 @@ import (
 
 const keyServer = "server"
 
-func serverCmd() *coral.Command {
+func serverCmd() *cobra.Command {
 	short := fmt.Sprintf("Starts the http server on port %d (by default)", util.AppPort)
-	f := func(*coral.Command, []string) error { return startServer(rootCtx, _flags) }
+	f := func(*cobra.Command, []string) error { return startServer(rootCtx, _flags) }
 	ret := newCmd(keyServer, short, f)
 	return ret
 }

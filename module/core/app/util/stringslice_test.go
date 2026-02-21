@@ -4,7 +4,6 @@
 package util_test
 
 import (
-	"encoding/json"
 	"testing"
 
 	"{{{ .Package }}}/app/util"
@@ -276,20 +275,17 @@ func TestStringSliceJSON(t *testing.T) {
 	t.Run("marshals to JSON array", func(t *testing.T) {
 		t.Parallel()
 		s := util.NewStringSlice("a", "b", "c")
-		data, err := json.Marshal(s)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		data := util.ToJSON(s)
 		expected := `["a","b","c"]`
-		if string(data) != expected {
-			t.Errorf("expected %s, got %s", expected, string(data))
+		if data != expected {
+			t.Errorf("expected %s, got %s", expected, data)
 		}
 	})
 
 	t.Run("unmarshals from JSON array", func(t *testing.T) {
 		t.Parallel()
 		s := &util.StringSlice{}
-		err := json.Unmarshal([]byte(`["x","y","z"]`), s)
+		err := util.FromJSON([]byte(`["x","y","z"]`), s)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

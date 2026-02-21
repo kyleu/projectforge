@@ -4,13 +4,13 @@
 
 Your project has a full CLI interface, run `{{{ .Key }}} help` to see available options.
 
-When the main HTTP server starts, the code in `app/controller/init.go` is run. 
-It contains `initApp`, for system startup logic, and `initAppRequest`, which is run before each HTTP request. 
+When the main HTTP server starts, the code in `app/controller/init.go` is run.
+It contains `initApp`, for system startup logic, and `initAppRequest`, which is run before each HTTP request.
 
 ### Services
 
-The main dependencies of the project are in `app/state.go`, which defines a `State` object that should almost always be in scope. 
-It contains a `Services` instance which is where we'll add all our project-specific dependencies. 
+The main dependencies of the project are in `app/state.go`, which defines a `State` object that should almost always be in scope.
+It contains a `Services` instance which is where we'll add all our project-specific dependencies.
 You can find it in `app/services.go`.
 
 ### HTTP Controllers
@@ -21,4 +21,4 @@ You can find it in `app/services.go`.
 
 ### CLI Actions
 
-- Start at `/app/cmd/run.go`; to add your own CLI actions, create a new [Coral](https://github.com/muesli/coral) action in `/cmd`
+- Start at `/app/cmd/run.go`; to add your own CLI actions, create a new [Cobra](https://github.com/spf13/cobra) action in `/cmd`

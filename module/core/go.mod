@@ -9,17 +9,18 @@ require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/buger/jsonparser v1.1.1
 	github.com/buildkite/shellwords v1.0.1
+	github.com/charmbracelet/fang v0.4.4
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/mileusna/useragent v1.3.5
-	github.com/muesli/coral v1.0.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.23.2
 	github.com/samber/lo v1.52.0
+	github.com/spf13/cobra v1.10.1
 	github.com/valyala/quicktemplate v1.8.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.64.0
 	go.opentelemetry.io/otel v1.39.0

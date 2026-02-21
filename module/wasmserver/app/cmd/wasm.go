@@ -4,15 +4,15 @@
 package cmd
 
 import (
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 )
 
 const keyWASM = "wasm"
 
-func wasmCmd() *coral.Command {
+func wasmCmd() *cobra.Command {
 	short := "Starts the server and exposes a WebAssembly application to scripts"
-	f := func(*coral.Command, []string) error { return startWASM(_flags) }
+	f := func(*cobra.Command, []string) error { return startWASM(_flags) }
 	ret := newCmd(keyWASM, short, f)
 	return ret
 }

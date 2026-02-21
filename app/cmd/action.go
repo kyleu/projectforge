@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+	"github.com/spf13/cobra"
 
 	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/module"
@@ -24,8 +24,8 @@ func actionF(ctx context.Context, t action.Type, args []string) error {
 	return nil
 }
 
-func actionCmd(ctx context.Context, t action.Type) *coral.Command {
-	f := func(_ *coral.Command, args []string) error { return actionF(ctx, t, args) }
+func actionCmd(ctx context.Context, t action.Type) *cobra.Command {
+	f := func(_ *cobra.Command, args []string) error { return actionF(ctx, t, args) }
 	var aliases []string
 	switch t.Key {
 	case action.TypeCreate.Key:
@@ -39,7 +39,7 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	if t.Matches(action.TypeBuild) {
 		lo.ForEach(action.AllBuilds, func(x *action.Build, _ int) {
 			k := x.Key
-			fx := func(_ *coral.Command, args []string) error {
+			fx := func(_ *cobra.Command, args []string) error {
 				return actionF(ctx, t, append(util.ArrayCopy(args), k))
 			}
 			ret.AddCommand(newCmd(x.Key, x.Description, fx))
@@ -48,8 +48,8 @@ func actionCmd(ctx context.Context, t action.Type) *coral.Command {
 	return ret
 }
 
-func actionCommands(ctx context.Context) []*coral.Command {
-	return lo.FilterMap(action.AllTypes, func(a action.Type, _ int) (*coral.Command, bool) {
+func actionCommands(ctx context.Context) []*cobra.Command {
+	return lo.FilterMap(action.AllTypes, func(a action.Type, _ int) (*cobra.Command, bool) {
 		if a.Hidden {
 			return nil, false
 		}

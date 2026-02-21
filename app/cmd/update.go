@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"projectforge.dev/projectforge/app/module"
 	"projectforge.dev/projectforge/app/util"
@@ -39,7 +39,7 @@ func updateF(ctx context.Context) error {
 	return nil
 }
 
-func updateCmd() *coral.Command {
-	f := func(_ *coral.Command, _ []string) error { return updateF(rootCtx) }
-	return &coral.Command{Use: "update", Short: "Refreshes downloaded assets such as modules", RunE: f}
+func updateCmd() *cobra.Command {
+	f := func(_ *cobra.Command, _ []string) error { return updateF(rootCtx) }
+	return &cobra.Command{Use: "update", Short: "Refreshes downloaded assets such as modules", RunE: f}
 }

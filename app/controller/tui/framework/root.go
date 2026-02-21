@@ -102,33 +102,24 @@ func (m *RootModel) View() string {
 		Render(body)
 
 	sidebarContent := m.sidebarContent(curr, rects)
-	var top string
+	topHeader := m.styles.Header.Width(max(1, rects.Header.W)).Render(util.AppName)
+	var content string
 	if rects.Compact {
 		header := m.styles.Header.Width(max(1, rects.Header.W)).Render(util.AppName + " | " + curr.page.Title)
-		top = lipgloss.JoinVertical(lipgloss.Left, header, main)
+		content = lipgloss.JoinVertical(lipgloss.Left, header, main)
 	} else {
-		sidebar := m.styles.Sidebar.
-			Width(max(1, rects.Sidebar.W)).
-			Height(max(1, rects.Sidebar.H)).
-			MaxWidth(max(1, rects.Sidebar.W)).
-			MaxHeight(max(1, rects.Sidebar.H)).
-			Render(sidebarContent)
-		top = lipgloss.JoinHorizontal(lipgloss.Top, main, sidebar)
+		sidebar := screens.Bounded(m.styles.Sidebar, rects.Sidebar.W, rects.Sidebar.H, sidebarContent)
+		content = lipgloss.JoinVertical(lipgloss.Left, topHeader, lipgloss.JoinHorizontal(lipgloss.Top, main, sidebar))
 	}
 
-	editor := m.styles.Panel.
-		Width(max(1, rects.Editor.W)).
-		Height(max(1, rects.Editor.H)).
-		MaxWidth(max(1, rects.Editor.W)).
-		MaxHeight(max(1, rects.Editor.H)).
-		Render(m.editorHint(curr))
+	editor := m.styles.Header.Width(max(1, rects.Editor.W)).Render(m.editorHint(curr))
 	status := lipgloss.NewStyle().
 		Width(max(1, rects.Status.W)).
 		Height(max(1, rects.Status.H)).
 		MaxWidth(max(1, rects.Status.W)).
 		MaxHeight(max(1, rects.Status.H)).
 		Render(components.RenderStatus(curr.page.Status, curr.page.Error, help.Short, m.state.ServerURL, rects.Status.W, m.styles))
-	frameParts := []string{top}
+	frameParts := []string{content}
 	if m.showLogs {
 		frameParts = append(frameParts, m.logDrawer())
 	}

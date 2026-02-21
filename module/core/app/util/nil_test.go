@@ -4,7 +4,6 @@
 package util_test
 
 import (
-	"encoding/json"
 	"strconv"
 	"testing"
 
@@ -109,31 +108,25 @@ func TestNilBool_JSON(t *testing.T) {
 		nb := util.NilBool{}
 		nb.Valid = true
 		nb.Bool = true
-		data, err := json.Marshal(nb)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != "true" {
-			t.Errorf("expected 'true', got %s", string(data))
+		data := util.ToJSON(nb)
+		if data != "true" {
+			t.Errorf("expected 'true', got %s", data)
 		}
 	})
 
 	t.Run("marshal invalid", func(t *testing.T) {
 		t.Parallel()
 		nb := util.NilBool{}
-		data, err := json.Marshal(nb)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != jsonNull {
-			t.Errorf("expected '%s', got %s", jsonNull, string(data))
+		data := util.ToJSON(nb)
+		if data != jsonNull {
+			t.Errorf("expected '%s', got %s", jsonNull, data)
 		}
 	})
 
 	t.Run("unmarshal true", func(t *testing.T) {
 		t.Parallel()
 		var nb util.NilBool
-		err := json.Unmarshal([]byte("true"), &nb)
+		err := util.FromJSON([]byte("true"), &nb)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -145,7 +138,7 @@ func TestNilBool_JSON(t *testing.T) {
 	t.Run("unmarshal null", func(t *testing.T) {
 		t.Parallel()
 		var nb util.NilBool
-		err := json.Unmarshal([]byte("null"), &nb)
+		err := util.FromJSON([]byte("null"), &nb)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -163,31 +156,25 @@ func TestNilFloat64_JSON(t *testing.T) {
 		nf := util.NilFloat64{}
 		nf.Valid = true
 		nf.Float64 = 3.14
-		data, err := json.Marshal(nf)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != "3.14" {
-			t.Errorf("expected '3.14', got %s", string(data))
+		data := util.ToJSON(nf)
+		if data != "3.14" {
+			t.Errorf("expected '3.14', got %s", data)
 		}
 	})
 
 	t.Run("marshal invalid", func(t *testing.T) {
 		t.Parallel()
 		nf := util.NilFloat64{}
-		data, err := json.Marshal(nf)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != jsonNull {
-			t.Errorf("expected '%s', got %s", jsonNull, string(data))
+		data := util.ToJSON(nf)
+		if data != jsonNull {
+			t.Errorf("expected '%s', got %s", jsonNull, data)
 		}
 	})
 
 	t.Run("unmarshal number", func(t *testing.T) {
 		t.Parallel()
 		var nf util.NilFloat64
-		err := json.Unmarshal([]byte("2.718"), &nf)
+		err := util.FromJSON([]byte("2.718"), &nf)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -199,7 +186,7 @@ func TestNilFloat64_JSON(t *testing.T) {
 	t.Run("unmarshal null", func(t *testing.T) {
 		t.Parallel()
 		var nf util.NilFloat64
-		err := json.Unmarshal([]byte("null"), &nf)
+		err := util.FromJSON([]byte("null"), &nf)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -217,19 +204,16 @@ func TestNilInt32_JSON(t *testing.T) {
 		ni := util.NilInt32{}
 		ni.Valid = true
 		ni.Int32 = 42
-		data, err := json.Marshal(ni)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != "42" {
-			t.Errorf("expected '42', got %s", string(data))
+		data := util.ToJSON(ni)
+		if data != "42" {
+			t.Errorf("expected '42', got %s", data)
 		}
 	})
 
 	t.Run("unmarshal number", func(t *testing.T) {
 		t.Parallel()
 		var ni util.NilInt32
-		err := json.Unmarshal([]byte("123"), &ni)
+		err := util.FromJSON([]byte("123"), &ni)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -247,19 +231,16 @@ func TestNilInt64_JSON(t *testing.T) {
 		ni := util.NilInt64{}
 		ni.Valid = true
 		ni.Int64 = 9223372036854775807
-		data, err := json.Marshal(ni)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != "9223372036854775807" {
-			t.Errorf("expected '9223372036854775807', got %s", string(data))
+		data := util.ToJSON(ni)
+		if data != "9223372036854775807" {
+			t.Errorf("expected '9223372036854775807', got %s", data)
 		}
 	})
 
 	t.Run("unmarshal number", func(t *testing.T) {
 		t.Parallel()
 		var ni util.NilInt64
-		err := json.Unmarshal([]byte("999"), &ni)
+		err := util.FromJSON([]byte("999"), &ni)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -277,31 +258,25 @@ func TestNilString_JSON(t *testing.T) {
 		ns := util.NilString{}
 		ns.Valid = true
 		ns.String = boolTestHello
-		data, err := json.Marshal(ns)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != strconv.Quote(boolTestHello) {
-			t.Errorf("expected %q, got %s", strconv.Quote(boolTestHello), string(data))
+		data := util.ToJSON(ns)
+		if data != strconv.Quote(boolTestHello) {
+			t.Errorf("expected %q, got %s", strconv.Quote(boolTestHello), data)
 		}
 	})
 
 	t.Run("marshal invalid", func(t *testing.T) {
 		t.Parallel()
 		ns := util.NilString{}
-		data, err := json.Marshal(ns)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != jsonNull {
-			t.Errorf("expected '%s', got %s", jsonNull, string(data))
+		data := util.ToJSON(ns)
+		if data != jsonNull {
+			t.Errorf("expected '%s', got %s", jsonNull, data)
 		}
 	})
 
 	t.Run("unmarshal string", func(t *testing.T) {
 		t.Parallel()
 		var ns util.NilString
-		err := json.Unmarshal([]byte(`"world"`), &ns)
+		err := util.FromJSON([]byte(`"world"`), &ns)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -313,7 +288,7 @@ func TestNilString_JSON(t *testing.T) {
 	t.Run("unmarshal null", func(t *testing.T) {
 		t.Parallel()
 		var ns util.NilString
-		err := json.Unmarshal([]byte("null"), &ns)
+		err := util.FromJSON([]byte("null"), &ns)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -329,19 +304,16 @@ func TestNilTime_JSON(t *testing.T) {
 	t.Run("marshal invalid", func(t *testing.T) {
 		t.Parallel()
 		nt := util.NilTime{}
-		data, err := json.Marshal(nt)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != jsonNull {
-			t.Errorf("expected '%s', got %s", jsonNull, string(data))
+		data := util.ToJSON(nt)
+		if data != jsonNull {
+			t.Errorf("expected '%s', got %s", jsonNull, data)
 		}
 	})
 
 	t.Run("unmarshal null", func(t *testing.T) {
 		t.Parallel()
 		var nt util.NilTime
-		err := json.Unmarshal([]byte("null"), &nt)
+		err := util.FromJSON([]byte("null"), &nt)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -353,7 +325,7 @@ func TestNilTime_JSON(t *testing.T) {
 	t.Run("unmarshal time string", func(t *testing.T) {
 		t.Parallel()
 		var nt util.NilTime
-		err := json.Unmarshal([]byte(`"2024-06-15T14:30:00Z"`), &nt)
+		err := util.FromJSON([]byte(`"2024-06-15T14:30:00Z"`), &nt)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -369,19 +341,16 @@ func TestNilJSON_JSON(t *testing.T) {
 	t.Run("marshal invalid", func(t *testing.T) {
 		t.Parallel()
 		nj := util.NilJSON{}
-		data, err := json.Marshal(nj)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if string(data) != jsonNull {
-			t.Errorf("expected '%s', got %s", jsonNull, string(data))
+		data := util.ToJSON(nj)
+		if data != jsonNull {
+			t.Errorf("expected '%s', got %s", jsonNull, data)
 		}
 	})
 
 	t.Run("unmarshal object", func(t *testing.T) {
 		t.Parallel()
 		var nj util.NilJSON
-		err := json.Unmarshal([]byte(`{"key":"value"}`), &nj)
+		err := util.FromJSON([]byte(`{"key":"value"}`), &nj)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

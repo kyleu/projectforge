@@ -56,9 +56,8 @@ func (s *AboutScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.T
 func (s *AboutScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
 	styles := style.New(ts.Theme)
 	lines := ps.EnsureData().GetStringArrayOpt("about")
-	header := styles.Header.Width(max(1, rects.Main.W)).Render(ps.Title)
-	panel := styles.Panel.Width(max(1, rects.Main.W)).Height(max(1, rects.Main.H-1)).Render(lipgloss.JoinVertical(lipgloss.Left, lines...))
-	return lipgloss.JoinVertical(lipgloss.Left, header, panel)
+	body := lipgloss.JoinVertical(lipgloss.Left, lines...)
+	return renderScreenPanel(ps.Title, body, styles.Panel, styles, rects)
 }
 
 func (s *AboutScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
