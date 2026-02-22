@@ -104,7 +104,9 @@ func (m *RootModel) View() string {
 		return "No active screen"
 	}
 
-	rects := layout.Solve(m.width, m.height)
+	previewRects := layout.SolveWithSidebar(m.width, m.height, true)
+	sidebarContent, showSidebar := m.sidebarContent(curr, previewRects)
+	rects := layout.SolveWithSidebar(m.width, m.height, showSidebar)
 	help := curr.screen.Help(m.state, curr.page)
 	help.Short = append(help.Short, "/: logs")
 	body := curr.screen.View(m.state, curr.page, rects)
@@ -115,15 +117,16 @@ func (m *RootModel) View() string {
 		MaxHeight(max(1, rects.Main.H)).
 		Render(body)
 
-	sidebarContent := m.sidebarContent(curr, rects)
 	topHeader := m.styles.Header.Width(max(1, rects.Header.W)).Render(util.AppName)
 	var content string
 	if rects.Compact {
 		header := m.styles.Header.Width(max(1, rects.Header.W)).Render(util.AppName + " | " + curr.page.Title)
 		content = lipgloss.JoinVertical(lipgloss.Left, header, main)
-	} else {
+	} else if showSidebar {
 		sidebar := screens.Bounded(m.styles.Sidebar, rects.Sidebar.W, rects.Sidebar.H, sidebarContent)
 		content = lipgloss.JoinVertical(lipgloss.Left, topHeader, lipgloss.JoinHorizontal(lipgloss.Top, main, sidebar))
+	} else {
+		content = lipgloss.JoinVertical(lipgloss.Left, topHeader, main)
 	}
 
 	editor := m.styles.Header.Width(max(1, rects.Editor.W)).Render(m.editorHint(curr))
@@ -265,31 +268,11 @@ func (m *RootModel) closeAllPages() {
 	}
 }
 
-func (m *RootModel) sidebarContent(curr *navEntry, rects layout.Rects) string {
+func (m *RootModel) sidebarContent(curr *navEntry, rects layout.Rects) (string, bool) {
 	if provider, ok := curr.screen.(screens.SidebarContentProvider); ok {
-		if content, handled := provider.SidebarContent(m.state, curr.page, rects); handled {
-			return content
-		}
+		return provider.SidebarContent(m.state, curr.page, rects)
 	}
-
-	lines := []string{fmt.Sprintf("section: %s", curr.page.Title)}
-	if curr.page.Data != nil {
-		for _, k := range curr.page.Data.Keys() {
-			if k == "result" {
-				continue
-			}
-			lines = append(lines, fmt.Sprintf("%s: %v", k, curr.page.Data[k]))
-		}
-	}
-	if result := curr.page.EnsureData().GetStringArrayOpt("result"); len(result) > 0 {
-		lines = append(lines, "", "recent output:")
-		tail := result
-		if len(tail) > 10 {
-			tail = tail[len(tail)-10:]
-		}
-		lines = append(lines, tail...)
-	}
-	return strings.Join(lines, "\n")
+	return "", false
 }
 
 func (m *RootModel) editorHint(curr *navEntry) string {

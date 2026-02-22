@@ -30,6 +30,10 @@ type Rects struct {
 }
 
 func Solve(width int, height int) Rects {
+	return SolveWithSidebar(width, height, true)
+}
+
+func SolveWithSidebar(width int, height int, showSidebar bool) Rects {
 	if width < 1 {
 		width = 1
 	}
@@ -57,8 +61,15 @@ func Solve(width int, height int) Rects {
 		return ret
 	}
 
-	sidebarWidth := nonCompactSidebarWidth
+	if !showSidebar {
+		ret.Main = Rect{X: 0, Y: headerHeight, W: width, H: bodyHeight}
+		ret.Sidebar = Rect{X: width, Y: headerHeight, W: 0, H: bodyHeight}
+		ret.Overlay = Rect{X: 0, Y: headerHeight, W: width, H: bodyHeight}
+		return ret
+	}
+
 	contentWidth := max(1, width+nonCompactWidthCompensation)
+	sidebarWidth := nonCompactSidebarWidth
 	if sidebarWidth > contentWidth/2 {
 		sidebarWidth = contentWidth / 2
 	}

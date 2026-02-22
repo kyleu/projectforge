@@ -1,6 +1,8 @@
 package screens
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/lipgloss"
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
@@ -50,4 +52,12 @@ func Bounded(st lipgloss.Style, outerW int, outerH int, content string) string {
 		MaxWidth(ow).
 		MaxHeight(oh).
 		Render(content)
+}
+
+func appendSidebarProp(lines []string, key string, value any) []string {
+	label := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.AdaptiveColor{Light: "#4c6475", Dark: "#8ba3b5"}).
+		Render(key)
+	return append(lines, label, fmt.Sprint(value), "")
 }

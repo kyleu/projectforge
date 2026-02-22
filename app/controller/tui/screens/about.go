@@ -64,15 +64,12 @@ func (s *AboutScreen) SidebarContent(ts *mvc.State, _ *mvc.PageState, _ layout.R
 	lines := []string{
 		"About",
 		"",
-		fmt.Sprintf("name: %s", util.AppName),
-		fmt.Sprintf("version: %s", version),
-		fmt.Sprintf("runtime: %s/%s", runtime.GOOS, runtime.GOARCH),
-		fmt.Sprintf("started: %s", started),
-		"",
-		"links:",
-		util.AppURL,
-		util.AppSource,
 	}
+	lines = appendSidebarProp(lines, "name", util.AppName)
+	lines = appendSidebarProp(lines, "version", version)
+	lines = appendSidebarProp(lines, "runtime", fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH))
+	lines = appendSidebarProp(lines, "started", started)
+	lines = append(lines, "", "links:", util.AppURL, util.AppSource)
 	return strings.Join(lines, "\n"), true
 }
 

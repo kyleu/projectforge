@@ -37,6 +37,19 @@ func TestSolveCompact(t *testing.T) {
 	}
 }
 
+func TestSolveNonCompactNoSidebar(t *testing.T) {
+	r := SolveWithSidebar(140, 40, false)
+	if r.Compact {
+		t.Fatal("expected non-compact layout")
+	}
+	if r.Sidebar.W != 0 {
+		t.Fatalf("expected hidden sidebar, got width=%d", r.Sidebar.W)
+	}
+	if r.Main.W != 140 {
+		t.Fatalf("expected full-width main pane, got %d", r.Main.W)
+	}
+}
+
 func TestSolveBreakpointTransition(t *testing.T) {
 	c := Solve(compactBreakpointWidth-1, compactBreakpointHeight)
 	if !c.Compact {

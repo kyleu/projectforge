@@ -144,24 +144,26 @@ func (s *DocumentationScreen) SidebarContent(_ *mvc.State, ps *mvc.PageState, _ 
 	if s.activeFile == "" {
 		items := s.currentItems()
 		cursor := clampMenuCursor(ps.Cursor, len(items))
-		lines = append(lines, fmt.Sprintf("folder: %s", folderLabel(s.stack)), fmt.Sprintf("items: %d", len(items)))
+		lines = appendSidebarProp(lines, "folder", folderLabel(s.stack))
+		lines = appendSidebarProp(lines, "items", len(items))
 		if len(items) > 0 {
 			item := items[cursor]
 			kind := "file"
 			if len(item.Children) > 0 || item.Route == "" {
 				kind = "folder"
 			}
-			lines = append(lines, fmt.Sprintf("selected: %s", item.Title), fmt.Sprintf("type: %s", kind))
+			lines = appendSidebarProp(lines, "selected", item.Title)
+			lines = appendSidebarProp(lines, "type", kind)
 		}
 		lines = append(lines, "", "keys:", "enter open", "b back")
 	} else {
-		lines = append(lines, fmt.Sprintf("file: %s", s.activeFile))
+		lines = appendSidebarProp(lines, "file", s.activeFile)
 		if s.loading {
-			lines = append(lines, "status: loading...")
+			lines = appendSidebarProp(lines, "status", "loading...")
 		} else {
-			lines = append(lines, fmt.Sprintf("lines: %d", len(s.lines)))
+			lines = appendSidebarProp(lines, "lines", len(s.lines))
 			if len(s.lines) > 0 {
-				lines = append(lines, fmt.Sprintf("at: %d", min(len(s.lines), s.scroll+1)))
+				lines = appendSidebarProp(lines, "at", min(len(s.lines), s.scroll+1))
 			}
 		}
 		lines = append(lines, "", "keys:", "up/down scroll", "b back")
