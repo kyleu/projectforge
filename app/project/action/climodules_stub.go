@@ -1,5 +1,5 @@
-//go:build js || aix
-// +build js aix
+//go:build js
+// +build js
 
 package action
 

@@ -224,13 +224,6 @@ builds:
     goarch:
       - "wasm"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-{{{ end }}}{{{ if .Build.AIX }}}
-  - id: "aix"
-    goos:
-      - "aix"
-    goarch:
-      - "ppc64"
-    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .Build.Dragonfly }}}
   - id: "dragonfly"
     goos:

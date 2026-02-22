@@ -275,7 +275,7 @@ func TestStringSliceJSON(t *testing.T) {
 	t.Run("marshals to JSON array", func(t *testing.T) {
 		t.Parallel()
 		s := util.NewStringSlice("a", "b", "c")
-		data := util.ToJSON(s)
+		data := util.ToJSONCompact(s)
 		expected := `["a","b","c"]`
 		if data != expected {
 			t.Errorf("expected %s, got %s", expected, data)

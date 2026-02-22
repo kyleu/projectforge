@@ -216,13 +216,6 @@ builds:
       - "wasm"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
-  - id: "aix"
-    goos:
-      - "aix"
-    goarch:
-      - "ppc64"
-    mod_timestamp: "{{ .CommitTimestamp }}"
-
   - id: "dragonfly"
     goos:
       - "dragonfly"

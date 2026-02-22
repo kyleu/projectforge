@@ -66,8 +66,6 @@ func (l *Link) ArchString() string {
 
 func (l *Link) OSString() string {
 	switch l.OS {
-	case OSAIX:
-		return "AIX"
 	case OSAndroid:
 		return "Android"
 	case OSDragonfly:
@@ -140,7 +138,6 @@ const (
 	ModeDesktop = "desktop"
 	ModeMobile  = "mobile"
 
-	OSAIX       = "aix"
 	OSAndroid   = "android"
 	OSDragonfly = "dragonfly"
 	OSFreeBSD   = "freebsd"
