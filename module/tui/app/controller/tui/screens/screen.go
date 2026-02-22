@@ -1,6 +1,8 @@
 package screens
 
 import (
+	"time"
+
 	tea "github.com/charmbracelet/bubbletea"
 
 	"{{{ .Package }}}/app/controller/tui/layout"
@@ -24,4 +26,10 @@ type Screen interface {
 // Return handled=false to fall back to the default sidebar.
 type SidebarContentProvider interface {
 	SidebarContent(*mvc.State, *mvc.PageState, layout.Rects) (content string, handled bool)
+}
+
+// AutoRefreshProvider optionally enables timed refresh ticks while the screen is active.
+// Returning a non-positive duration disables auto refresh for the screen.
+type AutoRefreshProvider interface {
+	RefreshInterval(*mvc.State, *mvc.PageState) time.Duration
 }

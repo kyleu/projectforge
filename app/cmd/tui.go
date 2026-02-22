@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap/zapcore"
 
 	"projectforge.dev/projectforge/app/controller/tui"
+	"projectforge.dev/projectforge/app/controller/tui/registry"
 	"projectforge.dev/projectforge/app/lib/log"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -79,7 +80,8 @@ func runTUI(ctx context.Context, flags *Flags) error {
 		}
 	}
 
-	t, err = tui.NewTUI(st, serverURL, serverErr, logger)
+	reg := registry.Bootstrap(st, logger)
+	t, err = tui.NewTUI(st, serverURL, serverErr, reg, logger)
 	if err != nil {
 		return err
 	}

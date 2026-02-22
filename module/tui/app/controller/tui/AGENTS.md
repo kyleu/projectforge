@@ -19,13 +19,14 @@ The TUI is intentionally thin and orchestration-focused. Reuse existing app serv
 ### Runtime Flow
 
 1. `tui.NewTUI(...)` builds the TUI context and refreshes projects in `InitTUI`.
-2. `(*TUI).Run(...)` creates `mvc.State`, bootstraps screen registry, then starts Bubble Tea with `framework.RootModel`.
-3. `RootModel` is responsible for:
+2. `runTUI(...)` in `app/cmd/tui.go` bootstraps the screen registry with `registry.Bootstrap()`.
+3. `(*TUI).Run(...)` creates `mvc.State` and starts Bubble Tea with `framework.RootModel`.
+4. `RootModel` is responsible for:
    - Terminal window sizing
    - Key-level global controls (`/` log drawer, `ctrl+c` quit)
    - Navigation stack (`push`, `pop`, `replace`, `quit`)
    - Rendering a common shell (main area, sidebar/header, editor hint, status/help)
-4. Active screen handles screen-local `Init`, `Update`, and `View`.
+5. Active screen handles screen-local `Init`, `Update`, and `View`.
 
 ### Navigation Model
 
@@ -57,7 +58,8 @@ Prefer deterministic screen behavior:
 - `mvc/state.go`: immutable shared dependencies for screens
 - `mvc/pagestate.go`: per-screen mutable UI state + telemetry span lifecycle
 - `mvc/transition.go`: navigation command model
-- `screens/bootstrap.go`: registry wiring and visible menu entries
+- `screens/bootstrap.go`: core screen wiring and visible menu entries
+- `registry/bootstrap.go`: full registry wiring, including settings/admin screens
 - `screens/*.go`: screen implementations
 - `components/`: reusable view helpers (menu list, status bar)
 - `layout/layout.go`: responsive terminal region solver
@@ -69,11 +71,12 @@ Prefer deterministic screen behavior:
 
 1. Add a key constant in `screens/keys.go`.
 2. Implement a new file in `screens/` satisfying `Screen`.
-3. Register it in `screens/bootstrap.go`:
+3. Register core routes in `screens/bootstrap.go`:
    - Use `reg.Register(item, screen)` if it should appear in the main menu.
    - Use `reg.AddScreen(screen)` for hidden/detail routes.
-4. Return navigation transitions from existing screens where appropriate.
-5. Add/adjust tests for any layout/state helper logic.
+4. Register cross-package routes in `registry/bootstrap.go` (for example settings/admin screens).
+5. Return navigation transitions from existing screens where appropriate.
+6. Add/adjust tests for any layout/state helper logic.
 
 ### Preferred Screen Pattern
 

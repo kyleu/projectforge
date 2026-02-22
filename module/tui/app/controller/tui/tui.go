@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/tui/framework"
@@ -20,19 +21,23 @@ type TUI struct {
 
 	logger util.Logger
 
+	registry *screens.Registry
+
 	logsMu sync.RWMutex
 	logs   []string
 }
 
-func NewTUI(st *app.State, serverURL string, serverErr string, logger util.Logger) (*TUI, error) {
-	return InitTUI(&TUI{logger: logger, st: st, serverURL: serverURL, serverErr: serverErr})
+func NewTUI(st *app.State, serverURL string, serverErr string, registry *screens.Registry, logger util.Logger) (*TUI, error) {
+	return InitTUI(&TUI{logger: logger, st: st, serverURL: serverURL, serverErr: serverErr, registry: registry})
 }
 
 func (t *TUI) Run(ctx context.Context, logger util.Logger) error {
 	logger.Debugf("starting [%s] TUI...", util.AppName)
+	if t.registry == nil {
+		return errors.New("screen registry must be provided")
+	}
 	ts := mvc.NewState(ctx, t.st, t.serverURL, t.serverErr, logger, t.LastLogs)
-	registry := screens.Bootstrap(ts)
-	root, err := framework.NewRootModel(ts, registry, screens.KeyMainMenu)
+	root, err := framework.NewRootModel(ts, t.registry, screens.KeyMainMenu)
 	if err != nil {
 		return err
 	}

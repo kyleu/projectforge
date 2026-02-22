@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap/zapcore"
 
 	"{{{ .Package }}}/app/controller/tui"
+	"{{{ .Package }}}/app/controller/tui/registry"
 	"{{{ .Package }}}/app/lib/log"
 	"{{{ .Package }}}/app/util"
 )
@@ -79,7 +80,8 @@ func runTUI(ctx context.Context, flags *Flags) error {
 		}
 	}
 
-	t, err = tui.NewTUI(st, serverURL, serverErr, logger)
+	reg := registry.Bootstrap(st, logger)
+	t, err = tui.NewTUI(st, serverURL, serverErr, reg, logger)
 	if err != nil {
 		return err
 	}
