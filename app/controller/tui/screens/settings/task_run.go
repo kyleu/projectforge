@@ -16,6 +16,11 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
+type taskRunMsg struct {
+	result *task.Result
+	err    error
+}
+
 type taskRunScreen struct {
 	form     *huh.Form
 	task     *task.Task
