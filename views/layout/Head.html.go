@@ -82,7 +82,7 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 	qw422016.N().S(`
   <link rel="icon" href="`)
 //line views/layout/Head.html:20
-	qw422016.E().S(assets.URL(`logo.svg`))
+	qw422016.E().S(assets.URL(`logo.svg`, ps.Logger))
 //line views/layout/Head.html:20
 	qw422016.N().S(`" type="image/svg+xml">
 `)
@@ -109,7 +109,7 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 			qw422016.N().S(`
   `)
 //line views/layout/Head.html:24
-			qw422016.N().S(assets.StylesheetElement(`client.css`))
+			qw422016.N().S(assets.StylesheetElement(`client.css`, ps.Logger))
 //line views/layout/Head.html:24
 		}
 //line views/layout/Head.html:24
@@ -118,7 +118,7 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 			qw422016.N().S(`
   `)
 //line views/layout/Head.html:25
-			qw422016.N().S(assets.ScriptElement(`client.js`, false))
+			qw422016.N().S(assets.ScriptElement(`client.js`, false, ps.Logger))
 //line views/layout/Head.html:25
 		}
 //line views/layout/Head.html:25

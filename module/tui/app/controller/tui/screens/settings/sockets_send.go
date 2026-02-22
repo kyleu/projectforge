@@ -1,3 +1,4 @@
+// $PF_HAS_MODULE(websocket)$
 package settings
 
 import (
@@ -6,12 +7,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/huh"
 
-	"projectforge.dev/projectforge/app/controller/tui/layout"
-	"projectforge.dev/projectforge/app/controller/tui/mvc"
-	"projectforge.dev/projectforge/app/controller/tui/screens"
-	"projectforge.dev/projectforge/app/controller/tui/style"
-	"projectforge.dev/projectforge/app/lib/websocket"
-	"projectforge.dev/projectforge/app/util"
+	"{{{ .Package }}}/app/controller/tui/layout"
+	"{{{ .Package }}}/app/controller/tui/mvc"
+	"{{{ .Package }}}/app/controller/tui/screens"
+	"{{{ .Package }}}/app/controller/tui/style"
+	"{{{ .Package }}}/app/lib/websocket"
+	"{{{ .Package }}}/app/util"
 )
 
 type socketSendScreen struct {

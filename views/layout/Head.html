@@ -17,12 +17,12 @@
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
-  <link rel="icon" href="{%s assets.URL(`logo.svg`) %}" type="image/svg+xml">
+  <link rel="icon" href="{%s assets.URL(`logo.svg`, ps.Logger) %}" type="image/svg+xml">
 {% if !ps.NoStyle %}  <style>
     {%s= thm.CSS(2) %}  </style>{% endif %}{%- if ps.HideHeader && ps.HideMenu -%}{%= inlineResources(ps.NoStyle, ps.NoScript) %}{%- else -%}
 {% if !ps.NoStyle %}
-  {%s= assets.StylesheetElement(`client.css`) %}{% endif %}{% if !ps.NoScript %}
-  {%s= assets.ScriptElement(`client.js`, false) %}{% endif %}
+  {%s= assets.StylesheetElement(`client.css`, ps.Logger) %}{% endif %}{% if !ps.NoScript %}
+  {%s= assets.ScriptElement(`client.js`, false, ps.Logger) %}{% endif %}
 {%- endif -%}
 {% endfunc %}
 

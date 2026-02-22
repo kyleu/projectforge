@@ -6,6 +6,13 @@
   "authorEmail": "kyle@kyleu.com",
   "license": "CC0",
   "sourcecode": "https://github.com/kyleu/projectforge/tree/main/module/tui",
+  "configVars": [
+    {
+      "key": "tui_theme_mode",
+      "type": "string",
+      "description": "theme mode for terminal UI, one of [`auto`, `dark`, `light`], defaults to `auto`"
+    }
+  ],
   "priority": 40,
   "technology": ["bubbletea"]
 }

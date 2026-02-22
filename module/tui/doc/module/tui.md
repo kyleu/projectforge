@@ -94,8 +94,11 @@ This helper rebuilds and reruns the TUI on file changes (requires `watchexec`).
 
 ## Configuration
 
-This module does not introduce module-specific environment variables.
-Runtime behavior is primarily controlled via existing CLI flags (`--addr`, `--port`, `--working_dir`, `--config_dir`, `--verbose`).
+Module-specific environment variables:
+
+- `tui_theme_mode`: one of `auto`, `dark`, `light` (defaults to `auto`), controls which side of the app theme (`Light` or `Dark`) is used in the terminal UI. `auto` uses terminal background detection from Lip Gloss/termenv.
+
+Runtime behavior is also controlled via existing CLI flags (`--addr`, `--port`, `--working_dir`, `--config_dir`, `--verbose`).
 
 ## Dependencies
 

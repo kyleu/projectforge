@@ -9,6 +9,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
+	"{{{ .Package }}}/app/controller/tui/style"
+	"{{{ .Package }}}/app/lib/theme"
 	"{{{ .Package }}}/app/util"
 )
 
@@ -39,22 +41,23 @@ func (t *TUI) LastLogs(limit int) []string {
 	return ret
 }
 
-var (
-	logTimeStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	logLoggerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("39"))
-	logCallerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
-	logFieldsStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111"))
-	logStackStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("99"))
-)
-
 func formatLogLine(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap) string {
 	levelText := strings.ToUpper(strings.TrimSpace(level))
 	if levelText == "" {
 		levelText = "INFO"
 	}
+	bg := logBackgroundColor()
+	logTimeStyle := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Foreground(lipgloss.Color("240"))
+	logLoggerStyle := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Foreground(lipgloss.Color("39"))
+	logCallerStyle := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Foreground(lipgloss.Color("244"))
+	logFieldsStyle := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Foreground(lipgloss.Color("111"))
+	logStackStyle := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Foreground(lipgloss.Color("99"))
+	logMessageStyle := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Foreground(lipgloss.Color("252"))
+	logSeparator := lipgloss.NewStyle().Background(lipgloss.Color(bg)).Render(" ")
+
 	pieces := []string{
 		logTimeStyle.Render(occurred.Format("15:04:05.000")),
-		renderLevel(levelText),
+		renderLevel(levelText, bg),
 	}
 
 	loggerName = strings.TrimSpace(loggerName)
@@ -64,7 +67,7 @@ func formatLogLine(level string, occurred time.Time, loggerName string, message 
 
 	msg := inlineText(message)
 	if msg != "" {
-		pieces = append(pieces, msg)
+		pieces = append(pieces, logMessageStyle.Render(msg))
 	}
 
 	if c := shortCaller(caller); c != "" {
@@ -77,11 +80,11 @@ func formatLogLine(level string, occurred time.Time, loggerName string, message 
 		pieces = append(pieces, logStackStyle.Render(s))
 	}
 
-	return strings.Join(pieces, " ")
+	return strings.Join(pieces, logSeparator)
 }
 
-func renderLevel(level string) string {
-	base := lipgloss.NewStyle().Bold(true)
+func renderLevel(level string, bg string) string {
+	base := lipgloss.NewStyle().Bold(true).Background(lipgloss.Color(bg))
 	switch strings.ToLower(level) {
 	case "debug":
 		base = base.Foreground(lipgloss.Color("141"))
@@ -93,6 +96,13 @@ func renderLevel(level string) string {
 		base = base.Foreground(lipgloss.Color("42"))
 	}
 	return base.Render(fmt.Sprintf("%-5s", level))
+}
+
+func logBackgroundColor() string {
+	if style.IsDarkMode() {
+		return theme.Default.Dark.Background
+	}
+	return theme.Default.Light.Background
 }
 
 func shortCaller(caller util.ValueMap) string {

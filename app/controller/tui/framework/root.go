@@ -108,7 +108,7 @@ func (m *RootModel) View() string {
 	help := curr.screen.Help(m.state, curr.page)
 	help.Short = append(help.Short, "/: logs")
 	body := curr.screen.View(m.state, curr.page, rects)
-	main := lipgloss.NewStyle().
+	main := m.styles.App.
 		Width(max(1, rects.Main.W)).
 		Height(max(1, rects.Main.H)).
 		MaxWidth(max(1, rects.Main.W)).
@@ -127,7 +127,7 @@ func (m *RootModel) View() string {
 	}
 
 	editor := m.styles.Header.Width(max(1, rects.Editor.W)).Render(m.editorHint(curr))
-	status := lipgloss.NewStyle().
+	status := m.styles.App.Padding(0).
 		Width(max(1, rects.Status.W)).
 		Height(max(1, rects.Status.H)).
 		MaxWidth(max(1, rects.Status.W)).
@@ -293,7 +293,7 @@ func (m *RootModel) sidebarContent(curr *navEntry, rects layout.Rects) string {
 }
 
 func (m *RootModel) editorHint(curr *navEntry) string {
-	return m.styles.Muted.Render(fmt.Sprintf("active: %s | use arrows + enter, b to go back", curr.page.Title))
+	return fmt.Sprintf("active: %s | use arrows + enter, b to go back", curr.page.Title)
 }
 
 func singleLine(s string) string {

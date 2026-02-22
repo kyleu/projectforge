@@ -195,10 +195,10 @@ func (p *PageState) Extra(key string) string {
 	return util.Choose(ok, ret, "")
 }
 
-func (p *PageState) AddHeaderScript(path string, deferFlag bool) {
-	p.HeaderContent += "\n  " + assets.ScriptElement(path, deferFlag)
+func (p *PageState) AddHeaderScript(path string, deferFlag bool, logger util.Logger) {
+	p.HeaderContent += "\n  " + assets.ScriptElement(path, deferFlag, logger)
 }
 
-func (p *PageState) AddHeaderStylesheet(path string) {
-	p.HeaderContent += "\n  " + assets.StylesheetElement(path)
+func (p *PageState) AddHeaderStylesheet(path string, logger util.Logger) {
+	p.HeaderContent += "\n  " + assets.StylesheetElement(path, logger)
 }

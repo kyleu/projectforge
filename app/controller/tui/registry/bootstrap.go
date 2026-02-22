@@ -27,5 +27,6 @@ func Bootstrap(st *app.State, logger util.Logger) *screens.Registry {
 	reg.AddScreen(screens.NewResultsScreen())
 
 	settings.Register(reg)
+
 	return reg
 }

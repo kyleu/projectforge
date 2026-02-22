@@ -52,11 +52,11 @@ func renderMenuRow(title string, desc string, width int, titleStyle lipgloss.Sty
 		descOut = truncateEllipsis(desc, remaining-runeLen(sep))
 	}
 
-	ret := prefix + titleStyle.Render(titleOut)
+	ret := titleStyle.Render(prefix + titleOut)
 	if descOut != "" {
-		ret += sep + descStyle.Render(descOut)
+		ret += descStyle.Render(sep + descOut)
 	}
-	return ret + suffix
+	return ret + descStyle.Render(suffix)
 }
 
 func truncateEllipsis(s string, width int) string {

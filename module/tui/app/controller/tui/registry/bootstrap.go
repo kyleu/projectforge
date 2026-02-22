@@ -4,6 +4,7 @@ package registry
 import (
 	"{{{ .Package }}}/app"
 	"{{{ .Package }}}/app/controller/tui/screens"
+	"{{{ .Package }}}/app/controller/tui/screens/settings"
 	"{{{ .Package }}}/app/lib/menu"
 	"{{{ .Package }}}/app/util"
 )
@@ -19,6 +20,8 @@ func Bootstrap(st *app.State, logger util.Logger) *screens.Registry {
 	reg.Register(aboutScreenItem, screens.NewAboutScreen())
 
 	// reg.AddScreen(SomeNewScreen())
+
+	settings.Register(reg)
 
 	return reg
 }

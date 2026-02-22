@@ -25,5 +25,5 @@
     document.getElementById("load-status").innerText = "Loaded in [" + ms + "ms]";
   }
 </script>
-{%= components.WASMScript(nil) %}
+{%= components.WASMScript(nil, ps.Logger) %}
 {% endfunc %}

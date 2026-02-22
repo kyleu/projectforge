@@ -88,7 +88,7 @@ func TestPageStateExtra(t *testing.T) {
 func TestPageStateAddHeaderScript(t *testing.T) {
 	t.Parallel()
 	ps := &cutil.PageState{}
-	ps.AddHeaderScript("client.js", true)
+	ps.AddHeaderScript("client.js", true, nil)
 
 	if !strings.Contains(ps.HeaderContent, "script") || !strings.Contains(ps.HeaderContent, "client.js") {
 		t.Fatalf("HeaderContent was [%v]", ps.HeaderContent)

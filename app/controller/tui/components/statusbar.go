@@ -16,13 +16,12 @@ func RenderStatus(status string, err string, shortHelp []string, serverURL strin
 }
 
 func renderTopStatus(status string, err string, st style.Styles) string {
-	leftText := status
+	leftText := strings.TrimSpace(status)
 	leftStyle := st.Status.Padding(0)
 	if err != "" {
-		leftText = err
+		leftText = strings.TrimSpace(err)
 		leftStyle = st.Error.Padding(0)
 	}
-	leftText = strings.TrimSpace(leftText)
 	if leftText == "" {
 		leftText = " "
 	}
@@ -41,7 +40,7 @@ func renderBottomStatus(helpText string, serverURL string, serverErr string, wid
 		if rightText == "" {
 			return helpStyle.Render(helpText)
 		}
-		return helpStyle.Render(helpText) + " " + rightStyle.Render(rightText)
+		return helpStyle.Render(helpText) + helpStyle.Render(" ") + rightStyle.Render(rightText)
 	}
 
 	helpText = truncateStatusEllipsis(helpText, width)
@@ -63,7 +62,7 @@ func renderBottomStatus(helpText string, serverURL string, serverErr string, wid
 	if gap < 1 {
 		gap = 1
 	}
-	return left + strings.Repeat(" ", gap) + right
+	return left + helpStyle.Render(strings.Repeat(" ", gap)) + right
 }
 
 func lastErrorSegment(s string) string {

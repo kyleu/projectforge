@@ -250,7 +250,11 @@ func (s *DocumentationScreen) renderMarkdownCmd(path string, width int) tea.Cmd 
 			return docRenderMsg{path: path, err: err}
 		}
 		// Fixed style avoids auto-style terminal probing delays.
-		r, err := glamour.NewTermRenderer(glamour.WithStandardStyle("dark"), glamour.WithWordWrap(max(24, width)))
+		glamourStyle := "light"
+		if style.IsDarkMode() {
+			glamourStyle = "dark"
+		}
+		r, err := glamour.NewTermRenderer(glamour.WithStandardStyle(glamourStyle), glamour.WithWordWrap(max(24, width)))
 		if err != nil {
 			return docRenderMsg{path: path, err: err}
 		}

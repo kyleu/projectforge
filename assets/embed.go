@@ -46,18 +46,22 @@ func Embed(path string) (*Entry, error) {
 	return e, nil
 }
 
-func URL(path string) string {
-	e, _ := Embed(path)
+func URL(path string, logger util.Logger) string {
+	e, err := Embed(path)
+	if err != nil {
+		logger.Warnf("unable to find asset [%s]: %s", path, err.Error())
+		return fmt.Sprintf("/assets/%s", path)
+	}
 	return fmt.Sprintf("/assets/%s?hash=%s", path, e.Hash)
 }
 
-func ScriptElement(path string, deferFlag bool) string {
+func ScriptElement(path string, deferFlag bool, logger util.Logger) string {
 	if deferFlag {
-		return fmt.Sprintf("<script src=%q defer=\"defer\"></script>", URL(path))
+		return fmt.Sprintf("<script src=%q defer=\"defer\"></script>", URL(path, logger))
 	}
-	return fmt.Sprintf("<script src=%q></script>", URL(path))
+	return fmt.Sprintf("<script src=%q></script>", URL(path, logger))
 }
 
-func StylesheetElement(path string) string {
-	return fmt.Sprintf(`<link rel="stylesheet" media="screen" href=%q>`, URL(path))
+func StylesheetElement(path string, logger util.Logger) string {
+	return fmt.Sprintf(`<link rel="stylesheet" media="screen" href=%q>`, URL(path, logger))
 }
