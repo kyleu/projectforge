@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "type": "module",
   "description": "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX.",
   "repository": {
