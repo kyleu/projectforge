@@ -58,7 +58,6 @@ Prefer deterministic screen behavior:
 - `mvc/state.go`: immutable shared dependencies for screens
 - `mvc/pagestate.go`: per-screen mutable UI state + telemetry span lifecycle
 - `mvc/transition.go`: navigation command model
-- `screens/bootstrap.go`: core screen wiring and visible menu entries
 - `registry/bootstrap.go`: full registry wiring, including settings/admin screens
 - `screens/*.go`: screen implementations
 - `components/`: reusable view helpers (menu list, status bar)
@@ -71,12 +70,11 @@ Prefer deterministic screen behavior:
 
 1. Add a key constant in `screens/keys.go`.
 2. Implement a new file in `screens/` satisfying `Screen`.
-3. Register core routes in `screens/bootstrap.go`:
+3. Register core routes in `registry/bootstrap.go`:
    - Use `reg.Register(item, screen)` if it should appear in the main menu.
    - Use `reg.AddScreen(screen)` for hidden/detail routes.
-4. Register cross-package routes in `registry/bootstrap.go` (for example settings/admin screens).
-5. Return navigation transitions from existing screens where appropriate.
-6. Add/adjust tests for any layout/state helper logic.
+4. Return navigation transitions from existing screens where appropriate.
+5. Add/adjust tests for any layout/state helper logic.
 
 ### Preferred Screen Pattern
 

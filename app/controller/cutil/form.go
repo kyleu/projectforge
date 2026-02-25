@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"projectforge.dev/projectforge/app/util"
 )

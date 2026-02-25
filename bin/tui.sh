@@ -50,4 +50,4 @@ watchexec \
   --ignore "**/*.html.go" \
   --ignore "**/*_test.go" \
   --shell=bash \
-  -- "make build && ./build/debug/projectforge tui"
+  -- "make build && ./build/debug/projectforge tui $@"

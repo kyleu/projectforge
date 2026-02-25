@@ -103,7 +103,7 @@ Runtime behavior is also controlled via existing CLI flags (`--addr`, `--port`, 
 ## Dependencies
 
 - Requires a non-WASM target (native terminal runtime)
-- Uses Charmbracelet libraries: Bubble Tea, Lip Gloss, Glamour
+- Uses Charmbracelet libraries: Bubble Tea, Lip Gloss, Huh
 - Integrates with existing app services (projects, modules, doctor checks, git helpers)
 
 ## Source Code

@@ -55,6 +55,7 @@ func (s *AboutScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.T
 }
 
 func (s *AboutScreen) SidebarContent(ts *mvc.State, _ *mvc.PageState, _ layout.Rects) (string, bool) {
+	styles := style.New(ts.Theme)
 	started := "unknown"
 	version := "unknown"
 	if ts.App != nil {
@@ -65,10 +66,10 @@ func (s *AboutScreen) SidebarContent(ts *mvc.State, _ *mvc.PageState, _ layout.R
 		"About",
 		"",
 	}
-	lines = appendSidebarProp(lines, "name", util.AppName)
-	lines = appendSidebarProp(lines, "version", version)
-	lines = appendSidebarProp(lines, "runtime", fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH))
-	lines = appendSidebarProp(lines, "started", started)
+	lines = appendSidebarProp(lines, styles, "name", util.AppName)
+	lines = appendSidebarProp(lines, styles, "version", version)
+	lines = appendSidebarProp(lines, styles, "runtime", fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH))
+	lines = appendSidebarProp(lines, styles, "started", started)
 	lines = append(lines, "", "links:", util.AppURL, util.AppSource)
 	return strings.Join(lines, "\n"), true
 }

@@ -2,8 +2,6 @@ package settings
 
 import (
 	"fmt"
-	"os/exec"
-	"runtime"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -85,7 +83,7 @@ func (s *linkListScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (
 	if m, ok := msg.(tea.KeyMsg); ok && m.String() == "enter" && len(s.items) > 0 {
 		item := s.items[menuClamp(ps.Cursor, len(s.items))]
 		url := s.openLink(ts, item)
-		if err := openInBrowser(url); err != nil {
+		if err := screens.OpenInBrowser(url); err != nil {
 			return mvc.Stay(), nil, err
 		}
 		ps.SetStatus("Opened %s", url)
@@ -104,19 +102,6 @@ func (s *linkListScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rec
 
 func (s *linkListScreen) Help(_ *mvc.State, _ *mvc.PageState) screens.HelpBindings {
 	return screens.HelpBindings{Short: []string{"up/down: move", "enter: open in browser", "b: back"}}
-}
-
-func openInBrowser(url string) error {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "darwin":
-		cmd = exec.Command("open", url)
-	case "windows":
-		cmd = exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
-	default:
-		cmd = exec.Command("xdg-open", url)
-	}
-	return cmd.Start()
 }
 
 func joinURLPath(base string, pth string) string {

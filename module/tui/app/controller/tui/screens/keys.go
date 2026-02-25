@@ -2,12 +2,14 @@
 package screens
 
 const (
-	KeyMainMenu = "mainmenu"
-	KeyProjects = "projects"
-	KeyDocs     = "docs"
-	KeyProject  = "project"
-	KeyResults  = "results"
-	KeyDoctor   = "doctor"
-	KeySettings = "settings"
-	KeyAbout    = "about"
+	KeyMainMenu    = "mainmenu"
+	KeyProjects    = "projects"
+	KeyDocs        = "docs"
+	KeyFileBrowser = "filebrowser"
+	KeyFileViewer  = "fileviewer"
+	KeyProject     = "project"
+	KeyResults     = "results"
+	KeyDoctor      = "doctor"
+	KeySettings    = "settings"
+	KeyAbout       = "about"
 )

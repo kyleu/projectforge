@@ -2,12 +2,45 @@ package screens
 
 import (
 	"fmt"
+	"os/exec"
+	"runtime"
+	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/style"
 )
+
+func renderLines(lines []string, width int) string {
+	ret := make([]string, 0, len(lines))
+	for _, line := range lines {
+		ret = append(ret, truncateLine(singleLine(line), width))
+	}
+	return strings.Join(ret, "\n")
+}
+
+func truncateLine(s string, width int) string {
+	if width < 1 {
+		return ""
+	}
+	r := []rune(s)
+	if len(r) <= width {
+		return s
+	}
+	if width == 1 {
+		return "…"
+	}
+	return string(r[:width-1]) + "…"
+}
+
+func singleLine(s string) string {
+	return strings.Join(strings.Fields(s), " ")
+}
+
+func runeLen(s string) int {
+	return len([]rune(s))
+}
 
 func mainPanelOuterHeight(rects layout.Rects) int {
 	if rects.Compact {
@@ -54,10 +87,20 @@ func Bounded(st lipgloss.Style, outerW int, outerH int, content string) string {
 		Render(content)
 }
 
-func appendSidebarProp(lines []string, key string, value any) []string {
-	label := lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.AdaptiveColor{Light: "#4c6475", Dark: "#8ba3b5"}).
-		Render(key)
+func appendSidebarProp(lines []string, styles style.Styles, key string, value any) []string {
+	label := styles.Muted.Bold(true).Render(key)
 	return append(lines, label, fmt.Sprint(value), "")
+}
+
+func OpenInBrowser(url string) error {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "darwin":
+		cmd = exec.Command("open", url)
+	case "windows":
+		cmd = exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
+	default:
+		cmd = exec.Command("xdg-open", url)
+	}
+	return cmd.Start()
 }

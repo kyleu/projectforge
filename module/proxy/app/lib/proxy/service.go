@@ -86,7 +86,9 @@ func (s *Service) Handle(ctx context.Context, svc string, w http.ResponseWriter,
 	}
 
 	rSz, sz := util.ByteSizeSI(int64(len(rspString))), util.ByteSizeSI(int64(size))
-	logger.Infof("response [%d] received [%s/%s] from [%s] url [%s]", rsp.StatusCode, rSz, sz, svc, req.URL.String())
+	safeURL := strings.ReplaceAll(strings.ReplaceAll(req.URL.String(), "\n", ""), "\r", "")
+	safeSvc := strings.ReplaceAll(strings.ReplaceAll(svc, "\n", ""), "\r", "")
+	logger.Infof("response [%d] received [%s/%s] from [%s] url [%s]", rsp.StatusCode, rSz, sz, safeSvc, safeURL)
 	return nil
 }
 

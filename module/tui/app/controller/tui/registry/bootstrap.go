@@ -19,6 +19,9 @@ func Bootstrap(st *app.State, logger util.Logger) *screens.Registry {
 	aboutScreenItem := &menu.Item{Key: screens.KeyAbout, Title: "About", Description: "Information about " + util.AppName, Icon: "info", Route: screens.KeyAbout}
 	reg.Register(aboutScreenItem, screens.NewAboutScreen())
 
+	reg.AddScreen(screens.NewFileBrowserScreen())
+	reg.AddScreen(screens.NewFileViewerScreen())
+
 	// reg.AddScreen(SomeNewScreen())
 
 	settings.Register(reg)

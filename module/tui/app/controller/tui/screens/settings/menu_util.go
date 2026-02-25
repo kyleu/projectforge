@@ -20,6 +20,14 @@ func menuClamp(cursor int, count int) int {
 }
 
 func menuDelta(msg tea.Msg) (int, bool) {
+	if m, ok := msg.(tea.MouseMsg); ok && m.Action == tea.MouseActionPress {
+		switch m.Button {
+		case tea.MouseButtonWheelUp:
+			return -1, true
+		case tea.MouseButtonWheelDown:
+			return 1, true
+		}
+	}
 	m, ok := msg.(tea.KeyMsg)
 	if !ok {
 		return 0, false

@@ -53,18 +53,19 @@ func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 	return mvc.Stay(), nil, nil
 }
 
-func (s *MainMenuScreen) SidebarContent(_ *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
+func (s *MainMenuScreen) SidebarContent(ts *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
+	styles := style.New(ts.Theme)
 	items := s.registry.Menu().Visible()
 	cursor := clampMenuCursor(ps.Cursor, len(items))
 
 	lines := []string{fmt.Sprintf("%s TUI", util.AppName), ""}
-	lines = appendSidebarProp(lines, "sections", len(items))
+	lines = appendSidebarProp(lines, styles, "sections", len(items))
 	if len(items) > 0 {
 		item := items[cursor]
-		lines = appendSidebarProp(lines, "selected", item.Title)
-		lines = appendSidebarProp(lines, "route", item.Route)
+		lines = appendSidebarProp(lines, styles, "selected", item.Title)
+		lines = appendSidebarProp(lines, styles, "route", item.Route)
 		if item.Description != "" {
-			lines = appendSidebarProp(lines, "about", item.Description)
+			lines = appendSidebarProp(lines, styles, "about", item.Description)
 		}
 	}
 	lines = append(lines, "", "keys:", "up/down move", "enter open", "q quit")

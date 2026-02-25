@@ -28,6 +28,7 @@ const (
 	dataViewportHeight    = "viewport_height"
 	keyGroupBuild         = "group:build"
 	keyGroupGit           = "group:git"
+	keyProjectFiles       = "project:files"
 	prefixBuildSubActions = "action:build:"
 	maxProjectRows        = 24
 )
@@ -88,13 +89,14 @@ func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 		return s.updatePrompt(ps, prj, msg)
 	}
 
+	if delta, moved := menuMoveDelta(msg); moved {
+		s.moveCursor(ps, len(choices), delta)
+		return mvc.Stay(), nil, nil
+	}
+
 	switch m := msg.(type) {
 	case tea.KeyMsg:
 		switch m.String() {
-		case "up", "k":
-			s.moveCursor(ps, len(choices), -1)
-		case "down", "j":
-			s.moveCursor(ps, len(choices), 1)
 		case "enter", "r", " ":
 			if prj == nil || len(choices) == 0 {
 				return mvc.Stay(), nil, nil
@@ -112,6 +114,9 @@ func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 			if !choice.runnable {
 				ps.SetStatus("This row is not executable")
 				return mvc.Stay(), nil, nil
+			}
+			if choice.key == keyProjectFiles {
+				return mvc.Push(KeyFileBrowser, fileBrowserData("Project Files", prj.Path, prj.Path)), nil, nil
 			}
 			if requiresInput(choice) {
 				startInputPrompt(ps, choice)
@@ -168,11 +173,16 @@ func (s *ProjectScreen) Help(_ *mvc.State, ps *mvc.PageState) HelpBindings {
 func (s *ProjectScreen) choices() []actionChoice {
 	ret := make([]actionChoice, 0, 40)
 	for _, t := range action.ProjectTypes {
+		// Build is available in the expandable Build section below.
+		if t.Matches(action.TypeBuild) {
+			continue
+		}
 		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description, runnable: true})
 	}
-	for _, t := range []action.Type{action.TypeDebug, action.TypeRules, action.TypeSVG} {
+	for _, t := range []action.Type{action.TypeRules, action.TypeSVG} {
 		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description, runnable: true})
 	}
+	ret = append(ret, actionChoice{key: keyProjectFiles, title: "Files", description: "Browse project files", runnable: true})
 	ret = append(ret, actionChoice{key: keyGroupBuild, title: "Build", description: "Build phases", runnable: false})
 	for _, b := range action.AllBuilds {
 		if b == nil {
@@ -438,34 +448,4 @@ func (s *ProjectScreen) viewportWindow(ps *mvc.PageState, count int) (int, int) 
 	}
 	end := min(count, offset+height)
 	return offset, end
-}
-
-func renderLines(lines []string, width int) string {
-	ret := make([]string, 0, len(lines))
-	for _, line := range lines {
-		ret = append(ret, truncateLine(singleLine(line), width))
-	}
-	return strings.Join(ret, "\n")
-}
-
-func truncateLine(s string, width int) string {
-	if width < 1 {
-		return ""
-	}
-	r := []rune(s)
-	if len(r) <= width {
-		return s
-	}
-	if width == 1 {
-		return "…"
-	}
-	return string(r[:width-1]) + "…"
-}
-
-func singleLine(s string) string {
-	return strings.Join(strings.Fields(s), " ")
-}
-
-func runeLen(s string) int {
-	return len([]rune(s))
 }

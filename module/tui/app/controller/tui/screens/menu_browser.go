@@ -31,6 +31,14 @@ func moveMenuCursor(cursor int, count int, delta int) int {
 }
 
 func menuMoveDelta(msg tea.Msg) (int, bool) {
+	if m, ok := msg.(tea.MouseMsg); ok && m.Action == tea.MouseActionPress {
+		switch m.Button {
+		case tea.MouseButtonWheelUp:
+			return -1, true
+		case tea.MouseButtonWheelDown:
+			return 1, true
+		}
+	}
 	m, ok := msg.(tea.KeyMsg)
 	if !ok {
 		return 0, false

@@ -52,4 +52,4 @@ watchexec \
   --ignore "**/*.sql.go" \{{{ end}}}
   --ignore "**/*_test.go" \
   --shell=bash \
-  -- "make build && ./build/debug/{{{ .Exec }}} tui"
+  -- "make build && ./build/debug/{{{ .Exec }}} tui $@"

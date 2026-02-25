@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/glamour"
 
 	"{{{ .Package }}}/app/controller/cmenu"
 	"{{{ .Package }}}/app/controller/tui/components"
@@ -115,7 +114,7 @@ func (s *DocumentationScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Ms
 			syncDocsTitle(ps, s.stack)
 			ps.SetStatus("File: %s (loading...)", selected.Title)
 			s.loading = true
-			return mvc.Stay(), s.renderMarkdownCmd(docPath, s.currentRenderWidth()), nil
+			return mvc.Stay(), s.renderMarkdownCmd(docPath), nil
 		case "esc", "backspace", "b", "left", "h":
 			if s.activeFile != "" {
 				s.activeFile = ""
@@ -140,31 +139,32 @@ func (s *DocumentationScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Ms
 	return mvc.Stay(), nil, nil
 }
 
-func (s *DocumentationScreen) SidebarContent(_ *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
+func (s *DocumentationScreen) SidebarContent(ts *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
+	styles := style.New(ts.Theme)
 	lines := []string{"Documentation", ""}
 	if s.activeFile == "" {
 		items := s.currentItems()
 		cursor := clampMenuCursor(ps.Cursor, len(items))
-		lines = appendSidebarProp(lines, "folder", folderLabel(s.stack))
-		lines = appendSidebarProp(lines, "items", len(items))
+		lines = appendSidebarProp(lines, styles, "folder", folderLabel(s.stack))
+		lines = appendSidebarProp(lines, styles, "items", len(items))
 		if len(items) > 0 {
 			item := items[cursor]
 			kind := "file"
 			if len(item.Children) > 0 || item.Route == "" {
 				kind = "folder"
 			}
-			lines = appendSidebarProp(lines, "selected", item.Title)
-			lines = appendSidebarProp(lines, "type", kind)
+			lines = appendSidebarProp(lines, styles, "selected", item.Title)
+			lines = appendSidebarProp(lines, styles, "type", kind)
 		}
 		lines = append(lines, "", "keys:", "enter open", "b back")
 	} else {
-		lines = appendSidebarProp(lines, "file", s.activeFile)
+		lines = appendSidebarProp(lines, styles, "file", s.activeFile)
 		if s.loading {
-			lines = appendSidebarProp(lines, "status", "loading...")
+			lines = appendSidebarProp(lines, styles, "status", "loading...")
 		} else {
-			lines = appendSidebarProp(lines, "lines", len(s.lines))
+			lines = appendSidebarProp(lines, styles, "lines", len(s.lines))
 			if len(s.lines) > 0 {
-				lines = appendSidebarProp(lines, "at", min(len(s.lines), s.scroll+1))
+				lines = appendSidebarProp(lines, styles, "at", min(len(s.lines), s.scroll+1))
 			}
 		}
 		lines = append(lines, "", "keys:", "up/down scroll", "b back")
@@ -239,43 +239,15 @@ func (s *DocumentationScreen) moveScroll(delta int) {
 	}
 }
 
-func (s *DocumentationScreen) currentRenderWidth() int {
-	if s.viewportW > 0 {
-		return max(24, s.viewportW)
-	}
-	return 100
-}
-
-func (s *DocumentationScreen) renderMarkdownCmd(path string, width int) tea.Cmd {
+func (s *DocumentationScreen) renderMarkdownCmd(path string) tea.Cmd {
 	return func() tea.Msg {
 		data, err := doc.Content(path)
 		if err != nil {
 			return docRenderMsg{path: path, err: err}
 		}
-		// Fixed style avoids auto-style terminal probing delays.
-		glamourStyle := "light"
-		if style.IsDarkMode() {
-			glamourStyle = "dark"
-		}
-		r, err := glamour.NewTermRenderer(glamour.WithStandardStyle(glamourStyle), glamour.WithWordWrap(max(24, width)))
-		if err != nil {
-			return docRenderMsg{path: path, err: err}
-		}
-		out, err := r.Render(string(data))
-		if err != nil {
-			return docRenderMsg{path: path, err: err}
-		}
-		out = strings.TrimSpace(trimRightLines(out))
-		return docRenderMsg{path: path, lines: strings.Split(out, "\n")}
+		lines, _ := renderHighlightedFile(path, data)
+		return docRenderMsg{path: path, lines: lines}
 	}
-}
-
-func trimRightLines(in string) string {
-	lines := strings.Split(in, "\n")
-	for i, line := range lines {
-		lines[i] = strings.TrimRight(line, " \t")
-	}
-	return strings.Join(lines, "\n")
 }
 
 func syncDocsTitle(ps *mvc.PageState, stack []*menu.Item) {
