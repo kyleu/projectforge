@@ -87,7 +87,7 @@ func Bounded(st lipgloss.Style, outerW int, outerH int, content string) string {
 		Render(content)
 }
 
-func appendSidebarProp(lines []string, styles style.Styles, key string, value any) []string {
+func AppendSidebarProp(lines []string, styles style.Styles, key string, value any) []string {
 	label := styles.Muted.Bold(true).Render(key)
 	return append(lines, label, fmt.Sprint(value), "")
 }

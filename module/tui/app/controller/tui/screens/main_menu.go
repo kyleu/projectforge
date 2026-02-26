@@ -59,13 +59,13 @@ func (s *MainMenuScreen) SidebarContent(ts *mvc.State, ps *mvc.PageState, _ layo
 	cursor := clampMenuCursor(ps.Cursor, len(items))
 
 	lines := []string{fmt.Sprintf("%s TUI", util.AppName), ""}
-	lines = appendSidebarProp(lines, styles, "sections", len(items))
+	lines = AppendSidebarProp(lines, styles, "sections", len(items))
 	if len(items) > 0 {
 		item := items[cursor]
-		lines = appendSidebarProp(lines, styles, "selected", item.Title)
-		lines = appendSidebarProp(lines, styles, "route", item.Route)
+		lines = AppendSidebarProp(lines, styles, "selected", item.Title)
+		lines = AppendSidebarProp(lines, styles, "route", item.Route)
 		if item.Description != "" {
-			lines = appendSidebarProp(lines, styles, "about", item.Description)
+			lines = AppendSidebarProp(lines, styles, "about", item.Description)
 		}
 	}
 	lines = append(lines, "", "keys:", "up/down move", "enter open", "q quit")

@@ -81,8 +81,8 @@ nfpms:
 release:
   draft: false
   header: |
-    ## {{ .Version }} ({{ .Date }})
-    See {{{ .Info.Homepage }}} for download links and documentation
+    ## {{ .Version }} ({{ .Date }}){{{ if .Public }}}
+    See {{{ .Info.Homepage }}} for download links and documentation{{{ end }}}
     ## Main downloads
     - [Linux Intel 64 bit]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_linux_amd64.zip)
     - [MacOS Universal]({{{ .Info.Sourcecode }}}/releases/download/{{ .Tag }}/{{{ .Key }}}_{{ .Version }}_darwin_all.zip)
