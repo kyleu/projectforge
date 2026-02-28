@@ -1,11 +1,11 @@
 package screens
 
 import (
-	"fmt"
 	"path"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/controller/cmenu"
 	"projectforge.dev/projectforge/app/controller/tui/components"
@@ -60,18 +60,8 @@ func (s *DocumentationScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Ms
 	items := s.currentItems()
 	ps.Cursor = clampMenuCursor(ps.Cursor, len(items))
 
-	switch m := msg.(type) {
-	case docRenderMsg:
-		if m.path != s.activeFile {
-			return mvc.Stay(), nil, nil
-		}
-		s.loading = false
-		if m.err != nil {
-			return mvc.Stay(), nil, m.err
-		}
-		s.lines = m.lines
-		ps.SetStatus("File loaded")
-		return mvc.Stay(), nil, nil
+	if m, ok := msg.(docRenderMsg); ok {
+		return s.updateRenderMsg(ps, m)
 	}
 
 	if s.activeFile == "" {
@@ -86,56 +76,80 @@ func (s *DocumentationScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Ms
 	}
 
 	if m, ok := msg.(tea.KeyMsg); ok {
-		switch m.String() {
-		case "enter":
-			if s.activeFile != "" {
-				return mvc.Stay(), nil, nil
-			}
-			if len(items) == 0 {
-				return mvc.Stay(), nil, nil
-			}
-			selected := items[ps.Cursor]
-			if len(selected.Children) > 0 || selected.Route == "" {
-				s.stack = append(s.stack, selected)
-				s.cursorPath = append(s.cursorPath, 0)
-				ps.Cursor = 0
-				syncDocsTitle(ps, s.stack)
-				ps.SetStatus("Folder: %s", folderLabel(s.stack))
-				return mvc.Stay(), nil, nil
-			}
-			docPath, err := docPathFromRoute(selected.Route)
-			if err != nil {
-				return mvc.Stay(), nil, err
-			}
-			s.activeFile = docPath
-			s.scroll = 0
-			s.lines = nil
-			syncDocsTitle(ps, s.stack)
-			ps.SetStatus("File: %s (loading...)", selected.Title)
-			s.loading = true
-			return mvc.Stay(), s.renderMarkdownCmd(docPath), nil
-		case "esc", "backspace", "b", "left", "h":
-			if s.activeFile != "" {
-				s.activeFile = ""
-				s.scroll = 0
-				s.loading = false
-				s.lines = nil
-				syncDocsTitle(ps, s.stack)
-				ps.SetStatus("Folder: %s", folderLabel(s.stack))
-				return mvc.Stay(), nil, nil
-			}
-			if len(s.stack) > 0 {
-				s.stack = s.stack[:len(s.stack)-1]
-				s.cursorPath = s.cursorPath[:len(s.cursorPath)-1]
-				ps.Cursor = s.cursorPath[len(s.cursorPath)-1]
-				syncDocsTitle(ps, s.stack)
-				ps.SetStatus("Folder: %s", folderLabel(s.stack))
-				return mvc.Stay(), nil, nil
-			}
-			return mvc.Pop(), nil, nil
-		}
+		return s.updateKeyMsg(ps, items, m)
 	}
 	return mvc.Stay(), nil, nil
+}
+
+func (s *DocumentationScreen) updateRenderMsg(ps *mvc.PageState, m docRenderMsg) (mvc.Transition, tea.Cmd, error) {
+	if m.path != s.activeFile {
+		return mvc.Stay(), nil, nil
+	}
+	s.loading = false
+	if m.err != nil {
+		return mvc.Stay(), nil, m.err
+	}
+	s.lines = m.lines
+	ps.SetStatus("File loaded")
+	return mvc.Stay(), nil, nil
+}
+
+func (s *DocumentationScreen) updateKeyMsg(ps *mvc.PageState, items menu.Items, m tea.KeyMsg) (mvc.Transition, tea.Cmd, error) {
+	switch m.String() {
+	case KeyEnter:
+		return s.openSelected(ps, items)
+	case KeyEsc, KeyBackspace, "b", KeyLeft, "h":
+		return s.goBack(ps)
+	default:
+		return mvc.Stay(), nil, nil
+	}
+}
+
+func (s *DocumentationScreen) openSelected(ps *mvc.PageState, items menu.Items) (mvc.Transition, tea.Cmd, error) {
+	if s.activeFile != "" || len(items) == 0 {
+		return mvc.Stay(), nil, nil
+	}
+	selected := items[ps.Cursor]
+	if len(selected.Children) > 0 || selected.Route == "" {
+		s.stack = append(s.stack, selected)
+		s.cursorPath = append(s.cursorPath, 0)
+		ps.Cursor = 0
+		syncDocsTitle(ps, s.stack)
+		ps.SetStatus("Folder: %s", folderLabel(s.stack))
+		return mvc.Stay(), nil, nil
+	}
+	docPath, err := docPathFromRoute(selected.Route)
+	if err != nil {
+		return mvc.Stay(), nil, err
+	}
+	s.activeFile = docPath
+	s.scroll = 0
+	s.lines = nil
+	syncDocsTitle(ps, s.stack)
+	ps.SetStatus("File: %s (loading...)", selected.Title)
+	s.loading = true
+	return mvc.Stay(), s.renderMarkdownCmd(docPath), nil
+}
+
+func (s *DocumentationScreen) goBack(ps *mvc.PageState) (mvc.Transition, tea.Cmd, error) {
+	if s.activeFile != "" {
+		s.activeFile = ""
+		s.scroll = 0
+		s.loading = false
+		s.lines = nil
+		syncDocsTitle(ps, s.stack)
+		ps.SetStatus("Folder: %s", folderLabel(s.stack))
+		return mvc.Stay(), nil, nil
+	}
+	if len(s.stack) > 0 {
+		s.stack = s.stack[:len(s.stack)-1]
+		s.cursorPath = s.cursorPath[:len(s.cursorPath)-1]
+		ps.Cursor = s.cursorPath[len(s.cursorPath)-1]
+		syncDocsTitle(ps, s.stack)
+		ps.SetStatus("Folder: %s", folderLabel(s.stack))
+		return mvc.Stay(), nil, nil
+	}
+	return mvc.Pop(), nil, nil
 }
 
 func (s *DocumentationScreen) SidebarContent(ts *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
@@ -238,14 +252,14 @@ func (s *DocumentationScreen) moveScroll(delta int) {
 	}
 }
 
-func (s *DocumentationScreen) renderMarkdownCmd(path string) tea.Cmd {
+func (s *DocumentationScreen) renderMarkdownCmd(docPath string) tea.Cmd {
 	return func() tea.Msg {
-		data, err := doc.Content(path)
+		data, err := doc.Content(docPath)
 		if err != nil {
-			return docRenderMsg{path: path, err: err}
+			return docRenderMsg{path: docPath, err: err}
 		}
-		lines, _ := renderHighlightedFile(path, data)
-		return docRenderMsg{path: path, lines: lines}
+		lines, _ := renderHighlightedFile(docPath, data)
+		return docRenderMsg{path: docPath, lines: lines}
 	}
 }
 
@@ -276,11 +290,11 @@ func folderLabel(stack []*menu.Item) string {
 func docPathFromRoute(route string) (string, error) {
 	const prefix = "/docs/"
 	if !strings.HasPrefix(route, prefix) {
-		return "", fmt.Errorf("invalid docs route [%s]", route)
+		return "", errors.Errorf("route [%s] is not a docs route", route)
 	}
 	pth := strings.TrimPrefix(route, prefix)
 	if pth == "" {
-		return "", fmt.Errorf("invalid docs route [%s]", route)
+		return "", errors.New("cannot use empty path")
 	}
 	return pth + ".md", nil
 }

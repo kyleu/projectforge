@@ -1,11 +1,11 @@
 package settings
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
@@ -20,9 +20,10 @@ type taskDetailScreen struct{ task *task.Task }
 func (s *taskDetailScreen) Key() string { return keyTaskDetail }
 
 func (s *taskDetailScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
-	s.task = ts.App.Services.Task.RegisteredTasks.Get(ps.EnsureData().GetStringOpt("key"))
+	key := ps.EnsureData().GetStringOpt("key")
+	s.task = ts.App.Services.Task.RegisteredTasks.Get(key)
 	if s.task == nil {
-		return func() tea.Msg { return errMsg{err: errors.New("unable to find task")} }
+		return func() tea.Msg { return errMsg{err: errors.Errorf("unable to find task [%s]", key)} }
 	}
 	ps.Title = s.task.TitleSafe()
 	ps.SetStatus("enter: run task")
@@ -33,10 +34,10 @@ func (s *taskDetailScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (
 	if em, ok := msg.(errMsg); ok {
 		return mvc.Stay(), nil, em.err
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && m.String() == "enter" && s.task != nil {
+	if m, ok := msg.(tea.KeyMsg); ok && m.String() == screens.KeyEnter && s.task != nil {
 		return mvc.Push(keyTaskRun, util.ValueMap{"key": s.task.Key}), nil, nil
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	return mvc.Stay(), nil, nil

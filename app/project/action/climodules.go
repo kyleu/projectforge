@@ -22,7 +22,7 @@ func promptModules(current []string, mods module.Modules) ([]string, error) {
 		title = util.StringDefaultLinebreak + title
 	}
 	ret := append([]string{}, current...)
-	var opts []huh.Option[string]
+	opts := make([]huh.Option[string], 0, len(mods))
 	for _, mod := range mods.Sorted() {
 		opts = append(opts, huh.NewOption(fmt.Sprintf("%s: %s", mod.Key, mod.Description), mod.Key))
 	}

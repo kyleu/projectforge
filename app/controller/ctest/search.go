@@ -20,7 +20,7 @@ func searchTest(as *app.State, r *http.Request, ps *cutil.PageState) (layout.Pag
 
 	prjs := as.Services.Projects.Projects().WithModules("export")
 	ctxs := lo.Map(prjs, func(p *project.Project, _ int) *action.ResultContext {
-		ret := util.OK
+		ret := util.KeyOK
 		res := &action.Result{Project: p, Action: action.TypeTest, Status: "ok", Args: cfg, Data: ret}
 		return &action.ResultContext{Prj: p, Res: res}
 	})

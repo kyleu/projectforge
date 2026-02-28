@@ -32,10 +32,18 @@ func New(th *theme.Theme) Styles {
 		sidebarBorder = "#ffffff"
 	}
 	return Styles{
-		App:      app,
-		Header:   text.Bold(true).Padding(0, 1).Background(lipgloss.Color(c.NavBackground)).Foreground(lipgloss.Color(c.NavForeground)),
-		Panel:    app.BorderStyle(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color(c.BackgroundMuted)).BorderBackground(lipgloss.Color(c.Background)).Padding(0, 1),
-		Sidebar:  app.BorderStyle(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color(sidebarBorder)).BorderBackground(lipgloss.Color(c.Background)).Padding(0, 1),
+		App:    app,
+		Header: text.Bold(true).Padding(0, 1).Background(lipgloss.Color(c.NavBackground)).Foreground(lipgloss.Color(c.NavForeground)),
+		Panel: app.
+			BorderStyle(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color(c.BackgroundMuted)).
+			BorderBackground(lipgloss.Color(c.Background)).
+			Padding(0, 1),
+		Sidebar: app.
+			BorderStyle(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color(sidebarBorder)).
+			BorderBackground(lipgloss.Color(c.Background)).
+			Padding(0, 1),
 		Selected: text.Bold(true).Background(lipgloss.Color(c.NavBackground)).Foreground(lipgloss.Color(c.NavForeground)),
 		Muted:    app.Foreground(lipgloss.Color(c.ForegroundMuted)),
 		Status:   app.Foreground(lipgloss.Color(c.Success)).Padding(0, 1),

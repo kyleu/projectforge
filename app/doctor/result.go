@@ -23,7 +23,7 @@ type Result struct {
 }
 
 func NewResult(check *Check, key string, title string, summary string) *Result {
-	return &Result{Check: check, Key: key, Title: title, Status: util.OK, Summary: summary}
+	return &Result{Check: check, Key: key, Title: title, Status: util.KeyOK, Summary: summary}
 }
 
 func (p *Result) AddLog(msg string) *Result {

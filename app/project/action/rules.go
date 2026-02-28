@@ -16,7 +16,7 @@ const keyTag, keyTags = "tag", "tags"
 func onRules(pm *PrjAndMods) *Result {
 	ret := newResult(TypeRules, pm.Prj, pm.Cfg, pm.Logger)
 	if pm.Prj.ExportArgs == nil {
-		ret.Status = util.OK
+		ret.Status = util.KeyOK
 		return ret
 	}
 

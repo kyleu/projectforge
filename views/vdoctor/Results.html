@@ -37,7 +37,7 @@
       <a href="{%s x.Check.URL %}" title="{%s x.Check.URL %}" target="_blank" rel="noopener noreferrer">{%= components.SVGRef("link", 12, 12, "", ps) %}</a>
     </h3>
     <div class="mt"><em>{%s x.Summary %}</em></div>
-    {%- if x.Status == util.OK -%}
+    {%- if x.Status == util.KeyOK -%}
     <div class="mt success">{%s x.Status %}</div>
     {%- endif -%}
     {%- for _, e := range x.Errors -%}

@@ -1,6 +1,7 @@
 package screens
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"runtime"
@@ -10,6 +11,7 @@ import (
 
 	"{{{ .Package }}}/app/controller/tui/layout"
 	"{{{ .Package }}}/app/controller/tui/style"
+	"{{{ .Package }}}/app/util"
 )
 
 func renderLines(lines []string, width int) string {
@@ -29,9 +31,9 @@ func truncateLine(s string, width int) string {
 		return s
 	}
 	if width == 1 {
-		return "…"
+		return util.KeyEllipsis
 	}
-	return string(r[:width-1]) + "…"
+	return string(r[:width-1]) + util.KeyEllipsis
 }
 
 func singleLine(s string) string {
@@ -94,13 +96,14 @@ func AppendSidebarProp(lines []string, styles style.Styles, key string, value an
 
 func OpenInBrowser(url string) error {
 	var cmd *exec.Cmd
+	ctx := context.Background()
 	switch runtime.GOOS {
 	case "darwin":
-		cmd = exec.Command("open", url)
+		cmd = exec.CommandContext(ctx, "open", url)
 	case "windows":
-		cmd = exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
+		cmd = exec.CommandContext(ctx, "rundll32", "url.dll,FileProtocolHandler", url)
 	default:
-		cmd = exec.Command("xdg-open", url)
+		cmd = exec.CommandContext(ctx, "xdg-open", url)
 	}
 	return cmd.Start()
 }

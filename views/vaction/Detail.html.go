@@ -61,7 +61,7 @@ func StreamDetail(qw422016 *qt422016.Writer, as *app.State, cfg util.ValueMap, r
 		qw422016.N().S(`  <div class="card">
     <div class="right">`)
 //line views/vaction/Detail.html:22
-		qw422016.E().S(util.StringPlural(len(res.Errors), util.Error))
+		qw422016.E().S(util.StringPlural(len(res.Errors), util.KeyError))
 //line views/vaction/Detail.html:22
 		qw422016.N().S(`</div>
     <h3>`)

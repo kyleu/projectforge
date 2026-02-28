@@ -94,10 +94,9 @@ func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 		return mvc.Stay(), nil, nil
 	}
 
-	switch m := msg.(type) {
-	case tea.KeyMsg:
+	if m, ok := msg.(tea.KeyMsg); ok {
 		switch m.String() {
-		case "enter", "r", " ":
+		case KeyEnter, "r", " ":
 			if prj == nil || len(choices) == 0 {
 				return mvc.Stay(), nil, nil
 			}
@@ -123,7 +122,7 @@ func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 				return mvc.Stay(), nil, nil
 			}
 			return mvc.Push(KeyResults, actionData(prj, choice, "", true)), nil, nil
-		case "esc", "backspace", "b":
+		case KeyEsc, KeyBackspace, "b":
 			return mvc.Pop(), nil, nil
 		}
 	}
@@ -182,8 +181,11 @@ func (s *ProjectScreen) choices() []actionChoice {
 	for _, t := range []action.Type{action.TypeRules, action.TypeSVG} {
 		ret = append(ret, actionChoice{key: "action:" + t.Key, title: t.Title, description: t.Description, runnable: true})
 	}
-	ret = append(ret, actionChoice{key: keyProjectFiles, title: "Files", description: "Browse project files", runnable: true})
-	ret = append(ret, actionChoice{key: keyGroupBuild, title: "Build", description: "Build phases", runnable: false})
+	ret = append(
+		ret,
+		actionChoice{key: keyProjectFiles, title: "Files", description: "Browse project files", runnable: true},
+		actionChoice{key: keyGroupBuild, title: "Build", description: "Build phases", runnable: false},
+	)
 	for _, b := range action.AllBuilds {
 		if b == nil {
 			continue
@@ -201,7 +203,10 @@ func (s *ProjectScreen) choices() []actionChoice {
 		})
 	}
 	ret = append(ret, actionChoice{key: keyGroupGit, title: "Git", description: "Repository actions", runnable: false})
-	for _, ga := range []*git.Action{git.ActionStatus, git.ActionFetch, git.ActionPull, git.ActionPush, git.ActionCommit, git.ActionReset, git.ActionHistory, git.ActionMagic} {
+	gitActions := []*git.Action{
+		git.ActionStatus, git.ActionFetch, git.ActionPull, git.ActionPush, git.ActionCommit, git.ActionReset, git.ActionHistory, git.ActionMagic,
+	}
+	for _, ga := range gitActions {
 		ret = append(ret, actionChoice{key: "git:" + ga.Key, title: "-> " + ga.Title, description: ga.Description, runnable: true})
 	}
 	return ret
@@ -285,10 +290,10 @@ func (s *ProjectScreen) updatePrompt(ps *mvc.PageState, prj *project.Project, ms
 	}
 
 	switch k.String() {
-	case "esc":
+	case KeyEsc:
 		stopInputPrompt(ps)
 		return mvc.Stay(), nil, nil
-	case "backspace":
+	case KeyBackspace:
 		v := d.GetStringOpt(dataInputMessage)
 		r := []rune(v)
 		if len(r) > 0 {
@@ -300,7 +305,7 @@ func (s *ProjectScreen) updatePrompt(ps *mvc.PageState, prj *project.Project, ms
 			d[dataInputDryRun] = !d.GetBoolOpt(dataInputDryRun)
 		}
 		return mvc.Stay(), nil, nil
-	case "enter":
+	case KeyEnter:
 		inputMessage := strings.TrimSpace(d.GetStringOpt(dataInputMessage))
 		if inputMessage == "" {
 			ps.SetStatus("Message is required")

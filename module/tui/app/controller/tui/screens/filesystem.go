@@ -1,3 +1,4 @@
+// $PF_HAS_MODULE(filesystem)$
 package screens
 
 import (
@@ -15,7 +16,7 @@ import (
 	"github.com/charmbracelet/bubbles/filepicker"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/dustin/go-humanize"
+	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/controller/tui/layout"
 	"{{{ .Package }}}/app/controller/tui/mvc"
@@ -29,6 +30,7 @@ const (
 	dataFileExplorerStart = "file_explorer_start"
 	dataFileExplorerPath  = "file_explorer_path"
 	dataFileViewScroll    = "file_view_scroll"
+	parentDir             = ".."
 )
 
 type FileBrowserScreen struct {
@@ -105,7 +107,7 @@ func (s *FileBrowserScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg)
 		switch k.String() {
 		case "b":
 			return mvc.Pop(), nil, nil
-		case "esc", "backspace", "left", "h":
+		case KeyEsc, KeyBackspace, KeyLeft, "h":
 			if samePath(s.picker.CurrentDirectory, s.root) {
 				return mvc.Pop(), nil, nil
 			}
@@ -126,25 +128,25 @@ func (s *FileBrowserScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg)
 }
 
 func (s *FileBrowserScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
-	styles := style.New(ts.Theme)
-	panelStyle := styles.Panel
+	st := style.New(ts.Theme)
+	panelStyle := st.Panel
 	contentW, contentH, _ := mainPanelContentSize(panelStyle, rects)
 	bodyH := max(1, contentH-3)
 	s.picker.SetHeight(bodyH)
-	applyFilePickerStyles(&s.picker, styles)
+	applyFilePickerStyles(&s.picker, st)
 
 	meta := statPath(s.picker.CurrentDirectory)
 	h1, h2 := browserHeaderLines(s.root, s.picker.CurrentDirectory, meta)
-	body := s.renderBrowserPanelBody(styles, contentW, bodyH, h1, h2)
-	return renderScreenPanel(ps.Title, body, panelStyle, styles, rects)
+	body := s.renderBrowserPanelBody(st, contentW, bodyH, h1, h2)
+	return renderScreenPanel(ps.Title, body, panelStyle, st, rects)
 }
 
 func (s *FileBrowserScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
 	return HelpBindings{Short: []string{"up/down: move", "enter: open file/dir", "h/left: parent", "b: back"}}
 }
 
-func (s *FileBrowserScreen) renderBrowserPanelBody(styles style.Styles, width int, bodyH int, line1 string, line2 string) string {
-	divider := styles.Muted.Render(strings.Repeat("─", max(1, width-2)))
+func (s *FileBrowserScreen) renderBrowserPanelBody(st style.Styles, width int, bodyH int, line1 string, line2 string) string {
+	divider := st.Muted.Render(strings.Repeat("─", max(1, width-2)))
 	listing := strings.TrimRight(s.picker.View(), "\n")
 	if listing == "" {
 		listing = " "
@@ -181,8 +183,7 @@ func (s *FileViewerScreen) Init(_ *mvc.State, ps *mvc.PageState) tea.Cmd {
 }
 
 func (s *FileViewerScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
-	switch m := msg.(type) {
-	case fileViewLoadMsg:
+	if m, ok := msg.(fileViewLoadMsg); ok {
 		if !samePath(m.path, s.path) {
 			return mvc.Stay(), nil, nil
 		}
@@ -203,21 +204,21 @@ func (s *FileViewerScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) 
 
 	if k, ok := msg.(tea.KeyMsg); ok {
 		switch k.String() {
-		case "pgdown", "J":
+		case KeyPgDown, "J":
 			moveFileViewScroll(ps, 10)
 			return mvc.Stay(), nil, nil
-		case "pgup", "K":
+		case KeyPgUp, "K":
 			moveFileViewScroll(ps, -10)
 			return mvc.Stay(), nil, nil
-		case "home", "g":
+		case KeyHome, "g":
 			ps.EnsureData()[dataFileViewScroll] = 0
 			return mvc.Stay(), nil, nil
-		case "end", "G":
+		case KeyEnd, "G":
 			if len(s.lines) > 0 {
 				ps.EnsureData()[dataFileViewScroll] = len(s.lines) - 1
 			}
 			return mvc.Stay(), nil, nil
-		case "esc", "backspace", "left", "h", "b":
+		case KeyEsc, KeyBackspace, KeyLeft, "h", "b":
 			return mvc.Pop(), nil, nil
 		}
 	}
@@ -225,13 +226,13 @@ func (s *FileViewerScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) 
 }
 
 func (s *FileViewerScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
-	styles := style.New(ts.Theme)
-	panelStyle := styles.Panel
+	newStyles := style.New(ts.Theme)
+	panelStyle := newStyles.Panel
 	contentW, contentH, _ := mainPanelContentSize(panelStyle, rects)
 	bodyH := max(1, contentH-3)
 
 	h1, h2 := viewerHeaderLines(s.root, s.path, s.meta)
-	divider := styles.Muted.Render(strings.Repeat("─", max(1, contentW-2)))
+	divider := newStyles.Muted.Render(strings.Repeat("─", max(1, contentW-2)))
 
 	var content string
 	if s.loading {
@@ -246,7 +247,7 @@ func (s *FileViewerScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.R
 		divider,
 		fitVertical(content, bodyH),
 	}, "\n")
-	return renderScreenPanel(ps.Title, body, panelStyle, styles, rects)
+	return renderScreenPanel(ps.Title, body, panelStyle, newStyles, rects)
 }
 
 func (s *FileViewerScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
@@ -274,9 +275,9 @@ func (s *FileViewerScreen) loadFileCmd(path string) tea.Cmd {
 	return func() tea.Msg {
 		meta := statPath(path)
 		if meta.isDir {
-			return fileViewLoadMsg{path: path, meta: meta, err: fmt.Errorf("[%s] is a directory", path)}
+			return fileViewLoadMsg{path: path, meta: meta, err: errors.Errorf("can't view directory [%s]", path)}
 		}
-		data, err := os.ReadFile(path) //nolint:gosec
+		data, err := os.ReadFile(path)
 		if err != nil {
 			return fileViewLoadMsg{path: path, meta: meta, err: err}
 		}
@@ -347,7 +348,7 @@ func clampToRoot(path string, root string) string {
 	if path == "" || root == "" {
 		return path
 	}
-	if rel, err := filepath.Rel(root, path); err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(os.PathSeparator)) {
+	if rel, err := filepath.Rel(root, path); err == nil && rel != parentDir && !strings.HasPrefix(rel, parentDir+string(os.PathSeparator)) {
 		return path
 	}
 	return root
@@ -395,7 +396,7 @@ func viewerHeaderLines(root string, path string, meta fileMeta) (string, string)
 		line2 := fmt.Sprintf("Directory | Children: %d (%d dirs, %d files)", meta.childCount, meta.dirCount, meta.fileCount)
 		return line1, line2
 	}
-	size := humanize.Bytes(uint64(max(0, meta.size))) //nolint:gosec
+	size := util.ByteSizeSI(max(0, meta.size))
 	line2 := fmt.Sprintf("Size: %s | Lines: %d | Mode: %s", size, meta.lineCount, meta.mode.String())
 	if !meta.modTime.IsZero() {
 		line2 += " | Modified: " + meta.modTime.Format(time.DateTime)
@@ -414,8 +415,8 @@ func displayPath(path string, root string) string {
 	if err == nil && rel == "." {
 		return "."
 	}
-	if err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(os.PathSeparator)) {
-		return "." + string(os.PathSeparator) + rel
+	if err == nil && rel != parentDir && !strings.HasPrefix(rel, parentDir+string(os.PathSeparator)) {
+		return filepath.Join(".", rel)
 	}
 	return path
 }
@@ -451,20 +452,20 @@ func fitVertical(s string, height int) string {
 	return strings.Join(lines, "\n")
 }
 
-func applyFilePickerStyles(p *filepicker.Model, styles style.Styles) {
+func applyFilePickerStyles(p *filepicker.Model, st style.Styles) {
 	p.Styles.Cursor = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	p.Styles.Selected = lipgloss.NewStyle().Bold(true)
 	if style.IsDarkMode() {
 		p.Styles.Directory = lipgloss.NewStyle().Foreground(lipgloss.Color("111"))
 		p.Styles.File = lipgloss.NewStyle().Foreground(lipgloss.Color("252"))
-		p.Styles.Permission = styles.Muted
-		p.Styles.FileSize = styles.Muted.Width(7).Align(lipgloss.Right)
+		p.Styles.Permission = st.Muted
+		p.Styles.FileSize = st.Muted.Width(7).Align(lipgloss.Right)
 		return
 	}
 	p.Styles.Directory = lipgloss.NewStyle().Foreground(lipgloss.Color("27"))
 	p.Styles.File = lipgloss.NewStyle().Foreground(lipgloss.Color("236"))
-	p.Styles.Permission = styles.Muted
-	p.Styles.FileSize = styles.Muted.Width(7).Align(lipgloss.Right)
+	p.Styles.Permission = st.Muted
+	p.Styles.FileSize = st.Muted.Width(7).Align(lipgloss.Right)
 }
 
 func renderHighlightedFile(path string, data []byte) ([]string, int) {
@@ -472,7 +473,7 @@ func renderHighlightedFile(path string, data []byte) ([]string, int) {
 		return []string{" "}, 0
 	}
 	if !utf8.Valid(data) {
-		msg := fmt.Sprintf("Binary file (%s) cannot be syntax-highlighted", humanize.Bytes(uint64(len(data)))) //nolint:gosec
+		msg := fmt.Sprintf("Binary file (%s) cannot be syntax-highlighted", util.ByteSizeSI(int64(len(data))))
 		return []string{msg}, 0
 	}
 	content := string(data)
@@ -486,7 +487,7 @@ func renderHighlightedFile(path string, data []byte) ([]string, int) {
 
 	lex := lexers.Match(path)
 	if lex == nil {
-		lex = lexers.Analyse(content)
+		lex = lexers.Analyse(content) //nolint:misspell // upstream API uses British spelling
 	}
 	if lex == nil {
 		lex = lexers.Fallback

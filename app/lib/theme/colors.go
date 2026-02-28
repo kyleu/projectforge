@@ -106,7 +106,7 @@ func (c *Colors) ApplyMap(m util.ValueMap, prefix string) *Colors {
 	c.MenuSelectedForeground = get("menu-selected-foreground", c.MenuSelectedForeground)
 	c.MenuSelectedBackground = get("menu-selected-background", c.MenuSelectedBackground)
 	c.ModalBackdrop = get("modal-backdrop", c.ModalBackdrop)
-	c.Success = get("success", c.Success)
+	c.Success = get(util.KeySuccess, c.Success)
 	c.Error = get(util.KeyError, c.Error)
 	return c
 }

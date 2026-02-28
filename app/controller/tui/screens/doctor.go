@@ -6,6 +6,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
@@ -55,20 +56,20 @@ func (s *DoctorScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mv
 		case "a":
 			ps.SetStatus("Running all doctor checks...")
 			return mvc.Stay(), s.runAll(ts, ps), nil
-		case "r", "enter":
+		case "r", KeyEnter:
 			if len(ck) == 0 {
 				return mvc.Stay(), nil, nil
 			}
 			selected := ck[ps.Cursor]
 			ps.SetStatus("Running check [%s]...", selected.Title)
 			return mvc.Stay(), s.runOne(ps, selected), nil
-		case "esc", "backspace", "b":
+		case KeyEsc, KeyBackspace, "b":
 			return mvc.Pop(), nil, nil
 		}
 	case doctorResultMsg:
 		if m.err != nil {
 			ps.SetError(m.err)
-			return mvc.Stay(), nil, nil
+			return mvc.Stay(), nil, m.err
 		}
 		ps.EnsureData()["result"] = m.lines
 		ps.SetStatusText(m.title)
@@ -147,11 +148,11 @@ func (s *DoctorScreen) runOne(ps *mvc.PageState, c *doctor.Check) tea.Cmd {
 	logger := ps.Logger
 	return func() tea.Msg {
 		if c == nil {
-			return doctorResultMsg{err: fmt.Errorf("check not found")}
+			return doctorResultMsg{err: errors.New("encountered [nil] check")}
 		}
 		ret := c.Check(ctx, logger)
 		if ret == nil {
-			return doctorResultMsg{err: fmt.Errorf("check [%s] not applicable", c.Key)}
+			return doctorResultMsg{err: errors.Errorf("check [%s] could not be run", c.Key)}
 		}
 		lines := flattenDoctorResults(doctor.Results{ret})
 		return doctorResultMsg{title: fmt.Sprintf("Finished [%s]", c.Title), lines: lines}
@@ -176,7 +177,7 @@ func flattenDoctorResults(results doctor.Results) []string {
 		}
 	}
 	if len(lines) == 0 {
-		return []string{util.OK}
+		return []string{util.KeyOK}
 	}
 	return lines
 }

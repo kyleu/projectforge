@@ -81,7 +81,7 @@ func (s *ResultsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 	case projectResultMsg:
 		if m.err != nil {
 			ps.SetError(m.err)
-			return mvc.Stay(), nil, nil
+			return mvc.Stay(), nil, m.err
 		}
 		ps.EnsureData()[dataResultLines] = m.lines
 		ps.EnsureData()[dataResultChanges] = m.changes
@@ -124,9 +124,12 @@ func (s *ResultsScreen) Help(_ *mvc.State, ps *mvc.PageState) HelpBindings {
 
 func (s *ResultsScreen) renderChanges(styles style.Styles, status string, cursor int, changes []resultChange, width int) string {
 	lines := make([]string, 0, len(changes)+3)
-	lines = append(lines, "Status: "+util.OrDefault(status, "ok"))
-	lines = append(lines, fmt.Sprintf("Changes: %s", util.StringPlural(len(changes), "change")))
-	lines = append(lines, styles.Muted.Render(strings.Repeat("─", max(1, width-1))))
+	lines = append(
+		lines,
+		"Status: "+util.OrDefault(status, "ok"),
+		fmt.Sprintf("Changes: %s", util.StringPlural(len(changes), "change")),
+		styles.Muted.Render(strings.Repeat("─", max(1, width-1))),
+	)
 
 	for i, ch := range changes {
 		tag := "[" + resultChangeTag(ch.StatusKey) + "]"

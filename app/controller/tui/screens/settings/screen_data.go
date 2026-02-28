@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
 	"projectforge.dev/projectforge/app/controller/tui/screens"
 	"projectforge.dev/projectforge/app/controller/tui/style"
+	"projectforge.dev/projectforge/app/util"
 )
 
 type linesLoader func(*mvc.State, *mvc.PageState) ([]string, error)
@@ -41,7 +42,7 @@ func (s *dataScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.Tr
 	if em, ok := msg.(errMsg); ok {
 		return mvc.Stay(), nil, em.err
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	return mvc.Stay(), nil, nil
@@ -55,7 +56,7 @@ func (s *dataScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) 
 	copy(lines, raw)
 	if w > 0 {
 		for i, line := range lines {
-			lines[i] = ansi.Truncate(line, w, "…")
+			lines[i] = ansi.Truncate(line, w, util.KeyEllipsis)
 		}
 	}
 	body := strings.Join(lines, "\n")

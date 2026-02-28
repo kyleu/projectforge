@@ -47,7 +47,7 @@ func (s *AboutScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
 func (s *AboutScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	if m, ok := msg.(tea.KeyMsg); ok {
 		switch m.String() {
-		case "esc", "backspace", "b":
+		case KeyEsc, KeyBackspace, "b":
 			return mvc.Pop(), nil, nil
 		}
 	}
@@ -56,8 +56,8 @@ func (s *AboutScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.T
 
 func (s *AboutScreen) SidebarContent(ts *mvc.State, _ *mvc.PageState, _ layout.Rects) (string, bool) {
 	styles := style.New(ts.Theme)
-	started := "unknown"
-	version := "unknown"
+	started := util.KeyUnknown
+	version := util.KeyUnknown
 	if ts.App != nil {
 		started = ts.App.Started.Format(time.RFC3339)
 		version = ts.App.AppVersion()

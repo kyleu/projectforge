@@ -16,7 +16,7 @@ func (s *Service) Commit(ctx context.Context, msg string, logger util.Logger) (*
 	if err != nil {
 		return nil, err
 	}
-	return NewResult(s.Key, util.OK, util.ValueMap{"commit": result, "commitMessage": msg}), nil
+	return NewResult(s.Key, util.KeyOK, util.ValueMap{"commit": result, "commitMessage": msg}), nil
 }
 
 func gitCommit(ctx context.Context, path string, message string, logger util.Logger) (string, error) {
@@ -39,7 +39,7 @@ func (s *Service) CommitCount(ctx context.Context, all bool, logger util.Logger)
 	if err != nil {
 		return nil, err
 	}
-	return NewResult(s.Key, util.OK, util.ValueMap{"count": result}), nil
+	return NewResult(s.Key, util.KeyOK, util.ValueMap{"count": result}), nil
 }
 
 func gitCommitCount(ctx context.Context, path string, all bool, logger util.Logger) (int, error) {

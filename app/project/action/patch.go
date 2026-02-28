@@ -15,6 +15,8 @@ const (
 	patchTypeAdded     = "added"
 	patchTypeRemoved   = "removed"
 	patchTypeUnchanged = "unchanged"
+	patchCSSSuccess    = "success"
+	patchCSSError      = "error"
 )
 
 func (p *PatchSection) CSSClass() string {
@@ -22,9 +24,9 @@ func (p *PatchSection) CSSClass() string {
 	case patchTypeUnchanged:
 		return "color-muted"
 	case patchTypeAdded:
-		return "success"
+		return patchCSSSuccess
 	case patchTypeRemoved:
-		return "error"
+		return patchCSSError
 	default:
 		return ""
 	}

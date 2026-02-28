@@ -47,7 +47,7 @@ func (s *Span) SetStatus(status string, description string) {
 	}
 	s.statusSet = true
 	switch strings.ToLower(status) {
-	case util.OK:
+	case util.KeyOK:
 		s.OT.SetStatus(codes.Ok, description)
 	case util.KeyError:
 		s.OT.SetStatus(codes.Error, description)
@@ -99,7 +99,7 @@ func (s *Span) Complete() {
 		return
 	}
 	if !s.statusSet {
-		s.SetStatus(util.OK, "complete")
+		s.SetStatus(util.KeyOK, "complete")
 	}
 	s.OT.End()
 }

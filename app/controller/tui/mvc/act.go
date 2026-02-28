@@ -1,7 +1,7 @@
 package mvc
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/util"
 )
@@ -12,7 +12,11 @@ func Act(key string, ts *State, ps *PageState, fn ActFn) (ret Transition, err er
 	timer := util.TimerStart()
 	defer func() {
 		if rec := recover(); rec != nil {
-			err = fmt.Errorf("panic in [%s]: %v", key, rec)
+			if cast, ok := rec.(error); ok {
+				err = errors.Wrapf(cast, "encountered panic in [%s]", key)
+			} else {
+				err = errors.Wrapf(errors.Errorf("panic in action [%s]", key), "encountered panic of type [%T] in [%s]: %+v", rec, key, rec)
+			}
 			ps.SetError(err)
 			ret = Stay()
 		}

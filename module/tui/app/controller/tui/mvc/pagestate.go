@@ -22,10 +22,13 @@ type PageState struct {
 	Span      *telemetry.Span `json:"-"`
 }
 
-func NewPageState(parentCtx context.Context, act string, title string, data util.ValueMap, logger util.Logger) *PageState {
-	if parentCtx == nil {
-		parentCtx = context.Background()
-	}
+func NewPageState(
+	parentCtx context.Context,
+	act string,
+	title string,
+	data util.ValueMap,
+	logger util.Logger,
+) *PageState {
 	ctx, span, scopedLogger := telemetry.StartSpan(parentCtx, "tui:"+act, logger)
 	span.Attribute("action", act)
 	return &PageState{Action: act, Title: title, Data: data, UpdatedAt: util.TimeCurrent(), Logger: scopedLogger, Context: ctx, Span: span}

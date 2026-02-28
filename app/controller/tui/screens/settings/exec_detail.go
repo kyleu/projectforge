@@ -1,13 +1,13 @@
 package settings
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
@@ -22,9 +22,10 @@ type execDetailScreen struct{ ex *exec.Exec }
 func (s *execDetailScreen) Key() string { return keyExecDetail }
 
 func (s *execDetailScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
-	s.ex = findExec(ts, ps.EnsureData().GetStringOpt("key"))
+	key := ps.EnsureData().GetStringOpt("key")
+	s.ex = findExec(ts, key)
 	if s.ex == nil {
-		return func() tea.Msg { return errMsg{err: errors.New("unable to find process")} }
+		return func() tea.Msg { return errMsg{err: errors.Errorf("unable to find process [%s]", key)} }
 	}
 	ps.Title = "Process " + s.ex.String()
 	ps.SetStatus("k: kill process")
@@ -35,7 +36,7 @@ func (s *execDetailScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (
 	if em, ok := msg.(errMsg); ok {
 		return mvc.Stay(), nil, em.err
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	if m, ok := msg.(tea.KeyMsg); ok && m.String() == "k" && s.ex != nil && s.ex.Completed == nil {

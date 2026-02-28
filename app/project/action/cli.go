@@ -30,9 +30,9 @@ var (
 func clilog(level string, s string) {
 	style := cliInfoStyle
 	switch level {
-	case "error":
+	case util.KeyError:
 		style = cliErrorStyle
-	case "success":
+	case util.KeySuccess:
 		style = cliSuccessStyle
 	}
 	lines := strings.Split(s, "\n")

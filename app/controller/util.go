@@ -18,7 +18,7 @@ func ERsp(msg string, args ...any) (string, error) {
 func FlashAndRedir(success bool, msg string, redir string, ps *cutil.PageState) (string, error) {
 	status := util.KeyError
 	if success {
-		status = "success"
+		status = util.KeySuccess
 	}
 	msgFmt := fmt.Sprintf("%s:%s", status, msg)
 	currStr := ps.Session.GetStringOpt(csession.WebFlashKey)

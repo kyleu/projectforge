@@ -39,7 +39,7 @@ func (s *actionScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.
 	if em, ok := msg.(errMsg); ok {
 		return mvc.Stay(), nil, em.err
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	return mvc.Stay(), nil, nil

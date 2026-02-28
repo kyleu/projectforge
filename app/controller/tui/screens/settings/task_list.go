@@ -42,11 +42,11 @@ func (s *taskListScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 		ps.Cursor = menuClamp(ps.Cursor+delta, len(s.items))
 		return mvc.Stay(), nil, nil
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && m.String() == "enter" && len(s.items) > 0 {
+	if m, ok := msg.(tea.KeyMsg); ok && m.String() == screens.KeyEnter && len(s.items) > 0 {
 		item := s.items[menuClamp(ps.Cursor, len(s.items))]
 		return mvc.Push(keyTaskDetail, util.ValueMap{"key": item.Key}), nil, nil
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	return mvc.Stay(), nil, nil

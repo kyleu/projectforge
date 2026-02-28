@@ -2,14 +2,19 @@
 package screens
 
 const (
-	KeyMainMenu    = "mainmenu"
-	KeyProjects    = "projects"
-	KeyDocs        = "docs"
+	KeyMainMenu    = "mainmenu"{{{ if .HasModule "docbrowse" }}}
+	KeyDocs        = "docs"{{{ end }}}{{{ if .HasModule "process" }}}
 	KeyFileBrowser = "filebrowser"
-	KeyFileViewer  = "fileviewer"
-	KeyProject     = "project"
-	KeyResults     = "results"
-	KeyDoctor      = "doctor"
+	KeyFileViewer  = "fileviewer"{{{ end }}}
 	KeySettings    = "settings"
 	KeyAbout       = "about"
+
+	KeyEnter     = "enter"
+	KeyEsc       = "esc"
+	KeyBackspace = "backspace"
+	KeyLeft      = "left"
+	KeyPgDown    = "pgdown"
+	KeyPgUp      = "pgup"
+	KeyHome      = "home"
+	KeyEnd       = "end"
 )

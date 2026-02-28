@@ -6,6 +6,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 
 	"{{{ .Package }}}/app/controller/tui/style"
+	"{{{ .Package }}}/app/util"
 )
 
 func RenderStatus(status string, err string, shortHelp []string, serverURL string, serverErr string, width int, st style.Styles) string {
@@ -86,7 +87,7 @@ func truncateStatusEllipsis(s string, width int) string {
 		return s
 	}
 	if width == 1 {
-		return "…"
+		return util.KeyEllipsis
 	}
-	return string(r[:width-1]) + "…"
+	return string(r[:width-1]) + util.KeyEllipsis
 }

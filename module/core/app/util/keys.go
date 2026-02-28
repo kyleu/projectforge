@@ -11,11 +11,14 @@ const (
 	AppSource  = "{{{ .Info.Sourcecode }}}"
 	AppLegal   = `Built by <a href="mailto:{{{ .Info.AuthorEmail }}}">{{{ .Info.AuthorName }}}</a>, all rights reserved`
 
-	KeyDebug   = "debug"
-	KeyError   = "error"
-	KeyRandom  = "random"
-	KeyStart   = "start"
-	KeyUnknown = "unknown"
+	KeyOK       = "ok"
+	KeySuccess  = "success"
+	KeyError    = "error"
+	KeyDebug    = "debug"
+	KeyStart    = "start"
+	KeyRandom   = "random"
+	KeyUnknown  = "unknown"
+	KeyEllipsis = "…"
 
 	KeyCSV  = "csv"
 	KeyJSON = "json"
@@ -24,10 +27,7 @@ const (
 	KeyYAML = "yaml"
 
 	ExtJSON     = ".json"
-	ExtMarkdown = ".md"
-
-	OK    = "ok"
-	Error = "error"{{{ if .HasModule "metamodel" }}}
+	ExtMarkdown = ".md"{{{ if .HasModule "metamodel" }}}
 
 	DatabaseMySQL      = "mysql"
 	DatabasePostgreSQL = "postgres"

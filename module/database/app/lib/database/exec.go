@@ -69,7 +69,7 @@ func (s *Service) Exec(ctx context.Context, q string, tx *sqlx.Tx, expected int,
 
 func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx.Tx, logger util.Logger, values ...any) (int, error) {
 	if op == "" {
-		op = "unknown"
+		op = util.KeyUnknown
 	}
 	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error

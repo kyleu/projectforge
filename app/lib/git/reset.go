@@ -19,7 +19,7 @@ func (s *Service) Reset(ctx context.Context, logger util.Logger) (*Result, error
 	count := lo.CountBy(util.StringSplitLines(x), func(line string) bool {
 		return strings.HasPrefix(line, "   ")
 	})
-	status := util.OK
+	status := util.KeyOK
 	fetched := "no changes"
 	if count > 0 {
 		status = fmt.Sprintf("[%s] reset", util.StringPlural(count, "file"))

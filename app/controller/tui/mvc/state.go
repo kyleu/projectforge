@@ -10,7 +10,7 @@ import (
 
 type State struct {
 	App       *app.State
-	Context   context.Context
+	Context   context.Context `json:"-"` //nolint:containedctx // shared TUI lifecycle context
 	Logger    util.Logger
 	ServerURL string
 	ServerErr string
@@ -18,10 +18,14 @@ type State struct {
 	LogTail   func(limit int) []string
 }
 
-func NewState(ctx context.Context, st *app.State, serverURL string, serverErr string, logger util.Logger, logTail func(limit int) []string) *State {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func NewState(
+	ctx context.Context,
+	st *app.State,
+	serverURL string,
+	serverErr string,
+	logger util.Logger,
+	logTail func(limit int) []string,
+) *State {
 	ret := &State{App: st, Context: ctx, ServerURL: serverURL, ServerErr: serverErr, Logger: logger, Theme: theme.Default, LogTail: logTail}
 	if st != nil && st.Themes != nil {
 		ret.Theme = st.Themes.Get("default", logger)

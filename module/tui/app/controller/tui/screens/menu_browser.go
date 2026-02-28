@@ -11,6 +11,10 @@ import (
 )
 
 func clampMenuCursor(cursor int, count int) int {
+	return MenuClampCursor(cursor, count)
+}
+
+func MenuClampCursor(cursor int, count int) int {
 	if count <= 0 {
 		return 0
 	}
@@ -24,19 +28,35 @@ func clampMenuCursor(cursor int, count int) int {
 }
 
 func moveMenuCursor(cursor int, count int, delta int) int {
+	return MenuMoveCursor(cursor, count, delta)
+}
+
+func MenuMoveCursor(cursor int, count int, delta int) int {
 	if count <= 0 || delta == 0 {
-		return clampMenuCursor(cursor, count)
+		return MenuClampCursor(cursor, count)
 	}
-	return clampMenuCursor(cursor+delta, count)
+	return MenuClampCursor(cursor+delta, count)
 }
 
 func menuMoveDelta(msg tea.Msg) (int, bool) {
+	return MenuMoveDelta(msg)
+}
+
+func MenuMoveDelta(msg tea.Msg) (int, bool) {
 	if m, ok := msg.(tea.MouseMsg); ok && m.Action == tea.MouseActionPress {
 		switch m.Button {
+		case tea.MouseButtonNone, tea.MouseButtonLeft, tea.MouseButtonMiddle, tea.MouseButtonRight:
+			return 0, false
 		case tea.MouseButtonWheelUp:
 			return -1, true
 		case tea.MouseButtonWheelDown:
 			return 1, true
+		case tea.MouseButtonWheelLeft, tea.MouseButtonWheelRight:
+			return 0, false
+		case tea.MouseButtonBackward, tea.MouseButtonForward:
+			return 0, false
+		case tea.MouseButton10, tea.MouseButton11:
+			return 0, false
 		}
 	}
 	m, ok := msg.(tea.KeyMsg)

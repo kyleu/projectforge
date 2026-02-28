@@ -35,9 +35,7 @@ func (t *TUI) LastLogs(limit int) []string {
 	}
 	start := len(t.logs) - limit
 	ret := make([]string, 0, limit)
-	for _, line := range t.logs[start:] {
-		ret = append(ret, line)
-	}
+	ret = append(ret, t.logs[start:]...)
 	return ret
 }
 
@@ -163,7 +161,7 @@ func truncateText(s string, limit int) string {
 		return s
 	}
 	if limit == 1 {
-		return "…"
+		return util.KeyEllipsis
 	}
-	return string(r[:limit-1]) + "…"
+	return string(r[:limit-1]) + util.KeyEllipsis
 }

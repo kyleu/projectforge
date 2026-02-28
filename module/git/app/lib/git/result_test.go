@@ -59,7 +59,7 @@ func TestResultHistory(t *testing.T) {
 			&git.HistoryEntry{SHA: "abc", AuthorName: "Alice", AuthorEmail: "alice@example.com", Message: "msg", Occurred: when},
 		},
 	}
-	res := git.NewResult("proj", util.OK, util.ValueMap{"history": history})
+	res := git.NewResult("proj", util.KeyOK, util.ValueMap{"history": history})
 	got := res.History()
 	if got == nil {
 		t.Fatal("expected history, got nil")

@@ -17,7 +17,7 @@ func cliGather(_ context.Context, p *project.Project, mods module.Modules, _ uti
 			if err != nil {
 				return err
 			}
-			if err = ApplyCreatePromptString(p, q.Key, val); err != nil {
+			if err := ApplyCreatePromptString(p, q.Key, val); err != nil {
 				return err
 			}
 		case CreatePromptModules:

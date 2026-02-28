@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 
 	"projectforge.dev/projectforge/app/lib/exec"
+	"projectforge.dev/projectforge/app/util"
 )
 
 func TestWriteOutFns(t *testing.T) {
@@ -203,7 +204,7 @@ func TestExecsGet(t *testing.T) {
 
 	t.Run("not found - wrong key", func(t *testing.T) {
 		t.Parallel()
-		found := execs.Get("unknown", 1)
+		found := execs.Get(util.KeyUnknown, 1)
 		if found != nil {
 			t.Errorf("expected nil, got %v", found)
 		}
@@ -244,7 +245,7 @@ func TestExecsGetByKey(t *testing.T) {
 
 	t.Run("no matches", func(t *testing.T) {
 		t.Parallel()
-		unknown := execs.GetByKey("unknown")
+		unknown := execs.GetByKey(util.KeyUnknown)
 		if len(unknown) != 0 {
 			t.Errorf("expected 0 matches, got %d", len(unknown))
 		}

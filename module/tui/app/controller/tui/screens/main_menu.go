@@ -40,10 +40,9 @@ func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 		ps.Cursor = moveMenuCursor(ps.Cursor, len(items), delta)
 		return mvc.Stay(), nil, nil
 	}
-	switch m := msg.(type) {
-	case tea.KeyMsg:
+	if m, ok := msg.(tea.KeyMsg); ok {
 		switch m.String() {
-		case "enter":
+		case KeyEnter:
 			if len(items) == 0 {
 				return mvc.Stay(), nil, nil
 			}
@@ -52,7 +51,7 @@ func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 				return mvc.Quit(), nil, nil
 			}
 			return mvc.Push(item.Route, nil), nil, nil
-		case "q", "esc":
+		case "q", KeyEsc:
 			return mvc.Quit(), nil, nil
 		}
 	}

@@ -40,7 +40,7 @@ func (s *socketChannelScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
 }
 
 func (s *socketChannelScreen) Update(_ *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	return mvc.Stay(), nil, nil

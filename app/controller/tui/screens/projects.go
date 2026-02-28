@@ -52,10 +52,9 @@ func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (
 		ps.EnsureData()[projectsSelectedKey] = items[ps.Cursor].Key
 		return mvc.Stay(), nil, nil
 	}
-	switch m := msg.(type) {
-	case tea.KeyMsg:
+	if m, ok := msg.(tea.KeyMsg); ok {
 		switch m.String() {
-		case "enter":
+		case KeyEnter:
 			if len(items) == 0 {
 				return mvc.Stay(), nil, nil
 			}
@@ -65,7 +64,7 @@ func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (
 				return mvc.Push(KeyProjectNew, nil), nil, nil
 			}
 			return mvc.Push(KeyProject, util.ValueMap{"project": selected.Key}), nil, nil
-		case "esc", "backspace", "b":
+		case KeyEsc, KeyBackspace, "b":
 			return mvc.Pop(), nil, nil
 		}
 	}

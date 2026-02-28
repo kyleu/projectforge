@@ -2,12 +2,12 @@
 package settings
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/huh"
+	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/controller/tui/layout"
 	"{{{ .Package }}}/app/controller/tui/mvc"
@@ -33,9 +33,10 @@ type taskRunScreen struct {
 func (s *taskRunScreen) Key() string { return keyTaskRun }
 
 func (s *taskRunScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
-	s.task = ts.App.Services.Task.RegisteredTasks.Get(ps.EnsureData().GetStringOpt("key"))
+	key := ps.EnsureData().GetStringOpt("key")
+	s.task = ts.App.Services.Task.RegisteredTasks.Get(key)
 	if s.task == nil {
-		return func() tea.Msg { return errMsg{err: errors.New("unable to find task")} }
+		return func() tea.Msg { return errMsg{err: errors.Errorf("unable to find task [%s]", key)} }
 	}
 	ps.Title = "Run " + s.task.TitleSafe()
 	s.category = "ad-hoc"
@@ -59,11 +60,15 @@ func (s *taskRunScreen) Update(ts *mvc.State, _ *mvc.PageState, msg tea.Msg) (mv
 		s.result = res.result
 		return mvc.Stay(), nil, res.err
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	mdl, cmd := s.form.Update(msg)
-	s.form = mdl.(*huh.Form)
+	form, ok := mdl.(*huh.Form)
+	if !ok {
+		return mvc.Stay(), nil, errors.New("invalid form model in [task]")
+	}
+	s.form = form
 	if s.form.State == huh.StateCompleted {
 		args := util.ValueMap{}
 		for k, v := range s.values {

@@ -13,7 +13,7 @@ func (s *Service) UndoCommit(ctx context.Context, logger util.Logger) (*Result, 
 		return nil, err
 	}
 
-	return NewResult(s.Key, util.OK, util.ValueMap{"reset": result}), nil
+	return NewResult(s.Key, util.KeyOK, util.ValueMap{"reset": result}), nil
 }
 
 func gitResetSoft(ctx context.Context, path string, logger util.Logger) (string, error) {
@@ -25,5 +25,5 @@ func gitResetSoft(ctx context.Context, path string, logger util.Logger) (string,
 		}
 		return "", err
 	}
-	return util.OK, nil
+	return util.KeyOK, nil
 }

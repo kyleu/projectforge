@@ -29,7 +29,7 @@ func Derive(name string, pkg string, content string, logger util.Logger) Result 
 		}
 		return deriveFileContent(pth, string(b), ret, logger)
 	}
-	return ret.AddSection(util.Error, (&Section{}).AddError(errors.Errorf("content isn't valid JSON or a valid path [%s]", content)))
+	return ret.AddSection(util.KeyError, (&Section{}).AddError(errors.Errorf("content isn't valid JSON or a valid path [%s]", content)))
 }
 
 func deriveFileContent(fn string, content string, ret Result, _ util.Logger) Result {

@@ -44,7 +44,7 @@ func NewRootModel(state *mvc.State, registry *screens.Registry, initialScreen st
 	if err != nil {
 		return nil, err
 	}
-	ps := mvc.NewPageState(state.Context, initialScreen, strings.Title(initialScreen), nil, state.Logger)
+	ps := mvc.NewPageState(state.Context, initialScreen, screenTitle(initialScreen), nil, state.Logger)
 	ret := &RootModel{
 		state:    state,
 		registry: registry,
@@ -123,13 +123,14 @@ func (m *RootModel) View() string {
 
 	topHeader := m.styles.Header.Width(max(1, rects.Header.W)).Render(util.AppName)
 	var content string
-	if rects.Compact {
+	switch {
+	case rects.Compact:
 		header := m.styles.Header.Width(max(1, rects.Header.W)).Render(util.AppName + " | " + curr.page.Title)
 		content = lipgloss.JoinVertical(lipgloss.Left, header, main)
-	} else if showSidebar {
+	case showSidebar:
 		sidebar := screens.Bounded(m.styles.Sidebar, rects.Sidebar.W, rects.Sidebar.H, sidebarContent)
 		content = lipgloss.JoinVertical(lipgloss.Left, topHeader, lipgloss.JoinHorizontal(lipgloss.Top, main, sidebar))
-	} else {
+	default:
 		content = lipgloss.JoinVertical(lipgloss.Left, topHeader, main)
 	}
 
@@ -217,7 +218,7 @@ func (m *RootModel) applyTransition(tr mvc.Transition) tea.Cmd {
 			m.current().page.SetError(err)
 			return nil
 		}
-		ps := mvc.NewPageState(m.state.Context, tr.Screen, strings.Title(tr.Screen), tr.Data, m.state.Logger)
+		ps := mvc.NewPageState(m.state.Context, tr.Screen, screenTitle(tr.Screen), tr.Data, m.state.Logger)
 		if tr.Type == mvc.TransitionReplace && len(m.stack) > 0 {
 			m.current().page.Close()
 			m.stack = m.stack[:len(m.stack)-1]
@@ -233,6 +234,8 @@ func (m *RootModel) refreshCommand(tr mvc.Transition, fromTick bool) tea.Cmd {
 	switch tr.Type {
 	case mvc.TransitionPush, mvc.TransitionReplace, mvc.TransitionPop, mvc.TransitionRoute:
 		return m.scheduleRefresh(m.current())
+	case mvc.TransitionQuit:
+		return nil
 	case mvc.TransitionStay:
 		if fromTick {
 			return m.scheduleRefresh(m.current())
@@ -320,7 +323,14 @@ func truncateRunes(s string, width int) string {
 	if width < 1 {
 		return ""
 	}
-	return ansi.Truncate(s, width, "…")
+	return ansi.Truncate(s, width, util.KeyEllipsis)
+}
+
+func screenTitle(key string) string {
+	if key == "" {
+		return ""
+	}
+	return util.StringToProper(key)
 }
 
 func overlayBottom(base string, overlay string) string {

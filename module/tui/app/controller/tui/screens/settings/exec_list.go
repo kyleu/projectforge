@@ -46,14 +46,14 @@ func (s *execListScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 		ps.Cursor = menuClamp(ps.Cursor+delta, len(s.items))
 		return mvc.Stay(), nil, nil
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && m.String() == "enter" {
+	if m, ok := msg.(tea.KeyMsg); ok && m.String() == screens.KeyEnter {
 		item := s.items[menuClamp(ps.Cursor, len(s.items))]
 		if item.Route == keyExecDetail {
 			return mvc.Push(keyExecDetail, util.ValueMap{"key": item.Title}), nil, nil
 		}
 		return mvc.Push(keyExecNew, nil), nil, nil
 	}
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	return mvc.Stay(), nil, nil

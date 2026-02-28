@@ -211,6 +211,7 @@ go test ./app/util -run TestPlural
 - Cyclomatic complexity: Max 30 recommended
 - Error handling: Always check errors, provide context
 - Naming: PascalCase for exported, camelCase for internal
+- Errors: Always use `github.com/pkg/errors`, never built-in `errors`
 
 ### Import Organization
 
@@ -221,7 +222,7 @@ import (
     "fmt"
 
     // Third-party
-    "github.com/gorilla/mux"
+	"github.com/pkg/errors"
     "go.uber.org/zap"
 
     // Project imports

@@ -99,7 +99,7 @@ func (s *ProjectNewScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg)
 		ps.SetStatus("Project created")
 		return mvc.Replace(KeyProject, util.ValueMap{"project": m.projectKey}), nil, nil
 	case tea.KeyMsg:
-		if m.String() == "esc" {
+		if m.String() == KeyEsc {
 			if s.step == projectNewStepCreate || s.step == projectNewStepLoad {
 				return mvc.Stay(), nil, nil
 			}
@@ -125,7 +125,11 @@ func (s *ProjectNewScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg)
 		return mvc.Stay(), nil, nil
 	}
 	mdl, cmd := s.form.Update(msg)
-	s.form = mdl.(*huh.Form)
+	form, ok := mdl.(*huh.Form)
+	if !ok {
+		return mvc.Stay(), nil, errors.Errorf("invalid [%T] as model, expected [*Form]", mdl)
+	}
+	s.form = form
 	if s.form.State != huh.StateCompleted {
 		return mvc.Stay(), cmd, nil
 	}
@@ -146,6 +150,8 @@ func (s *ProjectNewScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg)
 			return mvc.Stay(), s.createProjectCmd(ts, ps), nil
 		}
 		return mvc.Stay(), s.initPromptForm(ts), nil
+	case projectNewStepLoad, projectNewStepCreate:
+		return mvc.Stay(), nil, nil
 	}
 	return mvc.Stay(), nil, nil
 }

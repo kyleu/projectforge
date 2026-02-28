@@ -1,9 +1,14 @@
-package layout
+package layout_test
 
-import "testing"
+import (
+	"testing"
+
+	"projectforge.dev/projectforge/app/controller/tui/layout"
+)
 
 func TestSolveNonCompact(t *testing.T) {
-	r := Solve(140, 40)
+	t.Parallel()
+	r := layout.Solve(140, 40)
 	if r.Compact {
 		t.Fatal("expected non-compact layout")
 	}
@@ -16,7 +21,7 @@ func TestSolveNonCompact(t *testing.T) {
 	if r.Main.H != 36 {
 		t.Fatalf("unexpected main height: %d", r.Main.H)
 	}
-	if r.Main.W+r.Sidebar.W != 140+nonCompactWidthCompensation {
+	if r.Main.W+r.Sidebar.W != 142 {
 		t.Fatalf("unexpected content width: main=%d sidebar=%d", r.Main.W, r.Sidebar.W)
 	}
 	if r.Sidebar.X != r.Main.W {
@@ -25,7 +30,8 @@ func TestSolveNonCompact(t *testing.T) {
 }
 
 func TestSolveCompact(t *testing.T) {
-	r := Solve(80, 20)
+	t.Parallel()
+	r := layout.Solve(80, 20)
 	if !r.Compact {
 		t.Fatal("expected compact layout")
 	}
@@ -38,7 +44,8 @@ func TestSolveCompact(t *testing.T) {
 }
 
 func TestSolveNonCompactNoSidebar(t *testing.T) {
-	r := SolveWithSidebar(140, 40, false)
+	t.Parallel()
+	r := layout.SolveWithSidebar(140, 40, false)
 	if r.Compact {
 		t.Fatal("expected non-compact layout")
 	}
@@ -51,11 +58,12 @@ func TestSolveNonCompactNoSidebar(t *testing.T) {
 }
 
 func TestSolveBreakpointTransition(t *testing.T) {
-	c := Solve(compactBreakpointWidth-1, compactBreakpointHeight)
+	t.Parallel()
+	c := layout.Solve(99, 24)
 	if !c.Compact {
 		t.Fatal("expected compact layout below width breakpoint")
 	}
-	n := Solve(compactBreakpointWidth, compactBreakpointHeight)
+	n := layout.Solve(100, 24)
 	if n.Compact {
 		t.Fatal("expected non-compact layout at width breakpoint")
 	}

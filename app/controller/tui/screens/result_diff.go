@@ -60,7 +60,7 @@ func (s *ResultDiffScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) 
 				ps.EnsureData()[dataResultDiffScroll] = len(lines) - 1
 			}
 			return mvc.Stay(), nil, nil
-		case "esc", "backspace", "left", "h", "b":
+		case KeyEsc, KeyBackspace, KeyLeft, "h", "b":
 			return mvc.Pop(), nil, nil
 		}
 	}

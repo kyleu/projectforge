@@ -2,11 +2,11 @@
 package settings
 
 import (
-	"errors"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/huh"
+	"github.com/pkg/errors"
 
 	"{{{ .Package }}}/app/controller/tui/layout"
 	"{{{ .Package }}}/app/controller/tui/mvc"
@@ -41,11 +41,15 @@ func (s *execNewScreen) Init(_ *mvc.State, ps *mvc.PageState) tea.Cmd {
 }
 
 func (s *execNewScreen) Update(ts *mvc.State, _ *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
-	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == "esc" || m.String() == "backspace" || m.String() == "b") {
+	if m, ok := msg.(tea.KeyMsg); ok && (m.String() == screens.KeyEsc || m.String() == screens.KeyBackspace || m.String() == "b") {
 		return mvc.Pop(), nil, nil
 	}
 	mdl, cmd := s.form.Update(msg)
-	s.form = mdl.(*huh.Form)
+	form, ok := mdl.(*huh.Form)
+	if !ok {
+		return mvc.Stay(), nil, errors.New("invalid form model in [exec]")
+	}
+	s.form = form
 	if s.form.State == huh.StateCompleted {
 		if strings.TrimSpace(s.cmd) == "" {
 			return mvc.Stay(), nil, errors.New("command is required")

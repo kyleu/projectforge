@@ -56,7 +56,7 @@ func onGenerate(pm *PrjAndMods) *Result {
 		}
 	}
 
-	mr := &module.Result{Keys: pm.Mods.Keys(), Status: util.OK, Diffs: dfs, Duration: timer.End()}
+	mr := &module.Result{Keys: pm.Mods.Keys(), Status: util.KeyOK, Diffs: dfs, Duration: timer.End()}
 	ret.Modules = append(ret.Modules, mr)
 	return ret
 }
