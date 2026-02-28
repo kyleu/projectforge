@@ -42,7 +42,7 @@
       links := map[string]string{"Download": "?download=true"}
       lineNumLink := fmt.Sprintf("%s/blob/HEAD/%s#L{}", p.Project.Info.Sourcecode, util.StringPath(p.Path...))
     -%}
-    {%= vfile.Detail(as, p.Path, b, u, links, ps, lineNumLink, "View line {} on GitHub") %}
+    {%= vfile.Detail(as, p.Path, 0, b, u, links, ps, lineNumLink, "View line {} on GitHub") %}
   </div>
   {%- endif -%}
 {% endfunc %}

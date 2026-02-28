@@ -106,6 +106,18 @@ func (s *FileBrowserScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg)
 		switch k.String() {
 		case "b":
 			return mvc.Pop(), nil, nil
+		case "o":
+			path := s.selectedPathForOpen(k)
+			if path == "" {
+				ps.SetStatus("No file or folder selected")
+				return mvc.Stay(), nil, nil
+			}
+			path = clampToRoot(path, s.root)
+			if err := OpenPath(path); err != nil {
+				return mvc.Stay(), nil, errors.Wrapf(err, "unable to open path [%s]", path)
+			}
+			ps.SetStatus("Opened [%s]", filepath.Base(path))
+			return mvc.Stay(), nil, nil
 		case KeyEsc, KeyBackspace, KeyLeft, "h":
 			if samePath(s.picker.CurrentDirectory, s.root) {
 				return mvc.Pop(), nil, nil
@@ -141,7 +153,17 @@ func (s *FileBrowserScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.
 }
 
 func (s *FileBrowserScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
-	return HelpBindings{Short: []string{"up/down: move", "enter: open file/dir", "h/left: parent", "b: back"}}
+	return HelpBindings{Short: []string{"up/down: move", "enter: open file/dir", "o: open in OS", "h/left: parent", "b: back"}}
+}
+
+func (s *FileBrowserScreen) selectedPathForOpen(k tea.KeyMsg) string {
+	tmp := s.picker
+	tmp.DirAllowed = true
+	tmp.FileAllowed = true
+	tmp.KeyMap.Open.SetKeys("o")
+	tmp.KeyMap.Select.SetKeys("o")
+	tmp, _ = tmp.Update(k)
+	return tmp.Path
 }
 
 func (s *FileBrowserScreen) renderBrowserPanelBody(st style.Styles, width int, bodyH int, line1 string, line2 string) string {
@@ -203,6 +225,17 @@ func (s *FileViewerScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) 
 
 	if k, ok := msg.(tea.KeyMsg); ok {
 		switch k.String() {
+		case "o":
+			path := clampToRoot(s.path, s.root)
+			if path == "" {
+				ps.SetStatus("No file selected")
+				return mvc.Stay(), nil, nil
+			}
+			if err := OpenPath(path); err != nil {
+				return mvc.Stay(), nil, errors.Wrapf(err, "unable to open path [%s]", path)
+			}
+			ps.SetStatus("Opened [%s]", filepath.Base(path))
+			return mvc.Stay(), nil, nil
 		case KeyPgDown, "J":
 			moveFileViewScroll(ps, 10)
 			return mvc.Stay(), nil, nil
@@ -250,7 +283,7 @@ func (s *FileViewerScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.R
 }
 
 func (s *FileViewerScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
-	return HelpBindings{Short: []string{"up/down: scroll", "pgup/pgdn: page", "g/G: top/bottom", "b: back"}}
+	return HelpBindings{Short: []string{"up/down: scroll", "pgup/pgdn: page", "g/G: top/bottom", "o: open in OS", "b: back"}}
 }
 
 func (s *FileViewerScreen) renderFileWindow(ps *mvc.PageState, height int) string {

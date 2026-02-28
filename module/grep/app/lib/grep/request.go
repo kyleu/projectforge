@@ -35,5 +35,5 @@ func (r *Request) ToCommand() string {
 	argString := util.StringJoin(lo.Map(util.ArraySorted(args), func(x string, _ int) string {
 		return "--" + x
 	}), " ")
-	return fmt.Sprintf("rg %s %q, %q", argString, r.Query, r.Path)
+	return fmt.Sprintf("rg %s %q %q", argString, r.Query, r.Path)
 }

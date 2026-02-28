@@ -2,6 +2,7 @@ package grep
 
 import (
 	"context"
+	"os/exec"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -10,6 +11,10 @@ import (
 )
 
 func Run(ctx context.Context, req *Request, logger util.Logger) (*Response, error) {
+	if _, err := exec.LookPath("rg"); err != nil {
+		return nil, errors.Wrap(err, "ripgrep (rg) not found on PATH")
+	}
+
 	cmd := req.ToCommand()
 
 	_, out, err := util.RunProcessSimple(cmd, ".")

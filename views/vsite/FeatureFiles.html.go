@@ -92,7 +92,7 @@ func (p *FeatureFiles) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 		qw422016.N().S(`</h3>
     `)
 //line views/vsite/FeatureFiles.html:39
-		vfile.StreamDetail(qw422016, as, p.Path, b, u, nil, ps)
+		vfile.StreamDetail(qw422016, as, p.Path, 0, b, u, nil, ps)
 //line views/vsite/FeatureFiles.html:39
 		qw422016.N().S(`
   </div>

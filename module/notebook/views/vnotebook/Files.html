@@ -48,7 +48,7 @@
   -%}
   <div class="card">
     {%- code links := map[string]string{"Download": "?download=true"} -%}
-    {%= vfile.Detail(as, p.Path, b, u, links, ps) %}
+    {%= vfile.Detail(as, p.Path, 0, b, u, links, ps) %}
   </div>
   {%- endif -%}
 {% endfunc %}
