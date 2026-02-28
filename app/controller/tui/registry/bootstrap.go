@@ -27,6 +27,7 @@ func Bootstrap(st *app.State, logger util.Logger) *screens.Registry {
 	reg.AddScreen(screens.NewFileBrowserScreen())
 	reg.AddScreen(screens.NewFileViewerScreen())
 	reg.AddScreen(screens.NewResultsScreen())
+	reg.AddScreen(screens.NewResultDiffScreen())
 
 	settings.Register(reg)
 

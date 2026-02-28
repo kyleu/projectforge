@@ -9,8 +9,11 @@ import (
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
 	"projectforge.dev/projectforge/app/controller/tui/style"
+	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/util"
 )
+
+const mainMenuExitKey = "mainmenu.exit"
 
 type MainMenuScreen struct {
 	registry *Registry
@@ -31,7 +34,7 @@ func (s *MainMenuScreen) Init(_ *mvc.State, ps *mvc.PageState) tea.Cmd {
 }
 
 func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
-	items := s.registry.Menu().Visible()
+	items := s.items()
 	ps.Cursor = clampMenuCursor(ps.Cursor, len(items))
 	if delta, moved := menuMoveDelta(msg); moved {
 		ps.Cursor = moveMenuCursor(ps.Cursor, len(items), delta)
@@ -45,8 +48,11 @@ func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 				return mvc.Stay(), nil, nil
 			}
 			item := items[ps.Cursor]
+			if item.Key == mainMenuExitKey {
+				return mvc.Quit(), nil, nil
+			}
 			return mvc.Push(item.Route, nil), nil, nil
-		case "q":
+		case "q", "esc":
 			return mvc.Quit(), nil, nil
 		}
 	}
@@ -55,7 +61,7 @@ func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 
 func (s *MainMenuScreen) SidebarContent(ts *mvc.State, ps *mvc.PageState, _ layout.Rects) (string, bool) {
 	styles := style.New(ts.Theme)
-	items := s.registry.Menu().Visible()
+	items := s.items()
 	cursor := clampMenuCursor(ps.Cursor, len(items))
 
 	lines := []string{fmt.Sprintf("%s TUI", util.AppName), ""}
@@ -68,16 +74,24 @@ func (s *MainMenuScreen) SidebarContent(ts *mvc.State, ps *mvc.PageState, _ layo
 			lines = AppendSidebarProp(lines, styles, "about", item.Description)
 		}
 	}
-	lines = append(lines, "", "keys:", "up/down move", "enter open", "q quit")
+	lines = append(lines, "", "keys:", "up/down move", "enter open", "esc/q quit")
 	return strings.Join(lines, "\n"), true
 }
 
 func (s *MainMenuScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rects) string {
 	styles := style.New(ts.Theme)
-	items := s.registry.Menu().Visible()
+	items := s.items()
 	return renderMainListScreen(ps.Title, items, clampMenuCursor(ps.Cursor, len(items)), styles, rects)
 }
 
 func (s *MainMenuScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
-	return HelpBindings{Short: []string{"up/down: move", "enter: open", "q: quit"}}
+	return HelpBindings{Short: []string{"up/down: move", "enter: open", "esc|q: quit"}}
+}
+
+func (s *MainMenuScreen) items() menu.Items {
+	items := s.registry.Menu().Visible()
+	ret := make(menu.Items, 0, len(items)+1)
+	ret = append(ret, items...)
+	ret = append(ret, &menu.Item{Key: mainMenuExitKey, Title: "Exit", Description: "Exit the TUI"})
+	return ret
 }

@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
+	"projectforge.dev/projectforge/app/file/diff"
 	"projectforge.dev/projectforge/app/lib/git"
 	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/project/action"
@@ -14,22 +15,35 @@ import (
 )
 
 const (
-	dataProjectKey     = "project"
-	dataActionKey      = "action_key"
-	dataActionTitle    = "action_title"
-	dataActionDesc     = "action_desc"
-	dataActionCfg      = "action_cfg"
-	dataInputMessage   = "input_message"
-	dataInputDryRun    = "input_dry_run"
-	dataResultLines    = "result"
-	dataResultTitle    = "result_title"
-	dataResultComplete = "result_complete"
+	dataProjectKey      = "project"
+	dataActionKey       = "action_key"
+	dataActionTitle     = "action_title"
+	dataActionDesc      = "action_desc"
+	dataActionCfg       = "action_cfg"
+	dataInputMessage    = "input_message"
+	dataInputDryRun     = "input_dry_run"
+	dataResultLines     = "result"
+	dataResultTitle     = "result_title"
+	dataResultComplete  = "result_complete"
+	dataResultChanges   = "result_changes"
+	dataResultStatus    = "result_status"
+	dataResultDiffPath  = "result_diff_path"
+	dataResultDiffTag   = "result_diff_tag"
+	dataResultDiffPatch = "result_diff_patch"
 )
 
 type projectResultMsg struct {
-	title string
-	lines []string
-	err   error
+	title   string
+	status  string
+	lines   []string
+	changes []resultChange
+	err     error
+}
+
+type resultChange struct {
+	StatusKey string
+	Path      string
+	Patch     string
 }
 
 func actionData(prj *project.Project, c actionChoice, message string, dryRun bool) util.ValueMap {
@@ -96,26 +110,32 @@ func runProjectActionCmd(ts *mvc.State, ps *mvc.PageState, prj *project.Project,
 				Logger:     logger,
 			}
 			res := action.Apply(ctx, params)
-			lines := []string{fmt.Sprintf("status: %s", res.Status)}
-			lines = append(lines, res.Logs...)
+			changes := make([]resultChange, 0, 32)
 			for _, modRes := range res.Modules {
 				if modRes == nil {
 					continue
 				}
-				changes := len(modRes.DiffsFiltered(false))
-				lines = append(lines, fmt.Sprintf("module status: %s (%s)", modRes.Status, util.StringPlural(changes, "change")))
 				for _, d := range modRes.DiffsFiltered(false) {
 					if d == nil || d.Status == nil {
 						continue
 					}
-					lines = append(lines, fmt.Sprintf("  - %s: %s", d.Status.Key, d.Path))
+					changes = append(changes, resultChange{StatusKey: d.Status.Key, Path: d.Path, Patch: d.Patch})
 				}
+			}
+			lines := []string{fmt.Sprintf("Status: %s", res.Status)}
+			if len(res.Modules) > 0 {
+				lines = append(lines, fmt.Sprintf("Changes: %s", util.StringPlural(len(changes), "change")))
+				for _, c := range changes {
+					lines = append(lines, fmt.Sprintf("[%s] %s", resultChangeTag(c.StatusKey), c.Path))
+				}
+			} else {
+				lines = append(lines, res.Logs...)
 			}
 			lines = append(lines, res.Errors...)
 			if len(lines) == 1 {
 				lines = append(lines, util.OK)
 			}
-			return projectResultMsg{title: fmt.Sprintf("Completed [%s]", act.Title), lines: lines}
+			return projectResultMsg{title: fmt.Sprintf("Completed [%s]", act.Title), status: res.Status, lines: lines, changes: changes}
 		}
 
 		gs := git.NewService(prj.Key, prj.Path)
@@ -166,7 +186,20 @@ func runProjectActionCmd(ts *mvc.State, ps *mvc.PageState, prj *project.Project,
 		if len(lines) == 1 {
 			lines = append(lines, util.OK)
 		}
-		return projectResultMsg{title: fmt.Sprintf("Completed [%s]", c.title), lines: lines}
+		return projectResultMsg{title: fmt.Sprintf("Completed [%s]", c.title), status: res.Status, lines: lines}
+	}
+}
+
+func resultChangeTag(statusKey string) string {
+	switch statusKey {
+	case diff.StatusDifferent.Key:
+		return "M"
+	case diff.StatusNew.Key:
+		return "A"
+	case diff.StatusMissing.Key:
+		return "D"
+	default:
+		return "?"
 	}
 }
 

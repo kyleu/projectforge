@@ -8,6 +8,7 @@ const (
 	KeyFileBrowser = "filebrowser"
 	KeyFileViewer  = "fileviewer"
 	KeyResults     = "results"
+	KeyResultDiff  = "resultdiff"
 	KeyDoctor      = "doctor"
 	KeySettings    = "settings"
 	KeyAbout       = "about"
