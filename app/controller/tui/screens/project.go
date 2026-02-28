@@ -330,7 +330,7 @@ func startInputPrompt(ps *mvc.PageState, c actionChoice) {
 	d[dataInputActive] = true
 	d[dataInputChoiceKey] = c.key
 	d[dataInputChoiceTitle] = c.title
-	d[dataInputMessage] = defaultInputMessage(c)
+	d[dataInputMessage] = ""
 	d[dataInputDryRun] = true
 	ps.SetStatus("Enter values for [%s]", c.title)
 }
@@ -376,13 +376,6 @@ func syncPromptChoice(ps *mvc.PageState, choices []actionChoice) {
 		}
 	}
 	stopInputPrompt(ps)
-}
-
-func defaultInputMessage(c actionChoice) string {
-	if c.key == "git:"+git.ActionMagic.Key {
-		return "Project Forge TUI magic"
-	}
-	return "Project Forge TUI commit"
 }
 
 func (s *ProjectScreen) moveCursor(ps *mvc.PageState, count int, delta int) {

@@ -33,3 +33,8 @@ type SidebarContentProvider interface {
 type AutoRefreshProvider interface {
 	RefreshInterval(*mvc.State, *mvc.PageState) time.Duration
 }
+
+// GlobalKeyBypassProvider optionally allows screens to suppress root-level key handlers.
+type GlobalKeyBypassProvider interface {
+	BypassGlobalKey(*mvc.State, *mvc.PageState, string) bool
+}

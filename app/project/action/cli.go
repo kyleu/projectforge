@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -65,7 +66,11 @@ func cliProject(ctx context.Context, p *project.Project, mods module.Modules, lo
 		})
 		return errors.New(util.StringJoin(msgs, util.StringDefaultLinebreak))
 	}
-	clilog("success", "All good, project will be created in the current directory\n")
+	targetPath := p.Path
+	if absPath, err := filepath.Abs(targetPath); err == nil {
+		targetPath = absPath
+	}
+	clilog("success", "All good, project will be created in ["+targetPath+"]\n")
 
 	if err := cliGather(ctx, p, mods, logger); err != nil {
 		return err

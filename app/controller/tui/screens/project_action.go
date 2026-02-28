@@ -159,9 +159,6 @@ func runProjectActionCmd(ts *mvc.State, ps *mvc.PageState, prj *project.Project,
 		case git.ActionPush.Key:
 			res, err = gs.Push(ctx, logger)
 		case git.ActionCommit.Key:
-			if message == "" {
-				message = "Project Forge TUI commit"
-			}
 			res, err = gs.Commit(ctx, message, logger)
 		case git.ActionReset.Key:
 			res, err = gs.Reset(ctx, logger)

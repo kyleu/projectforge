@@ -16,8 +16,10 @@ import (
 
 type ProjectsScreen struct{}
 
-const keyNewProject = "project:new"
-const projectsSelectedKey = "projects.selectedKey"
+const (
+	keyNewProject       = "project:new"
+	projectsSelectedKey = "projects.selectedKey"
+)
 
 func NewProjectsScreen() *ProjectsScreen {
 	return &ProjectsScreen{}

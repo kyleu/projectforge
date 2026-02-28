@@ -68,7 +68,11 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width, m.height = x.Width, x.Height
 		return m, tea.ClearScreen
 	case tea.KeyMsg:
+		curr := m.current()
 		if x.String() == "/" {
+			if bypass, ok := curr.screen.(screens.GlobalKeyBypassProvider); ok && bypass.BypassGlobalKey(m.state, curr.page, x.String()) {
+				break
+			}
 			m.showLogs = !m.showLogs
 			return m, tea.ClearScreen
 		}
