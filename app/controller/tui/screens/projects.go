@@ -16,6 +16,9 @@ import (
 
 type ProjectsScreen struct{}
 
+const keyNewProject = "project:new"
+const projectsSelectedKey = "projects.selectedKey"
+
 func NewProjectsScreen() *ProjectsScreen {
 	return &ProjectsScreen{}
 }
@@ -25,27 +28,41 @@ func (s *ProjectsScreen) Key() string {
 }
 
 func (s *ProjectsScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
+	prjs := ts.App.Services.Projects.Projects()
+	items := projectItems(prjs)
 	ps.Title = "Projects"
-	ps.SetStatus("Loaded %d project(s)", len(ts.App.Services.Projects.Projects()))
+	if selected, ok := ps.EnsureData()[projectsSelectedKey].(string); ok && selected != "" {
+		ps.Cursor = indexForProjectItem(items, selected)
+	} else {
+		ps.Cursor = util.Choose(len(prjs) > 0, 1, 0)
+	}
+	ps.EnsureData()[projectsSelectedKey] = items[clampMenuCursor(ps.Cursor, len(items))].Key
+	ps.SetStatus("Loaded %d project(s)", len(prjs))
 	return nil
 }
 
 func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
-	prjs := ts.App.Services.Projects.Projects()
-	ps.Cursor = clampMenuCursor(ps.Cursor, len(prjs))
+	items := projectItems(ts.App.Services.Projects.Projects())
+	ps.Cursor = clampMenuCursor(ps.Cursor, len(items))
+	ps.EnsureData()[projectsSelectedKey] = items[ps.Cursor].Key
 	if delta, moved := menuMoveDelta(msg); moved {
-		ps.Cursor = moveMenuCursor(ps.Cursor, len(prjs), delta)
+		ps.Cursor = moveMenuCursor(ps.Cursor, len(items), delta)
+		ps.EnsureData()[projectsSelectedKey] = items[ps.Cursor].Key
 		return mvc.Stay(), nil, nil
 	}
 	switch m := msg.(type) {
 	case tea.KeyMsg:
 		switch m.String() {
 		case "enter":
-			if len(prjs) == 0 {
+			if len(items) == 0 {
 				return mvc.Stay(), nil, nil
 			}
-			prj := prjs[ps.Cursor]
-			return mvc.Push(KeyProject, util.ValueMap{"project": prj.Key}), nil, nil
+			selected := items[ps.Cursor]
+			ps.EnsureData()[projectsSelectedKey] = selected.Key
+			if selected.Key == keyNewProject {
+				return mvc.Push(KeyProjectNew, nil), nil, nil
+			}
+			return mvc.Push(KeyProject, util.ValueMap{"project": selected.Key}), nil, nil
 		case "esc", "backspace", "b":
 			return mvc.Pop(), nil, nil
 		}
@@ -61,11 +78,12 @@ func (s *ProjectsScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rec
 }
 
 func (s *ProjectsScreen) Help(_ *mvc.State, _ *mvc.PageState) HelpBindings {
-	return HelpBindings{Short: []string{"up/down: move", "enter: open project", "b: back"}}
+	return HelpBindings{Short: []string{"up/down: move", "enter: open project/create", "b: back"}}
 }
 
 func projectItems(prjs project.Projects) menu.Items {
-	ret := make(menu.Items, 0, len(prjs))
+	ret := make(menu.Items, 0, len(prjs)+1)
+	ret = append(ret, &menu.Item{Key: keyNewProject, Title: "[+] New Project", Description: "Guided project creation form"})
 	for _, prj := range prjs {
 		desc := strings.TrimSpace(prj.DescriptionSafe())
 		if desc == "" {
@@ -74,4 +92,13 @@ func projectItems(prjs project.Projects) menu.Items {
 		ret = append(ret, &menu.Item{Key: prj.Key, Title: prj.Title(), Description: desc})
 	}
 	return ret
+}
+
+func indexForProjectItem(items menu.Items, key string) int {
+	for idx, item := range items {
+		if item.Key == key {
+			return idx
+		}
+	}
+	return 0
 }

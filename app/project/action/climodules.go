@@ -37,7 +37,7 @@ func promptModules(current []string, mods module.Modules) ([]string, error) {
 		if errors.Is(err, huh.ErrUserAborted) {
 			return nil, errors.New("project creation canceled")
 		}
-		clilog("error: " + err.Error() + util.StringDefaultLinebreak)
+		clilog("error", err.Error())
 		return nil, err
 	}
 	ret = util.ArraySorted(util.ArrayRemoveDuplicates(ret))

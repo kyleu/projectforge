@@ -86,9 +86,6 @@ func runProjectActionCmd(ts *mvc.State, ps *mvc.PageState, prj *project.Project,
 		logger = ts.Logger
 	}
 	return func() tea.Msg {
-		if prj == nil {
-			return projectResultMsg{err: fmt.Errorf("project not found")}
-		}
 		if strings.HasPrefix(c.key, "action:") {
 			actionKey := strings.TrimPrefix(c.key, "action:")
 			if idx := strings.Index(actionKey, ":"); idx > -1 {
@@ -99,14 +96,19 @@ func runProjectActionCmd(ts *mvc.State, ps *mvc.PageState, prj *project.Project,
 			if cfg == nil {
 				cfg = util.ValueMap{}
 			}
+			projectKey := ""
+			if prj != nil {
+				projectKey = prj.Key
+			}
 			params := &action.Params{
-				ProjectKey: prj.Key,
+				ProjectKey: projectKey,
 				T:          act,
 				Cfg:        cfg,
 				MSvc:       ts.App.Services.Modules,
 				PSvc:       ts.App.Services.Projects,
 				ESvc:       ts.App.Services.Export,
 				XSvc:       ts.App.Services.Exec,
+				CLI:        cfg.GetBoolOpt("cli"),
 				Logger:     logger,
 			}
 			res := action.Apply(ctx, params)
@@ -136,6 +138,9 @@ func runProjectActionCmd(ts *mvc.State, ps *mvc.PageState, prj *project.Project,
 				lines = append(lines, util.OK)
 			}
 			return projectResultMsg{title: fmt.Sprintf("Completed [%s]", act.Title), status: res.Status, lines: lines, changes: changes}
+		}
+		if prj == nil {
+			return projectResultMsg{err: fmt.Errorf("project not found")}
 		}
 
 		gs := git.NewService(prj.Key, prj.Path)
@@ -207,9 +212,14 @@ func selectedProject(ts *mvc.State, ps *mvc.PageState) *project.Project {
 	if ts == nil || ts.App == nil || ts.App.Services == nil || ts.App.Services.Projects == nil {
 		return nil
 	}
-	key := ps.EnsureData().GetStringOpt(dataProjectKey)
-	if key == "" {
+	data := ps.EnsureData()
+	rawKey, hasProjectKey := data[dataProjectKey]
+	if !hasProjectKey {
 		return ts.App.Services.Projects.Default()
+	}
+	key, _ := rawKey.(string)
+	if key == "" {
+		return nil
 	}
 	prj, err := ts.App.Services.Projects.Get(key)
 	if err != nil {

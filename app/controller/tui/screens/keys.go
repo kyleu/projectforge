@@ -5,6 +5,7 @@ const (
 	KeyProjects    = "projects"
 	KeyDocs        = "docs"
 	KeyProject     = "project"
+	KeyProjectNew  = "projectnew"
 	KeyFileBrowser = "filebrowser"
 	KeyFileViewer  = "fileviewer"
 	KeyResults     = "results"

@@ -13,9 +13,13 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func promptString(label string, query string, curr string) (string, error) {
-	promptTotal++
-	title := fmt.Sprintf("%d: %s", promptTotal, query)
+func promptString(label string, query string, curr string, isHidden ...bool) (string, error) {
+	hidden := len(isHidden) > 0 && isHidden[0]
+	title := query
+	if !hidden {
+		promptTotal++
+		title = fmt.Sprintf("%d: %s", promptTotal, query)
+	}
 	if promptTotal > 1 {
 		title = util.StringDefaultLinebreak + title
 	}
@@ -32,10 +36,12 @@ func promptString(label string, query string, curr string) (string, error) {
 		if errors.Is(err, huh.ErrUserAborted) {
 			return "", errors.New("project creation canceled")
 		}
-		clilog("error: " + err.Error() + util.StringDefaultLinebreak)
+		clilog("error", "error: "+err.Error()+util.StringDefaultLinebreak)
 		return "", err
 	}
 	ret := util.OrDefault(strings.TrimSpace(text), curr)
-	logPromptAnswer(label, ret)
+	if !hidden {
+		logPromptAnswer(label, ret)
+	}
 	return ret, nil
 }

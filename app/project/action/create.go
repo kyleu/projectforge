@@ -13,9 +13,13 @@ import (
 
 func onCreate(ctx context.Context, params *Params) *Result {
 	path := util.OrDefault(params.Cfg.GetStringOpt("path"), ".")
+	if pth, err := promptString("Directory", "Choose the directory your project will live in", path, true); err != nil {
+		return errorResult(err, params.T, params.Cfg, params.Logger)
+	} else {
+		path = pth
+	}
 
 	_, _ = params.PSvc.Refresh(params.Logger)
-
 	var prj *project.Project
 	if params.ProjectKey == "" {
 		prj = params.PSvc.ByPath(path)
@@ -46,14 +50,12 @@ func onCreate(ctx context.Context, params *Params) *Result {
 	}
 
 	params.Logger.Info("Saving project...")
-	err := params.PSvc.Save(prj, params.Logger)
-	if err != nil {
+	if err := params.PSvc.Save(prj, params.Logger); err != nil {
 		return ret.WithError(err)
 	}
 
 	params.Logger.Info("Generating project...")
-	_, err = params.PSvc.Refresh(params.Logger)
-	if err != nil {
+	if _, err := params.PSvc.Refresh(params.Logger); err != nil {
 		msg := fmt.Sprintf("unable to load newly created project from path [%s]", path)
 		return errorResult(errors.Wrap(err, msg), TypeCreate, params.Cfg, params.Logger)
 	}
