@@ -101,7 +101,7 @@ func (p *Project) HasModule(key string) bool {
 func (p *Project) ToMap() util.ValueMap {
 	return util.ValueMap{
 		"key": p.Key, "name": p.Name, "icon": p.Icon, "exec": p.Exec,
-		"version": p.Version, "package": p.Package, "args": p.Key, "port": p.Port,
+		"version": p.Version, "package": p.Package, "args": p.Args, "port": p.Port,
 		"modules": p.Modules, "path": p.Path,
 	}
 }

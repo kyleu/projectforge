@@ -55,8 +55,8 @@ func Validate(p *Project, fs filesystem.FileLoader, moduleDeps map[string][]stri
 	}
 	if moduleDeps != nil {
 		validateModuleDeps(p.Modules, moduleDeps, e)
+		validateModuleConfig(p, e, dangerous)
 	}
-	validateModuleConfig(p, e, dangerous)
 	validateInfo(p, e)
 	validateBuild(p, e)
 	validateExport(p, e)
