@@ -44,7 +44,11 @@ func modelWebPath(g *golang.File, m *model.Model) *golang.Block {
 		case pk.Type.Key() == types.KeyTimestamp:
 			keys = append(keys, fn+"(util.TimeToJS("+goStr+"))")
 		default:
-			keys = append(keys, fn+"("+goStr+")")
+			if _, err := model.AsEnum(pk.Type); err == nil {
+				keys = append(keys, fn+"("+goStr+".String())")
+			} else {
+				keys = append(keys, fn+"("+goStr+")")
+			}
 		}
 	})
 	ret.WF("\treturn util.StringPath(append(paths, %s)...)", util.StringJoin(keys, ", "))

@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -27,12 +28,12 @@ func checkGrp(ret *golang.Block, grp *model.Column, override ...string) {
 	ret.W("\t\t}")
 }
 
-func controllerModelFromPath(m *model.Model) *golang.Block {
+func controllerModelFromPath(m *model.Model, enums enum.Enums) *golang.Block {
 	ret := golang.NewBlock(m.Proper()+"FromPath", "func")
 	ret.WF("func %sFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*%s, error) {", m.Package, m.ClassRef())
 	pks := m.PKs()
 	lo.ForEach(pks, func(col *model.Column, _ int) {
-		controllerArgFor(col, ret, "nil", 1)
+		controllerArgFor(col, ret, "nil", 1, enums)
 	})
 	args := lo.Map(pks, func(x *model.Column, _ int) string {
 		if x.Nullable && !x.Type.Scalar() {

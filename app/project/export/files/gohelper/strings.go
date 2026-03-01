@@ -70,32 +70,6 @@ func BlockTitle(g *golang.File, cols model.Columns, str metamodel.StringProvider
 	return ret
 }
 
-func BlockWebPath(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
-	ret := golang.NewBlock("WebPath", "type")
-	ret.WF("func (%s *%s) WebPath(paths ...string) string {", str.FirstLetter(), str.Proper())
-	ret.W("\tif len(paths) == 0 {")
-	ret.W("\t\tpaths = []string{DefaultRoute}")
-	ret.W("\t}")
-	keys := make([]string, 0, len(cols.PKs()))
-	lo.ForEach(cols.PKs(), func(pk *model.Column, _ int) {
-		g.AddImport(helper.ImpURL)
-		const fn = "url.QueryEscape"
-		goStr := pk.ToGoString(str.FirstLetter() + ".")
-		switch {
-		case types.IsStringList(pk.Type):
-			keys = append(keys, fmt.Sprintf(fn+`(util.StringJoin(%s, ","))`, goStr))
-		case types.IsString(pk.Type) && pk.HasTag("path"):
-			g.AddImport(helper.ImpStrings)
-			keys = append(keys, fn+"(strings.ReplaceAll("+goStr+`, "/", "||"))`)
-		default:
-			keys = append(keys, fn+"("+goStr+")")
-		}
-	})
-	ret.WF("\treturn util.StringPath(append(paths, %s)...)", util.StringJoin(keys, ", "))
-	ret.W("}")
-	return ret
-}
-
 func BlockStrings(g *golang.File, cols model.Columns, str metamodel.StringProvider) *golang.Block {
 	ret := golang.NewBlock("Strings", "func")
 	ret.WF("func (%s *%s) Strings() []string {", str.FirstLetter(), str.Proper())

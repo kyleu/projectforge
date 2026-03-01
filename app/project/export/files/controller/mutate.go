@@ -7,6 +7,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
@@ -15,7 +16,7 @@ import (
 
 const msgEqSPrint = "\t\tmsg := fmt.Sprintf(\""
 
-func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, models model.Models, prefix string) *golang.Block {
+func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, models model.Models, prefix string, enums enum.Enums) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create", "form")
 	if n := m.Config.GetStringOpt("_new"); n != "" {
 		if strings.HasPrefix(n, "redir:") {
@@ -26,7 +27,7 @@ func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, mod
 		}
 	}
 	if grp != nil {
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 	}
 	g.AddImport(helper.ImpAppUtil)
 	var decls []string
@@ -84,10 +85,10 @@ func controllerRandom(m *model.Model, prefix string) *golang.Block {
 	return ret
 }
 
-func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+func controllerCreate(m *model.Model, grp *model.Column, prefix string, enums enum.Enums) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create")
 	if grp != nil {
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 	}
 	ret.WF("\t\tret, err := %sFromForm(r, ps.RequestBody, true)", m.Package)
 	ret.W("\t\tif err != nil {")
@@ -105,11 +106,11 @@ func controllerCreate(m *model.Model, grp *model.Column, prefix string) *golang.
 	return ret
 }
 
-func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+func controllerEditForm(m *model.Model, grp *model.Column, prefix string, enums enum.Enums) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit", "form")
 	var bc string
 	if grp != nil {
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 		bc = grp.BC()
 	}
 	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
@@ -122,10 +123,10 @@ func controllerEditForm(m *model.Model, grp *model.Column, prefix string) *golan
 	return ret
 }
 
-func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+func controllerEdit(m *model.Model, grp *model.Column, prefix string, enums enum.Enums) *golang.Block {
 	ret := blockFor(m, prefix, grp, "edit")
 	if grp != nil {
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 	}
 	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)
@@ -149,10 +150,10 @@ func controllerEdit(m *model.Model, grp *model.Column, prefix string) *golang.Bl
 	return ret
 }
 
-func controllerDelete(m *model.Model, grp *model.Column, prefix string) *golang.Block {
+func controllerDelete(m *model.Model, grp *model.Column, prefix string, enums enum.Enums) *golang.Block {
 	ret := blockFor(m, prefix, grp, "delete")
 	if grp != nil {
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 	}
 	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
 	ret.WE(2, `""`)

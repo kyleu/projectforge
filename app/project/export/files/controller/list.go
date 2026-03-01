@@ -18,7 +18,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	if grp != nil {
 		meth = helper.TextGetBy + grp.Title()
 		grpArgs = helper.TextCommaSpace + grp.Camel() + helper.TextArg
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 	}
 
 	var suffix string

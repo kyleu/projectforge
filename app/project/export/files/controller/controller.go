@@ -5,6 +5,7 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/metamodel"
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
@@ -39,16 +40,16 @@ func Controller(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 	if err != nil {
 		return nil, err
 	}
-	g.AddBlocks(cl, controllerDetail(g, args.Models, m, nil, args.Audit(m), prefix))
+	g.AddBlocks(cl, controllerDetail(g, args.Models, m, nil, args.Audit(m), prefix, args.Enums))
 	g.AddBlocks(
-		controllerCreateForm(g, m, nil, args.Models, prefix), controllerRandom(m, prefix), controllerCreate(m, nil, prefix),
-		controllerEditForm(m, nil, prefix), controllerEdit(m, nil, prefix), controllerDelete(m, nil, prefix),
+		controllerCreateForm(g, m, nil, args.Models, prefix, args.Enums), controllerRandom(m, prefix), controllerCreate(m, nil, prefix, args.Enums),
+		controllerEditForm(m, nil, prefix, args.Enums), controllerEdit(m, nil, prefix, args.Enums), controllerDelete(m, nil, prefix, args.Enums),
 	)
-	g.AddBlocks(controllerModelFromPath(m), controllerModelFromForm(m))
+	g.AddBlocks(controllerModelFromPath(m, args.Enums), controllerModelFromForm(m))
 	return g.Render(linebreak)
 }
 
-func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int) {
+func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent int, enums enum.Enums) {
 	ind := util.StringJoin(lo.Times(indent, func(_ int) string {
 		return "\t"
 	}), "")
@@ -60,6 +61,23 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("%sArg, err := cutil.PathBool(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a boolean argument\")", retVal, col.Camel())
+		add("}")
+	case types.KeyEnum:
+		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
+		add("}")
+		e, _ := model.AsEnum(col.Type)
+		en := enums.Get(e.Ref)
+		add("%sArg := %s.All%s.Get(%sArgStr, nil)", col.Camel(), en.Package, col.ProperPlural(), col.Camel())
+	case types.KeyFloat:
+		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
+		add("}")
+		add("%sArg, err := strconv.ParseFloat(%sArgStr, 64)", col.Camel(), col.Camel())
+		add("if err != nil {")
+		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid floating-point number\")", retVal, col.Camel())
 		add("}")
 	case types.KeyInt:
 		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
@@ -80,15 +98,16 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		} else {
 			add("%sArg := int%d(%sArgX)", col.Camel(), bits, col.Camel())
 		}
-	case types.KeyFloat:
-		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
+	case types.KeyList:
+		if !types.IsStringList(col.Type) {
+			add("// ERROR: invalid list argument [%s]", col.Type.String())
+			break
+		}
+		add("%sStringsArg, err := cutil.PathArray(r, %q)", col.Camel(), col.Camel())
 		add("if err != nil {")
-		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an argument\")", retVal, col.Camel())
+		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an comma-separated argument\")", retVal, col.Camel())
 		add("}")
-		add("%sArg, err := strconv.ParseFloat(%sArgStr, 64)", col.Camel(), col.Camel())
-		add("if err != nil {")
-		add("\treturn %s, errors.Wrap(err, \"field [%s] must be a valid a valid floating-point number\")", retVal, col.Camel())
-		add("}")
+		add("%sArg := %sStringsArg.Strings()", col.Camel(), col.Camel())
 	case types.KeyString:
 		add("%sArg, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")
@@ -104,16 +123,6 @@ func controllerArgFor(col *model.Column, b *golang.Block, retVal string, indent 
 		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as a valid timestamp\")", retVal, col.Camel())
 		add("}")
 		add("%sArg := *%sArgP", col.Camel(), col.Camel())
-	case types.KeyList:
-		if !types.IsStringList(col.Type) {
-			add("// ERROR: invalid list argument [%s]", col.Type.String())
-			break
-		}
-		add("%sStringsArg, err := cutil.PathArray(r, %q)", col.Camel(), col.Camel())
-		add("if err != nil {")
-		add("\treturn %s, errors.Wrap(err, \"must provide [%s] as an comma-separated argument\")", retVal, col.Camel())
-		add("}")
-		add("%sArg := %sStringsArg.Strings()", col.Camel(), col.Camel())
 	case types.KeyUUID:
 		add("%sArgStr, err := cutil.PathString(r, %q, false)", col.Camel(), col.Camel())
 		add("if err != nil {")

@@ -5,18 +5,19 @@ import (
 
 	"github.com/samber/lo"
 
+	"projectforge.dev/projectforge/app/lib/metamodel/enum"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/project/export/files/helper"
 	"projectforge.dev/projectforge/app/project/export/golang"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *model.Column, audit bool, prefix string) *golang.Block {
+func controllerDetail(g *golang.File, models model.Models, m *model.Model, grp *model.Column, audit bool, prefix string, enums enum.Enums) *golang.Block {
 	rrels := models.ReverseRelations(m.Name)
 	ret := blockFor(m, prefix, grp, util.KeyDetail)
 	var grpHistory string
 	if grp != nil {
-		controllerArgFor(grp, ret, `""`, 2)
+		controllerArgFor(grp, ret, `""`, 2, enums)
 		grpHistory = fmt.Sprintf(", %q", grp.Camel())
 	}
 	ret.WF("\t\tret, err := %sFromPath(r, as, ps)", m.Package)
