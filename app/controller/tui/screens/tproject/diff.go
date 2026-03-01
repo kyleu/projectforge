@@ -1,4 +1,4 @@
-package screens
+package tproject
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
+	"projectforge.dev/projectforge/app/controller/tui/screens"
 	"projectforge.dev/projectforge/app/controller/tui/style"
 )
 
@@ -60,7 +61,7 @@ func (s *ResultDiffScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) 
 				ps.EnsureData()[dataResultDiffScroll] = len(lines) - 1
 			}
 			return mvc.Stay(), nil, nil
-		case KeyEsc, KeyBackspace, KeyLeft, "h", "b":
+		case screens.KeyEsc, screens.KeyBackspace, screens.KeyLeft, "h", "b":
 			return mvc.Pop(), nil, nil
 		}
 	}

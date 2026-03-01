@@ -1,4 +1,4 @@
-package screens
+package tproject
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 	"projectforge.dev/projectforge/app/controller/tui/components"
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
+	"projectforge.dev/projectforge/app/controller/tui/screens"
 	"projectforge.dev/projectforge/app/controller/tui/style"
 	"projectforge.dev/projectforge/app/lib/git"
 	"projectforge.dev/projectforge/app/lib/menu"
@@ -96,7 +97,7 @@ func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 
 	if m, ok := msg.(tea.KeyMsg); ok {
 		switch m.String() {
-		case KeyEnter, "r", " ":
+		case screens.KeyEnter, "r", " ":
 			if prj == nil || len(choices) == 0 {
 				return mvc.Stay(), nil, nil
 			}
@@ -115,14 +116,14 @@ func (s *ProjectScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (m
 				return mvc.Stay(), nil, nil
 			}
 			if choice.key == keyProjectFiles {
-				return mvc.Push(KeyFileBrowser, fileBrowserData("Project Files", prj.Path, prj.Path)), nil, nil
+				return mvc.Push(screens.KeyFileBrowser, fileBrowserData("Project Files", prj.Path, prj.Path)), nil, nil
 			}
 			if requiresInput(choice) {
 				startInputPrompt(ps, choice)
 				return mvc.Stay(), nil, nil
 			}
 			return mvc.Push(KeyResults, actionData(prj, choice, "", true)), nil, nil
-		case KeyEsc, KeyBackspace, "b":
+		case screens.KeyEsc, screens.KeyBackspace, "b":
 			return mvc.Pop(), nil, nil
 		}
 	}
@@ -290,10 +291,10 @@ func (s *ProjectScreen) updatePrompt(ps *mvc.PageState, prj *project.Project, ms
 	}
 
 	switch k.String() {
-	case KeyEsc:
+	case screens.KeyEsc:
 		stopInputPrompt(ps)
 		return mvc.Stay(), nil, nil
-	case KeyBackspace:
+	case screens.KeyBackspace:
 		v := d.GetStringOpt(dataInputMessage)
 		r := []rune(v)
 		if len(r) > 0 {
@@ -305,7 +306,7 @@ func (s *ProjectScreen) updatePrompt(ps *mvc.PageState, prj *project.Project, ms
 			d[dataInputDryRun] = !d.GetBoolOpt(dataInputDryRun)
 		}
 		return mvc.Stay(), nil, nil
-	case KeyEnter:
+	case screens.KeyEnter:
 		inputMessage := strings.TrimSpace(d.GetStringOpt(dataInputMessage))
 		if inputMessage == "" {
 			ps.SetStatus("Message is required")

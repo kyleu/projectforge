@@ -1,4 +1,4 @@
-package screens
+package tproject
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ import (
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
+	"projectforge.dev/projectforge/app/controller/tui/screens"
 	"projectforge.dev/projectforge/app/controller/tui/style"
 	pftheme "projectforge.dev/projectforge/app/lib/theme"
 	"projectforge.dev/projectforge/app/project"
@@ -99,7 +100,7 @@ func (s *ProjectNewScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg)
 		ps.SetStatus("Project created")
 		return mvc.Replace(KeyProject, util.ValueMap{"project": m.projectKey}), nil, nil
 	case tea.KeyMsg:
-		if m.String() == KeyEsc {
+		if m.String() == screens.KeyEsc {
 			if s.step == projectNewStepCreate || s.step == projectNewStepLoad {
 				return mvc.Stay(), nil, nil
 			}

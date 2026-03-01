@@ -4,6 +4,7 @@ import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/tui/screens"
 	"projectforge.dev/projectforge/app/controller/tui/screens/settings"
+	"projectforge.dev/projectforge/app/controller/tui/screens/tproject"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/util"
 )
@@ -13,8 +14,9 @@ func Bootstrap(st *app.State, logger util.Logger) *screens.Registry {
 
 	reg.AddScreen(screens.NewMainMenuScreen(reg))
 
-	projectsScreenItem := &menu.Item{Key: screens.KeyProjects, Title: "Projects", Description: "Manage your projects", Icon: "folder", Route: screens.KeyProjects}
-	reg.Register(projectsScreenItem, screens.NewProjectsScreen())
+	const projectDesc = "Manage your projects"
+	projectsScreenItem := &menu.Item{Key: tproject.KeyProjects, Title: "Projects", Description: projectDesc, Icon: "folder", Route: tproject.KeyProjects}
+	reg.Register(projectsScreenItem, tproject.NewProjectsScreen())
 	doctorScreenItem := &menu.Item{Key: screens.KeyDoctor, Title: "Doctor", Description: "Environment checks", Icon: "first-aid", Route: screens.KeyDoctor}
 	reg.Register(doctorScreenItem, screens.NewDoctorScreen())
 
@@ -23,12 +25,12 @@ func Bootstrap(st *app.State, logger util.Logger) *screens.Registry {
 	aboutScreenItem := &menu.Item{Key: screens.KeyAbout, Title: "About", Description: "Information about " + util.AppName, Icon: "info", Route: screens.KeyAbout}
 	reg.Register(aboutScreenItem, screens.NewAboutScreen())
 
-	reg.AddScreen(screens.NewProjectScreen())
-	reg.AddScreen(screens.NewProjectNewScreen())
+	reg.AddScreen(tproject.NewProjectScreen())
+	reg.AddScreen(tproject.NewProjectNewScreen())
 	reg.AddScreen(screens.NewFileBrowserScreen())
 	reg.AddScreen(screens.NewFileViewerScreen())
-	reg.AddScreen(screens.NewResultsScreen())
-	reg.AddScreen(screens.NewResultDiffScreen())
+	reg.AddScreen(tproject.NewResultsScreen())
+	reg.AddScreen(tproject.NewResultDiffScreen())
 
 	settings.Register(reg)
 

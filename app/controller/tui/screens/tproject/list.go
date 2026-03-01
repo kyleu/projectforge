@@ -1,4 +1,4 @@
-package screens
+package tproject
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 
 	"projectforge.dev/projectforge/app/controller/tui/layout"
 	"projectforge.dev/projectforge/app/controller/tui/mvc"
+	"projectforge.dev/projectforge/app/controller/tui/screens"
 	"projectforge.dev/projectforge/app/controller/tui/style"
 	"projectforge.dev/projectforge/app/lib/menu"
 	"projectforge.dev/projectforge/app/project"
@@ -54,7 +55,7 @@ func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (
 	}
 	if m, ok := msg.(tea.KeyMsg); ok {
 		switch m.String() {
-		case KeyEnter:
+		case screens.KeyEnter:
 			if len(items) == 0 {
 				return mvc.Stay(), nil, nil
 			}
@@ -64,7 +65,7 @@ func (s *ProjectsScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (
 				return mvc.Push(KeyProjectNew, nil), nil, nil
 			}
 			return mvc.Push(KeyProject, util.ValueMap{"project": selected.Key}), nil, nil
-		case KeyEsc, KeyBackspace, "b":
+		case screens.KeyEsc, screens.KeyBackspace, "b":
 			return mvc.Pop(), nil, nil
 		}
 	}
