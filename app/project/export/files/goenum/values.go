@@ -2,6 +2,7 @@ package goenum
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/samber/lo"
 
@@ -40,15 +41,16 @@ func enumValues(e *enum.Enum) *golang.Block {
 }
 
 func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
-	msg := fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(e.Proper()+v.Proper(e.Acronyms...), maxColLength), e.Proper(), v.Key)
+	var msg strings.Builder
+	msg.WriteString(fmt.Sprintf("\t%s = %s{Key: %q", util.StringPad(e.Proper()+v.Proper(e.Acronyms...), maxColLength), e.Proper(), v.Key))
 	if v.Name != "" {
-		msg += fmt.Sprintf(", Name: %q", v.Name)
+		msg.WriteString(fmt.Sprintf(", Name: %q", v.Name))
 	}
 	if v.Description != "" {
-		msg += fmt.Sprintf(", Description: %q", v.Description)
+		msg.WriteString(fmt.Sprintf(", Description: %q", v.Description))
 	}
 	if v.Icon != "" {
-		msg += fmt.Sprintf(", Icon: %q", v.Icon)
+		msg.WriteString(fmt.Sprintf(", Icon: %q", v.Icon))
 	}
 	ef := e.ExtraFields()
 	for _, extraKey := range ef.Keys() {
@@ -75,8 +77,8 @@ func enumValue(e *enum.Enum, v *enum.Value, maxColLength int) string {
 				continue
 			}
 		}
-		msg += fmt.Sprintf(", %s: %s", util.StringToProper(extraKey), t)
+		msg.WriteString(fmt.Sprintf(", %s: %s", util.StringToProper(extraKey), t))
 	}
-	msg += "}"
-	return msg
+	msg.WriteString("}")
+	return msg.String()
 }

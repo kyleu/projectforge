@@ -59,10 +59,7 @@ func renderBottomStatus(helpText string, serverURL string, serverErr string, wid
 	helpText = truncateStatusEllipsis(helpText, maxHelp)
 	left := helpStyle.Render(helpText)
 	right := rightStyle.Render(rightText)
-	gap := width - lipgloss.Width(left) - lipgloss.Width(right)
-	if gap < 1 {
-		gap = 1
-	}
+	gap := max(width-lipgloss.Width(left)-lipgloss.Width(right), 1)
 	return left + helpStyle.Render(strings.Repeat(" ", gap)) + right
 }
 

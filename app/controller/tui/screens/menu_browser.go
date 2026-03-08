@@ -38,10 +38,6 @@ func MenuMoveCursor(cursor int, count int, delta int) int {
 	return MenuClampCursor(cursor+delta, count)
 }
 
-func menuMoveDelta(msg tea.Msg) (int, bool) {
-	return MenuMoveDelta(msg)
-}
-
 func MenuMoveDelta(msg tea.Msg) (int, bool) {
 	if m, ok := msg.(tea.MouseMsg); ok && m.Action == tea.MouseActionPress {
 		switch m.Button {

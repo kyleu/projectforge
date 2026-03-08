@@ -49,11 +49,11 @@ func ToXMLBytes(x any, indent bool) ([]byte, error) {
 			n = "array"
 		}
 		if indent {
-			b = append([]byte(fmt.Sprintf("<%s>\n", n)), b...)
-			b = append(b, []byte(fmt.Sprintf("\n</%s>", n))...)
+			b = append(fmt.Appendf(nil, "<%s>\n", n), b...)
+			b = append(b, fmt.Appendf(nil, "\n</%s>", n)...)
 		} else {
-			b = append([]byte(fmt.Sprintf("<%s>", n)), b...)
-			b = append(b, []byte(fmt.Sprintf("</%s>", n))...)
+			b = append(fmt.Appendf(nil, "<%s>", n), b...)
+			b = append(b, fmt.Appendf(nil, "</%s>", n)...)
 		}
 	}
 	return b, nil

@@ -1,9 +1,9 @@
 //go:build test_all || !func_test
-// +build test_all !func_test
 
 package util_test
 
 import (
+	"slices"
 	"testing"
 
 	"{{{ .Package }}}/app/util"
@@ -51,7 +51,7 @@ func TestRandomInt(t *testing.T) {
 
 	t.Run("returns value in range", func(t *testing.T) {
 		t.Parallel()
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			n := util.RandomInt(10)
 			if n < 0 || n >= 10 {
 				t.Errorf("expected 0 <= n < 10, got %d", n)
@@ -65,7 +65,7 @@ func TestRandomInt16(t *testing.T) {
 
 	t.Run("returns value in range", func(t *testing.T) {
 		t.Parallel()
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			n := util.RandomInt16(100)
 			if n < 0 || n >= 100 {
 				t.Errorf("expected 0 <= n < 100, got %d", n)
@@ -79,7 +79,7 @@ func TestRandomInt32(t *testing.T) {
 
 	t.Run("returns value in range", func(t *testing.T) {
 		t.Parallel()
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			n := util.RandomInt32(1000)
 			if n < 0 || n >= 1000 {
 				t.Errorf("expected 0 <= n < 1000, got %d", n)
@@ -93,7 +93,7 @@ func TestRandomInt64(t *testing.T) {
 
 	t.Run("returns value in range", func(t *testing.T) {
 		t.Parallel()
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			n := util.RandomInt64(10000)
 			if n < 0 || n >= 10000 {
 				t.Errorf("expected 0 <= n < 10000, got %d", n)
@@ -107,7 +107,7 @@ func TestRandomFloat(t *testing.T) {
 
 	t.Run("returns value in range", func(t *testing.T) {
 		t.Parallel()
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			f := util.RandomFloat(10)
 			if f < 0 || f >= 10 {
 				t.Errorf("expected 0 <= f < 10, got %f", f)
@@ -123,7 +123,7 @@ func TestRandomBool(t *testing.T) {
 		t.Parallel()
 		trueCount := 0
 		falseCount := 0
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			if util.RandomBool() {
 				trueCount++
 			} else {
@@ -214,13 +214,7 @@ func TestRandomElement(t *testing.T) {
 		t.Parallel()
 		slice := []string{"a", "b", "c"}
 		elem := util.RandomElement(slice)
-		found := false
-		for _, s := range slice {
-			if s == elem {
-				found = true
-				break
-			}
-		}
+		found := slices.Contains(slice, elem)
 		if !found {
 			t.Errorf("element %s not in slice", elem)
 		}

@@ -64,7 +64,7 @@ Static URLs served from `./build/wasm`:
 
 ## Dependencies
 
-- Go 1.25+ with WASM support
+- Go 1.26+ with WASM support
 - A static web server (Node `npx http-server`, `python3 -m http.server`, or equivalent)
 - `zip` if you run `./bin/build/wasmrelease.sh`
 - A modern browser with WebAssembly + Service Worker support (HTTPS required in production)

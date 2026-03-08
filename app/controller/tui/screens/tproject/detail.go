@@ -144,10 +144,7 @@ func (s *ProjectScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.Rect
 	ps.EnsureData()[dataViewportHeight] = contentH
 	s.ensureViewportState(ps, len(choices))
 	offset, end := s.viewportWindow(ps, len(choices))
-	cursor := ps.Cursor - offset
-	if cursor < 0 {
-		cursor = 0
-	}
+	cursor := max(ps.Cursor-offset, 0)
 	items := make(menu.Items, 0, end-offset)
 	for idx := offset; idx < end; idx++ {
 		c := choices[idx]
@@ -388,10 +385,7 @@ func (s *ProjectScreen) moveCursor(ps *mvc.PageState, count int, delta int) {
 	if count == 0 || delta == 0 {
 		return
 	}
-	next := ps.Cursor + delta
-	if next < 0 {
-		next = 0
-	}
+	next := max(ps.Cursor+delta, 0)
 	if next >= count {
 		next = count - 1
 	}
@@ -409,10 +403,7 @@ func (s *ProjectScreen) ensureViewportState(ps *mvc.PageState, count int) {
 	if height < 1 {
 		height = 10
 	}
-	offset := d.GetIntOpt(dataListOffset)
-	if offset < 0 {
-		offset = 0
-	}
+	offset := max(d.GetIntOpt(dataListOffset), 0)
 	maxOffset := max(0, count-height)
 	if offset > maxOffset {
 		offset = maxOffset

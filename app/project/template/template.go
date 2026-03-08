@@ -55,8 +55,8 @@ func ToTemplateContext(p *project.Project, configVars util.KeyTypeDescs, portOff
 
 	var ignoreGrep string
 	lo.ForEach(p.Ignore, func(ig string, _ int) {
-		if strings.HasPrefix(ig, "^") {
-			ig = "\\\\./" + strings.TrimPrefix(ig, "^")
+		if after, ok := strings.CutPrefix(ig, "^"); ok {
+			ig = "\\\\./" + after
 		}
 		ignoreGrep += fmt.Sprintf(" | grep -v %s", ig)
 	})

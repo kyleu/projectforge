@@ -87,8 +87,8 @@ func load(ctx context.Context, src string, tgt string) (*SVG, error) {
 		return Transform(tgt, b, src)
 	}
 
-	if strings.HasPrefix(src, "brand-") {
-		src = strings.TrimPrefix(src, "brand-")
+	if after, ok := strings.CutPrefix(src, "brand-"); ok {
+		src = after
 		tgt = strings.TrimPrefix(tgt, "brand-")
 		return get(simpleIcons + src)
 	}

@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"maps"
 	"slices"
 
 	"github.com/samber/lo"
@@ -97,9 +98,7 @@ func parseConfig(pm *PrjAndMods) (util.KeyTypeDescs, map[string]int) {
 				configVars = append(configVars, src)
 			}
 		})
-		for k, v := range mod.PortOffsets {
-			portOffsets[k] = v
-		}
+		maps.Copy(portOffsets, mod.PortOffsets)
 	})
 	for k, v := range pm.Prj.Info.AdditionalPorts {
 		portOffsets[k] = v - pm.Prj.Port

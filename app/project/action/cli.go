@@ -35,8 +35,8 @@ func clilog(level string, s string) {
 	case util.KeySuccess:
 		style = cliSuccessStyle
 	}
-	lines := strings.Split(s, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(s, "\n")
+	for line := range lines {
 		if line != "" {
 			_, _ = os.Stdout.WriteString(style.Render(line))
 		}
@@ -47,10 +47,7 @@ func clilog(level string, s string) {
 const promptLabelWidth = len("Author GitHub")
 
 func logPromptAnswer(label string, value string) {
-	pad := promptLabelWidth - len(label)
-	if pad < 0 {
-		pad = 0
-	}
+	pad := max(promptLabelWidth-len(label), 0)
 	spacer := strings.Repeat(" ", pad+1)
 	clilog("info", cliLabelStyle.Render(label+":")+spacer+cliValueStyle.Render(value))
 }

@@ -48,7 +48,7 @@ func FromReflect(t reflect.Type) *Wrapped {
 		return NewAny()
 	case reflect.Map:
 		return NewMap(FromReflect(t.Key()), FromReflect(t.Elem()))
-	case reflect.Ptr:
+	case reflect.Pointer:
 		return NewOption(FromReflect(t.Elem()))
 	case reflect.Slice:
 		return NewList(FromReflect(t.Elem()))

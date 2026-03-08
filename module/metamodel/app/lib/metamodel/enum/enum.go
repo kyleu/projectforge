@@ -98,6 +98,8 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 				typ = types.KeyInt
 			case bool:
 				typ = types.KeyBool
+			default:
+				typ = fmt.Sprintf("error(invalid extra field type [%T])", x)
 			}
 			if x := e.Config.GetStringOpt("type:" + k); x != "" {
 				switch x {
@@ -115,15 +117,17 @@ func (e *Enum) ExtraFields() *util.OrderedMap[string] {
 
 func (e *Enum) ExtraFieldValues(k string) ([]any, bool) {
 	ret := make([]any, 0, len(e.Values))
+	strs := make([]string, 0, len(e.Values))
 	for _, v := range e.Values {
 		if v.Extra == nil {
 			continue
 		}
 		if x, ok := v.Extra.Get(k); ok && x != nil {
 			ret = append(ret, x)
+			strs = append(strs, util.ToJSON(x))
 		}
 	}
-	return ret, len(lo.Uniq(ret)) == len(ret)
+	return ret, len(lo.Uniq(strs)) == len(ret)
 }
 
 func (e *Enum) ID() string {

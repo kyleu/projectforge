@@ -67,6 +67,7 @@ var (
 	buildCleanup       = &Build{Key: "cleanup", Title: "Cleanup", Description: "Cleans up file permissions", Run: onCleanup}
 	buildSize          = &Build{Key: "size", Title: "Binary Size", Description: "Visualizes the file size of the binary", Run: onSize}
 	buildTidy          = simpleBuild("tidy", "Tidy", "go mod tidy", false)
+	buildFix           = simpleBuild("fix", "Go Fix", "go fix ./...", true)
 	buildFormat        = simpleBuild("format", "Format", util.StringFilePath("bin", "format."+build.ScriptExtension), false)
 	buildFormatClient  = simpleBuild("format-client", "Format Client", util.StringFilePath("bin", "format-client."+build.ScriptExtension), false)
 	buildLint          = simpleBuild("lint", "Lint", util.StringFilePath("bin", "check."+build.ScriptExtension), true)
@@ -85,8 +86,8 @@ var (
 
 var AllBuilds = Builds{
 	buildFull, buildBuild, buildStart, buildClean, buildDeps, buildImports, buildIgnored, buildPackages, buildCleanup, buildSize,
-	buildTidy, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientUpdate, buildClientBuild,
-	buildThemeRebuild, buildDeployments, buildTest, buildTestClient, buildCoverage, buildCustom,
+	buildTidy, buildFix, buildFormat, buildFormatClient, buildLint, buildLintClient, buildTemplates, buildClientInstall, buildClientUpdate,
+	buildClientBuild, buildThemeRebuild, buildDeployments, buildTest, buildTestClient, buildCoverage, buildCustom,
 }
 
 func fullBuild(ctx context.Context, prj *project.Project, r *Result, logger util.Logger) *Result {

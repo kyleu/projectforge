@@ -25,9 +25,7 @@ func ValueMapFor(kvs ...any) ValueMap {
 
 func ValueMapFrom(m map[string]any) ValueMap {
 	ret := make(ValueMap, len(m))
-	for k, v := range m {
-		ret[k] = v
-	}
+	maps.Copy(ret, m)
 	return ret
 }
 
@@ -98,9 +96,7 @@ func (m ValueMap) With(k string, v any) ValueMap {
 func (m ValueMap) Merge(args ...ValueMap) ValueMap {
 	ret := m.Clone()
 	lo.ForEach(args, func(arg ValueMap, _ int) {
-		for k, v := range arg {
-			ret[k] = v
-		}
+		maps.Copy(ret, arg)
 	})
 	return ret
 }
@@ -117,9 +113,7 @@ func (m ValueMap) Filter(keys []string) ValueMap {
 
 func (m ValueMap) Overwrite(sourceMap ValueMap) ValueMap {
 	destMap := m.Clone()
-	for key, data := range sourceMap {
-		destMap[key] = data
-	}
+	maps.Copy(destMap, sourceMap)
 	return destMap
 }
 
@@ -153,9 +147,7 @@ func (m ValueMap) Clone() ValueMap {
 		return nil
 	}
 	ret := make(ValueMap, len(m))
-	for k, v := range m {
-		ret[k] = v
-	}
+	maps.Copy(ret, m)
 	return ret
 }
 
@@ -222,8 +214,8 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 	vals := ValueMap{}
 
 	for k, v := range m {
-		if strings.HasSuffix(k, selectedSuffix) {
-			key := strings.TrimSuffix(k, selectedSuffix)
+		if before, ok := strings.CutSuffix(k, selectedSuffix); ok {
+			key := before
 			keys = append(keys, key)
 		} else {
 			curr, ok := vals[k]

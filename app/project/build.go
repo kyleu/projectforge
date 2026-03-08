@@ -24,10 +24,9 @@ type Build struct {
 	WASM    bool `json:"wasm,omitzero"`
 	X86     bool `json:"x86,omitzero"`
 
-	WindowsARM bool `json:"windowsARM,omitzero"`
-	LinuxARM   bool `json:"linuxARM,omitzero"`
-	LinuxMIPS  bool `json:"linuxMIPS,omitzero"`
-	LinuxOdd   bool `json:"linuxOdd,omitzero"`
+	LinuxARM  bool `json:"linuxARM,omitzero"`
+	LinuxMIPS bool `json:"linuxMIPS,omitzero"`
+	LinuxOdd  bool `json:"linuxOdd,omitzero"`
 
 	Dragonfly bool `json:"dragonfly,omitzero"`
 	Illumos   bool `json:"illumos,omitzero"`
@@ -48,13 +47,13 @@ func (b *Build) Mobile() bool {
 }
 
 func (b *Build) HasArm() bool {
-	return b.WindowsARM || b.LinuxARM || b.FreeBSD || b.OpenBSD
+	return b.LinuxARM || b.FreeBSD || b.OpenBSD
 }
 
 func (b *Build) Empty() bool {
 	ret := b.Private || b.Changelog || b.TestsFail || b.NoScript || b.Simple ||
 		b.Desktop || b.Notarize || b.Signing || b.SkipDocker || b.SafeMode ||
-		b.Android || b.IOS || b.WASM || b.X86 || b.WindowsARM ||
+		b.Android || b.IOS || b.WASM || b.X86 ||
 		b.LinuxARM || b.LinuxMIPS || b.LinuxOdd || b.Dragonfly || b.Illumos ||
 		b.FreeBSD || b.NetBSD || b.OpenBSD || b.Plan9 || b.Solaris ||
 		b.Homebrew || b.NFPMS || b.BOM || b.Snapcraft
@@ -65,7 +64,7 @@ func (b *Build) ToMap() map[string]bool {
 	return map[string]bool{
 		"private": b.Private, "changelog": b.Changelog, "testsFail": b.TestsFail, "noScript": b.NoScript,
 		"desktop": b.Desktop, "notarize": b.Notarize, "signing": b.Signing, "skipDocker": b.SkipDocker, "safeMode": b.SafeMode,
-		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "x86": b.X86, "windows-arm": b.WindowsARM,
+		"android": b.Android, "ios": b.IOS, "wasm": b.WASM, "x86": b.X86,
 		"linux-arm": b.LinuxARM, "linux-mips": b.LinuxMIPS, "linux-odd": b.LinuxOdd,
 		"dragonfly": b.Dragonfly, "illumos": b.Illumos, "freebsd": b.FreeBSD,
 		"netbsd": b.NetBSD, "openbsd": b.OpenBSD, "plan9": b.Plan9, "solaris": b.Solaris,
@@ -81,7 +80,7 @@ func BuildFromMap(frm util.ValueMap) *Build {
 	return &Build{
 		Private: x("private"), Changelog: x("changelog"), TestsFail: x("testsFail"), NoScript: x("noScript"),
 		Desktop: x("desktop"), Notarize: x("notarize"), Signing: x("signing"), SkipDocker: x("skipDocker"), SafeMode: x("safeMode"),
-		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"), WindowsARM: x("windows-arm"),
+		Android: x("android"), IOS: x("ios"), WASM: x("wasm"), X86: x("x86"),
 		LinuxARM: x("linux-arm"), LinuxMIPS: x("linux-mips"), LinuxOdd: x("linux-odd"),
 		Dragonfly: x("dragonfly"), Illumos: x("illumos"), FreeBSD: x("freebsd"),
 		NetBSD: x("netbsd"), OpenBSD: x("openbsd"), Plan9: x("plan9"), Solaris: x("solaris"),

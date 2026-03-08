@@ -219,7 +219,7 @@ func (s *FileViewerScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) 
 		return mvc.Stay(), nil, nil
 	}
 
-	if delta, moved := menuMoveDelta(msg); moved {
+	if delta, moved := MenuMoveDelta(msg); moved {
 		moveFileViewScroll(ps, delta)
 		return mvc.Stay(), nil, nil
 	}
@@ -291,10 +291,7 @@ func (s *FileViewerScreen) renderFileWindow(ps *mvc.PageState, height int) strin
 	if len(s.lines) == 0 {
 		return "Empty file"
 	}
-	scroll := ps.EnsureData().GetIntOpt(dataFileViewScroll)
-	if scroll < 0 {
-		scroll = 0
-	}
+	scroll := max(ps.EnsureData().GetIntOpt(dataFileViewScroll), 0)
 	maxOffset := max(0, len(s.lines)-max(1, height))
 	if scroll > maxOffset {
 		scroll = maxOffset
@@ -470,8 +467,8 @@ func fitVertical(s string, height int) string {
 		if s == "" {
 			return ""
 		}
-		if i := strings.IndexByte(s, '\n'); i >= 0 {
-			return s[:i]
+		if before, _, ok := strings.Cut(s, "\n"); ok {
+			return before
 		}
 		return s
 	}

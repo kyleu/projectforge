@@ -206,17 +206,6 @@ builds:
     goarch:
       - "386"
     mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
-{{{ end }}}{{{ if .Build.WindowsARM }}}
-  - id: "windows-arm"
-    goos:
-      - "windows"
-    goarch:
-      - "arm"
-    goarm:
-      - "5"
-      - "6"
-      - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"{{{ .GoBinaryContent }}}
 {{{ end }}}{{{ if .BuildWASM }}}
   - id: "js"
     goos:

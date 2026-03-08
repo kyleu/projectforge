@@ -65,12 +65,12 @@ func (s *DocumentationScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Ms
 	}
 
 	if s.activeFile == "" {
-		if delta, moved := menuMoveDelta(msg); moved {
+		if delta, moved := MenuMoveDelta(msg); moved {
 			ps.Cursor = moveMenuCursor(ps.Cursor, len(items), delta)
 			s.cursorPath[len(s.cursorPath)-1] = ps.Cursor
 			return mvc.Stay(), nil, nil
 		}
-	} else if delta, moved := menuMoveDelta(msg); moved {
+	} else if delta, moved := MenuMoveDelta(msg); moved {
 		s.moveScroll(delta)
 		return mvc.Stay(), nil, nil
 	}

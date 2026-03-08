@@ -12,7 +12,7 @@ type Stats struct {
 	MessagesReceived int       `json:"messagesReceived"`
 	BytesSent        int       `json:"bytesSent"`
 	BytesReceived    int       `json:"bytesReceived"`
-	Started          time.Time `json:"started,omitempty"`
+	Started          time.Time `json:"started"`
 }
 
 func NewStats() *Stats {

@@ -2,6 +2,7 @@ package filter
 
 import (
 	"fmt"
+	"maps"
 	"net/url"
 
 	"github.com/samber/lo"
@@ -108,10 +109,7 @@ func (p *Params) NextPage() *Params {
 	if limit == 0 {
 		limit = PageSize
 	}
-	offset := p.Offset + limit
-	if offset < 0 {
-		offset = 0
-	}
+	offset := max(p.Offset+limit, 0)
 	return &Params{Key: p.Key, Orderings: p.Orderings, Limit: p.Limit, Offset: offset}
 }
 
@@ -124,10 +122,7 @@ func (p *Params) PreviousPage() *Params {
 	if limit == 0 {
 		limit = PageSize
 	}
-	offset := p.Offset - limit
-	if offset < 0 {
-		offset = 0
-	}
+	offset := max(p.Offset-limit, 0)
 	return &Params{Key: p.Key, Orderings: p.Orderings, Limit: p.Limit, Offset: offset}
 }
 
@@ -215,9 +210,7 @@ func (p *Params) ToQueryString(u *url.URL) string {
 	}
 
 	ret := url.Values{}
-	for k, v := range u.Query() {
-		ret[k] = v
-	}
+	maps.Copy(ret, u.Query())
 
 	ret.Del(p.Key + SuffixOrder)
 	ret.Del(p.Key + SuffixLimit)

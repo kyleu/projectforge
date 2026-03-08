@@ -36,7 +36,7 @@ func (s *MainMenuScreen) Init(_ *mvc.State, ps *mvc.PageState) tea.Cmd {
 func (s *MainMenuScreen) Update(_ *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	items := s.items()
 	ps.Cursor = clampMenuCursor(ps.Cursor, len(items))
-	if delta, moved := menuMoveDelta(msg); moved {
+	if delta, moved := MenuMoveDelta(msg); moved {
 		ps.Cursor = moveMenuCursor(ps.Cursor, len(items), delta)
 		return mvc.Stay(), nil, nil
 	}

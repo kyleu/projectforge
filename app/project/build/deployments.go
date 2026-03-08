@@ -50,8 +50,8 @@ func Deployments(curr string, fs filesystem.FileLoader, fix bool, path string, d
 }
 
 func deploymentProcessLine(line string, fix bool, hit util.ValueMap, curr string) string {
-	if idx := strings.Index(line, "tag: "); idx > -1 {
-		v := strings.TrimSpace(line[idx+5:])
+	if _, after, ok := strings.Cut(line, "tag: "); ok {
+		v := strings.TrimSpace(after)
 		if curr == v || curr == strings.TrimPrefix(v, "v") {
 			return line
 		}

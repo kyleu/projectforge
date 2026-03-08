@@ -20,8 +20,8 @@ func List() ([]string, error) {
 	}
 	ret := util.NewStringSliceWithSize(len(files))
 	for _, f := range files {
-		if strings.HasSuffix(f.Name(), util.ExtMarkdown) {
-			ret.Push(strings.TrimSuffix(f.Name(), util.ExtMarkdown))
+		if before, ok := strings.CutSuffix(f.Name(), util.ExtMarkdown); ok {
+			ret.Push(before)
 		}
 	}
 	return ret.Slice, nil

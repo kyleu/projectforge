@@ -23,10 +23,7 @@ func menuWindow(items menu.Items, cursor int, height int) (menu.Items, int) {
 		return items, menuClamp(cursor, len(items))
 	}
 	cursor = menuClamp(cursor, len(items))
-	start := cursor - (height / 2)
-	if start < 0 {
-		start = 0
-	}
+	start := max(cursor-(height/2), 0)
 	maxStart := len(items) - height
 	if start > maxStart {
 		start = maxStart

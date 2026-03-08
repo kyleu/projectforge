@@ -44,12 +44,9 @@ func (p Pkg) Trim(src Pkg) Pkg {
 }
 
 func (p Pkg) Drop(n int) Pkg {
-	l := len(p) - n
-	if l < 0 {
-		l = 0
-	}
+	l := max(len(p)-n, 0)
 	ret := make(Pkg, 0, l)
-	for idx := 0; idx < l; idx++ {
+	for idx := range l {
 		ret = append(ret, p[idx])
 	}
 	return ret

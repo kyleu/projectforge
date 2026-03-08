@@ -1,6 +1,6 @@
 {
 	"name": "{{{ .Title }}} Dev Container",
-	"image": "mcr.microsoft.com/devcontainers/go:2.0.3-1.25-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/go:2.1.0-1.26-bookworm",
 	"features": {
 		"ghcr.io/devcontainers/features/go:1": {
 			"version": "{{{ .GoMajorVersionSafe }}}"

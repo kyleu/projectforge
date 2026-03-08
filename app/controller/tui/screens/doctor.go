@@ -46,7 +46,7 @@ func (s *DoctorScreen) Init(ts *mvc.State, ps *mvc.PageState) tea.Cmd {
 func (s *DoctorScreen) Update(ts *mvc.State, ps *mvc.PageState, msg tea.Msg) (mvc.Transition, tea.Cmd, error) {
 	ck := s.availableChecks(ts)
 	ps.Cursor = clampMenuCursor(ps.Cursor, len(ck))
-	if delta, moved := menuMoveDelta(msg); moved {
+	if delta, moved := MenuMoveDelta(msg); moved {
 		ps.Cursor = moveMenuCursor(ps.Cursor, len(ck), delta)
 		return mvc.Stay(), nil, nil
 	}

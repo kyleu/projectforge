@@ -75,8 +75,8 @@ func ServiceGet(m *model.Model, args *metamodel.Args, linebreak string) (*file.F
 	})
 	lo.ForEach(m.Columns, func(col *model.Column, _ int) {
 		lo.ForEach(col.Tags, func(tag string, _ int) {
-			if strings.HasPrefix(tag, "fn:") {
-				fn := strings.TrimPrefix(tag, "fn:")
+			if after, ok := strings.CutPrefix(tag, "fn:"); ok {
+				fn := after
 				getBys[fn] = append(getBys[fn], col)
 				titles[fn] = fn
 			}

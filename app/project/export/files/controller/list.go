@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/samber/lo"
 
@@ -57,7 +58,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.WE(2, `""`)
 	}
 	ret.WF("\t\tps.SetTitleAndData(%q, ret)", m.TitlePlural())
-	var toStrings string
+	var toStrings strings.Builder
 	for _, rel := range m.Relations {
 		relModel := models.Get(rel.Table)
 		if !relModel.CanTraverseRelation() {
@@ -92,7 +93,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.WF(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), sfx, c)
 		ret.WE(2, `""`)
 
-		toStrings += fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper())
+		toStrings.WriteString(fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper()))
 	}
 	var searchSuffix string
 	if m.HasSearches() {
@@ -101,7 +102,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 	if m.HasTag("count") {
 		searchSuffix += ", Count: count"
 	}
-	ret.WF("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings, searchSuffix)
+	ret.WF("\t\tpage := &v%s.List{Models: ret%s, Params: ps.Params%s}", m.Package, toStrings.String(), searchSuffix)
 	render := "\t\treturn %sRender(r, as, page, ps, %s%s)"
 	var bc string
 	if grp != nil {

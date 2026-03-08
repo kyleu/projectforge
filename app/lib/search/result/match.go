@@ -54,7 +54,7 @@ func (m Matches) Sort() {
 func MatchesFor(key string, x any, q string) Matches {
 	q = strings.ToLower(q)
 	v := reflect.ValueOf(x)
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		if v.IsNil() {
 			return nil
 		}

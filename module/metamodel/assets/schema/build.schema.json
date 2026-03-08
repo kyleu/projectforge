@@ -61,10 +61,6 @@
       "description": "if set, generates x86 binaries",
       "type": "boolean"
     },
-    "windowsARM": {
-      "description": "if set, generates ARM Windows binaries",
-      "type": "boolean"
-    },
     "linuxARM": {
       "description": "if set, generates ARM Linux binaries",
       "type": "boolean"

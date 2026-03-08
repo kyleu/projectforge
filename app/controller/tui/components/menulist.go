@@ -22,7 +22,7 @@ func RenderMenuList(items menu.Items, cursor int, st style.Styles, width int) st
 
 	out := make([]string, 0, len(items))
 	for i, item := range items {
-		line := renderMenuRow(item.Title, item.Description, width, titleStyle, descStyle)
+		line := RenderMenuRow(item.Title, item.Description, width, titleStyle, descStyle)
 		if i == cursor {
 			line = st.Selected.Render(stripANSI(line))
 		}
@@ -32,7 +32,7 @@ func RenderMenuList(items menu.Items, cursor int, st style.Styles, width int) st
 	return strings.Join(out, "\n")
 }
 
-func renderMenuRow(title string, desc string, width int, titleStyle lipgloss.Style, descStyle lipgloss.Style) string {
+func RenderMenuRow(title string, desc string, width int, titleStyle lipgloss.Style, descStyle lipgloss.Style) string {
 	const (
 		prefix = "  "
 		suffix = "  "

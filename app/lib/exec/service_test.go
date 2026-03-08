@@ -103,7 +103,7 @@ func TestServiceNewExec_ConcurrentSafety(t *testing.T) {
 	const numGoroutines = 100
 
 	wg.Add(numGoroutines)
-	for i := 0; i < numGoroutines; i++ {
+	for range numGoroutines {
 		go func() {
 			defer wg.Done()
 			s.NewExec("concurrent", "cmd", ".", false)

@@ -69,10 +69,7 @@ func SolveWithSidebar(width int, height int, showSidebar bool) Rects {
 	}
 
 	contentWidth := max(1, width+nonCompactWidthCompensation)
-	sidebarWidth := nonCompactSidebarWidth
-	if sidebarWidth > contentWidth/2 {
-		sidebarWidth = contentWidth / 2
-	}
+	sidebarWidth := min(nonCompactSidebarWidth, contentWidth/2)
 	mainWidth := max(1, contentWidth-sidebarWidth)
 	ret.Main = Rect{X: 0, Y: headerHeight, W: mainWidth, H: bodyHeight}
 	ret.Sidebar = Rect{X: mainWidth, Y: headerHeight, W: sidebarWidth, H: bodyHeight}

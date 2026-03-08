@@ -56,13 +56,13 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSMac, ArchUniversal){{{ if .BuildDesktop }}}
 	addDefault(ModeDesktop, OSWindows, ArchAMD64){{{ end }}}
 	addDefault(ModeServer, OSWindows, ArchAMD64)
-	addDefault(ModeServer, OSWindows, Arch386){{{ if .Build.WindowsARM }}}
 	addDefault(ModeServer, OSWindows, ArchARM64)
-	addARMs(ModeServer, OSWindows){{{ end }}}{{{ if .BuildDesktop }}}
+	addDefault(ModeServer, OSWindows, Arch386)
+	{{{ if .BuildDesktop }}}
 	addDefault(ModeDesktop, OSLinux, ArchAMD64){{{ end }}}
 	addDefault(ModeServer, OSLinux, ArchAMD64)
-	addDefault(ModeServer, OSLinux, Arch386){{{ if .Build.LinuxARM }}}
 	addDefault(ModeServer, OSLinux, ArchARM64)
+	addDefault(ModeServer, OSLinux, Arch386){{{ if .Build.LinuxARM }}}
 	addARMs(ModeServer, OSLinux){{{ end }}}{{{ if .Build.LinuxOdd }}}
 	addDefault(ModeServer, OSLinux, ArchPPC64)
 	addDefault(ModeServer, OSLinux, ArchPPC64LE)
@@ -74,8 +74,8 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeMobile, OSAndroid, "aar"){{{ end }}}{{{ if .Build.Dragonfly }}}
 	addDefault(ModeServer, OSDragonfly, ArchAMD64){{{ end }}}{{{ if .Build.FreeBSD }}}
 	addDefault(ModeServer, OSFreeBSD, ArchAMD64)
-	addDefault(ModeServer, OSFreeBSD, Arch386)
 	addDefault(ModeServer, OSFreeBSD, ArchARM64)
+	addDefault(ModeServer, OSFreeBSD, Arch386)
 	addARMs(ModeServer, OSFreeBSD){{{ end }}}{{{ if .Build.Illumos }}}
 	addDefault(ModeServer, OSIllumos, ArchAMD64){{{ end }}}{{{ if .BuildIOS }}}
 	addDefault(ModeMobile, OSIOS, "app")

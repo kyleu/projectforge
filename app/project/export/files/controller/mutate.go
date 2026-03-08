@@ -19,8 +19,8 @@ const msgEqSPrint = "\t\tmsg := fmt.Sprintf(\""
 func controllerCreateForm(g *golang.File, m *model.Model, grp *model.Column, models model.Models, prefix string, enums enum.Enums) *golang.Block {
 	ret := blockFor(m, prefix, grp, "create", "form")
 	if n := m.Config.GetStringOpt("_new"); n != "" {
-		if strings.HasPrefix(n, "redir:") {
-			ret.WF("\t\treturn %q, nil", strings.TrimPrefix(n, "redir:"))
+		if after, ok := strings.CutPrefix(n, "redir:"); ok {
+			ret.WF("\t\treturn %q, nil", after)
 			ret.W("\t})")
 			ret.W("}")
 			return ret

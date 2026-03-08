@@ -151,7 +151,7 @@ func ArrayDereference[T any](x []*T) []T {
 func LengthAny(dest any) int {
 	defer func() { _ = recover() }()
 	rfl := reflect.ValueOf(dest)
-	if rfl.Kind() == reflect.Ptr {
+	if rfl.Kind() == reflect.Pointer {
 		rfl = rfl.Elem()
 	}
 	return rfl.Len()
@@ -160,7 +160,7 @@ func LengthAny(dest any) int {
 func ArrayFromAny[T any](dest any) ([]T, error) {
 	defer func() { _ = recover() }()
 	rfl := reflect.ValueOf(dest)
-	if rfl.Kind() == reflect.Ptr {
+	if rfl.Kind() == reflect.Pointer {
 		rfl = rfl.Elem()
 	}
 	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {

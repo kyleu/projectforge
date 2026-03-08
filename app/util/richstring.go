@@ -223,11 +223,12 @@ func (s Str) OrDefault(dflt string) Str {
 }
 
 func (s Str) Append(strs ...string) Str {
-	ret := s.String()
+	var ret strings.Builder
+	ret.WriteString(s.String())
 	for _, s := range strs {
-		ret += s
+		ret.WriteString(s)
 	}
-	return Str(ret)
+	return Str(ret.String())
 }
 
 type Strings []Str
