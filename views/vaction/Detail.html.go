@@ -111,11 +111,11 @@ func StreamDetail(qw422016 *qt422016.Writer, as *app.State, cfg util.ValueMap, r
 			qw422016.N().D(idx + 1)
 //line views/vaction/Detail.html:40
 			qw422016.N().S(`</td>
-              <td><code>`)
+              <td><pre>`)
 //line views/vaction/Detail.html:41
 			qw422016.E().S(l)
 //line views/vaction/Detail.html:41
-			qw422016.N().S(`</code></td>
+			qw422016.N().S(`</pre></td>
             </tr>
 `)
 //line views/vaction/Detail.html:43

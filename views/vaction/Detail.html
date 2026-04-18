@@ -38,7 +38,7 @@
             {%- for idx, l := range res.Logs -%}
             <tr>
               <td class="shrink">{%d idx + 1 %}</td>
-              <td><code>{%s l %}</code></td>
+              <td><pre>{%s l %}</pre></td>
             </tr>
             {%- endfor -%}
           </tbody>

@@ -101,7 +101,7 @@ func (t *Context) TypeScriptPaths() string {
 	}
 	ret := util.NewStringSlice("", `    "paths": {`)
 	for _, k := range util.ArraySorted(lo.Keys(paths)) {
-		ret.Pushf("      %q: [%q]%s", k, paths[k], util.Choose(len(ret.Slice) == len(paths)+1, "", ","))
+		ret.Pushf("      %q: [%q]%s", k, "./"+paths[k], util.Choose(len(ret.Slice) == len(paths)+1, "", ","))
 	}
 	ret.Push("    },")
 	return ret.String()
