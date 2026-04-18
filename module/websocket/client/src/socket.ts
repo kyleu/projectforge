@@ -5,8 +5,10 @@ const maxPendingMessages = 100;
 export interface SocketMessage {
   readonly channel: string;
   readonly cmd: string;
-  readonly param: Record<string, unknown>;
+  readonly param: unknown;
 }
+
+export type Message = SocketMessage;
 
 function socketUrl(u?: string) {
   u ??= "/connect";

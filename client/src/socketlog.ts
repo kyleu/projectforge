@@ -44,7 +44,7 @@ export function socketLog(
       }
       return;
     }
-    const htmlParam = m.param.html;
+    const htmlParam = (m.param as Record<string, unknown>).html;
     if (htmlParam === undefined) {
       console.log("no [html] key in message param: " + JSON.stringify(m, null, 2));
     }

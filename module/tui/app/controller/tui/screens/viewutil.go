@@ -40,10 +40,6 @@ func singleLine(s string) string {
 	return strings.Join(strings.Fields(s), " ")
 }
 
-func runeLen(s string) int {
-	return len([]rune(s))
-}
-
 func mainPanelOuterHeight(rects layout.Rects) int {
 	if rects.Compact {
 		return max(1, rects.Main.H-1)

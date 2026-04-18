@@ -40,7 +40,10 @@ describe("form", () => {
     initForm(frm);
 
     const input = requireNonNull(frm.querySelector<HTMLInputElement>('input[name="foo"]'), "foo input");
-    const selected = requireNonNull(frm.querySelector<HTMLInputElement>('input[name="foo--selected"]'), "selected input");
+    const selected = requireNonNull(
+      frm.querySelector<HTMLInputElement>('input[name="foo--selected"]'),
+      "selected input"
+    );
     expect(selected.checked).toBe(false);
 
     input.value = "b";

@@ -12,8 +12,10 @@ var (
 	arms = []string{ArchARMV5, ArchARMV6, ArchARMV7}
 	mips = []string{ArchMIPS64Hard, ArchMIPS64Soft, ArchMIPS64LEHard, ArchMIPS64LESoft, ArchMIPSHard, ArchMIPSSoft, ArchMIPSLEHard, ArchMIPSLESoft}
 )
-{{{ else if .Build.HasArm }}}var arms = []string{ArchARMV5, ArchARMV6, ArchARMV7}
-{{{ else if .Build.LinuxMIPS }}}var mips = []string{ArchMIPS64Hard, ArchMIPS64Soft, ArchMIPS64LEHard, ArchMIPS64LESoft, ArchMIPSHard, ArchMIPSSoft, ArchMIPSLEHard, ArchMIPSLESoft}
+{{{ else if .Build.HasArm }}}
+var arms = []string{ArchARMV5, ArchARMV6, ArchARMV7}
+{{{ else if .Build.LinuxMIPS }}}
+var mips = []string{ArchMIPS64Hard, ArchMIPS64Soft, ArchMIPS64LEHard, ArchMIPS64LESoft, ArchMIPSHard, ArchMIPSSoft, ArchMIPSLEHard, ArchMIPSLESoft}
 {{{ end }}}
 func GetLinks(version string) Links {
 	if availableLinks == nil {
@@ -58,7 +60,7 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSWindows, ArchAMD64)
 	addDefault(ModeServer, OSWindows, ArchARM64)
 	addDefault(ModeServer, OSWindows, Arch386)
-	{{{ if .BuildDesktop }}}
+{{{ if .BuildDesktop }}}
 	addDefault(ModeDesktop, OSLinux, ArchAMD64){{{ end }}}
 	addDefault(ModeServer, OSLinux, ArchAMD64)
 	addDefault(ModeServer, OSLinux, ArchARM64)
