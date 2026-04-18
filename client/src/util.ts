@@ -61,7 +61,6 @@ export function unknownToString(value: unknown): string {
   return "";
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function jsonParse<T>(json: string): T | null {
   try {
     return JSON.parse(json) as T;

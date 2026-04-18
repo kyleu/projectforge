@@ -2,7 +2,7 @@ import { unknownToString } from "./util";
 import { setHTML } from "./dom";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+  // oxlint-disable-next-line typescript/no-namespace -- Required for global JSX intrinsic typing.
   namespace JSX {
     type Element = HTMLElement;
     type IntrinsicElements = Record<string, unknown>;

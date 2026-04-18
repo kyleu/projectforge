@@ -82,13 +82,13 @@ If the main Golang application was started with `./bin/dev.sh`, the server will 
 ### Formatting & Linting
 
 - **Prettier**: Consistent code formatting
-- **ESLint**: TypeScript-specific linting rules
+- **Oxlint**: Fast TypeScript linting for the client project
 - **TypeScript**: Strict type checking with comprehensive compiler options
 
 ### Configuration Files
 
 - `.prettierrc`: Code formatting rules
-- `eslint.config.js`: Linting configuration
+- `.oxlintrc.json`: Linting configuration
 - `tsconfig.json`: TypeScript compiler settings
 
 ## Integration with Go Application

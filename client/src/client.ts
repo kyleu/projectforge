@@ -41,8 +41,7 @@ declare global {
         extraHandlers: ((m: SocketMessage) => void)[]
       ) => void;
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    audit: (s: string, ...args: any) => void;
+    audit: (s: string, ...args: unknown[]) => void;
     JSX: (tag: string, attrs: Record<string, unknown>, ...args: Node[]) => HTMLElement;
   }
 }
