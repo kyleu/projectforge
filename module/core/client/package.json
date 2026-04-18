@@ -24,24 +24,21 @@
     "dev": "node build.js --watch --dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },{{{ .NPMDependencies }}}
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.48.0",
     "cross-spawn": "^7.0.6",
     "esbuild": "^0.27.0",
-    "eslint": "^9.39.1",
-    "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.3.3",
+    "oxlint": "^1.14.0",
+    "oxlint-tsgolint": "^0.20.0",
     "prettier": "^3.7.1",
     "rollup": ">=4.59.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.0",
     "vitest": "^4.0.16"
   }
 }

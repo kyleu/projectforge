@@ -10,7 +10,7 @@ import { linkInit } from "./link";
 import { menuInit } from "./menu";
 import { modalInit } from "./modal";
 import { modeInit } from "./mode";{{{ if .HasModule "websocket" }}}
-import { SocketMessage, socketInit } from "./socket";{{{ if .HasModule "process" }}}
+import { {{{ if .HasModule "process" }}}SocketMessage, {{{ end }}}socketInit } from "./socket";{{{ if .HasModule "process" }}}
 import { socketLog } from "./socketlog";{{{ end }}}{{{ end }}}
 import { tagsInit } from "./tags";
 import { themeInit } from "./theme";
@@ -41,8 +41,7 @@ declare global {
         extraHandlers: ((m: SocketMessage) => void)[]
       ) => void;{{{ end }}}{{{ end }}}
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    audit: (s: string, ...args: any) => void;{{{ if .HasModule "jsx" }}}
+    audit: (s: string, ...args: unknown[]) => void;{{{ if .HasModule "jsx" }}}
     JSX: (tag: string, attrs: Record<string, unknown>, ...args: Node[]) => HTMLElement;{{{ end }}}
   }
 }

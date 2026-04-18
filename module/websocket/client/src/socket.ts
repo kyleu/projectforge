@@ -65,57 +65,56 @@ export class Socket {
     }
     this.connectTime = Date.now();
     this.sock = new WebSocket(socketUrl(this.url));
-    const s = this; // eslint-disable-line @typescript-eslint/no-this-alias
     this.sock.onopen = () => {
-      s.connected = true;
-      s.pendingMessages.forEach((msg) => {
-        s.send(msg);
+      this.connected = true;
+      this.pendingMessages.forEach((msg) => {
+        this.send(msg);
       });
-      s.pendingMessages = [];
-      if (s.debug) {
+      this.pendingMessages = [];
+      if (this.debug) {
         console.log("WebSocket connected");
       }
-      s.open();
+      this.open();
     };
     this.sock.onmessage = (event) => {
       let msg: SocketMessage;
       try {
         msg = JSON.parse(String(event.data)) as SocketMessage;
       } catch (err) {
-        s.err("socket", `invalid message payload: ${String(err)}`);
+        this.err("socket", `invalid message payload: ${String(err)}`);
         return;
       }
-      if (s.debug) {
+      if (this.debug) {
         console.debug("[socket]: receive", msg);
       }
       if (msg.cmd === "close-connection") {
-        s.disconnect();
+        this.disconnect();
       } else {
-        s.recv(msg);
+        this.recv(msg);
       }
     };
     this.sock.onerror = (event) => {
-      s.err("socket", event.type);
+      this.err("socket", event.type);
     };
     this.sock.onclose = () => {
-      if (appUnloading || s.closed) {
+      if (appUnloading || this.closed) {
         return;
       }
-      s.connected = false;
-      const elapsed = s.connectTime ? Date.now() - s.connectTime : 0;
+      this.connected = false;
+      const elapsed = this.connectTime ? Date.now() - this.connectTime : 0;
       if (elapsed > 0 && elapsed < 2000) {
-        s.pauseSeconds = s.pauseSeconds * 2;
-        if (s.debug) {
-          console.debug(`socket closed immediately, reconnecting in ${s.pauseSeconds.toString()} seconds`);
+        this.pauseSeconds = this.pauseSeconds * 2;
+        if (this.debug) {
+          console.debug(`socket closed immediately, reconnecting in ${this.pauseSeconds.toString()} seconds`);
         }
         setTimeout(() => {
-          s.connect();
-        }, s.pauseSeconds * 1000);
+          this.connect();
+        }, this.pauseSeconds * 1000);
       } else {
         console.debug("socket closed after [" + elapsed.toString() + "ms]");
         setTimeout(() => {
-          s.connect();
-        }, s.pauseSeconds * 500);
+          this.connect();
+        }, this.pauseSeconds * 500);
       }
     };
   }
