@@ -1,7 +1,6 @@
 package tproject
 
 import (
-	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -136,13 +135,4 @@ func fitVertical(s string, height int) string {
 		lines = append(lines, "")
 	}
 	return strings.Join(lines, "\n")
-}
-
-func assertScreens() {
-	var _ screens.Screen = NewProjectsScreen()
-	var _ screens.Screen = NewProjectScreen()
-	var _ screens.Screen = NewProjectNewScreen()
-	var _ screens.Screen = NewResultsScreen()
-	var _ screens.Screen = NewResultDiffScreen()
-	_ = fmt.Sprintf
 }

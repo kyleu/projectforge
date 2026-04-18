@@ -72,31 +72,6 @@ func (t *Context) PortIncremented(i int) int {
 	return t.Port + i
 }
 
-func (t *Context) BuildAndroid() bool {
-	ret := t.HasModules("android") && t.Build.Android
-	return ret
-}
-
-func (t *Context) BuildIOS() bool {
-	return t.HasModules("ios") && t.Build.IOS
-}
-
-func (t *Context) BuildDesktop() bool {
-	return t.HasModules("desktop") && t.Build.Desktop
-}
-
-func (t *Context) BuildMobile() bool {
-	return t.BuildIOS() || t.BuildAndroid()
-}
-
-func (t *Context) BuildWASM() bool {
-	return t.HasModules("wasmserver") && t.Build.WASM
-}
-
-func (t *Context) BuildNotarize() bool {
-	return t.HasModules("notarize") && t.Build.Notarize
-}
-
 func (t *Context) UsesLib() bool {
 	return t.BuildMobile() || t.Build.Desktop
 }
@@ -111,40 +86,6 @@ func (t *Context) HasAccount() bool {
 
 func (t *Context) HasUser() bool {
 	return t.HasModules(keyUser)
-}
-
-func (t *Context) IsNotarized() bool {
-	return t.HasModule("notarize") && t.Build != nil && t.Build.Notarize
-}
-
-func (t *Context) IsArmAndMips() bool {
-	return t.Build.HasArm() && t.Build.LinuxMIPS
-}
-
-func (t *Context) DatabaseUIOpts() (bool, bool, bool) {
-	cfg, _ := t.Config.GetMap("databaseui", true)
-	if len(cfg) == 0 {
-		return true, false, false
-	}
-	sqleditor := cfg.GetBoolOpt("sqleditor")
-	readonly := cfg.GetBoolOpt("readonly")
-	saveuser := cfg.GetBoolOpt("saveuser")
-	return sqleditor, readonly, saveuser
-}
-
-func (t *Context) DatabaseUISQLEditor() bool {
-	sqleditor, _, _ := t.DatabaseUIOpts()
-	return sqleditor
-}
-
-func (t *Context) DatabaseUIReadOnly() bool {
-	_, readonly, _ := t.DatabaseUIOpts()
-	return readonly
-}
-
-func (t *Context) DatabaseUISaveUser() bool {
-	_, _, saveUser := t.DatabaseUIOpts()
-	return saveUser
 }
 
 func (t *Context) GoVersionSafe() string {
@@ -186,80 +127,4 @@ func (t *Context) HasExport() bool {
 
 func (t *Context) HasExportModels() bool {
 	return t.HasModules("export") && !t.ExportArgs.EmptyModels()
-}
-
-func (t *Context) HasDocker() bool {
-	return !t.Build.SkipDocker
-}
-
-func (t *Context) HasDatabase() bool {
-	return t.DatabaseEngine != ""
-}
-
-func (t *Context) HasDatabaseOrMetamodel() bool {
-	return t.HasDatabase() || t.HasModule("metamodel")
-}
-
-func (t *Context) MySQL() bool {
-	return t.DatabaseEngine == util.DatabaseMySQL || t.HasModule(util.DatabaseMySQL)
-}
-
-func (t *Context) MySQLOrExport() bool {
-	return t.MySQL() || t.HasExport()
-}
-
-func (t *Context) MySQLOrMetamodel() bool {
-	return t.MySQL() || t.HasModule("metamodel")
-}
-
-func (t *Context) MySQLOnly() bool {
-	return t.MySQL() && !t.PostgreSQL() && !t.SQLite() && !t.SQLServer()
-}
-
-func (t *Context) PostgreSQL() bool {
-	return t.DatabaseEngine == util.DatabasePostgreSQL || t.HasModule(util.DatabasePostgreSQL)
-}
-
-func (t *Context) PostgreSQLOrExport() bool {
-	return t.PostgreSQL() || t.HasExport()
-}
-
-func (t *Context) PostgreSQLOrMetamodel() bool {
-	return t.PostgreSQL() || t.HasModule("metamodel")
-}
-
-func (t *Context) PostgreSQLOnly() bool {
-	return t.PostgreSQL() && !t.MySQL() && !t.SQLite() && !t.SQLServer()
-}
-
-func (t *Context) SQLite() bool {
-	return t.DatabaseEngine == util.DatabaseSQLite || t.HasModule(util.DatabaseSQLite)
-}
-
-func (t *Context) SQLiteOrExport() bool {
-	return t.SQLite() || t.HasExport()
-}
-
-func (t *Context) SQLiteOrMetamodel() bool {
-	return t.SQLite() || t.HasModule("metamodel")
-}
-
-func (t *Context) SQLiteOnly() bool {
-	return t.SQLite() && !t.MySQL() && !t.PostgreSQL() && !t.SQLServer()
-}
-
-func (t *Context) SQLServer() bool {
-	return t.DatabaseEngine == util.DatabaseSQLServer || t.HasModule(util.DatabaseSQLServer)
-}
-
-func (t *Context) SQLServerOrExport() bool {
-	return t.SQLServer() || t.HasExport()
-}
-
-func (t *Context) SQLServerOrMetamodel() bool {
-	return t.SQLServer() || t.HasModule("metamodel")
-}
-
-func (t *Context) SQLServerOnly() bool {
-	return t.SQLServer() && !t.MySQL() && !t.PostgreSQL() && !t.SQLite()
 }

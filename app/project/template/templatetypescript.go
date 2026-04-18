@@ -36,7 +36,7 @@ func (t *Context) TypeScriptProjectContent() string {
 			key = x[idx+1:]
 		}
 		ss := &util.StringSlice{}
-		ss.Pushf(`  await esbuild.build({...options, entryPoints: ["src/%s/%s.ts"], outfile: "../assets/%s.js"});`, x, key, key)
+		ss.Pushf(`  await esbuild.build({ ...options, entryPoints: ["%s/%s.ts"], outfile: "../assets/%s.js" });`, x, key, key)
 		return ss.String()
 	}
 	return "\n" + util.StringJoin(lo.Map(tsDeps, convert), "\n")
@@ -87,7 +87,7 @@ func (t *Context) NPMDependencies() string {
 func (t *Context) TypeScriptPaths() string {
 	paths := map[string]string{}
 	if t.HasModule("numeric") {
-		paths["@numeric/*"] = "numeric/*"
+		paths["@numeric/*"] = "src/numeric/*"
 	}
 	for _, pth := range t.TypeScriptDeployments() {
 		key := pth

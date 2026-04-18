@@ -65,7 +65,8 @@ func RunAction(w http.ResponseWriter, r *http.Request) {
 					if argRes.HasMissing() {
 						ps.SetTitleAndData("Custom Command", argRes)
 						url := fmt.Sprintf("/run/%s/build", prj.Key)
-						page := &vpage.Args{URL: url, Directions: "Enter your commit message", Results: argRes, Hidden: map[string]string{"phase": phase}}
+						const dirs = "Enter the command to run, and an optional directory relative to each project's root"
+						page := &vpage.Args{URL: url, Directions: dirs, Results: argRes, Hidden: map[string]string{"phase": phase}}
 						return controller.Render(r, as, page, ps, bc...)
 					}
 				}

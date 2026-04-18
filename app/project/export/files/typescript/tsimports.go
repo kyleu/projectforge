@@ -3,6 +3,7 @@ package typescript
 import (
 	"fmt"
 
+	"github.com/samber/lo"
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"
@@ -72,11 +73,13 @@ func tsModelImports(args *metamodel.Args, cols model.Columns, str metamodel.Stri
 	add := func(s string, args ...any) {
 		ret.PushUnique(fmt.Sprintf(s, args...))
 	}
-	relPath := util.StringRepeat("../", str.GroupLen()+1)
-	if str.GroupLen() == 0 {
-		relPath = localRef
+	hasScalar := lo.ContainsBy(cols, func(x *model.Column) bool {
+		return x.Type.T.Scalar()
+	})
+	if hasScalar {
+		relPath := util.StringRepeat("../", str.GroupLen()+1)
+		add(`import { Parse } from "%sparse";`, relPath)
 	}
-	add(`import { Parse } from "%sparse";`, relPath)
 	for _, col := range cols {
 		x, err := tsModelImportsColumn(col, args, str)
 		if err != nil {

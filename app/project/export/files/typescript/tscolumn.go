@@ -13,12 +13,18 @@ import (
 func tsFromObjectColumn(col *model.Column, enums enum.Enums, ret *golang.Block) error {
 	opt := col.Nullable || col.HasTag("optional-json")
 	switch col.Type.Key() {
-	case types.KeyTimestamp, types.KeyTimestampZoned:
-		if opt {
-			ret.WF(`    const %s = Parse.dateOpt(obj.%s);`, col.Camel(), col.Camel())
-		} else {
-			ret.WF(`    const %s = Parse.date(obj.%s, () => new Date());`, col.Camel(), col.Camel())
+	case types.KeyEnum:
+		op := util.Choose(opt, "parse", "get")
+		e, err := model.AsEnum(col.Type)
+		if err != nil {
+			return err
 		}
+		en := enums.Get(e.Ref)
+		suffix := ""
+		if dflt := en.Values.Default(); dflt != nil {
+			suffix = fmt.Sprintf(", () => %q", dflt.Key)
+		}
+		ret.WF(`    const %s = %s%s(Parse.string(obj.%s%s));`, col.Camel(), op, en.Proper(), col.Camel(), suffix)
 	case types.KeyInt:
 		if opt {
 			ret.WF(`    const %s = Parse.intOpt(obj.%s);`, col.Camel(), col.Camel())
@@ -30,12 +36,6 @@ func tsFromObjectColumn(col *model.Column, enums enum.Enums, ret *golang.Block) 
 			ret.WF(`    const %s = Parse.floatOpt(obj.%s);`, col.Camel(), col.Camel())
 		} else {
 			ret.WF(`    const %s = Parse.float(obj.%s, () => 0);`, col.Camel(), col.Camel())
-		}
-	case types.KeyString, types.KeyUUID:
-		if opt {
-			ret.WF(`    const %s = Parse.stringOpt(obj.%s);`, col.Camel(), col.Camel())
-		} else {
-			ret.WF(`    const %s = Parse.string(obj.%s, () => "");`, col.Camel(), col.Camel())
 		}
 	case types.KeyMap, types.KeyOrderedMap, types.KeyAny:
 		if opt {
@@ -51,18 +51,18 @@ func tsFromObjectColumn(col *model.Column, enums enum.Enums, ret *golang.Block) 
 		} else {
 			ret.WF(`    const %s = NumericMap.parse(Parse.obj(obj.%s, () => ({})));`, col.Camel(), col.Camel())
 		}
-	case types.KeyEnum:
-		op := util.Choose(opt, "parse", "get")
-		e, err := model.AsEnum(col.Type)
-		if err != nil {
-			return err
+	case types.KeyString, types.KeyUUID:
+		if opt {
+			ret.WF(`    const %s = Parse.stringOpt(obj.%s);`, col.Camel(), col.Camel())
+		} else {
+			ret.WF(`    const %s = Parse.string(obj.%s, () => "");`, col.Camel(), col.Camel())
 		}
-		en := enums.Get(e.Ref)
-		suffix := ""
-		if dflt := en.Values.Default(); dflt != nil {
-			suffix = fmt.Sprintf(", () => %q", dflt.Key)
+	case types.KeyTimestamp, types.KeyTimestampZoned, types.KeyDate:
+		if opt {
+			ret.WF(`    const %s = Parse.dateOpt(obj.%s);`, col.Camel(), col.Camel())
+		} else {
+			ret.WF(`    const %s = Parse.date(obj.%s, () => new Date());`, col.Camel(), col.Camel())
 		}
-		ret.WF(`    const %s = %s%s(Parse.string(obj.%s%s));`, col.Camel(), op, en.Proper(), col.Camel(), suffix)
 	default:
 		ret.WF("    const %s = obj.%s as %s;", col.Camel(), col.Camel(), tsType(col.Type, enums))
 	}

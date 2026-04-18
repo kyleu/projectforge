@@ -56,7 +56,7 @@ func calcDownloadLinks(version string) Links {
 	addDefault(ModeServer, OSWindows, ArchAMD64)
 	addDefault(ModeServer, OSWindows, ArchARM64)
 	addDefault(ModeServer, OSWindows, Arch386)
-	
+
 	addDefault(ModeDesktop, OSLinux, ArchAMD64)
 	addDefault(ModeServer, OSLinux, ArchAMD64)
 	addDefault(ModeServer, OSLinux, ArchARM64)

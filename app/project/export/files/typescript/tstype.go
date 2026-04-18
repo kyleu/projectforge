@@ -1,6 +1,7 @@
 package typescript
 
 import (
+	"fmt"
 	"strings"
 
 	"projectforge.dev/projectforge/app/lib/metamodel"
@@ -19,7 +20,7 @@ func tsType(t *types.Wrapped, enums enum.Enums) string {
 		return "string"
 	case types.KeyInt, types.KeyFloat:
 		return "number"
-	case types.KeyTimestamp:
+	case types.KeyTimestamp, types.KeyDate:
 		return "Date"
 	case types.KeyEnum:
 		e := enums.Get(t.EnumKey())
@@ -53,8 +54,9 @@ func tsFromObject(cols model.Columns, str metamodel.StringProvider, enums enum.E
 	ret.WB()
 	args := cols.CamelNames()
 	argsJoined := strings.Join(args, ", ")
-	if len(argsJoined) < 100 {
-		ret.WF("    return new %s(%s);", str.Proper(), argsJoined)
+	inline := fmt.Sprintf("    return new %s(%s);", str.Proper(), argsJoined)
+	if len(inline) < 120 {
+		ret.W(inline)
 	} else {
 		ret.WF("    return new %s(", str.Proper())
 		for idx, c := range cols.CamelNames() {
