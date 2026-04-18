@@ -30,7 +30,7 @@ func TestWriteCORSUsesReferer(t *testing.T) {
 
 func TestGetContentTypesFormatOverride(t *testing.T) {
 	t.Parallel()
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/?format=csv", http.NoBody)
+	req := newRequest(http.MethodGet, "http://example.com/?format=csv", http.NoBody)
 	req.Header.Set(cutil.HeaderAccept, "application/json")
 
 	ct, format := cutil.GetContentTypes(req)
@@ -38,7 +38,7 @@ func TestGetContentTypesFormatOverride(t *testing.T) {
 		t.Fatalf("GetContentTypes returned [%v], [%v]", ct, format)
 	}
 
-	req2 := httptest.NewRequest(http.MethodGet, "http://example.com/", http.NoBody)
+	req2 := newRequest(http.MethodGet, "http://example.com/", http.NoBody)
 	req2.Header.Set(cutil.HeaderAccept, "text/html; charset=UTF-8")
 	ct2, format2 := cutil.GetContentTypes(req2)
 	if ct2 != "text/html" || format2 != "" {
@@ -99,7 +99,7 @@ func TestWriteCORSNetworkScheme(t *testing.T) {
 
 func TestGetContentTypesFromContentType(t *testing.T) {
 	t.Parallel()
-	req := httptest.NewRequest(http.MethodPost, "http://example.com/?t=yml", http.NoBody)
+	req := newRequest(http.MethodPost, "http://example.com/?t=yml", http.NoBody)
 	req.Header.Set(cutil.HeaderContentType, "application/x-yaml")
 
 	ct, format := cutil.GetContentTypes(req)

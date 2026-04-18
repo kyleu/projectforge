@@ -1,6 +1,8 @@
 package cutil_test
 
 import (
+	"context"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -9,9 +11,13 @@ import (
 	"projectforge.dev/projectforge/app/controller/cutil"
 )
 
+func newRequest(method string, target string, body io.Reader) *http.Request {
+	return httptest.NewRequestWithContext(context.Background(), method, target, body)
+}
+
 func TestParseFormJSON(t *testing.T) {
 	t.Parallel()
-	req := httptest.NewRequest(http.MethodPost, "http://example.com", strings.NewReader(`{"a":"b"}`))
+	req := newRequest(http.MethodPost, "http://example.com", strings.NewReader(`{"a":"b"}`))
 	req.Header.Set(cutil.HeaderContentType, "application/json")
 
 	m, err := cutil.ParseForm(req, []byte(`{"a":"b"}`))
@@ -26,7 +32,7 @@ func TestParseFormJSON(t *testing.T) {
 func TestParseFormAsMapsJSONArray(t *testing.T) {
 	t.Parallel()
 	body := `[{"a":1},{"a":2}]`
-	req := httptest.NewRequest(http.MethodPost, "http://example.com", strings.NewReader(body))
+	req := newRequest(http.MethodPost, "http://example.com", strings.NewReader(body))
 	req.Header.Set(cutil.HeaderContentType, "application/json")
 
 	m, err := cutil.ParseFormAsMaps(req, []byte(body))
@@ -41,7 +47,7 @@ func TestParseFormAsMapsJSONArray(t *testing.T) {
 func TestParseFormHTTPFallback(t *testing.T) {
 	t.Parallel()
 	body := "a=1&b=two"
-	req := httptest.NewRequest(http.MethodPost, "http://example.com", strings.NewReader(body))
+	req := newRequest(http.MethodPost, "http://example.com", strings.NewReader(body))
 	req.Header.Set(cutil.HeaderContentType, "application/x-www-form-urlencoded")
 
 	m, err := cutil.ParseForm(req, []byte(body))

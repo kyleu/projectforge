@@ -178,7 +178,7 @@ func (s *ProjectNewScreen) View(ts *mvc.State, ps *mvc.PageState, rects layout.R
 	}
 	if showSummary {
 		body.WriteString("\nSummary:\n")
-		body.WriteString(fmt.Sprintf("Directory: %s\n", s.dir))
+		_, _ = fmt.Fprintf(&body, "Directory: %s\n", s.dir)
 		body.WriteString(strings.Join(action.CreateSummaryLines(s.prj), "\n"))
 	}
 	return renderScreenPanel(ps.Title, body.String(), styles.Panel, styles, rects)

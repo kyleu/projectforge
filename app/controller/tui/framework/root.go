@@ -144,9 +144,7 @@ func (m *RootModel) View() string {
 	if m.showLogs {
 		content = overlayBottom(content, m.logDrawer())
 	}
-	frameParts := []string{content}
-	frameParts = append(frameParts, editor, status)
-	frame := lipgloss.JoinVertical(lipgloss.Left, frameParts...)
+	frame := lipgloss.JoinVertical(lipgloss.Left, content, editor, status)
 	return m.styles.App.
 		Width(max(1, m.width)).
 		Height(max(1, m.height)).

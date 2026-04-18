@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/samber/lo"
+
 	"projectforge.dev/projectforge/app/lib/metamodel"
 	"projectforge.dev/projectforge/app/lib/metamodel/model"
 	"projectforge.dev/projectforge/app/lib/types"

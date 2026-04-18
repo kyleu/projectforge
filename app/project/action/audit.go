@@ -50,8 +50,6 @@ func onAudit(ctx context.Context, pm *PrjAndMods) *Result {
 func auditRun(pm *PrjAndMods, ret *Result) error {
 	timer := util.TimerStart()
 
-	var audits diff.Diffs
-
 	ign := util.ArrayCopy(pm.Prj.Ignore)
 	if pm.Prj.HasModule("notebook") {
 		ign = append(ign, "notebook")
@@ -60,6 +58,7 @@ func auditRun(pm *PrjAndMods, ret *Result) error {
 	if err != nil {
 		return err
 	}
+	audits := make(diff.Diffs, 0, len(empty))
 	audits = append(audits, lo.Map(empty, func(e string, _ int) *diff.Diff {
 		return &diff.Diff{Path: e, Status: diff.StatusMissing}
 	})...)

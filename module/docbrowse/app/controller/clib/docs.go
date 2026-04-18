@@ -20,8 +20,10 @@ func Docs(w http.ResponseWriter, r *http.Request) {
 			return "", errors.New("invalid path")
 		}
 
-		bc := []string{"docs"}
-		bc = append(bc, util.StringSplitAndTrim(pth, "/")...)
+		pathParts := util.StringSplitAndTrim(pth, "/")
+		bc := make([]string, 0, 1+len(pathParts))
+		bc = append(bc, "docs")
+		bc = append(bc, pathParts...)
 
 		title, x, err := doc.HTML("doc:"+pth, pth+util.ExtMarkdown, func(s string) (string, string, error) {
 			return cutil.FormatMarkdownClean(s, "file")

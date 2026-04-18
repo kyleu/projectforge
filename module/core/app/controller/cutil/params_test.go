@@ -2,7 +2,6 @@ package cutil_test
 
 import (
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"{{{ .Package }}}/app/controller/cutil"
@@ -11,7 +10,7 @@ import (
 
 func TestParamSetFromRequest(t *testing.T) {
 	t.Parallel()
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/?user.o=name&user.l=200001&user.x=5&order.o=title.d", http.NoBody)
+	req := newRequest(http.MethodGet, "http://example.com/?user.o=name&user.l=200001&user.x=5&order.o=title.d", http.NoBody)
 
 	ps := cutil.ParamSetFromRequest(req)
 	user := ps["user"]

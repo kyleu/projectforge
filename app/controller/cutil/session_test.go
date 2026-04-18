@@ -20,7 +20,7 @@ func TestLoadPageStateNoCookie(t *testing.T) {
 	t.Parallel()
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
-	req := httptest.NewRequest(http.MethodGet, "http://example.com/path", http.NoBody)
+	req := newRequest(http.MethodGet, "http://example.com/path", http.NoBody)
 
 	ps := cutil.LoadPageState(nil, wc, req, "test", zap.NewNop().Sugar())
 	if ps.Profile == nil || ps.Profile.Name != user.DefaultProfile.Name {
@@ -48,7 +48,7 @@ func TestLoadPageStateWithCookieAndFlashes(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	wc := cutil.NewWriteCounter(rr)
-	req := httptest.NewRequest(http.MethodPost, "http://example.com/path", bytes.NewBufferString(requestBody))
+	req := newRequest(http.MethodPost, "http://example.com/path", bytes.NewBufferString(requestBody))
 	req.AddCookie(csession.NewCookie(enc))
 
 	ps := cutil.LoadPageState(nil, wc, req, "test", logger)

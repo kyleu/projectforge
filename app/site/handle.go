@@ -83,7 +83,7 @@ func Handle(as *app.State, path []string, ps *cutil.PageState) (string, layout.P
 
 func siteData(result string, kvs ...string) util.ValueMap {
 	ret := util.ValueMap{"app": util.AppName, "url": util.AppURL, "result": result}
-	for i := 0; i < len(kvs); i += 2 {
+	for i := 0; i+1 < len(kvs); i += 2 {
 		ret[kvs[i]] = kvs[i+1]
 	}
 	return ret

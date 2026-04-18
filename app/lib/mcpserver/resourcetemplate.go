@@ -44,7 +44,7 @@ func (r *ResourceTemplate) IconSafe() string {
 
 func (r *ResourceTemplate) Handler(as *app.State, logger util.Logger) server.ResourceTemplateHandlerFunc {
 	return func(ctx context.Context, req mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
-		var ret []mcp.ResourceContents
+		ret := make([]mcp.ResourceContents, 0, 1)
 		args := util.ValueMapFrom(req.Params.Arguments)
 		u, mt, content, err := r.Fn(ctx, as, ResourceReq(req), util.ValueMapFrom(args), logger)
 		if err != nil {

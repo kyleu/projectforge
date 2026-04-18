@@ -23,7 +23,7 @@ func Search(ctx context.Context, as *app.State, params *Params, page *cutil.Page
 	if params.Q == "" {
 		return nil, nil
 	}
-	var allProviders []Provider
+	allProviders := make([]Provider, 0, 2)
 	// $PF_SECTION_START(search_functions)$
 	projectFunc := func(_ context.Context, p *Params, as *app.State, _ *cutil.PageState, _ util.Logger) (result.Results, error) {
 		return as.Services.Projects.Search(p.Q)

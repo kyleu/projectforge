@@ -1,6 +1,8 @@
 package controller_test
 
 import (
+	"context"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -13,6 +15,10 @@ import (
 	"{{{ .Package }}}/app/controller/cutil"
 	"{{{ .Package }}}/app/util"
 )
+
+func newRequest(method string, target string, body io.Reader) *http.Request {
+	return httptest.NewRequestWithContext(context.Background(), method, target, body)
+}
 
 func TestERsp(t *testing.T) {
 	t.Parallel()
@@ -105,7 +111,7 @@ func TestReturnToReferrer(t *testing.T) {
 func TestOptionsAndHead(t *testing.T) {
 	t.Parallel()
 	rr := httptest.NewRecorder()
-	controller.Options(rr, httptest.NewRequest(http.MethodOptions, "http://example.com", http.NoBody))
+	controller.Options(rr, newRequest(http.MethodOptions, "http://example.com", http.NoBody))
 	if rr.Code != http.StatusOK {
 		t.Fatalf("Options status was [%d]", rr.Code)
 	}
@@ -114,7 +120,7 @@ func TestOptionsAndHead(t *testing.T) {
 	}
 
 	rr = httptest.NewRecorder()
-	controller.Head(rr, httptest.NewRequest(http.MethodHead, "http://example.com", http.NoBody))
+	controller.Head(rr, newRequest(http.MethodHead, "http://example.com", http.NoBody))
 	if rr.Code != http.StatusOK {
 		t.Fatalf("Head status was [%d]", rr.Code)
 	}

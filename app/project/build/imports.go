@@ -42,7 +42,6 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 	if !strings.HasSuffix(fn, util.ExtGo) && !strings.HasSuffix(fn, util.ExtHTML) {
 		return nil, nil, nil
 	}
-	var ret diff.Diffs
 	var logs []string
 	content, err := fs.ReadFile(fn)
 	if err != nil {
@@ -54,6 +53,7 @@ func importsFor(self string, fix bool, fs filesystem.FileLoader, fn string, targ
 		return nil, nil, err
 	}
 	_, fixed, diffs, err := processFileImports(fn, util.StringSplitLines(str), self)
+	ret := make(diff.Diffs, 0, len(diffs))
 	ret = append(ret, diffs...)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "unable to process imports for [%s]", fn)
@@ -76,7 +76,7 @@ func processFileImports(fn string, lines []string, self string) ([]string, []str
 	if strings.HasPrefix(fn, "module/") {
 		return nil, nil, nil, nil
 	}
-	var ret diff.Diffs
+	ret := make(diff.Diffs, 0, 1)
 
 	var started bool
 	var start int

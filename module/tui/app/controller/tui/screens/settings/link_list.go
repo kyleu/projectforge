@@ -28,14 +28,16 @@ func newModulesScreen() *linkListScreen {
 		key:   keyModules,
 		title: "Go Modules",
 		load: func(ts *mvc.State) menu.Items {
-			items := menu.Items{
-				{
+			deps := util.DebugBuildInfo().Deps
+			items := make(menu.Items, 0, 1+len(deps))
+			items = append(items,
+				&menu.Item{
 					Key:         util.AppSource,
 					Title:       fmt.Sprintf("%s v%s", util.AppName, ts.App.BuildInfo.Version),
 					Description: "Primary module",
 				},
-			}
-			for _, m := range util.DebugBuildInfo().Deps {
+			)
+			for _, m := range deps {
 				items = append(items, &menu.Item{Key: m.Path, Title: m.Path, Description: m.Version})
 			}
 			return items

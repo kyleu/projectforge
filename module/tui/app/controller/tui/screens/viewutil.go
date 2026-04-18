@@ -14,6 +14,11 @@ import (
 	"{{{ .Package }}}/app/util"
 )
 
+const (
+	OSDarwin  = "darwin"
+	OSWindows = "windows"
+)
+
 func renderLines(lines []string, width int) string {
 	ret := make([]string, 0, len(lines))
 	for _, line := range lines {
@@ -94,9 +99,9 @@ func OpenInBrowser(url string) error {
 	var cmd *exec.Cmd
 	ctx := context.Background()
 	switch runtime.GOOS {
-	case "darwin":
+	case OSDarwin:
 		cmd = exec.CommandContext(ctx, "open", url)
-	case "windows":
+	case OSWindows:
 		cmd = exec.CommandContext(ctx, "rundll32", "url.dll,FileProtocolHandler", url)
 	default:
 		cmd = exec.CommandContext(ctx, "xdg-open", url)
@@ -106,13 +111,14 @@ func OpenInBrowser(url string) error {
 
 func OpenPath(path string) error {
 	var cmd *exec.Cmd
+	ctx := context.Background()
 	switch runtime.GOOS {
-	case "darwin":
-		cmd = exec.Command("open", path)
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", "", path)
+	case OSDarwin:
+		cmd = exec.CommandContext(ctx, "open", path)
+	case OSWindows:
+		cmd = exec.CommandContext(ctx, "cmd", "/c", "start", "", path)
 	default:
-		cmd = exec.Command("xdg-open", path)
+		cmd = exec.CommandContext(ctx, "xdg-open", path)
 	}
 	return cmd.Start()
 }

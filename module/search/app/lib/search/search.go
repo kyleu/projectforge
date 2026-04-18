@@ -23,7 +23,7 @@ func Search(ctx context.Context, as *app.State, params *Params, page *cutil.Page
 	if params.Q == "" {
 		return nil, nil
 	}
-	var allProviders []Provider
+	allProviders := make([]Provider, 0, 2)
 	// $PF_SECTION_START(search_functions)$
 	// add your custom search functions here
 	testFunc := func(ctx context.Context, p *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {

@@ -93,7 +93,7 @@ func controllerList(g *golang.File, m *model.Model, grp *model.Column, models mo
 		ret.WF(call, relModel.CamelPlural(), srcCol.Proper(), relModel.Proper(), sfx, c)
 		ret.WE(2, `""`)
 
-		toStrings.WriteString(fmt.Sprintf(", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper()))
+		_, _ = fmt.Fprintf(&toStrings, ", %sBy%s: %sBy%s", relModel.ProperPlural(), srcCol.Proper(), relModel.CamelPlural(), srcCol.Proper())
 	}
 	var searchSuffix string
 	if m.HasSearches() {
