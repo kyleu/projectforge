@@ -162,7 +162,7 @@ func SQLNotInClause(column string, numParams int, offset int, dbt *DBType) strin
 
 func sqlInClause(column string, numParams int, offset int, notIn bool, dbt *DBType) string {
 	resBuilder := strings.Builder{}
-	for index := 0; index < numParams; index++ {
+	for index := range numParams {
 		if index == 0 {
 			if notIn {
 				resBuilder.WriteString(column + " not in (")

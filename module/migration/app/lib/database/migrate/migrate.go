@@ -21,8 +21,8 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger, match
 
 	var positiveTags, negativeTags []string
 	for _, t := range matchesTags {
-		if strings.HasPrefix(t, "-") {
-			negativeTags = append(negativeTags, strings.TrimPrefix(t, "-"))
+		if after, ok := strings.CutPrefix(t, "-"); ok {
+			negativeTags = append(negativeTags, after)
 		} else {
 			positiveTags = append(positiveTags, t)
 		}
