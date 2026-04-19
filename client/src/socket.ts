@@ -10,6 +10,17 @@ export interface SocketMessage {
 
 export type Message = SocketMessage;
 
+function sanitizeLogText(value: string) {
+  return value.replaceAll("\r", "").replaceAll("\n", "");
+}
+
+function socketLogMessage(msg: SocketMessage) {
+  return {
+    channel: sanitizeLogText(msg.channel),
+    cmd: sanitizeLogText(msg.cmd),
+  };
+}
+
 function socketUrl(u?: string) {
   u ??= "/connect";
   if (u.startsWith("ws")) {
@@ -87,7 +98,7 @@ export class Socket {
         return;
       }
       if (this.debug) {
-        console.debug("[socket]: receive", msg);
+        console.debug("[socket]: receive", socketLogMessage(msg));
       }
       if (msg.cmd === "close-connection") {
         this.disconnect();
@@ -131,7 +142,7 @@ export class Socket {
 
   send(msg: SocketMessage) {
     if (this.debug) {
-      console.debug("out", msg);
+      console.debug("out", socketLogMessage(msg));
     }
     if (!this.sock) {
       throw new Error("socket not initialized");

@@ -185,7 +185,7 @@ func (p *PageState) Close() {
 }
 
 func (p *PageState) LogError(msg string, args ...any) {
-	p.Logger.Errorf(msg, args...)
+	p.Logger.Errorf(msg, util.SanitizeLogArgs(args...)...)
 }
 
 func (p *PageState) ClassDecl() string {

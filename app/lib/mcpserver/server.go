@@ -43,7 +43,7 @@ func (s *Server) ServeCLI(ctx context.Context) error {
 }
 
 func (s *Server) ServeHTTP(ctx context.Context, w http.ResponseWriter, r *http.Request, logger util.Logger) {
-	logger.Debugf("MCP HTTP request: %s %s", r.Method, r.URL.Path)
+	logger.Debugf("MCP HTTP request: %s %s", util.SanitizeLogValue(r.Method), util.SanitizeLogValue(r.URL.Path))
 	if s.HTTP == nil {
 		s.HTTP = server.NewStreamableHTTPServer(s.MCP)
 	}

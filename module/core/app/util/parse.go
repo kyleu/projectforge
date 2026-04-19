@@ -113,11 +113,38 @@ func ParseFloat(r any, path string, allowEmpty bool) (float64, error) {
 }
 
 func ParseInt(r any, path string, allowEmpty bool) (int, error) {
-	ret, err := ParseInt64(r, path, allowEmpty)
-	if err != nil {
-		return 0, err
+	const maxInt = int64(^uint(0) >> 1)
+	const minInt = -maxInt - 1
+	switch t := r.(type) {
+	case int:
+		return t, nil
+	case int32:
+		return int(t), nil
+	case int64:
+		if t < minInt || t > maxInt {
+			return 0, errors.Errorf("integer value [%d] is out of range for [int] at path [%s]", t, path)
+		}
+		return int(t), nil
+	case float64:
+		ret := int64(t)
+		if ret < minInt || ret > maxInt {
+			return 0, errors.Errorf("integer value [%v] is out of range for [int] at path [%s]", t, path)
+		}
+		return int(ret), nil
+	case string:
+		ret, err := strconv.ParseInt(t, 10, strconv.IntSize)
+		return int(ret), err
+	case []byte:
+		ret, err := strconv.ParseInt(string(t), 10, strconv.IntSize)
+		return int(ret), err
+	case nil:
+		if !allowEmpty {
+			return 0, errors.Errorf("could not find int for path [%s]", path)
+		}
+		return 0, nil
+	default:
+		return 0, invalidTypeError(path, "int", t)
 	}
-	return int(ret), nil
 }
 
 func ParseInt16(r any, path string, allowEmpty bool) (int16, error) {
