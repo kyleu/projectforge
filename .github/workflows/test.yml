@@ -67,6 +67,6 @@ jobs:
           TOKEN: "${{ secrets.CR_PAT }}"
       - name: "Annotate"
         if: always()
-        uses: guyarb/golang-test-annotations@v0.5.0
+        uses: guyarb/golang-test-annotations@fcac4214274b069dace3101047c4f11cf796ac8e # v0.5.0
         with:
           test-results: test.json
