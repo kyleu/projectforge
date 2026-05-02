@@ -84,7 +84,7 @@ func ProjectExportEventForm(w http.ResponseWriter, r *http.Request) {
 			"projects",
 			prj.Key,
 			fmt.Sprintf("Export||/p/%s/export", prj.Key),
-			mdl.Title() + "||" + prj.WebPath() + "/export/events/" + mdl.Name,
+			mdl.Title() + "||" + prj.WebPathEvents(mdl.Name),
 			"Edit",
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] %s", prj.Key, mdl.Name), mdl)

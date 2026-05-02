@@ -45,7 +45,7 @@ func (p *Files) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 `)
 //line views/vproject/Files.html:22
 	prj := p.Project
-	u := prj.WebPath() + "/fs"
+	u := prj.WebPath("fs")
 	pth := util.StringFilePath(p.Path...)
 
 //line views/vproject/Files.html:25

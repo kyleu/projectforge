@@ -80,7 +80,7 @@ func ProjectExportWriteJSONSchema(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 		}
-		return controller.FlashAndRedir(true, "wrote JSON Schema files", prj.WebPath()+"/export/jsonschema", ps)
+		return controller.FlashAndRedir(true, "wrote JSON Schema files", prj.WebPathExport("jsonschema"), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func ProjectExportModelJSONSchema(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
-		page := &vjsonschema.ModelDetail{BaseURL: prj.WebPath() + "/export/models", Model: x, Collection: schCollection, Result: tgt}
+		page := &vjsonschema.ModelDetail{BaseURL: prj.WebPathModels(), Model: x, Collection: schCollection, Result: tgt}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, x.Title()+" JSON Schema")
 	})
 }
@@ -121,7 +121,7 @@ func ProjectExportEnumJSONSchema(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData(fmt.Sprintf("[%s] JSON Schema", prj.Key), schCollection)
-		page := &vjsonschema.EnumDetail{BaseURL: prj.WebPath() + "/export/enums", Enum: x, Collection: schCollection, Result: tgt}
+		page := &vjsonschema.EnumDetail{BaseURL: prj.WebPathEnums(), Enum: x, Collection: schCollection, Result: tgt}
 		return controller.Render(r, as, page, ps, "projects", prj.Key, x.Title()+" JSON Schema")
 	})
 }

@@ -106,20 +106,24 @@ func (p *Project) ToMap() util.ValueMap {
 	}
 }
 
-func (p *Project) WebPath() string {
-	return "/p/" + p.Key
+func (p *Project) WebPath(extra ...string) string {
+	return "/" + util.StringJoin(append([]string{"p", p.Key}, extra...), "/")
 }
 
-func (p *Project) WebPathEnums() string {
-	return p.WebPath() + "/export/enums"
+func (p *Project) WebPathExport(extra ...string) string {
+	return p.WebPath(append([]string{"export"}, extra...)...)
 }
 
-func (p *Project) WebPathEvents() string {
-	return p.WebPath() + "/export/events"
+func (p *Project) WebPathEnums(extra ...string) string {
+	return p.WebPathExport(append([]string{"enums"}, extra...)...)
 }
 
-func (p *Project) WebPathModels() string {
-	return p.WebPath() + "/export/models"
+func (p *Project) WebPathEvents(extra ...string) string {
+	return p.WebPathExport(append([]string{"events"}, extra...)...)
+}
+
+func (p *Project) WebPathModels(extra ...string) string {
+	return p.WebPathExport(append([]string{"models"}, extra...)...)
 }
 
 func (p *Project) ModuleArgExport(pSvc *Service, logger util.Logger) error {

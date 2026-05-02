@@ -48,7 +48,7 @@ func File(w http.ResponseWriter, r *http.Request) {
 			return cutil.RespondDownload(path[len(path)-1], b, ps.W)
 		}
 
-		bcAppend := dblpipe + prj.WebPath() + "/fs"
+		bcAppend := dblpipe + prj.WebPath("fs")
 		bc := []string{"projects", prj.Key, "Files" + bcAppend}
 		lo.ForEach(path, func(x string, _ int) {
 			bcAppend += "/" + x

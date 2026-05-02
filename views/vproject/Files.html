@@ -20,7 +20,7 @@
 {% func (p *Files) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
     prj := p.Project
-    u := prj.WebPath() + "/fs"
+    u := prj.WebPath("fs")
     pth := util.StringFilePath(p.Path...)
   -%}
   {%= Summary(prj, "/" + util.StringJoin(p.Path, "/"), nil, nil, nil, ps) %}

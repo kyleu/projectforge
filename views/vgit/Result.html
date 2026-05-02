@@ -6,6 +6,7 @@
   "projectforge.dev/projectforge/app/lib/git"
   "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/views/components"
+  "projectforge.dev/projectforge/views/components/view"
   "projectforge.dev/projectforge/views/layout"
 ) %}
 
@@ -30,7 +31,7 @@
     <div class="mt">
       {%= statusActions(p.Result, false) %}
     </div>
-    {%= statusDetail(p.Result) %}
+    {%= statusDetail(p.Result, ps) %}
   </div>
 {% endfunc %}
 
@@ -43,7 +44,7 @@
   {%- endfor -%}
 {% endfunc %}
 
-{% func statusDetail(r *git.Result) %}
+{% func statusDetail(r *git.Result, ps *cutil.PageState) %}
   <div class="overflow full-width">
     <table class="mt min-200">
       <tbody>
@@ -110,7 +111,7 @@
             <div class="right"><a href="/git/{%s r.Project %}/commit"><button>Commit</button></a></div>
             <ul>
               {%- for _, d := range dirt -%}
-              <li>{%s d %}</li>
+              <li>{%= view.URL("/p/" + r.Project + "/fs/" + d, d, false, ps) %}</li>
               {%- endfor -%}
             </ul>
             {%- else -%}
