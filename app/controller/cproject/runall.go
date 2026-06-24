@@ -73,7 +73,7 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 					argRes := util.FieldDescsCollectMap(cfg, gitCustomArgs)
 					if argRes.HasMissing() {
 						ps.SetTitleAndData("Custom Command", argRes)
-						page := &vpage.Args{URL: "/run/build", Directions: "Enter your commit message", Results: argRes, Hidden: map[string]string{"phase": phase}}
+						page := &vpage.Args{URL: "/run/build", Directions: "Enter your command", Results: argRes, Hidden: map[string]string{"phase": phase}}
 						return controller.Render(r, as, page, ps, actT.Breadcrumb())
 					}
 				}

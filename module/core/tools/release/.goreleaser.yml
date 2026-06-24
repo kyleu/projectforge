@@ -60,6 +60,9 @@ dockers_v2:
     tags:
       - "{{ trimprefix .Tag \"v\" }}"
       - "latest"
+    sbom: false
+    flags:
+      - "--provenance=false"
     dockerfile: ./tools/release/Dockerfile.release{{{ .ExtraFilesContent }}}
   -
     id: debug
@@ -68,6 +71,9 @@ dockers_v2:
     tags:
       - "{{ trimprefix .Tag \"v\" }}-debug"
       - "latest-debug"
+    sbom: false
+    flags:
+      - "--provenance=false"
     dockerfile: ./tools/release/Dockerfile.debug{{{ end }}}{{{ .ExtraFilesContent }}}
 
 dist: "build/dist"
