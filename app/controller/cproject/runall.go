@@ -68,13 +68,17 @@ func RunAllActions(w http.ResponseWriter, r *http.Request) {
 		if actT.Matches(action.TypeBuild) {
 			phase := cfg.GetStringOpt("phase")
 			if phase == keyCustom {
-				if cmd := cfg.GetStringOpt("cmd"); cmd == "" {
+				cmd := cfg.GetStringOpt("cmd")
+				if cmd == "" {
 					argRes := util.FieldDescsCollectMap(cfg, gitCustomArgs)
 					if argRes.HasMissing() {
 						ps.SetTitleAndData("Custom Command", argRes)
 						page := &vpage.Args{URL: "/run/build", Directions: "Enter your commit message", Results: argRes, Hidden: map[string]string{"phase": phase}}
 						return controller.Render(r, as, page, ps, actT.Breadcrumb())
 					}
+				}
+				if page := HandleLoad(cfg, r.URL, fmt.Sprintf("Running custom command [%s] for all projects", cmd)); page != nil {
+					return controller.Render(r, as, page, ps, "projects", actT.Breadcrumb())
 				}
 			}
 
