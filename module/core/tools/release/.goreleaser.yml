@@ -9,12 +9,12 @@ announce:
     message_template: "*{{{ .Name }}}* `{{ .Tag }}` has been released from the `{{ .Branch }}` branch at commit `{{ .ShortCommit }}` ({{ .CommitDate }})\n{{{ .Info.Sourcecode }}}/releases/tag/{{ .Tag }}\n\n{{ .ReleaseNotes }}"
 {{{ end }}}
 archives:
-  - format: zip
+  - formats: ["zip"]
     wrap_in_directory: "false"
     files:
       - none*
 {{{ if .Build.Homebrew }}}
-brews:
+homebrew_casks:
   -
     repository:
       owner: "{{{ .Info.Org }}}"
@@ -22,15 +22,18 @@ brews:
     commit_author:
       name: "{{{ .Info.AuthorName }}}"
       email: "{{{ .Info.AuthorEmail }}}"
-    directory: Formula
+    directory: Casks
     homepage: "{{{ .Info.Homepage }}}"
     description: "{{{ .Info.Description }}}"
     license: "{{{ .Info.License }}}"
     skip_upload: "false"{{{ if .Build.Private }}}
-    download_strategy: "GitHubPrivateRepositoryReleaseDownloadStrategy"
-    custom_require: "lib/private_strategy"{{{ end }}}{{{ if .Info.Homebrew }}}
-    url_template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}
-    install: "bin.install \"{{{ .Exec }}}\""
+    custom_block: |
+      require_relative "../lib/private_strategy"{{{ end }}}{{{ if or .Info.Homebrew .Build.Private }}}
+    url:{{{ if .Info.Homebrew }}}
+      template: "{{{ .Info.Homebrew }}}/{{ .Tag }}/{{ .ArtifactName }}"{{{ end }}}{{{ if .Build.Private }}}
+      using: GitHubPrivateRepositoryReleaseDownloadStrategy{{{ end }}}{{{ end }}}
+    binaries:
+      - "{{{ .Exec }}}"
 {{{ end }}}
 changelog:{{{ if .Build.Changelog }}}
   use: "github"{{{ else }}}
@@ -49,16 +52,22 @@ checksum:
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)${{{ if .HasDocker }}}
 
-dockers:
+dockers_v2:
   -
-    image_templates:
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}"
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
+    id: release
+    images:
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}"
+      - "latest"
     dockerfile: ./tools/release/Dockerfile.release{{{ .ExtraFilesContent }}}
   -
-    image_templates:
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}-debug"
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
+    id: debug
+    images:
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}-debug"
+      - "latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug{{{ end }}}{{{ .ExtraFilesContent }}}
 
 dist: "build/dist"

@@ -4,12 +4,12 @@ version: 2
 project_name: projectforge
 
 archives:
-  - format: zip
+  - formats: ["zip"]
     wrap_in_directory: "false"
     files:
       - none*
 
-brews:
+homebrew_casks:
   -
     repository:
       owner: "kyleu"
@@ -17,12 +17,13 @@ brews:
     commit_author:
       name: "Kyle U"
       email: "projectforge@kyleu.com"
-    directory: Formula
+    directory: Casks
     homepage: "https://projectforge.dev"
     description: "Project Forge creates and manages applications written in the Go programming language. Using code generation, the latest technology, and a strong standard library, Project Forge will help manage your project's code, assets, UI and UX."
     license: "MIT"
     skip_upload: "false"
-    install: "bin.install \"projectforge\""
+    binaries:
+      - "projectforge"
 
 changelog:
   use: "github"
@@ -41,16 +42,22 @@ checksum:
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(checksums)$
 
-dockers:
+dockers_v2:
   -
-    image_templates:
-      - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}"
-      - "ghcr.io/kyleu/projectforge:latest"
+    id: release
+    images:
+      - "ghcr.io/kyleu/projectforge"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}"
+      - "latest"
     dockerfile: ./tools/release/Dockerfile.release
   -
-    image_templates:
-      - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}-debug"
-      - "ghcr.io/kyleu/projectforge:latest-debug"
+    id: debug
+    images:
+      - "ghcr.io/kyleu/projectforge"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}-debug"
+      - "latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"

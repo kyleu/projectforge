@@ -17,4 +17,6 @@ WORKDIR /
 
 ENTRYPOINT ["/{{{ .Exec }}}", "-a", "0.0.0.0"]
 
-COPY {{{ .Exec }}} /{{{ .ExtraFilesDocker }}}
+ARG TARGETPLATFORM
+
+COPY $TARGETPLATFORM/{{{ .Exec }}} /{{{ .ExtraFilesDocker }}}
