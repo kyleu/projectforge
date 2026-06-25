@@ -52,28 +52,16 @@ checksum:
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)${{{ if .HasDocker }}}
 
-dockers_v2:
+dockers:
   -
-    id: release
-    images:
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}"
-    tags:
-      - "{{ trimprefix .Tag \"v\" }}"
-      - "latest"
-    sbom: false
-    flags:
-      - "--provenance=false"
+    image_templates:
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest"
     dockerfile: ./tools/release/Dockerfile.release{{{ .ExtraFilesContent }}}
   -
-    id: debug
-    images:
-      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}"
-    tags:
-      - "{{ trimprefix .Tag \"v\" }}-debug"
-      - "latest-debug"
-    sbom: false
-    flags:
-      - "--provenance=false"
+    image_templates:
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:{{ trimprefix .Tag \"v\" }}-debug"
+      - "ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug{{{ end }}}{{{ .ExtraFilesContent }}}
 
 dist: "build/dist"

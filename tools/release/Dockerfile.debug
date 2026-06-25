@@ -25,6 +25,4 @@ WORKDIR /
 
 ENTRYPOINT ["/projectforge", "-a", "0.0.0.0"]
 
-ARG TARGETPLATFORM
-
-COPY $TARGETPLATFORM/projectforge /
+COPY projectforge /

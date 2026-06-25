@@ -42,28 +42,16 @@ checksum:
     - glob: "./build/dist/projectforge_module_*.zip"
     # $PF_SECTION_END(checksums)$
 
-dockers_v2:
+dockers:
   -
-    id: release
-    images:
-      - "ghcr.io/kyleu/projectforge"
-    tags:
-      - "{{ trimprefix .Tag \"v\" }}"
-      - "latest"
-    sbom: false
-    flags:
-      - "--provenance=false"
+    image_templates:
+      - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}"
+      - "ghcr.io/kyleu/projectforge:latest"
     dockerfile: ./tools/release/Dockerfile.release
   -
-    id: debug
-    images:
-      - "ghcr.io/kyleu/projectforge"
-    tags:
-      - "{{ trimprefix .Tag \"v\" }}-debug"
-      - "latest-debug"
-    sbom: false
-    flags:
-      - "--provenance=false"
+    image_templates:
+      - "ghcr.io/kyleu/projectforge:{{ trimprefix .Tag \"v\" }}-debug"
+      - "ghcr.io/kyleu/projectforge:latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"
