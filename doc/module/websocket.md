@@ -51,7 +51,7 @@ func ExampleSocket(w http.ResponseWriter, r *http.Request) {
 
         // Upgrade connection
         connID, err := as.Services.Socket.Upgrade(
-            ps.Context, ps.W, ps.R, channel,
+            ps.Context, ps.W, ps.R, nil /* optional ConnID */, channel,
             ps.Profile, handler, ps.Logger,
         )
         if err != nil {

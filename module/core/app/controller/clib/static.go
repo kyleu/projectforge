@@ -34,9 +34,9 @@ func assetResponse(w http.ResponseWriter, e *assets.Entry, err error) {
 		w.Header().Set(cutil.HeaderCacheControl, "public, max-age=86400") // 24 hours
 		w.WriteHeader(http.StatusOK)
 		cutil.WriteCORS(w)
+		//nolint:gosec // e.Bytes is loaded exclusively from the compile-time embedded asset filesystem.
 		_, _ = w.Write(e.Bytes)
 	} else {
-		w.WriteHeader(http.StatusNotFound)
-		_, _ = w.Write([]byte(err.Error()))
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
 }

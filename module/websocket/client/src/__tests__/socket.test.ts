@@ -68,6 +68,7 @@ describe("socket", () => {
       "ws://example"
     );
     const ws = MockWebSocket.instances[0];
+    expect(ws.url).toBe("ws://example");
 
     sock.send({ channel: "c", cmd: "ping", param: { ok: true } });
     expect(sock.pendingMessages).toHaveLength(1);

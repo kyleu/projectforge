@@ -29,9 +29,12 @@ type Connection struct {
 	mu       sync.Mutex
 }
 
-func NewConnection(svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasAccount }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn, handler Handler) *Connection {
+func NewConnection(connID *uuid.UUID, svc string{{{ if .HasUser }}}, usr *dbuser.User{{{ end }}}, profile *user.Profile{{{ if .HasAccount }}}, accounts user.Accounts{{{ end }}}, socket *websocket.Conn, handler Handler) *Connection {
+	if connID == nil {
+		connID = util.UUIDP()
+	}
 	return &Connection{
-		ID:       util.UUID(){{{ if .HasUser }}},
+		ID:       *connID{{{ if .HasUser }}},
 		User:     usr{{{ end }}},
 		Profile:  profile{{{ if .HasAccount }}},
 		Accounts: accounts{{{ end }}},

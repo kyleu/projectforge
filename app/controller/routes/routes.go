@@ -18,7 +18,7 @@ func makeRoute(x *mux.Router, method string, path string, f http.HandlerFunc) {
 }
 
 func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
-	r := mux.NewRouter()
+	r := mux.NewRouter().UseEncodedPath()
 
 	makeRoute(r, http.MethodGet, "/", controller.Home)
 	makeRoute(r, http.MethodGet, "/healthcheck", clib.Healthcheck)

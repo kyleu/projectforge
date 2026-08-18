@@ -25,6 +25,7 @@ func Model(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 		g.AddImport(imp)
 	})
 	g.AddImport(helper.ImpAppUtil, helper.ImpAppSvc)
+
 	imps, err := helper.SpecialImports(m.Columns, m.PackageWithGroup(""), args)
 	if err != nil {
 		return nil, err
@@ -35,6 +36,7 @@ func Model(m *model.Model, args *metamodel.Args, linebreak string) (*file.File, 
 		return nil, err
 	}
 	g.AddImport(imps...)
+
 	g.AddImport(m.Imports.Supporting("model")...)
 
 	if !m.SkipController() {

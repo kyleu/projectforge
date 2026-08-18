@@ -8,30 +8,32 @@ package layout
 import (
 	"projectforge.dev/projectforge/app"
 	"projectforge.dev/projectforge/app/controller/cutil"
-	"projectforge.dev/projectforge/app/util"
 	"projectforge.dev/projectforge/assets"
 )
 
-//line views/layout/Head.html:8
+//line views/layout/Head.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/layout/Head.html:8
+//line views/layout/Head.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/layout/Head.html:8
+//line views/layout/Head.html:7
 func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Head.html:8
+//line views/layout/Head.html:7
 	qw422016.N().S(`
 `)
-//line views/layout/Head.html:9
+//line views/layout/Head.html:8
 	thm := as.Themes.Get(ps.Profile.Theme, ps.Logger)
+
+//line views/layout/Head.html:9
+	logoURL := assets.URL(`logo.svg`, ps.Logger)
 
 //line views/layout/Head.html:9
 	qw422016.N().S(`  <meta charset="UTF-8">
@@ -60,11 +62,11 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Head.html:14
 	qw422016.N().S(`">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/assets/`)
+  <meta property="og:image" content="`)
 //line views/layout/Head.html:16
-	qw422016.N().U(util.AppKey)
+	qw422016.E().S(logoURL)
 //line views/layout/Head.html:16
-	qw422016.N().S(`.svg">
+	qw422016.N().S(`">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="`)
 //line views/layout/Head.html:18
@@ -82,7 +84,7 @@ func StreamHead(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 	qw422016.N().S(`
   <link rel="icon" href="`)
 //line views/layout/Head.html:20
-	qw422016.E().S(assets.URL(`logo.svg`, ps.Logger))
+	qw422016.E().S(logoURL)
 //line views/layout/Head.html:20
 	qw422016.N().S(`" type="image/svg+xml">
 `)

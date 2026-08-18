@@ -56,7 +56,7 @@ func ValueMapFromAnyOK(x any) ValueMap {
 	return m
 }
 
-func (m ValueMap) Add(kvs ...any) {
+func (m ValueMap) Add(kvs ...any) ValueMap {
 	numWidth := -1
 	pad := func() int {
 		if numWidth == -1 {
@@ -85,6 +85,7 @@ func (m ValueMap) Add(kvs ...any) {
 		}
 		m[k] = kvs[i+1]
 	}
+	return m
 }
 
 func (m ValueMap) With(k string, v any) ValueMap {

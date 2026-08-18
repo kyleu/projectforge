@@ -23,6 +23,13 @@ func ServiceMutate(m *model.Model, args *metamodel.Args, linebreak string) (*fil
 	lo.ForEach(helper.ImportsForTypes("go", "", m.PKs().Types()...), func(imp *model.Import, _ int) {
 		g.AddImport(imp)
 	})
+
+	imps, err := helper.EnumImports(m.PKs().Types(), m.PackageWithGroup(""), args.Enums)
+	if err != nil {
+		return nil, err
+	}
+	g.AddImport(imps...)
+
 	g.AddImport(helper.ImpAppUtil, helper.ImpContext, helper.ImpSQLx, helper.ImpAppDatabase, helper.ImpLo)
 	g.AddImport(m.Imports.Supporting("servicemutate")...)
 

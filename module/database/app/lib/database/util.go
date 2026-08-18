@@ -47,8 +47,7 @@ func MapScan(row *sqlx.Rows) (util.ValueMap, error) {
 		return nil, err
 	}
 	for k, v := range x {
-		switch t := v.(type) {
-		case []byte:
+		if t, ok := v.([]byte); ok {
 			if utf8.Valid(t) {
 				x[k] = string(t)
 			}

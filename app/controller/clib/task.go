@@ -79,7 +79,7 @@ func TaskStart(w http.ResponseWriter, r *http.Request) {
 		}
 		args, cat := argsAndCategory(r)
 		ch := fmt.Sprintf("%s-%d", t.Key, util.RandomInt(1000))
-		id, err := as.Services.Socket.Upgrade(ps.Context, w, r, ch, ps.Profile, websocket.EchoHandler, ps.Logger)
+		id, err := as.Services.Socket.Upgrade(ps.Context, w, r, nil, ch, ps.Profile, websocket.EchoHandler, ps.Logger)
 		if err != nil {
 			ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
 			return "", err

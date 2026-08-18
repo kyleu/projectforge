@@ -12,7 +12,7 @@ import (
 )
 
 func SiteRoutes(logger util.Logger) (http.Handler, error) {
-	r := mux.NewRouter()
+	r := mux.NewRouter().UseEncodedPath()
 
 	makeRoute(r, http.MethodGet, cutil.DefaultProfilePath, clib.ProfileSite)
 	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave)

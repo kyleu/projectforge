@@ -12,8 +12,8 @@ import (
 	"projectforge.dev/projectforge/app/util"
 )
 
-func (s *Service) Register(profile *user.Profile, c *websocket.Conn, h Handler, logger util.Logger) (*Connection, error) {
-	conn := NewConnection("system", profile, c, h)
+func (s *Service) Register(connID *uuid.UUID, profile *user.Profile, c *websocket.Conn, h Handler, logger util.Logger) (*Connection, error) {
+	conn := NewConnection(connID, "system", profile, c, h)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	s.connections[conn.ID] = conn

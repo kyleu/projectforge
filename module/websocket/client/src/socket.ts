@@ -17,7 +17,7 @@ function sanitizeLogText(value: string) {
 function socketLogMessage(msg: SocketMessage) {
   return {
     channel: sanitizeLogText(msg.channel),
-    cmd: sanitizeLogText(msg.cmd),
+    cmd: sanitizeLogText(msg.cmd)
   };
 }
 
@@ -39,9 +39,10 @@ function socketUrl(u?: string) {
 
 export class Socket {
   readonly debug: boolean;
-  private readonly open: () => void;
+  private readonly open: (s: Socket) => void;
   private readonly recv: (m: SocketMessage) => void;
   private readonly err: (svc: string, err: string) => void;
+  readonly id: string;
   readonly url?: string;
   connected: boolean;
   pauseSeconds: number;
@@ -52,15 +53,17 @@ export class Socket {
 
   constructor(
     debug: boolean,
-    o: () => void,
+    o: (s: Socket) => void,
     r: (m: SocketMessage) => void,
     e: (svc: string, err: string) => void,
-    url?: string
+    url?: string,
+    id?: string
   ) {
     this.debug = debug;
     this.open = o;
     this.recv = r;
     this.err = e;
+    this.id = id ?? "anonymous";
     this.url = socketUrl(url);
     this.connected = false;
     this.pauseSeconds = 1;
@@ -87,7 +90,7 @@ export class Socket {
       if (this.debug) {
         console.log("WebSocket connected");
       }
-      this.open();
+      this.open(this);
     };
     this.sock.onmessage = (event) => {
       let msg: SocketMessage;

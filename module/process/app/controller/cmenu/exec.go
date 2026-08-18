@@ -7,6 +7,7 @@ import (
 	"{{{ .Package }}}/app/lib/menu"
 )
 
+//nolint:unused
 func processMenu(processes exec.Execs) *menu.Item {
 	ret := make(menu.Items, 0, len(processes))
 	lo.ForEach(processes, func(p *exec.Exec, _ int) {

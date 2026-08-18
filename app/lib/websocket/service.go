@@ -74,14 +74,14 @@ func (s *Service) Close(logger util.Logger) {
 var upgrader = websocket.Upgrader{EnableCompression: true}
 
 func (s *Service) Upgrade(
-	_ context.Context, w http.ResponseWriter, r *http.Request, channel string,
+	_ context.Context, w http.ResponseWriter, r *http.Request, connID *uuid.UUID, channel string,
 	profile *user.Profile, handler Handler, logger util.Logger,
 ) (uuid.UUID, error) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return uuid.Nil, err
 	}
-	cx, err := s.Register(profile, conn, handler, logger)
+	cx, err := s.Register(connID, profile, conn, handler, logger)
 	if err != nil {
 		logger.Warnf("unable to register websocket connection: %+v", err)
 		return uuid.Nil, nil

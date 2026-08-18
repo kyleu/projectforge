@@ -1,23 +1,23 @@
 {% import (
   "projectforge.dev/projectforge/app"
   "projectforge.dev/projectforge/app/controller/cutil"
-  "projectforge.dev/projectforge/app/util"
   "projectforge.dev/projectforge/assets"
 ) %}
 
 {% func Head(as *app.State, ps *cutil.PageState) %}
   {%- code thm := as.Themes.Get(ps.Profile.Theme, ps.Logger) -%}
+  {%- code logoURL := assets.URL(`logo.svg`, ps.Logger) -%}
   <meta charset="UTF-8">
   <title>{%s ps.TitleString() %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   {% if ps.Description != "" %}<meta property="description" content="{%s ps.Description %}">
   {% endif %}<meta property="og:title" content="{%s ps.TitleString() %}">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/assets/{%u util.AppKey %}.svg">
+  <meta property="og:image" content="{%s logoURL %}">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
-  <link rel="icon" href="{%s assets.URL(`logo.svg`, ps.Logger) %}" type="image/svg+xml">
+  <link rel="icon" href="{%s logoURL %}" type="image/svg+xml">
 {% if !ps.NoStyle %}  <style>
     {%s= thm.CSS(2) %}  </style>{% endif %}{%- if ps.HideHeader && ps.HideMenu -%}{%= inlineResources(ps.NoStyle, ps.NoScript) %}{%- else -%}
 {% if !ps.NoStyle %}

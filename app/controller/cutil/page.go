@@ -195,6 +195,13 @@ func (p *PageState) Extra(key string) string {
 	return util.Choose(ok, ret, "")
 }
 
+func (p *PageState) SetMinimalPage() {
+	p.HideHeader = true
+	p.HideMenu = true
+	p.NoStyle = true
+	p.NoScript = true
+}
+
 func (p *PageState) AddHeaderScript(path string, deferFlag bool, logger util.Logger) {
 	p.HeaderContent += "\n  " + assets.ScriptElement(path, deferFlag, logger)
 }

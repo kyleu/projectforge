@@ -19,10 +19,12 @@ func (s *Service) Query(ctx context.Context, q string, tx *sqlx.Tx, logger util.
 	defer s.complete(q, op, span, now, logger, err)
 	f := s.logQuery(ctx, "running raw query", q, logger, values...)
 	if tx == nil {
+		//nolint:sqlclosecheck // Query transfers ownership of the returned rows to its caller.
 		ret, err = s.db.QueryxContext(ctx, q, values...)
 		defer f(0, "ran raw query without transaction", err)
 		return ret, err
 	}
+	//nolint:sqlclosecheck // Query transfers ownership of the returned rows to its caller.
 	ret, err = tx.QueryxContext(ctx, q, values...)
 	defer f(0, "ran raw query with transaction", err)
 	return ret, err
