@@ -10,13 +10,13 @@ brew install {{{ .Info.Org }}}/{{{ .Info.Org }}}/{{{ .Key }}}
 {{{ end }}}{{{ if .Build.NFPMS }}}
 ### deb, rpm and apk packages
 Download the .deb, .rpm or .apk packages from the [release page]({{{ .Info.Sourcecode }}}/releases) and install them with the appropriate tools.
-{{{ end }}}
+{{{ end }}}{{{ if not .Build.SkipDocker }}}
 ## Running with Docker
 ```shell
 docker run{{{ .DockerPorts }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest
 docker run{{{ .DockerPorts }}} ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}:latest-debug
 ```
-
+{{{ end }}}
 ## Built from source
 
 ### go install

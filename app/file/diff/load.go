@@ -10,10 +10,11 @@ import (
 
 	"projectforge.dev/projectforge/app/file"
 	"projectforge.dev/projectforge/app/lib/filesystem"
+	"projectforge.dev/projectforge/app/project"
 	"projectforge.dev/projectforge/app/util"
 )
 
-func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, ignoredFiles []string, includeUnchanged bool, logger util.Logger) (Diffs, error) {
+func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, ignoredFiles []string, bld *project.Build, includeUnchanged bool, logger util.Logger) (Diffs, error) {
 	var ret Diffs
 	for _, s := range src {
 		p := s.FullPath()
@@ -36,7 +37,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, ignore
 			}
 		}
 
-		matches, err := matchesModules(s, mods, tgtFile)
+		matches, err := matchesModules(s, mods, bld, tgtFile)
 		if err != nil {
 			return nil, err
 		}
@@ -57,7 +58,7 @@ func FileLoader(mods []string, src file.Files, tgt filesystem.FileLoader, ignore
 	return ret, nil
 }
 
-func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, error) {
+func matchesModules(s *file.File, mods []string, bld *project.Build, tgtFile *file.File) (bool, error) {
 	if idx := strings.Index(s.Content, file.ModulePrefix); idx > 1 {
 		lines := util.StringSplitLines(s.Content)
 		line, lineIdx, _ := lo.FindIndexOf(lines, func(line string) bool {
@@ -76,8 +77,15 @@ func matchesModules(s *file.File, mods []string, tgtFile *file.File) (bool, erro
 
 		hasAllMods := true
 		lo.ForEach(tgtMods, func(mod string, _ int) {
-			if !lo.Contains(mods, mod) {
-				hasAllMods = false
+			switch {
+			case mod == "docker":
+				if bld.SkipDocker {
+					hasAllMods = false
+				}
+			default:
+				if !lo.Contains(mods, mod) {
+					hasAllMods = false
+				}
 			}
 		})
 		if hasAllMods {

@@ -1,3 +1,4 @@
+# $PF_HAS_MODULE(docker)$
 #!/bin/bash
 
 ## Builds a linux/amd64 binary, then builds and runs a Docker image.

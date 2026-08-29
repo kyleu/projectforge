@@ -85,7 +85,7 @@ func diffs(pm *PrjAndMods) (file.Files, diff.Diffs, error) {
 	if pm.Prj.Build.Homebrew {
 		mods = append(mods, "homebrew")
 	}
-	dfs, err := diff.FileLoader(mods, srcFiles, pm.FS, pm.Prj.Info.IgnoredFiles, false, pm.Logger)
+	dfs, err := diff.FileLoader(mods, srcFiles, pm.FS, pm.Prj.Info.IgnoredFiles, pm.Prj.Build, false, pm.Logger)
 	if err != nil {
 		return nil, nil, err
 	}

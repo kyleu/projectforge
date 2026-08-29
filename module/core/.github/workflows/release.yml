@@ -23,13 +23,13 @@ jobs:{{{ if .Build.TestsFail }}}
       - name: "Golang"
         uses: "actions/setup-go@v5"
         with:
-          go-version: "{{{ .GoVersionSafe }}}"
+          go-version: "{{{ .GoVersionSafe }}}"{{{ if not .Build.SkipDocker }}}
       - name: "Login"
         uses: "docker/login-action@dd4fa0671be5250ee6f50aedf4cb05514abda2c7" # v1
         with:
           registry: "ghcr.io"
           username: "${{ github.repository_owner }}"
-          password: "${{ secrets.CR_PAT }}"
+          password: "${{ secrets.CR_PAT }}"{{{ end }}}
       - name: "Cache"
         uses: "actions/cache@v4"
         with:

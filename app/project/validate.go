@@ -105,6 +105,10 @@ func validateModuleConfig(p *Project, e validationAddErrFn, dangerous []string) 
 	if p.HasModule("android") && (!p.Build.Android) {
 		e("android-disabled", "Android module is enabled, but Android build isn't set")
 	}
+	hasDB := p.HasModule(util.DatabaseMySQL) || p.HasModule(util.DatabasePostgreSQL) || p.HasModule(util.DatabaseSQLite) || p.HasModule(util.DatabaseSQLServer)
+	if p.HasModule("migration") && (!hasDB) {
+		e("no-db-engine", "migration module is enabled, but no database engine is configured")
+	}
 	if p.Build != nil && p.Build.SafeMode {
 		lo.ForEach(dangerous, func(m string, _ int) {
 			if p.HasModule(m) {

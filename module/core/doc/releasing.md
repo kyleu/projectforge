@@ -13,11 +13,11 @@ All release binaries are checksummed, available in `checksums.txt` in the root o
 ### Changelog
 
 A changelog will be created based on the commit history, including all authors and messages
-{{{ end }}}
+{{{ end }}}{{{ if not .Build.SkipDocker }}}
 ### Docker Images
 
 Multiple Docker images will be created. The main image is `ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}/x.x.x`, and a debug image is provided at `ghcr.io/{{{ .Info.Org }}}/{{{ .Key }}}/x.x.x-debug` that includes `delve` for debugging
-{{{ if .Build.Homebrew }}}
+{{{ end }}}{{{ if .Build.Homebrew }}}
 ### Homebrew
 
 Packages for macOS and Linux will be pushed to Homebrew at `{{{ .Info.Org }}}/homebrew-{{{ .Info.Org }}}`

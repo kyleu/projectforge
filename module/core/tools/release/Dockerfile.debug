@@ -1,3 +1,4 @@
+# $PF_HAS_MODULE(docker)$
 FROM golang:alpine
 
 LABEL "org.opencontainers.image.authors"="{{{ .Info.AuthorName }}}"
