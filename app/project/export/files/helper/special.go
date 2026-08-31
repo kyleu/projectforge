@@ -35,7 +35,10 @@ func SpecialImports(cols model.Columns, pkg string, args *metamodel.Args) (model
 					case len(ref.Pkg) > 0 && ref.Pkg[0] == "views":
 						ret = append(ret, ViewImport(ref.Pkg[1:].ToPath()))
 					default:
-						ret = append(ret, model.NewImport(model.ImportTypeApp, ref.Pkg.ToPath()))
+						pth := ref.Pkg.ToPath()
+						if pth != "" {
+							ret = append(ret, model.NewImport(model.ImportTypeApp, pth))
+						}
 					}
 				} else {
 					ret = append(ret, AppImport(mdl.PackageWithGroup("")))

@@ -35,6 +35,10 @@ func (i *Import) WithAlias(a string) *Import {
 	return i
 }
 
+func (i *Import) Empty() bool {
+	return i == nil || (i.Value == "" && i.Alias == "")
+}
+
 func (i *Import) Render() string {
 	var alias string
 	if i.Alias != "" {
@@ -58,7 +62,7 @@ func (i Imports) Render(linebreak string) string {
 		return fmt.Sprintf("import %s", i[0].Render())
 	}
 	ret := util.NewStringSlice("import (")
-	ret.Push(i.toStrings("\t")...)
+	ret.Push(i.WithoutEmpty().toStrings("\t")...)
 	ret.Push(")")
 	return ret.Join(linebreak)
 }
@@ -68,9 +72,15 @@ func (i Imports) RenderHTML(linebreak string) string {
 		return fmt.Sprintf("{%% import %s %%}", i[0].Render())
 	}
 	ret := util.NewStringSlice("{%% import (")
-	ret.Push(i.toStrings("  ")...)
+	ret.Push(i.WithoutEmpty().toStrings("  ")...)
 	ret.Push(") %%}")
 	return ret.Join(linebreak)
+}
+
+func (i Imports) WithoutEmpty() Imports {
+	return lo.Filter(i, func(x *Import, _ int) bool {
+		return !x.Empty()
+	})
 }
 
 func (i Imports) toStrings(whitespace string) []string {
