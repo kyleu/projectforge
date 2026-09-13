@@ -115,9 +115,8 @@ func HashFNV128UUID(s string) uuid.UUID {
 
 // HashSHA256 returns a Base64-encoded string representing the SHA-256 hash of the argument.
 func HashSHA256(s string) string {
-	h := sha256.New()
-	ret := h.Sum([]byte(s))
-	return base64.URLEncoding.EncodeToString(ret)
+	h := sha256.Sum256([]byte(s))
+	return base64.URLEncoding.EncodeToString(h[:])
 }
 
 func getKey(logger Logger) []byte {

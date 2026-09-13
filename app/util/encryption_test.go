@@ -13,8 +13,8 @@ var hashTests = []struct {
 	hash32    uint32
 	hashSHA   string
 }{
-	{plaintext: "Hello, world!", hash32: 3985698964, hashSHA: "SGVsbG8sIHdvcmxkIeOwxEKY_BwUmvv0yJlvuSQnrkHkZJuTTKSVmRt4UrhV"},
-	{plaintext: "Goodbye, cruel world!", hash32: 55824456, hashSHA: "R29vZGJ5ZSwgY3J1ZWwgd29ybGQh47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU="},
+	{plaintext: "Hello, world!", hash32: 3985698964, hashSHA: "MV9b23bQeMQ7isAGTkoBZGErH853yGk0W_yUx1iU7dM="},
+	{plaintext: "Goodbye, cruel world!", hash32: 55824456, hashSHA: "Rpwk-Ulwczqp08GLqIuBalVyzchihsMBB-P_y574jgU="},
 }
 
 func TestEncryptDecrypt(t *testing.T) {
